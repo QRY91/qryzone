@@ -1,0 +1,54 @@
+base_url = "https://qry91.github.io/about/home"
+# theme = "zola.386"
+
+default_language = "en"
+title = "QRY ZONE"
+description = "Questions mandatory! Answers optional ¯\\(ツ)/¯"
+
+highlight_code = true
+compile_sass = true
+generate_rss = true
+build_search_index = true
+
+taxonomies = [
+  {name="categories", rss=true},
+  {name="tags", rss=true},
+]
+
+
+[extra]
+author = "QRY"
+year = "2023"
+
+keywords = "programming, software, development, engineering, hacking"
+theme_color = "#2d2d2d"
+zola386_menu = [
+  {path="", name="Home"},
+  {path="categories", name="Categories"},
+  {path="tags", name="Tags"},
+  {path="about", name="About"},
+  {path="projects", name="Projects"},
+]
+
+### THIRD PARTY
+# google_analytics = "UA-012345-67"
+# disqus = "disqus-user"
+
+### SOCIAL MEDIA
+# image = "https://avatars.githubusercontent.com/u/93480629?s=96&v=4"
+# image = "https://raw.githubusercontent.com/lopes/zola.386/master/screenshot.png"
+# twitter_user = "diogenesfan"
+linkedin_user = "glenn-bokondo-98957b196"
+github_user = "QRY91"
+# gitlab_user = ""
+
+### I18N WORDS
+label_tags = "Tags"
+label_tag = "Tag"
+label_categories = "Categories"
+label_category = "Category"
+label_author = "Author"
+label_date = "Date"
+label_taxonomy = "Taxonomy"
+label_reading = "Reading time"
+label_read_more = "Read more"

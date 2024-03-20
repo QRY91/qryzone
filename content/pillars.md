@@ -1,0 +1,28 @@
++++
+title = "Spinning plates"
+description = "A look into my core interests"
+date = 2023-08-02
+draft = false
+slug = "spinning-plates"
+
+[taxonomies]
+categories = ["meta"]
+tags = ["hobby", "software", "development"]
++++
+
+Typical advice would tell you to specialize, which makes sense. But what if doing one thing and one thing only is not an option for you? What if variety is not simply a luxury, but a necessity to maintain motivation and interest? 
+
+My approach is that of variety within a carefully selected set of interests. One of the major advantages of specializing is time efficiency. After all, we only have so much time in our lives, so many of us would naturally prefer to get really good at one thing, rather than simply okay at a couple of things.
+
+The issue I take with that perspective is that it seems to communicate the following: Expertise is the most valuable. Accomplishment is the measure of a person's success in life. Examination and analysis must serve towards reaching these goals, and serve no other purpose.
+
+From the perspective of starting a career, this all makes sense. But is any of this truly fulfilling?
+
+Over the course of my life, I've noticed that I do not typically stay in a single area of interest for very long. That is not to say I am unable to commit to any endeavour, however. Rather, it seems variety is key to keeping my motivation strong and my interest fresh. So, every now and then, I'll shift from one primary interest to another, and so on, until I circle back. This could in some cases take years. The thing is, it feels pretty natural and actually quite productive to maintain that system for a couple of reasons.
+
+Videogames were my formal introduction to the potential of software. Before that, I would occassionally mess around on my mother's work laptop, making silly narrative animations in Powerpoint using the stock assets. Throughout most of my youth however, most of my entertainment was analog. You know, playing outside, building with Lego/K'nex, that sort of thing. But once I experienced the joy of videogames, I knew I wanted to learn more about them. At first, I simply wanted to play whatever I could get my hands on, and I did. Over time, as I built up experience and gained an understanding of genre and game mechanics, I was more drawn toward understanding the process of videogame **production**, specifically. How did anyone manage to create something like this, with only what amounts to a calculator and some electronics? Where is the magic hiding that, you know, makes the stuff go?
+
+At this point, I knew about the concept of code, as an abstract idea of a set of instructions that can tell a machine what to do, but I had never written code. Honestly, I was intimidated by the very thought. Surely, something as complex as a videogame must take a crazy amount of training to produce, right? Well, yes. But also, it isn't necessarily any more complicated than any other job. So, gradually, I picked up some more creative hobbies. I taught myself some basic drawing skills, and messed around with making music. Never really with the goal of becoming a successful artist or musician, but out of raw curiosity for the subject. Much like with videogames, practicing these skills **deepened** my understanding of the subset of skills that make them up, while adding to my general understanding of their applications. By drawing a lot, I really came to understand how to look around and properly use my eyes to parse incoming information at a fundamental level, peeling away some of the processing layers that serve to interpret the signal. For example, if you ask someone to draw a nose, they will often draw the symbol of a nose, not what an actual nose looks like. It takes considerable time and effort to really learn how to draw what we see, and even more to make creative alterations to it in order to form a cohesive artistic style. The same goes for music production, of course. Everybody has a favorite song, album, artist, whatever, but it can often be difficult to express why we like that particular sound. There's a lot of nuance that goes into the production side of things to deliver the final product, and without exploring the process of music production, we can often only barely scratch the surface.
+
+That all is not to say that we must learn how to produce everything we consume in order to enjoy it, but at least in my experience, it most certainly strengthens my appreciation for what I already enjoy, and it's a great way to learn new skills. So what does this have to do with videogames? Well, at one point I realized that due to the sheer volume of games I've played in my youth, they had an enormous impact on shaping my tastes, both visually and auditorily. Pixel based sprites and early 3D polygonal models inspired me to dig into how a complex shape like the human figure could successfully be boiled down to such a degree of abstract representation. This eventually led me to taking up drawing, as I understand things better by experiencing them for myself. A similar thing happened with the chiptune soundtracks on systems like the Gameboy and NES, which led to discovering tracker software for music production. More broadly, many PS1 games (and their music) had such a profound impact on me that I'm still digging up production info on titles like [Spyro The Dragon](https://en.wikipedia.org/wiki/Spyro_the_Dragon) and [Crash Bandicoot](https://en.wikipedia.org/wiki/Crash_Bandicoot_(video_game)), and I'm pretty sure freakin' [Tank Racer](https://en.wikipedia.org/wiki/Tank_Racer) was my first introduction into the world of drum and bass ([that OST](https://youtu.be/QXrmZK0DVOQ) still holds up). 
+
