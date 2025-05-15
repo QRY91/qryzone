@@ -1,39 +1,36 @@
 /* src/components/layout/Header.module.css */
 .header {
-  background-color: var(--color-surface); /* Use surface color for header */
-  padding-top: var(--space-md);
-  padding-bottom: var(--space-md);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.nav {
-  /* Using .container class from globals.css for centering and max-width */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logoLink {
-  font-size: 1.5rem; /* ~24px */
-  font-weight: bold;
-  color: var(--color-text-primary); /* Ensure logo stands out */
-  text-decoration: none;
-}
-.logoLink:hover {
-  color: var(--color-accent); /* Or keep it primary on hover */
-  text-decoration: none;
-}
-
-.navLinks a {
-  margin-left: var(--space-lg); /* Spacing between nav links */
-  color: var(--color-text-secondary);
-  font-weight: 500;
-}
-
-.navLinks a:hover,
-.navLinks a:focus,
-.navLinks a.active {
-  /* You might add an 'active' class later with Next/Router */
-  color: var(--color-text-primary);
-  text-decoration: none; /* Remove underline for nav items, or add subtle one */
-}
+    background-color: var(--color-background); /* Blend with body or very subtle difference */
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border); /* Keep a subtle separator */
+  }
+  .nav { display: flex; justify-content: space-between; align-items: center; }
+  .logoLink {
+    display: flex; /* If you have text next to the logo */
+    align-items: center;
+    text-decoration: none;
+    /* Remove font-size and font-weight if it's just the image now */
+  }
+  .logoLink:hover { /* Optional: if you want a hover effect on the logo container */
+      opacity: 0.8;
+  }
+  .logoImage {
+    /* Next/Image handles responsiveness, but you can add margins etc. */
+    margin-right: var(--space-sm); /* If you have text next to it */
+    /* Add any specific styling for the image itself if needed */
+  }
+  .logoText { /* If you decide to add text next to the logo */
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--color-text-primary);
+      letter-spacing: -0.02em; /* Slightly tighten letter spacing */
+  }
+  .navLinks a {
+    margin-left: var(--space-lg);
+    color: var(--color-text-secondary);
+    font-size: 0.9rem; /* Smaller nav links */
+    font-weight: normal; /* Less emphasis */
+    letter-spacing: 0.05em; /* Slight letter spacing for a refined feel */
+  }
+  .navLinks a:hover, .navLinks a:focus { color: var(--color-text-primary); text-decoration: none; }

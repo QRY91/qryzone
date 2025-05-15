@@ -1,22 +1,27 @@
 // src/app/page.tsx
-import styles from "./page.module.css"; // If you create the CSS module
+import Image from 'next/image'; // Import Next.js Image component
+// import styles from './page.module.css'; // Optional
 
 export default function HomePage() {
   return (
-    <div className={styles.heroSection}>
-      {" "}
-      {/* Example usage */}
-      <h1 className="text-5xl mb-6">
-        Welcome to <span className="text-[var(--color-accent)]">QRY</span>.zone
-      </h1>{" "}
-      {/* Example of using CSS var inline for accent */}
-      <p className={styles.tagline}>
-        This is the personal cosmos of Q. A place for creative exploration,
-        persistent learning, and query.
-      </p>
-      <p className="text-lg mt-4">
-        <em>"Questions mandatory! Answers optional..."</em>
-      </p>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: 'calc(70vh - var(--space-xl) * 2)', // Adjust as needed
+      textAlign: 'center'
+    }}>
+      <Image
+        src="/logo_animation.gif" // Path to your GIF in the public folder
+        alt="QRY.zone Animated Logo"
+        width={128}  // Specify the intrinsic width of your GIF
+        height={128} // Specify the intrinsic height of your GIF
+        unoptimized // Important for GIFs to prevent Next.js from trying to optimize them as static images
+      />
+      {/* <p style={{ fontStyle: 'italic', color: 'var(--color-text-secondary)', marginTop: 'var(--space-lg)' }}>
+        "Q"
+      </p> */}
     </div>
   );
 }

@@ -1,0 +1,72 @@
+/* src/app/etch/page.module.css */
+.etchContainer {
+  /* Uses global .container for max-width already via layout.tsx */
+}
+
+.etchContainer h1 {
+  /* Already styled globally, but you can override */
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  color: var(--color-text-primary);
+}
+
+.intro {
+  text-align: center;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin: 0 auto var(--space-xl) auto;
+  font-size: 1rem;
+}
+
+.experimentSection {
+  margin-bottom: var(--space-xxl);
+  padding: var(--space-lg);
+  background-color: var(--color-surface); /* Subtle background for sections */
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+}
+
+.experimentSection h2 {
+  margin-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-sm);
+  color: var(--color-accent); /* Use accent for section titles */
+}
+
+.logoGrid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(150px, 1fr)
+  ); /* Responsive grid */
+  gap: var(--space-lg);
+  align-items: center;
+  text-align: center;
+}
+
+.logoGrid div p {
+  /* Style for the text above each logo */
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.logoGrid img, /* If using next/image, it renders an img tag */
+  .logoGrid span > img {
+  /* next/image might wrap in a span */
+  display: inline-block; /* Or block with margin auto for centering */
+  /* Add border or bg to see transparent PNGs clearly if needed */
+  /* background-color: #555; /* Temporary to see transparent areas */
+}
+.opacity10 {
+  opacity: 0.1;
+}
+.opacity30 {
+  opacity: 0.3;
+}
+.opacity60 {
+  opacity: 0.6;
+}
+.opacityHover90:hover {
+  opacity: 0.9;
+}

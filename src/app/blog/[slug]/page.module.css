@@ -1,0 +1,31 @@
+    /* src/app/blog/[slug]/page.module.css */
+    .articleContainer { max-width: 700px; /* Optimal reading width */ /* ... */ }
+    .articleHeader {
+      margin-bottom: var(--space-xl);
+      border-bottom: none; /* Remove border if too much */
+      padding-bottom: 0;
+      text-align: center; /* Center header block */
+    }
+    .articleTitle {
+      font-size: 2rem; /* More restrained */
+      line-height: 1.3;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-sm);
+    }
+    .metaInfo { /* ... */ margin-bottom: var(--space-xl); } /* More space after meta */
+    .tagsContainer { display: none; } /* Hide tags for starkness */
+    .articleContent {
+      font-size: 1rem; /* Standard readable size */
+      line-height: 1.8; /* Generous line height */
+      color: var(--color-text-primary);
+    }
+    /* Ensure MDX elements (h2, h3, p, pre, code, blockquote) from globals.css
+       or specific overrides here look good with the Zenburn theme and stark aesthetic */
+    .articleContent h2 { font-size: 1.4rem; margin-top: var(--space-xl); color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em;}
+    .articleContent h3 { font-size: 1.2rem; margin-top: var(--space-lg); color: var(--color-text-secondary); }
+    .articleContent blockquote {
+        border-left: 2px solid var(--color-border); /* More subtle border */
+        /* ... */
+        color: var(--color-text-secondary);
+        font-size: 1rem; /* Match content font size */
+    }
