@@ -19,11 +19,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.className} bg-gray-900 text-gray-100 flex flex-col min-h-screen`}
-      >
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
+        {" "}
+        {/* Removed bg/text from body, it's in globals.css now */}
         <Header />
-        <main className="flex-grow container mx-auto p-4 py-8">{children}</main>
+        <main className="flex-grow container py-8">
+          {" "}
+          {/* Added .container and consistent padding */}
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

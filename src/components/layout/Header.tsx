@@ -1,23 +1,20 @@
-// components/layout/Header.tsx
+// src/components/layout/Header.tsx
 import Link from "next/link";
+import styles from "./Header.module.css";
 
 export default function Header() {
   return (
-    <header className="bg-gray-800 text-white p-4">
-      <nav className="container mx-auto flex justify-between">
-        <Link href="/" className="text-xl font-bold">
-          QRY.zone
+    <header className={styles.header}>
+      <nav className={`${styles.nav} container`}>
+        {" "}
+        {/* Add global .container class */}
+        <Link href="/" className={styles.logoLink}>
+          QRY.zone {/* Maybe Qube logo here later */}
         </Link>
-        <div>
-          <Link href="/blog" className="mr-4 hover:text-gray-300">
-            Blog
-          </Link>
-          <Link href="/experiments" className="mr-4 hover:text-gray-300">
-            Experiments
-          </Link>
-          <Link href="/about" className="hover:text-gray-300">
-            About Q
-          </Link>
+        <div className={styles.navLinks}>
+          <Link href="/blog">Blog</Link>
+          <Link href="/experiments">Experiments</Link>
+          <Link href="/about">About Q</Link>
         </div>
       </nav>
     </header>

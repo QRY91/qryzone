@@ -1,0 +1,39 @@
+/* src/components/layout/Header.module.css */
+.header {
+  background-color: var(--color-surface); /* Use surface color for header */
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nav {
+  /* Using .container class from globals.css for centering and max-width */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logoLink {
+  font-size: 1.5rem; /* ~24px */
+  font-weight: bold;
+  color: var(--color-text-primary); /* Ensure logo stands out */
+  text-decoration: none;
+}
+.logoLink:hover {
+  color: var(--color-accent); /* Or keep it primary on hover */
+  text-decoration: none;
+}
+
+.navLinks a {
+  margin-left: var(--space-lg); /* Spacing between nav links */
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.navLinks a:hover,
+.navLinks a:focus,
+.navLinks a.active {
+  /* You might add an 'active' class later with Next/Router */
+  color: var(--color-text-primary);
+  text-decoration: none; /* Remove underline for nav items, or add subtle one */
+}

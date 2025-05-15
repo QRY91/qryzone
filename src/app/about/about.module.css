@@ -1,0 +1,16 @@
+/* src/app/about/page.module.css */
+.aboutContent {
+  max-width: 750px; /* Or your preferred reading width */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.motto,
+.philosophy {
+  font-style: italic;
+  font-size: 1.1rem; /* Slightly larger for emphasis */
+  color: var(--color-text-secondary);
+  padding-left: var(--space-md);
+  border-left: 3px solid var(--color-accent);
+  margin-bottom: var(--space-lg);
+}
