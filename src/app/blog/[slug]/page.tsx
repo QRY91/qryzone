@@ -23,19 +23,9 @@ const components = {
   // Add other custom components to pass to MDXRemote if needed
 };
 
-// In src/app/blog/[slug]/page.tsx, temporarily modify:
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   console.log("Slug received:", params.slug); // Check if slug is correct
-  // const post = await getPostData(params.slug); // Comment out for a moment
-  const post = { // Mock post data
-    title: "Test Title for " + params.slug,
-    author: "Test Author",
-    date: new Date().toISOString(),
-    tags: ["test"],
-    content: "# Hello Test",
-    slug: params.slug,
-    excerpt: "Test excerpt"
-  };
+  const post = await getPostData(params.slug); // Real data now!
 
   return (
     <article className={styles.articleContainer}>
@@ -60,7 +50,6 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       </header>
 
       <div className={styles.articleContent}>
-        @ts-expect-error Server Component types with MDXRemote can be complex
         <MDXRemote source={post.content} components={components} />
       </div>
     </article>
