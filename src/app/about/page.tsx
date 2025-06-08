@@ -135,7 +135,7 @@ export default function AboutPage() {
             validation through IEEE-formatted report delivered in 16 hours.
           </p>
           <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>
-            <strong>Evidence:</strong> Live at panopticron.vercel.app/dashboard
+            <strong>Evidence:</strong> <a href="https://panopticron.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}>Live at panopticron.vercel.app</a>
           </p>
         </div>
 
@@ -153,7 +153,7 @@ export default function AboutPage() {
             a specific dysfunction I've experienced and documented.
           </p>
           <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>
-            <strong>Evidence:</strong> Active development at labs.qry.zone
+            <strong>Evidence:</strong> <a href="https://github.com/QRY91/qry" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}>Active development on GitHub</a>
           </p>
         </div>
 
@@ -171,7 +171,7 @@ export default function AboutPage() {
             into intuitive interactive systems.
           </p>
           <p style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)' }}>
-            <strong>Evidence:</strong> Playable prototype at arcade.qry.zone
+            <strong>Evidence:</strong> <a href="https://github.com/QRY91/quantum_dice" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}>Game development on GitHub</a>
           </p>
         </div>
       </section>
@@ -250,7 +250,7 @@ export default function AboutPage() {
           }}>
             glenn@qry.zone
           </a>
-          <a href="https://github.com/qryworkspace" style={{
+          <a href="https://github.com/QRY91" style={{
             color: 'var(--color-accent)',
             textDecoration: 'none',
             padding: 'var(--space-sm) var(--space-md)',
