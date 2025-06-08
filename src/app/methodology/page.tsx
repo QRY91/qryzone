@@ -273,7 +273,7 @@ export default function MethodologyPage() {
           justifyContent: 'center',
           flexWrap: 'wrap'
         }}>
-          <Link href="https://labs.qry.zone" style={{
+          <a href="https://github.com/QRY91" style={{
             color: 'var(--color-accent)',
             textDecoration: 'none',
             padding: 'var(--space-sm) var(--space-md)',
@@ -281,8 +281,8 @@ export default function MethodologyPage() {
             borderRadius: 'var(--border-radius)',
             background: 'var(--color-background)'
           }}>
-            See the tools →
-          </Link>
+            github.com/QRY91 →
+          </a>
           <Link href="/about" style={{
             color: 'var(--color-accent)',
             textDecoration: 'none',

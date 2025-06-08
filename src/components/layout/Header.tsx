@@ -19,9 +19,8 @@ export default function Header() {
           {/* <span className={styles.logoText}>QRY.zone</span> */}
         </Link>
         <div className={styles.navLinks}>
-          <Link href="/blog">Log</Link>
-          <Link href="/etch">Etch</Link>
-          <Link href="/about">Info</Link>
+          <Link href="/methodology">Methodology</Link>
+          <Link href="/about">About</Link>
         </div>
       </nav>
     </header>

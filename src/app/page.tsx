@@ -9,11 +9,27 @@ interface ProjectCardProps {
   approach: string;
   caution?: string;
   link: string;
-  external?: boolean;
+  linkStatus?: 'ready' | 'coming-soon' | 'external';
+  externalUrl?: string;
 }
 
-function ProjectCard({ name, status, problem, approach, caution, link, external = true }: ProjectCardProps) {
-  const href = external ? `https://${link}.qry.zone` : `/${link}`;
+function ProjectCard({ name, status, problem, approach, caution, link, linkStatus = 'ready', externalUrl }: ProjectCardProps) {
+  const getHref = () => {
+    if (linkStatus === 'external' && externalUrl) return externalUrl;
+    if (linkStatus === 'ready') return `https://${link}.qry.zone`;
+    return '#';
+  };
+
+  const getLinkText = () => {
+    if (linkStatus === 'external' && externalUrl) {
+      if (externalUrl.includes('github.com')) {
+        return `github.com/QRY91/${link} →`;
+      }
+      return `${externalUrl.replace('https://', '').replace('www.', '')} →`;
+    }
+    if (linkStatus === 'coming-soon') return `${link}.qry.zone (coming soon)`;
+    return `${link}.qry.zone →`;
+  };
   
   return (
     <div style={{
@@ -64,13 +80,23 @@ function ProjectCard({ name, status, problem, approach, caution, link, external 
       )}
       
       <div style={{ textAlign: 'right' }}>
-        <Link href={href} style={{
-          color: 'var(--color-accent)',
-          textDecoration: 'none',
-          fontSize: '0.9rem'
-        }}>
-          {external ? `${link}.qry.zone →` : `${link} →`}
-        </Link>
+        {linkStatus === 'coming-soon' ? (
+          <span style={{
+            color: 'var(--color-text-secondary)',
+            fontSize: '0.9rem',
+            fontStyle: 'italic'
+          }}>
+            {getLinkText()}
+          </span>
+        ) : (
+          <Link href={getHref()} style={{
+            color: 'var(--color-accent)',
+            textDecoration: 'none',
+            fontSize: '0.9rem'
+          }}>
+            {getLinkText()}
+          </Link>
+        )}
       </div>
     </div>
   );
@@ -134,6 +160,8 @@ export default function HomePage() {
             approach="Context capture that makes the development process undeniable"
             caution="Database schema still evolving - backup your captures"
             link="labs"
+            linkStatus="external"
+            externalUrl="https://www.uroboro.dev/"
           />
           
           <ProjectCard 
@@ -142,7 +170,9 @@ export default function HomePage() {
             problem="Alert systems that cry wolf vs ones that actually help you focus"
             approach="Local monitoring that learns your patterns without surveillance"
             caution="Only tested on my Linux setup so far"
-            link="labs"
+            link="doggowoof"
+            linkStatus="external"
+            externalUrl="https://github.com/QRY91/doggowoof"
           />
           
           <ProjectCard 
@@ -151,7 +181,9 @@ export default function HomePage() {
             problem="Developers becoming walking documentation, context switching costs"
             approach="Archaeological context preservation across work sessions"
             caution="Still figuring out the context retention algorithms"
-            link="labs"
+            link="wherewasi"
+            linkStatus="external"
+            externalUrl="https://github.com/QRY91/wherewasi"
           />
           
           <ProjectCard 
@@ -160,7 +192,9 @@ export default function HomePage() {
             problem="Using AI without losing your mind, authenticity, or professional credibility"
             approach="Systematic integration that builds capability rather than dependency"
             caution="Ethics and transparency still being worked out"
-            link="ai"
+            link="qry"
+            linkStatus="external"
+            externalUrl="https://github.com/QRY91/qry"
           />
           
           <ProjectCard 
@@ -168,7 +202,9 @@ export default function HomePage() {
             status="Documented & Playable"
             problem="Quantum mechanics concepts are hard to learn intuitively"
             approach="Dice game mechanics that make superposition feel natural"
-            link="arcade"
+            link="quantum-dice"
+            linkStatus="external"
+            externalUrl="https://github.com/QRY91/quantum-dice"
           />
         </div>
       </section>
@@ -245,7 +281,17 @@ export default function HomePage() {
           gap: 'var(--space-lg)',
           flexWrap: 'wrap'
         }}>
-          <a href="https://ai.qry.zone" style={{
+          <span style={{
+            color: 'var(--color-text-secondary)',
+            padding: 'var(--space-sm) var(--space-md)',
+            border: '1px solid var(--color-border)',
+            borderRadius: 'var(--border-radius)',
+            background: 'var(--color-surface)',
+            fontStyle: 'italic'
+          }}>
+            ai.qry.zone (coming soon)
+          </span>
+          <a href="https://github.com/QRY91" style={{
             color: 'var(--color-accent)',
             textDecoration: 'none',
             padding: 'var(--space-sm) var(--space-md)',
@@ -253,17 +299,7 @@ export default function HomePage() {
             borderRadius: 'var(--border-radius)',
             background: 'var(--color-surface)'
           }}>
-            How I work with AI →
-          </a>
-          <a href="https://labs.qry.zone" style={{
-            color: 'var(--color-accent)',
-            textDecoration: 'none',
-            padding: 'var(--space-sm) var(--space-md)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--border-radius)',
-            background: 'var(--color-surface)'
-          }}>
-            Developer tools →
+            github.com/QRY91 →
           </a>
           <Link href="/about" style={{
             color: 'var(--color-accent)',
