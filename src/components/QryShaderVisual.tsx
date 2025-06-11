@@ -105,7 +105,7 @@ export default function QryShaderVisual() {
           float scanlines = sin(uv.y * 800.0) * 0.5 + 0.5;
 
           // Hologram flicker
-          float flicker = sin(time * 60.0) * 0.1 + 0.9;
+          float flicker = sin(time * 160.0) * 0.1 + 0.9;
 
           // Base hologram color - using cyan/blue colors
           vec3 holoColor = vec3(0.0, 0.8, 1.0);
@@ -122,7 +122,7 @@ export default function QryShaderVisual() {
           color *= edge + 0.2;
 
           // Adjust opacity for transparency
-          float opacity = 0.7 * (edge + 0.3);
+          float opacity = 0.9 * (edge + 0.3);
 
           gl_FragColor = vec4(color, opacity);
         }
@@ -154,9 +154,9 @@ export default function QryShaderVisual() {
 
     const textureLoader = new THREE.TextureLoader();
 
-    // Load white logo texture
+    // Load black logo texture
     textureLoader.load(
-      "/logo_transparent_white_inverted.png", // Use white logo
+      "/logo_transparent_black_inverted.png", // Use white logo
       (texture) => {
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
@@ -170,7 +170,7 @@ export default function QryShaderVisual() {
       (error) => {
         console.error("Error loading logo texture:", error);
         // Try to load fallback
-        textureLoader.load("/q_wht_32.png", (texture) => {
+        textureLoader.load("/q_blk_32.png", (texture) => {
           createLogoCircle(texture);
           setLoaded(true);
         });
@@ -217,7 +217,7 @@ export default function QryShaderVisual() {
         map: logoTexture,
         transparent: true,
         side: THREE.DoubleSide,
-        opacity: 0.9,
+        opacity: 0.3,
         alphaTest: 0.1,
       });
 
