@@ -222,6 +222,7 @@ export default function QryShaderVisual() {
       );
 
       // Load the cube model
+      // Try to load the qube model
       const loadModel = () => {
         // Default cube geometry as fallback
         const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
@@ -233,9 +234,10 @@ export default function QryShaderVisual() {
         loader.load(
           "/qube.glb", // Place your model in the public folder
           (gltf) => {
+            const typedGltf = gltf as { scene: THREE.Object3D };
             if (model) scene.remove(model);
 
-            model = gltf.scene;
+            model = typedGltf.scene;
             model.traverse((child: THREE.Object3D) => {
               if ((child as THREE.Mesh).isMesh) {
                 (child as THREE.Mesh).material = material;
