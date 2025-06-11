@@ -59,7 +59,7 @@ export default function QryShaderVisual() {
     // Clock for animation
     const clock = new THREE.Clock();
 
-    // Hologram shader material
+    // Hologram shader material with Zenburn colors
     const createHologramMaterial = () => {
       // Vertex shader (simplified)
       const vertexShader = `
@@ -78,7 +78,7 @@ export default function QryShaderVisual() {
         }
       `;
 
-      // Hologram fragment shader
+      // Hologram fragment shader with Zenburn colors
       const fragmentShader = `
         uniform float u_time;
         uniform vec2 u_resolution;
@@ -88,41 +88,57 @@ export default function QryShaderVisual() {
         varying vec3 vPosition;
         varying vec3 vWorldPosition;
 
-        // Utility for color palette
-        vec3 palette(float t) {
-          vec3 a = vec3(0.5, 0.5, 0.5);
-          vec3 b = vec3(0.5, 0.5, 0.5);
-          vec3 c = vec3(1.0, 1.0, 1.0);
-          vec3 d = vec3(0.0, 0.33, 0.67);
-          return a + b * cos(6.28318 * (c * t + d));
+        // Color palette generator for Zenburn-inspired colors
+        vec3 zenburnPalette(float t) {
+          // Define Zenburn color palette
+          // Soft green, blue, red, orange, yellow
+          vec3 colors[5];
+          colors[0] = vec3(0.498, 0.624, 0.498);  // #7F9F7F - soft green
+          colors[1] = vec3(0.486, 0.722, 0.733);  // #7CB8BB - soft blue
+          colors[2] = vec3(0.800, 0.573, 0.573);  // #CC9393 - soft red
+          colors[3] = vec3(0.875, 0.686, 0.561);  // #DFAF8F - soft orange
+          colors[4] = vec3(0.941, 0.871, 0.686);  // #F0DFAF - soft yellow
+
+          // Smooth transition between colors based on time
+          float colorIndex = floor(t * 5.0);
+          float colorBlend = fract(t * 5.0);
+
+          // Get the two colors to blend between
+          int idx1 = int(mod(colorIndex, 5.0));
+          int idx2 = int(mod(colorIndex + 1.0, 5.0));
+
+          // Smoothly interpolate between the two colors
+          return mix(colors[idx1], colors[idx2], smoothstep(0.0, 1.0, colorBlend));
         }
 
         void main() {
           vec2 uv = vUv;
-          float time = u_time;
+          float time = u_time * 0.2; // Slow down the color changes
 
           // Hologram scanlines
           float scanlines = sin(uv.y * 800.0) * 0.5 + 0.5;
 
           // Hologram flicker
-          float flicker = sin(time * 160.0) * 0.1 + 0.9;
+          float flicker = sin(u_time * 60.0) * 0.05 + 0.95;
 
-          // Base hologram color - using cyan/blue colors
-          vec3 holoColor = vec3(0.0, 0.8, 1.0);
-
-          // Add some color shifting
-          holoColor = palette(time * 0.1 + uv.y);
+          // Get color from Zenburn palette
+          vec3 baseColor = zenburnPalette(time * 0.1 + uv.y * 0.2);
 
           // Edge detection for hologram effect
           float edge = 1.0 - abs(dot(vNormal, normalize(cameraPosition - vWorldPosition)));
-          edge = pow(edge, 2.0);
+          edge = pow(edge, 1.5); // Soften the edge effect slightly
 
           // Combine effects
-          vec3 color = holoColor * scanlines * flicker;
-          color *= edge + 0.2;
+          vec3 color = baseColor * scanlines * flicker;
+
+          // Add subtle pulse
+          float pulse = sin(u_time * 1.5) * 0.05 + 0.95;
+
+          // Edge glow effect using current palette color
+          color = mix(color, baseColor * 1.5, edge * pulse);
 
           // Adjust opacity for transparency
-          float opacity = 0.9 * (edge + 0.3);
+          float opacity = 0.7 * (edge + 0.3) * pulse;
 
           gl_FragColor = vec4(color, opacity);
         }
@@ -154,7 +170,7 @@ export default function QryShaderVisual() {
 
     const textureLoader = new THREE.TextureLoader();
 
-    // Load black logo texture
+    // Load white logo texture
     textureLoader.load(
       "/logo_transparent_black_inverted.png", // Use white logo
       (texture) => {
@@ -338,6 +354,7 @@ export default function QryShaderVisual() {
           position: "relative",
           // Add a thin border around the viewport
           border: "1px solid var(--color-border)",
+          borderRadius: "var(--border-radius)",
         }}
       >
         {!loaded && (
