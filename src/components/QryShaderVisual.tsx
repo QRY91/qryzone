@@ -18,13 +18,17 @@ export default function QryShaderVisual() {
 
     // Dynamically import Three.js modules
     const loadDependencies = async () => {
+      // Type declarations for the modules we'll import dynamically
+      type GLTFLoaderType = typeof import("three/examples/jsm/loaders/GLTFLoader");
+      type OrbitControlsType = typeof import("three/examples/jsm/controls/OrbitControls");
+
       // Dynamic imports that will be resolved at runtime, not build time
       const GLTFLoaderModule = await import(
         "three/examples/jsm/loaders/GLTFLoader"
-      );
+      ) as GLTFLoaderType;
       const OrbitControlsModule = await import(
         "three/examples/jsm/controls/OrbitControls"
-      );
+      ) as OrbitControlsType;
 
       const GLTFLoader = GLTFLoaderModule.GLTFLoader;
       const OrbitControls = OrbitControlsModule.OrbitControls;
@@ -33,7 +37,10 @@ export default function QryShaderVisual() {
     };
 
     // Initialize the scene with dynamically loaded modules
-    const initScene = (GLTFLoader: any, OrbitControls: any) => {
+    const initScene = (
+      GLTFLoader: new () => THREE.Loader,
+      OrbitControls: new (camera: THREE.Camera, domElement: HTMLElement) => any
+    ) => {
       // Scene setup
       const scene = new THREE.Scene();
       // Make scene background transparent
