@@ -193,7 +193,7 @@ export default function QryShaderVisual() {
       const material = createHologramMaterial();
 
       // Load model and create logo circle
-      let model: THREE.Group | null = null;
+      let model: THREE.Object3D | null = null;
       let logoObjects: THREE.Mesh[] = [];
 
       const textureLoader = new THREE.TextureLoader();
@@ -236,9 +236,9 @@ export default function QryShaderVisual() {
             if (model) scene.remove(model);
 
             model = gltf.scene;
-            model.traverse((child: any) => {
-              if (child.isMesh) {
-                child.material = material;
+            model.traverse((child: THREE.Object3D) => {
+              if ((child as THREE.Mesh).isMesh) {
+                (child as THREE.Mesh).material = material;
               }
             });
 

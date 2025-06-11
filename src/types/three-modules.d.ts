@@ -2,13 +2,57 @@
  * Type declarations for Three.js modules used in the project
  */
 
+// Define key Three.js types for better compatibility
+declare namespace THREE {
+  export interface Object3DEventMap {
+    [key: string]: any;
+  }
+
+  export interface Object3D<T extends Object3DEventMap = Object3DEventMap> {
+    position: Vector3;
+    rotation: Euler;
+    scale: Vector3;
+    userData: any;
+    
+    lookAt(target: Vector3 | Object3D): this;
+    traverse(callback: (object: Object3D) => void): void;
+    add(object: Object3D): this;
+    remove(object: Object3D): this;
+  }
+
+  export interface Material {
+    dispose(): void;
+  }
+
+  export interface Geometry {
+    dispose(): void;
+  }
+
+  export interface Mesh<
+    TGeometry extends Geometry = Geometry,
+    TMaterial extends Material = Material,
+    TEventMap extends Object3DEventMap = Object3DEventMap
+  > extends Object3D<TEventMap> {
+    isMesh: true;
+    geometry: TGeometry;
+    material: TMaterial;
+  }
+
+  export interface Group<T extends Object3DEventMap = Object3DEventMap> extends Object3D<T> {
+    isGroup: true;
+  }
+
+  export class Vector3 {}
+  export class Euler {}
+}
+
 // GLTFLoader module declaration
 declare module "three/examples/jsm/loaders/GLTFLoader" {
   import { Loader, Group, Object3D } from "three";
 
   export interface GLTF {
-    scene: Group;
-    scenes: Group[];
+    scene: THREE.Object3D;
+    scenes: THREE.Object3D[];
     animations: any[];
     cameras: any[];
     asset: any;
