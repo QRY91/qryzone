@@ -392,6 +392,16 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+      <div
+        style={{
+          display: "flex",
+          gap: "var(--space-lg)",
+          flexWrap: "wrap",
+          justifyContent: "center",
+        }}
+      >
+        <img src="/logo_animation.gif" alt="Logo Animation" />
+      </div>
     </div>
   );
 }
