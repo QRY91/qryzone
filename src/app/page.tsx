@@ -147,6 +147,7 @@ export default function HomePage() {
         maxWidth: "900px",
         margin: "0 auto",
         padding: "0 var(--space-md)",
+        lineHeight: "1.7",
       }}
     >
       {/* Hero with 3D shader visualization */}
@@ -162,8 +163,9 @@ export default function HomePage() {
         <h1
           style={{
             fontSize: "2rem",
-            marginBottom: "var(--space-md)",
-            color: "var(--color-text-primary)",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
           }}
         >
           I build tools that solve problems I&apos;ve documented.
@@ -173,6 +175,7 @@ export default function HomePage() {
             fontSize: "1.1rem",
             color: "var(--color-text-secondary)",
             lineHeight: "1.6",
+            marginBottom: "var(--space-md)",
           }}
         >
           Come on in, have a look around. Most things are safe to touch.
@@ -187,8 +190,7 @@ export default function HomePage() {
           style={{
             fontSize: "1.5rem",
             marginBottom: "var(--space-lg)",
-            color: "var(--color-accent)",
-            fontFamily: "var(--font-mono)",
+            color: "var(--color-text-primary)",
           }}
         >
           What&apos;s on the workbench:
@@ -263,7 +265,7 @@ export default function HomePage() {
       >
         <h2
           style={{
-            fontSize: "1.5rem",
+            fontSize: "1.3rem",
             marginBottom: "var(--space-lg)",
             color: "var(--color-accent)",
             fontFamily: "var(--font-mono)",
@@ -316,8 +318,7 @@ export default function HomePage() {
           style={{
             fontSize: "1.5rem",
             marginBottom: "var(--space-lg)",
-            color: "var(--color-accent)",
-            fontFamily: "var(--font-mono)",
+            color: "var(--color-text-primary)",
           }}
         >
           Fair warning
@@ -325,6 +326,7 @@ export default function HomePage() {
         <p
           style={{
             marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
             lineHeight: "1.6",
           }}
         >
@@ -336,8 +338,8 @@ export default function HomePage() {
         <p
           style={{
             marginBottom: "var(--space-lg)",
-            lineHeight: "1.6",
             color: "var(--color-text-secondary)",
+            lineHeight: "1.6",
           }}
         >
           If you&apos;re looking for the next viral app, wrong garage. If you

@@ -1,7 +1,7 @@
 // src/components/layout/Header.tsx
-import Link from 'next/link';
-import Image from 'next/image'; // Import Next.js Image component
-import styles from './Header.module.css';
+import Link from "next/link";
+import Image from "next/image"; // Import Next.js Image component
+import styles from "./Header.module.css";
 
 export default function Header() {
   return (
@@ -19,8 +19,14 @@ export default function Header() {
           {/* <span className={styles.logoText}>QRY.zone</span> */}
         </Link>
         <div className={styles.navLinks}>
+          <Link href="/site">Site</Link>
+          <Link href="/thinking">Thinking</Link>
+          <Link href="/journey">Journey</Link>
+          <Link href="/workshop">Workshop</Link>
+          <Link href="/explore">Explore</Link>
           <Link href="/methodology">Methodology</Link>
           <Link href="/about">About</Link>
+          <Link href="/errata">Errata</Link>
         </div>
       </nav>
     </header>

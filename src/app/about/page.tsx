@@ -210,7 +210,7 @@ export default function AboutPage() {
           >
             <strong>Evidence:</strong>{" "}
             <a
-              href="https://github.com/QRY91/qry"
+              href="https://github.com/QRY91/qryzone"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -365,6 +365,21 @@ export default function AboutPage() {
             }}
           >
             GitHub →
+          </a>
+          <a
+            href="https://www.bokondo.net/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: "var(--color-accent)",
+              textDecoration: "none",
+              padding: "var(--space-sm) var(--space-md)",
+              border: "1px solid var(--color-border)",
+              borderRadius: "var(--border-radius)",
+              background: "var(--color-background)",
+            }}
+          >
+            Professional Resume →
           </a>
         </div>
         <p
