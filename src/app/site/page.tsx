@@ -1,13 +1,12 @@
+import ArticleLayout, {
+  HotswapEdit,
+  HumanEditDiff,
+  InlineHumanEdit,
+} from "@/components/ArticleLayout";
+
 export default function SitePage() {
   return (
-    <div
-      style={{
-        maxWidth: "800px",
-        margin: "0 auto",
-        padding: "0 var(--space-md)",
-        lineHeight: "1.7",
-      }}
-    >
+    <ArticleLayout>
       <h1
         style={{
           fontSize: "2rem",
@@ -233,10 +232,17 @@ export default function SitePage() {
               🎯 Why This Works
             </h3>
             <p style={{ color: "#1976d2", marginBottom: "var(--space-md)" }}>
-              The bottleneck in knowledge transfer isn't having insights—it's
-              the time and effort required to communicate them clearly. AI
-              collaboration solves the communication bottleneck while preserving
-              the human insight that took years to develop.
+              <InlineHumanEdit
+                original="The bottleneck in knowledge transfer isn't having insights—it's
+                the time and effort required to communicate them clearly. AI
+                collaboration solves the communication bottleneck while
+                preserving the human insight that took years to develop."
+              >
+                In knowledge transfer, the bottleneck is in the time and effort
+                required for effective, consistent communication. AI solves the
+                consistency issue, but for the communication to be effective,
+                human intervention remains necessary.
+              </InlineHumanEdit>
             </p>
             <div
               style={{
@@ -542,10 +548,14 @@ export default function SitePage() {
             </strong>
           </div>
           <p style={{ color: "#92400e" }}>
-            The value isn't in the writing—it's in the systematic approaches
-            that took years to develop, test, and refine. AI collaboration just
-            removes the communication bottleneck that prevented sharing these
-            frameworks effectively.
+            <HotswapEdit
+              original="The value isn't in the writing—it's in the systematic approaches
+            that took years to develop, test, and refine."
+            >
+              The value is in sharing approaches that took years of experience
+              to distill and refine. Not the writing. AI collaboration
+              significantly lowers the threshold for sharing these frameworks.
+            </HotswapEdit>
           </p>
         </div>
       </section>
@@ -611,6 +621,6 @@ export default function SitePage() {
           </a>
         </div>
       </section>
-    </div>
+    </ArticleLayout>
   );
 }

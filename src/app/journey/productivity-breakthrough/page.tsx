@@ -1,15 +1,13 @@
 import Link from "next/link";
+import ArticleLayout, {
+  InlineHumanEdit,
+  HotswapEdit,
+  HotswapBlock,
+} from "@/components/ArticleLayout";
 
 export default function ProductivityBreakthrough() {
   return (
-    <div
-      style={{
-        maxWidth: "800px",
-        margin: "0 auto",
-        padding: "0 var(--space-md)",
-        lineHeight: "1.7",
-      }}
-    >
+    <ArticleLayout>
       <div style={{ marginBottom: "var(--space-xl)" }}>
         <Link
           href="/journey"
@@ -88,10 +86,19 @@ export default function ProductivityBreakthrough() {
 
         <p style={{ marginBottom: "var(--space-lg)" }}>
           A conscious move away from activities like gaming toward "hacking
-          together stuff" and actively building projects. This wasn't abandoning
+          together stuff" and actively building projects.{" "}
+          <InlineHumanEdit
+            original="This wasn't abandoning
           previous interests — it was recognizing that the systematic analysis
           and deep practice skills developed elsewhere could transfer to
-          software development.
+          software development."
+          >
+            I had a much easier time executing on ideas by leveraging my natural
+            language skills in AI collaboration in combination with my
+            understanding of game state systems. If you've ever tried to break a
+            dialogue tree in an RPG just to see if there's any funny responses,
+            you know what I mean.
+          </InlineHumanEdit>
         </p>
 
         <h3
@@ -184,10 +191,16 @@ export default function ProductivityBreakthrough() {
           Bypassing the Tutorial Slog
         </h3>
         <p style={{ marginBottom: "var(--space-lg)" }}>
-          AI tools helped bypass the "tutorial slog"—a common momentum killer
-          when starting new projects. Instead of getting stuck in setup phases,
-          I could immediately engage with the interesting complexity that
-          actually maintains motivation and drives learning.
+          AI tools helped bypass{" "}
+          <HotswapEdit
+            original="the 'tutorial slog'—a common momentum killer
+          when starting new projects"
+          >
+            "tutorial hell"
+          </HotswapEdit>
+          . Instead of getting stuck in setup phases, I could immediately engage
+          with the interesting complexity that actually maintains motivation and
+          drives learning.
         </p>
 
         <h3
@@ -336,10 +349,20 @@ export default function ProductivityBreakthrough() {
             GitHub Activity as Professional Proof
           </h3>
           <p style={{ marginBottom: "var(--space-md)" }}>
-            The GitHub contribution graph serves as compelling visual evidence
+            <HotswapBlock
+              original="The GitHub contribution graph serves as compelling visual evidence
             of sustained engagement, proactive learning, and genuine passion for
             the craft. Daily commits tell the story better than any resume
-            bullet point.
+            bullet point."
+            >
+              This GitHub graph shows a distinct spike in activity once I
+              started using AI more intensively. The threshold for
+              experimentation was suddenly so low, that I found myself
+              continuously building out ideas that I'd had floating around for
+              ages. A GitHub contribution graph is easily manipulated,
+              obviously. I could write my name if I prefer. Regardless, I found
+              this sudden change worth noting.
+            </HotswapBlock>
           </p>
           <p>
             <strong>Profile:</strong>{" "}
@@ -653,6 +676,6 @@ export default function ProductivityBreakthrough() {
           </Link>
         </div>
       </section>
-    </div>
+    </ArticleLayout>
   );
 }
