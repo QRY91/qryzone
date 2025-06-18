@@ -218,78 +218,6 @@ export default function JourneyPage() {
         />
       </section>
 
-      <section style={{ marginBottom: "var(--space-xxl)" }}>
-        <h2
-          style={{
-            fontSize: "1.5rem",
-            marginBottom: "var(--space-lg)",
-            color: "var(--color-text-primary)",
-          }}
-        >
-          AI Collaboration Learning
-        </h2>
-
-        <JourneyCard
-          title="AI Development Journey"
-          description="From skeptic to systematic collaborator: evolving AI integration methodology. Personal evolution from AI experimentation to systematic collaboration and tool building."
-          href="/journey/ai-development-narrative"
-          tags={["ai", "collaboration", "methodology"]}
-          status="coming-soon"
-        />
-
-        <JourneyCard
-          title="AI Hyperresponder Characteristics"
-          description="Analysis of individuals who get disproportionate benefits from AI collaboration. Pattern recognition, systematic thinking, and transparent integration approaches."
-          href="/journey/ai-hyperresponder"
-          tags={["ai", "productivity", "analysis"]}
-          status="coming-soon"
-        />
-
-        <JourneyCard
-          title="Building AI Capability vs Dependency"
-          description="Strategic approach to AI integration that enhances rather than replaces human capability. Documentation requirements, transparency principles, and ethical considerations."
-          href="/journey/ai-capability-building"
-          tags={["ai", "capability", "ethics"]}
-          status="coming-soon"
-        />
-      </section>
-
-      <section style={{ marginBottom: "var(--space-xxl)" }}>
-        <h2
-          style={{
-            fontSize: "1.5rem",
-            marginBottom: "var(--space-lg)",
-            color: "var(--color-text-primary)",
-          }}
-        >
-          Systematic Learning Methods
-        </h2>
-
-        <JourneyCard
-          title="NixOS Learning Roadmap"
-          description="Systematic approach to learning declarative system configuration and reproducible environments. Strategic learning methodology from concepts to production-ready configurations."
-          href="/journey/nixos-learning-roadmap"
-          tags={["learning", "nixos", "systematic"]}
-          status="coming-soon"
-        />
-
-        <JourneyCard
-          title="Documentation as Learning Tool"
-          description="Using systematic documentation to accelerate learning and knowledge retention. Converting experience into transferable knowledge through transparent capture."
-          href="/journey/documentation-learning"
-          tags={["documentation", "learning", "knowledge"]}
-          status="coming-soon"
-        />
-
-        <JourneyCard
-          title="Learning Through Institutional Dysfunction"
-          description="Converting toxic work experiences into systematic knowledge. How organizational trauma becomes strategic understanding and capability building."
-          href="/journey/learning-through-dysfunction"
-          tags={["learning", "organizations", "resilience"]}
-          status="coming-soon"
-        />
-      </section>
-
       <section
         style={{
           background: "var(--color-surface)",
@@ -374,7 +302,7 @@ export default function JourneyPage() {
           }}
         >
           <Link
-            href="/thinking"
+            href="/site"
             style={{
               color: "var(--color-accent)",
               textDecoration: "none",
@@ -384,10 +312,10 @@ export default function JourneyPage() {
               background: "var(--color-background)",
             }}
           >
-            Strategic Thinking →
+            How This Site Was Built →
           </Link>
           <Link
-            href="/workshop"
+            href="/methodology"
             style={{
               color: "var(--color-accent)",
               textDecoration: "none",
@@ -397,7 +325,7 @@ export default function JourneyPage() {
               background: "var(--color-background)",
             }}
           >
-            Process Documentation →
+            Systematic Methodology →
           </Link>
           <Link
             href="/explore"

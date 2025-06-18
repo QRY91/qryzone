@@ -75,14 +75,8 @@ export default function Header() {
             <Link href="/site" onClick={closeMobileMenu}>
               Site
             </Link>
-            <Link href="/thinking" onClick={closeMobileMenu}>
-              Thinking
-            </Link>
             <Link href="/journey" onClick={closeMobileMenu}>
               Journey
-            </Link>
-            <Link href="/workshop" onClick={closeMobileMenu}>
-              Workshop
             </Link>
             <Link href="/explore" onClick={closeMobileMenu}>
               Explore
