@@ -24,11 +24,13 @@ export default function MethodologyPage() {
             color: "var(--color-text-secondary)",
           }}
         >
-          <InlineHumanEdit original="The QRY methodology isn't revolutionary. It's just systematic."></InlineHumanEdit>{" "}
+          <InlineHumanEdit original="The QRY methodology isn't revolutionary. It's just systematic.">
+            {" "}
+          </InlineHumanEdit>{" "}
           When you encounter problems repeatedly, you can either keep
           complaining or start documenting patterns and building better
           solutions.{" "}
-          <InlineHumanEdit>
+          <InlineHumanEdit original="">
             I chose the latter. I only complain recreationally. Promise.
           </InlineHumanEdit>
         </p>
