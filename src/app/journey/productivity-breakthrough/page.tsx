@@ -2,35 +2,91 @@ import Link from "next/link";
 
 export default function ProductivityBreakthrough() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-8">
+    <div
+      style={{
+        maxWidth: "800px",
+        margin: "0 auto",
+        padding: "0 var(--space-md)",
+        lineHeight: "1.7",
+      }}
+    >
+      <div style={{ marginBottom: "var(--space-xl)" }}>
         <Link
           href="/journey"
-          className="text-blue-600 hover:text-blue-800 mb-4 inline-block"
+          style={{
+            color: "var(--color-accent)",
+            textDecoration: "none",
+            marginBottom: "var(--space-md)",
+            display: "inline-block",
+          }}
         >
           ← Back to Learning Journey
         </Link>
-        <h1 className="text-4xl font-bold mb-4">Productivity Breakthrough</h1>
-        <p className="text-xl text-gray-600 mb-6">
+        <h1
+          style={{
+            fontSize: "2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Productivity Breakthrough
+        </h1>
+        <p
+          style={{
+            fontSize: "1.1rem",
+            color: "var(--color-text-secondary)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
           From consumption to creation: how transferable skills and AI catalyzed
           sustained development flow
         </p>
       </div>
 
-      <div className="prose prose-lg max-w-none">
-        <div className="bg-blue-50 p-6 rounded-lg mb-8">
-          <h2 className="text-2xl font-semibold mb-4">The Narrative Core</h2>
-          <p>
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <div
+          style={{
+            background: "#e0f2fe",
+            borderLeft: "4px solid #0284c7",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-xl)",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "1.3rem",
+              fontWeight: "600",
+              color: "#0369a1",
+              marginBottom: "var(--space-md)",
+              fontFamily: "var(--font-mono)",
+            }}
+          >
+            The Narrative Core
+          </h2>
+          <p style={{ color: "#0c4a6e" }}>
             Something clicked. Years of exploring game mechanics and studying
             complex systems finally made the leap to hands-on learning and
             building to learn. The result: sustained GitHub activity, intrinsic
             motivation, and genuine fun in the creative process.
           </p>
         </div>
+      </section>
 
-        <h2>The Shift: From Consumption to Creation</h2>
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          The Shift: From Consumption to Creation
+        </h2>
 
-        <p>
+        <p style={{ marginBottom: "var(--space-lg)" }}>
           A conscious move away from activities like gaming toward "hacking
           together stuff" and actively building projects. This wasn't abandoning
           previous interests — it was recognizing that the systematic analysis
@@ -38,253 +94,565 @@ export default function ProductivityBreakthrough() {
           software development.
         </p>
 
-        <h3>The "Aha!" Moment: Transferable Skills Unleashed</h3>
-        <div className="bg-green-50 p-6 rounded-lg mb-6">
-          <h4 className="font-semibold mb-3">
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          The "Aha!" Moment: Transferable Skills Unleashed
+        </h3>
+        <div
+          style={{
+            background: "#f0fdf4",
+            borderLeft: "4px solid #16a34a",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <h4
+            style={{
+              fontWeight: "600",
+              marginBottom: "var(--space-md)",
+              color: "#15803d",
+            }}
+          >
             Skills That Transferred from Gaming to Development:
           </h4>
-          <ul className="space-y-2">
-            <li>
+          <ul style={{ marginBottom: "var(--space-md)" }}>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
               <strong>Systematic analysis:</strong> Breaking down complex
               systems to understand mechanics
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
               <strong>Pattern recognition:</strong> Identifying optimal
               approaches and efficiency patterns
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
               <strong>Deep practice and iteration:</strong> Grinding
               improvements through repetition
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
               <strong>Problem-solving persistence:</strong> Working through
               challenging scenarios systematically
             </li>
           </ul>
-          <p className="mt-4 text-sm text-gray-600">
-            "The hours of studying systems in games finally made the leap to
-            hands on learning and building to learn."
-          </p>
+          <div
+            style={{
+              background: "#dcfce7",
+              padding: "var(--space-md)",
+              borderRadius: "var(--border-radius)",
+              border: "1px solid #bbf7d0",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "0.9rem",
+                color: "#166534",
+                fontStyle: "italic",
+                margin: 0,
+              }}
+            >
+              "The hours of studying systems in games finally made the leap to
+              hands on learning and building to learn."
+            </p>
+          </div>
         </div>
+      </section>
 
-        <h2>AI as Catalyst and Enabler</h2>
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          AI as Catalyst and Enabler
+        </h2>
 
-        <h3>Bypassing the Tutorial Slog</h3>
-        <p>
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Bypassing the Tutorial Slog
+        </h3>
+        <p style={{ marginBottom: "var(--space-lg)" }}>
           AI tools helped bypass the "tutorial slog"—a common momentum killer
           when starting new projects. Instead of getting stuck in setup phases,
           I could immediately engage with the interesting complexity that
           actually maintains motivation and drives learning.
         </p>
 
-        <h3>The "Always On" Partner</h3>
-        <div className="bg-yellow-50 p-6 rounded-lg mb-6">
-          <p className="font-semibold mb-2">Key Insight:</p>
-          <p>
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          The "Always On" Partner
+        </h3>
+        <div
+          style={{
+            background: "#fef3c7",
+            borderLeft: "4px solid #f59e0b",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <p
+            style={{
+              fontWeight: "600",
+              marginBottom: "var(--space-sm)",
+              color: "#92400e",
+            }}
+          >
+            Key Insight:
+          </p>
+          <p style={{ color: "#92400e", marginBottom: "var(--space-md)" }}>
             AI acts as an always on board and encouraging partner. Even when it
             leads to experimental "lemming" moments where we go off the cliff,
             there's fun and learning all the way down. This resilience and humor
             about experimentation became part of the enjoyment.
           </p>
-          <p className="mt-3 text-sm italic">
-            "Sure we go off the cliff like lemmings sometimes, but I'm having
-            fun all the way down!"
-          </p>
+          <div
+            style={{
+              background: "#fde68a",
+              padding: "var(--space-md)",
+              borderRadius: "var(--border-radius)",
+              border: "1px solid #fcd34d",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "0.9rem",
+                color: "#78350f",
+                fontStyle: "italic",
+                margin: 0,
+              }}
+            >
+              "Sure we go off the cliff like lemmings sometimes, but I'm having
+              fun all the way down!"
+            </p>
+          </div>
         </div>
+      </section>
 
-        <h2>Intrinsic Motivation Discovery</h2>
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Intrinsic Motivation Discovery
+        </h2>
 
-        <h3>Joy-Driven Development</h3>
-        <p>
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Joy-Driven Development
+        </h3>
+        <p style={{ marginBottom: "var(--space-lg)" }}>
           The drive to build became primarily intrinsic and joy-driven.
           "Couldn't stop hacking" and "having fun??" became the actual
           experience rather than forced productivity. This signals genuine
           engagement rather than external pressure responses.
         </p>
 
-        <h3>Flow State Achievement</h3>
-        <ul>
-          <li>
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Flow State Achievement
+        </h3>
+        <ul style={{ marginBottom: "var(--space-lg)" }}>
+          <li style={{ marginBottom: "var(--space-sm)" }}>
             <strong>Proactive engagement:</strong> Building beyond requirements
             and exploring independently
           </li>
-          <li>
+          <li style={{ marginBottom: "var(--space-sm)" }}>
             <strong>Sustained effort:</strong> Daily activity rather than
             sporadic bursts
           </li>
-          <li>
+          <li style={{ marginBottom: "var(--space-sm)" }}>
             <strong>Deep learning integration:</strong> Building to learn rather
             than learning to build
           </li>
-          <li>
+          <li style={{ marginBottom: "var(--space-sm)" }}>
             <strong>Natural motivation:</strong> Intrinsic drive rather than
             external validation seeking
           </li>
         </ul>
+      </section>
 
-        <h2>Visual Evidence: The GitHub Story</h2>
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Visual Evidence: The GitHub Story
+        </h2>
 
-        <div className="bg-blue-50 p-6 rounded-lg mb-6">
-          <h3 className="font-semibold mb-3">
+        <div
+          style={{
+            background: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            padding: "var(--space-xl)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "1.2rem",
+              fontWeight: "600",
+              marginBottom: "var(--space-md)",
+              color: "var(--color-accent)",
+              fontFamily: "var(--font-mono)",
+            }}
+          >
             GitHub Activity as Professional Proof
           </h3>
-          <p>
+          <p style={{ marginBottom: "var(--space-md)" }}>
             The GitHub contribution graph serves as compelling visual evidence
             of sustained engagement, proactive learning, and genuine passion for
             the craft. Daily commits tell the story better than any resume
             bullet point.
           </p>
-          <p className="mt-3">
+          <p>
             <strong>Profile:</strong>{" "}
             <a
               href="https://github.com/QRY91"
-              className="text-blue-600 hover:text-blue-800"
+              style={{
+                color: "var(--color-accent)",
+                textDecoration: "none",
+              }}
             >
               github.com/QRY91
             </a>
           </p>
         </div>
+      </section>
 
-        <h2>Professional Narrative Framework</h2>
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Professional Narrative Framework
+        </h2>
 
-        <h3>Authenticity Over Generic Statements</h3>
-        <p>
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Authenticity Over Generic Statements
+        </h3>
+        <p style={{ marginBottom: "var(--space-lg)" }}>
           This personal journey narrative is more compelling than generic
           passion statements because it's specific, measurable, and demonstrates
           genuine transformation. The story shows rather than tells professional
           capability.
         </p>
 
-        <h3>Interview-Ready Elements</h3>
-        <div className="bg-gray-50 p-6 rounded-lg mb-6">
-          <h4 className="font-semibold mb-3">Key Story Components:</h4>
-          <ol className="space-y-2">
-            <li>
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Interview-Ready Elements
+        </h3>
+        <div
+          style={{
+            background: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <h4
+            style={{
+              fontWeight: "600",
+              marginBottom: "var(--space-md)",
+              color: "var(--color-text-primary)",
+            }}
+          >
+            Key Story Components:
+          </h4>
+          <ol>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
               <strong>The "click" moment:</strong> Skills from other domains
               transferring to development
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
               <strong>AI as barrier removal:</strong> How tools helped overcome
               initial friction
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
               <strong>Experimental resilience:</strong> Comfort with failure and
               iteration
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
               <strong>Specific project connections:</strong> Linking motivation
               to concrete work (Uroboro, Examinator, Panopticron)
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
               <strong>Visual evidence:</strong> GitHub activity supporting the
               narrative
             </li>
           </ol>
         </div>
+      </section>
 
-        <h2>Adapting This Framework</h2>
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Adapting This Framework
+        </h2>
 
-        <h3>For Individual Breakthrough Recognition</h3>
-        <div className="bg-gray-50 p-6 rounded-lg mb-6">
-          <ol className="space-y-3">
-            <li>
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          For Individual Breakthrough Recognition
+        </h3>
+        <div
+          style={{
+            background: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <ol>
+            <li style={{ marginBottom: "var(--space-md)" }}>
               <strong>Identify transferable skills:</strong> What systematic
               approaches do you use in other areas?
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
               <strong>Recognize catalyst moments:</strong> When did tools or
               environments unlock your natural patterns?
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
               <strong>Document intrinsic motivation:</strong> What activities
               feel genuinely engaging vs. forced?
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
               <strong>Collect visual evidence:</strong> How does your work
               pattern demonstrate sustained engagement?
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
               <strong>Frame authenticity:</strong> What's your specific story
               rather than generic statements?
             </li>
           </ol>
         </div>
 
-        <h3>For Teams Supporting Breakthrough</h3>
-        <ul>
-          <li>
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          For Teams Supporting Breakthrough
+        </h3>
+        <ul style={{ marginBottom: "var(--space-lg)" }}>
+          <li style={{ marginBottom: "var(--space-sm)" }}>
             <strong>Remove tutorial barriers:</strong> Help people engage with
             interesting complexity quickly
           </li>
-          <li>
+          <li style={{ marginBottom: "var(--space-sm)" }}>
             <strong>Support experimental approaches:</strong> Create safe spaces
             for "lemming moments"
           </li>
-          <li>
+          <li style={{ marginBottom: "var(--space-sm)" }}>
             <strong>Recognize transferable skills:</strong> Value systematic
             thinking from any domain
           </li>
-          <li>
+          <li style={{ marginBottom: "var(--space-sm)" }}>
             <strong>Encourage intrinsic motivation:</strong> Let people find
             their natural engagement patterns
           </li>
         </ul>
+      </section>
 
-        <h2>Key Insights</h2>
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Key Insights
+        </h2>
 
-        <div className="bg-blue-50 p-6 rounded-lg">
-          <ul className="space-y-3">
-            <li>
+        <div
+          style={{
+            background: "#e0f2fe",
+            border: "1px solid #0ea5e9",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <ul>
+            <li style={{ marginBottom: "var(--space-md)" }}>
               <strong>Skills transfer systematically:</strong> Deep practice
               patterns apply across domains
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
               <strong>Barriers matter more than motivation:</strong> Removing
               friction unlocks natural engagement
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
               <strong>Intrinsic joy drives sustainability:</strong> Fun creates
               better long-term outcomes than discipline
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
               <strong>Visual evidence supports narrative:</strong> Activity
               patterns tell compelling professional stories
             </li>
-            <li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
               <strong>Authenticity beats generic positioning:</strong> Specific
               transformation stories demonstrate genuine capability
             </li>
           </ul>
         </div>
+      </section>
 
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <h3 className="text-lg font-semibold mb-4">
-            Related Learning Journey
-          </h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            <Link
-              href="/journey/professional-identity"
-              className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100"
+      <section
+        style={{
+          marginTop: "var(--space-xxl)",
+          paddingTop: "var(--space-xl)",
+          borderTop: "1px solid var(--color-border)",
+        }}
+      >
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            fontWeight: "600",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Related Learning Journey
+        </h3>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "var(--space-md)",
+          }}
+        >
+          <Link
+            href="/journey/professional-identity"
+            style={{
+              display: "block",
+              padding: "var(--space-md)",
+              background: "var(--color-surface)",
+              border: "1px solid var(--color-border)",
+              borderRadius: "var(--border-radius)",
+              textDecoration: "none",
+              color: "inherit",
+            }}
+          >
+            <h4
+              style={{
+                fontWeight: "600",
+                marginBottom: "var(--space-sm)",
+                color: "var(--color-text-primary)",
+              }}
             >
-              <h4 className="font-semibold">
-                Professional Identity Architecture
-              </h4>
-              <p className="text-sm text-gray-600">
-                From institutional trauma to systematic solutions
-              </p>
-            </Link>
-            <Link
-              href="/journey/systematic-career-growth"
-              className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100"
+              Professional Identity Architecture
+            </h4>
+            <p
+              style={{
+                fontSize: "0.9rem",
+                color: "var(--color-text-secondary)",
+                margin: 0,
+              }}
             >
-              <h4 className="font-semibold">Systematic Career Growth</h4>
-              <p className="text-sm text-gray-600">
-                Quantified accomplishments and multi-domain mastery
-              </p>
-            </Link>
-          </div>
+              From institutional trauma to systematic solutions
+            </p>
+          </Link>
+          <Link
+            href="/journey/systematic-career-growth"
+            style={{
+              display: "block",
+              padding: "var(--space-md)",
+              background: "var(--color-surface)",
+              border: "1px solid var(--color-border)",
+              borderRadius: "var(--border-radius)",
+              textDecoration: "none",
+              color: "inherit",
+            }}
+          >
+            <h4
+              style={{
+                fontWeight: "600",
+                marginBottom: "var(--space-sm)",
+                color: "var(--color-text-primary)",
+              }}
+            >
+              Systematic Career Growth
+            </h4>
+            <p
+              style={{
+                fontSize: "0.9rem",
+                color: "var(--color-text-secondary)",
+                margin: 0,
+              }}
+            >
+              Quantified accomplishments and multi-domain mastery
+            </p>
+          </Link>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
