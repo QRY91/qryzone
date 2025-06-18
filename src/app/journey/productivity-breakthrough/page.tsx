@@ -282,9 +282,14 @@ export default function ProductivityBreakthrough() {
         </h3>
         <p style={{ marginBottom: "var(--space-lg)" }}>
           The drive to build became primarily intrinsic and joy-driven.
-          "Couldn't stop hacking" and "having fun??" became the actual
+          <InlineHumanEdit
+            original={`"Couldn't stop hacking" and "having fun??" became the actual
           experience rather than forced productivity. This signals genuine
-          engagement rather than external pressure responses.
+          engagement rather than external pressure responses.`}
+          >
+            I couldn't stop hacking together solutions, and having a blast in
+            the process!
+          </InlineHumanEdit>
         </p>
 
         <h3
@@ -588,7 +593,7 @@ export default function ProductivityBreakthrough() {
         </div>
       </section>
 
-      <section
+      {/* <section
         style={{
           marginTop: "var(--space-xxl)",
           paddingTop: "var(--space-xl)",
@@ -662,7 +667,7 @@ export default function ProductivityBreakthrough() {
                 color: "var(--color-text-primary)",
               }}
             >
-              Systematic Career Growth
+              Systematic Career Growth (coming soon)
             </h4>
             <p
               style={{
@@ -675,7 +680,7 @@ export default function ProductivityBreakthrough() {
             </p>
           </Link>
         </div>
-      </section>
+      </section> */}
     </ArticleLayout>
   );
 }
