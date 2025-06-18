@@ -1,164 +1,577 @@
-import Link from 'next/link'
+import Link from "next/link";
 
 export default function ProfessionalIdentity() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <Link href="/journey" className="text-blue-600 hover:text-blue-800 mb-4 inline-block">
+    <div
+      style={{
+        maxWidth: "800px",
+        margin: "0 auto",
+        padding: "0 var(--space-md)",
+        lineHeight: "1.7",
+      }}
+    >
+      <div style={{ marginBottom: "var(--space-xl)" }}>
+        <Link
+          href="/journey"
+          style={{
+            color: "var(--color-accent)",
+            textDecoration: "none",
+            marginBottom: "var(--space-md)",
+            display: "inline-block",
+          }}
+        >
           ← Back to Learning Journey
         </Link>
-        <h1 className="text-4xl font-bold mb-4">Professional Identity Architecture</h1>
-        <p className="text-xl text-gray-600 mb-6">
-          From institutional trauma to systematic solutions: building authentic professional identity
+        <h1
+          style={{
+            fontSize: "2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Professional Identity Architecture
+        </h1>
+        <p
+          style={{
+            fontSize: "1.1rem",
+            color: "var(--color-text-secondary)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          From institutional trauma to systematic solutions: building authentic
+          professional identity as a systematic problem-solver
         </p>
       </div>
 
-      <div className="prose prose-lg max-w-none">
-        <div className="bg-blue-50 p-6 rounded-lg mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Core Identity Discovery</h2>
-          <p className="text-lg font-medium">
-            "Software developer who builds systematic solutions to documented problems"
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <div
+          style={{
+            background: "#e0f2fe",
+            borderLeft: "4px solid #0284c7",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-xl)",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "1.3rem",
+              fontWeight: "600",
+              color: "#0369a1",
+              marginBottom: "var(--space-md)",
+              fontFamily: "var(--font-mono)",
+            }}
+          >
+            Core Identity Discovery
+          </h2>
+          <p
+            style={{
+              fontSize: "1.1rem",
+              fontWeight: "600",
+              color: "#0c4a6e",
+              marginBottom: "var(--space-md)",
+            }}
+          >
+            "Software developer who builds systematic solutions to documented
+            problems"
           </p>
-          <p className="mt-3">
-            This wasn't constructed—it was recognized. Years of consistent choices and tools revealed
-            an existing systematic developer identity that just needed amplification, not creation.
+          <p style={{ color: "#0c4a6e" }}>
+            This identity crystallized after years of institutional dysfunction.
+            The breakthrough wasn't creating new identity—it was recognizing
+            existing patterns and systematic approaches I'd developed as
+            survival mechanisms.
           </p>
         </div>
+      </section>
 
-        <h2>The Philosophical Foundation</h2>
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          The Identity Evolution Process
+        </h2>
 
-        <div className="bg-gray-50 p-6 rounded-lg mb-6">
-          <blockquote className="text-lg italic border-l-4 border-blue-500 pl-4">
-            "I learn to spite those who punish it. If I can suffer and learn and build systems
-            that prevent others from experiencing that dysfunction, then the suffering has become valuable.
-            If I die with the knowledge, the systems never get built, and the dysfunction repeats."
-          </blockquote>
-        </div>
-
-        <p>
-          This philosophy emerged from recognizing a pattern: organizations extract value while providing
-          zero mentorship, then criticize those who clean up knowledge gaps. The response isn't bitterness—it's
-          systematic solution building that protects future developers from the same dysfunction.
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Phase 1: Survival Mechanisms
+        </h3>
+        <p style={{ marginBottom: "var(--space-lg)" }}>
+          During toxic work environments, I developed systematic documentation
+          habits as self-defense against gaslighting. What felt like paranoid
+          record-keeping was actually building evidence-based problem-solving
+          skills.
         </p>
 
-        <h2>The Pattern: Institutional Trauma → Systematic Solutions</h2>
-
-        <h3>Recognizing the Cycle</h3>
-        <p>
-          What I initially experienced as "intellectual vampirism"—being drained by systems that take
-          knowledge without giving it—became the foundation for systematic thinking. The trauma response
-          was learning: document everything, build systems, prevent others from experiencing the same gaps.
-        </p>
-
-        <h3>The Systematic Advantage</h3>
-        <div className="bg-green-50 p-6 rounded-lg mb-6">
-          <h4 className="font-semibold mb-3">The Systematic Thinking "Curse"</h4>
-          <p>
-            The systematic anxiety that drives continuous improvement and knowledge infrastructure creation
-            is exhausting to live with, but it becomes a professional superpower. What feels like overthinking
-            is actually comprehensive solution architecture.
-          </p>
-          <p className="mt-3 text-sm text-gray-600">
-            Example: At Mileviewer, "learning to survive" when institutional knowledge walked out became
-            systematic knowledge replenishment—making it the sole company survivor.
-          </p>
-        </div>
-
-        <h2>Meta-Insights: The Identity Architecture</h2>
-
-        <h3>The Defiant Proof Builder</h3>
-        <p>
-          There's a "DENY THIS!" mentality toward achievements that drives systematic documentation and
-          evidence collection. Not arrogance—defiance against systems that dismiss capability without evidence.
-        </p>
-
-        <h3>Systematic Development DNA</h3>
-        <p>
-          The same approach appears whether coding, gaming, or learning. This consistency across domains
-          wasn't intentional—it was recognition of an existing systematic thinking pattern that predated
-          professional development.
-        </p>
-
-        <h2>Systematic Authenticity Architecture</h2>
-
-        <div className="bg-blue-50 p-6 rounded-lg mb-6">
-          <h3 className="font-semibold mb-3">The Professional Breakthrough</h3>
-          <p>
-            Every choice systematically reinforced authentic identity—from development tools to gaming
-            preferences to visual branding. This wasn't constructing a professional persona; it was
-            systematic authenticity architecture built over years of consistent identity development.
-          </p>
-          <p className="mt-3">
-            The breakthrough wasn't creating new identity—it was recognizing and amplifying the systematic
-            developer identity that already existed in every choice and tool.
-          </p>
-        </div>
-
-        <h2>Adapting This Framework</h2>
-
-        <h3>For Individual Identity Development</h3>
-        <div className="bg-gray-50 p-6 rounded-lg mb-6">
-          <ol className="space-y-3">
-            <li><strong>Audit your consistent patterns</strong> - What approaches do you use across different domains?</li>
-            <li><strong>Recognize existing identity</strong> - Don't construct; amplify what's already there</li>
-            <li><strong>Document your philosophy</strong> - What drives your systematic approaches?</li>
-            <li><strong>Transform trauma into systems</strong> - How can your difficult experiences prevent others' pain?</li>
-            <li><strong>Build evidence systematically</strong> - Create "deny this!" proof of your capabilities</li>
-          </ol>
-        </div>
-
-        <h3>For Organizations Supporting Identity Development</h3>
-        <ul>
-          <li><strong>Recognize systematic thinkers:</strong> The "overthinking" employee might be your solution architect</li>
-          <li><strong>Provide mentorship infrastructure:</strong> Don't create knowledge vampires; build knowledge systems</li>
-          <li><strong>Document institutional knowledge:</strong> Prevent survivor syndrome by preserving expertise</li>
-          <li><strong>Value authentic approaches:</strong> Systematic thinking patterns often indicate deep capability</li>
-        </ul>
-
-        <h2>The Systematic Thinking Reality</h2>
-
-        <h3>The Curse and the Gift</h3>
-        <p>
-          Systematic thinking is exhausting. It drives continuous analysis, improvement, and infrastructure
-          creation. But this "overthinking" creates resilient systems, comprehensive solutions, and sustainable approaches.
-        </p>
-
-        <h3>From Survival to Thriving</h3>
-        <div className="bg-yellow-50 p-6 rounded-lg mb-6">
-          <p className="font-semibold mb-2">Key Insight:</p>
-          <p>
-            What starts as "learning to survive" institutional dysfunction becomes systematic capability
-            building. The anxiety-driven need to understand everything transforms into comprehensive
-            solution architecture that others can rely on.
-          </p>
-        </div>
-
-        <h2>Key Takeaways</h2>
-
-        <div className="bg-blue-50 p-6 rounded-lg">
-          <ul className="space-y-3">
-            <li><strong>Identity exists before recognition:</strong> You're not building from scratch; you're amplifying existing patterns</li>
-            <li><strong>Trauma can drive systematic solutions:</strong> Institutional dysfunction creates opportunities for systematic improvement</li>
-            <li><strong>Consistency reveals authenticity:</strong> Patterns across domains indicate genuine systematic thinking</li>
-            <li><strong>Systematic anxiety becomes systematic advantage:</strong> The curse of overthinking is the gift of comprehensive solutions</li>
-            <li><strong>Evidence defeats dismissal:</strong> Systematic documentation creates undeniable capability proof</li>
+        <div
+          style={{
+            background: "#fef3c7",
+            borderLeft: "4px solid #f59e0b",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <h4
+            style={{
+              fontWeight: "600",
+              marginBottom: "var(--space-md)",
+              color: "#92400e",
+            }}
+          >
+            Survival Skills That Became Professional Strengths:
+          </h4>
+          <ul style={{ marginBottom: "var(--space-md)" }}>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              <strong>Comprehensive documentation:</strong> Recording everything
+              to prevent revisionist narratives
+            </li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              <strong>Systematic analysis:</strong> Breaking down dysfunction to
+              understand patterns
+            </li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              <strong>Evidence-based arguments:</strong> Supporting claims with
+              data to resist manipulation
+            </li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              <strong>Process improvement:</strong> Creating systems to prevent
+              recurring problems
+            </li>
           </ul>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <h3 className="text-lg font-semibold mb-4">Related Learning Journey</h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            <Link href="/journey/systematic-career-growth" className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100">
-              <h4 className="font-semibold">Systematic Career Growth</h4>
-              <p className="text-sm text-gray-600">Quantified accomplishments and multi-domain mastery framework</p>
-            </Link>
-            <Link href="/journey/career-realignment" className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100">
-              <h4 className="font-semibold">Career Realignment at 33</h4>
-              <p className="text-sm text-gray-600">From junior positioning to senior reality recognition</p>
-            </Link>
-          </div>
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Phase 2: Pattern Recognition
+        </h3>
+        <p style={{ marginBottom: "var(--space-lg)" }}>
+          The breakthrough came when I realized these "trauma responses" were
+          actually sophisticated professional methodologies. The same systematic
+          approach that helped survive dysfunction could build better systems
+          for others.
+        </p>
+
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Phase 3: Professional Identity Integration
+        </h3>
+        <p style={{ marginBottom: "var(--space-lg)" }}>
+          Instead of hiding institutional trauma or pretending it didn't happen,
+          I learned to present it as systematic problem-solving experience.
+          Dysfunction became a source of expertise rather than shame.
+        </p>
+      </section>
+
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Core Professional Competencies
+        </h2>
+
+        <div
+          style={{
+            background: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "1.2rem",
+              marginBottom: "var(--space-md)",
+              color: "var(--color-text-primary)",
+            }}
+          >
+            Systematic Problem Documentation
+          </h3>
+          <p style={{ marginBottom: "var(--space-md)" }}>
+            I excel at identifying, documenting, and solving problems that
+            others might dismiss or work around. Years of dealing with
+            institutional dysfunction taught me to see patterns others miss.
+          </p>
+          <ul>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              Root cause analysis beyond surface symptoms
+            </li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              Clear documentation that prevents problem recurrence
+            </li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              Process design that accounts for human psychology
+            </li>
+          </ul>
         </div>
-      </div>
+
+        <div
+          style={{
+            background: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "1.2rem",
+              marginBottom: "var(--space-md)",
+              color: "var(--color-text-primary)",
+            }}
+          >
+            Evidence-Based Technical Communication
+          </h3>
+          <p style={{ marginBottom: "var(--space-md)" }}>
+            Technical decisions backed by measurable outcomes and clear
+            reasoning. I communicate complex technical concepts in ways that
+            support decision-making rather than obscure it.
+          </p>
+          <ul>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              Architecture documentation with tradeoff analysis
+            </li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              Performance metrics that guide optimization decisions
+            </li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              Clear explanations that enable knowledge transfer
+            </li>
+          </ul>
+        </div>
+
+        <div
+          style={{
+            background: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "1.2rem",
+              marginBottom: "var(--space-md)",
+              color: "var(--color-text-primary)",
+            }}
+          >
+            Dysfunction-Resistant System Design
+          </h3>
+          <p style={{ marginBottom: "var(--space-md)" }}>
+            I build systems that work even when organizational processes break
+            down. This isn't pessimism—it's realistic engineering that accounts
+            for human factors and institutional limitations.
+          </p>
+          <ul>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              Automation that reduces dependency on manual processes
+            </li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              Documentation that survives personnel changes
+            </li>
+            <li style={{ marginBottom: "var(--space-sm)" }}>
+              Monitoring that catches problems before they become crises
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Professional Narrative Framework
+        </h2>
+
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Reframing Institutional Experience
+        </h3>
+        <p style={{ marginBottom: "var(--space-lg)" }}>
+          Instead of presenting difficult work experiences as problems to
+          overcome, I frame them as systematic learning opportunities that
+          developed unique professional capabilities.
+        </p>
+
+        <div
+          style={{
+            background: "#f0fdf4",
+            borderLeft: "4px solid #16a34a",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <h4
+            style={{
+              fontWeight: "600",
+              marginBottom: "var(--space-md)",
+              color: "#15803d",
+            }}
+          >
+            Professional Strength Reframes:
+          </h4>
+          <ul style={{ marginBottom: "var(--space-md)" }}>
+            <li style={{ marginBottom: "var(--space-md)" }}>
+              <strong>"Hypervigilant documentation"</strong> becomes{" "}
+              <strong>"comprehensive technical writing"</strong>
+            </li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
+              <strong>"Defensive record-keeping"</strong> becomes{" "}
+              <strong>"systematic process documentation"</strong>
+            </li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
+              <strong>"Paranoid backup systems"</strong> becomes{" "}
+              <strong>"robust disaster recovery planning"</strong>
+            </li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
+              <strong>"Obsessive analysis"</strong> becomes{" "}
+              <strong>"thorough root cause investigation"</strong>
+            </li>
+          </ul>
+        </div>
+
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Authentic Professional Positioning
+        </h3>
+        <p style={{ marginBottom: "var(--space-lg)" }}>
+          This identity is authentic because it's based on real capabilities
+          developed through actual experience. It's not aspirational or
+          theoretical—it's documented through working software and systematic
+          problem-solving.
+        </p>
+      </section>
+
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Value Proposition for Organizations
+        </h2>
+
+        <div
+          style={{
+            background: "#e0f2fe",
+            border: "1px solid #0ea5e9",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-lg)",
+          }}
+        >
+          <h3
+            style={{
+              fontSize: "1.2rem",
+              marginBottom: "var(--space-md)",
+              color: "var(--color-text-primary)",
+            }}
+          >
+            What Organizations Get
+          </h3>
+          <ul>
+            <li style={{ marginBottom: "var(--space-md)" }}>
+              <strong>Problem Prevention:</strong> I identify and solve
+              systematic issues before they become expensive crises
+            </li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
+              <strong>Knowledge Preservation:</strong> Documentation practices
+              that survive personnel changes and organizational turbulence
+            </li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
+              <strong>Realistic Planning:</strong> Technical decisions based on
+              evidence and organizational reality rather than wishful thinking
+            </li>
+            <li style={{ marginBottom: "var(--space-md)" }}>
+              <strong>Dysfunction Resistance:</strong> Systems that work even
+              when processes break down or teams struggle
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section
+        style={{
+          background: "var(--color-surface)",
+          padding: "var(--space-xl)",
+          border: "1px solid var(--color-border)",
+          borderRadius: "var(--border-radius)",
+          marginBottom: "var(--space-xxl)",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "1.3rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-accent)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          The Professional Identity Reality
+        </h2>
+        <div
+          style={{
+            background: "#2f2f1f",
+            border: "1px dashed #7f7f5f",
+            padding: "var(--space-lg)",
+            borderRadius: "var(--border-radius)",
+            marginBottom: "var(--space-md)",
+            fontStyle: "italic",
+            color: "var(--color-text-secondary)",
+          }}
+        >
+          "I learn to spite those who punish it. If I can suffer and learn and
+          build systems that prevent others from experiencing that dysfunction,
+          then the suffering becomes valuable."
+        </div>
+        <p style={{ marginBottom: "var(--space-md)" }}>
+          This professional identity integrates institutional trauma into
+          systematic capability. Rather than hiding difficult experiences, it
+          transforms them into professional strengths that genuinely help
+          organizations build better systems.
+        </p>
+        <p>
+          The result is authentic professional identity backed by measurable
+          capabilities and demonstrated through working software, systematic
+          documentation, and evidence-based problem-solving.
+        </p>
+      </section>
+
+      <section
+        style={{
+          marginTop: "var(--space-xxl)",
+          paddingTop: "var(--space-xl)",
+          borderTop: "1px solid var(--color-border)",
+        }}
+      >
+        <h3
+          style={{
+            fontSize: "1.2rem",
+            fontWeight: "600",
+            marginBottom: "var(--space-md)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          Related Learning Journey
+        </h3>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "var(--space-md)",
+          }}
+        >
+          <Link
+            href="/journey/productivity-breakthrough"
+            style={{
+              display: "block",
+              padding: "var(--space-md)",
+              background: "var(--color-surface)",
+              border: "1px solid var(--color-border)",
+              borderRadius: "var(--border-radius)",
+              textDecoration: "none",
+              color: "inherit",
+            }}
+          >
+            <h4
+              style={{
+                fontWeight: "600",
+                marginBottom: "var(--space-sm)",
+                color: "var(--color-text-primary)",
+              }}
+            >
+              Productivity Breakthrough
+            </h4>
+            <p
+              style={{
+                fontSize: "0.9rem",
+                color: "var(--color-text-secondary)",
+                margin: 0,
+              }}
+            >
+              From consumption to creation: systematic skill building
+            </p>
+          </Link>
+          <Link
+            href="/journey/systematic-career-growth"
+            style={{
+              display: "block",
+              padding: "var(--space-md)",
+              background: "var(--color-surface)",
+              border: "1px solid var(--color-border)",
+              borderRadius: "var(--border-radius)",
+              textDecoration: "none",
+              color: "inherit",
+            }}
+          >
+            <h4
+              style={{
+                fontWeight: "600",
+                marginBottom: "var(--space-sm)",
+                color: "var(--color-text-primary)",
+              }}
+            >
+              Systematic Career Growth
+            </h4>
+            <p
+              style={{
+                fontSize: "0.9rem",
+                color: "var(--color-text-secondary)",
+                margin: 0,
+              }}
+            >
+              Quantified accomplishments and multi-domain mastery
+            </p>
+          </Link>
+        </div>
+      </section>
     </div>
-  )
+  );
 }
