@@ -158,6 +158,12 @@ export default function JourneyPage() {
         >
           Professional Evolution
         </h2>
+        <JourneyCard
+          title="Productivity Breakthrough"
+          description="From consumption to creation: how transferable skills and AI catalyzed sustained development flow. The story of when gaming skills finally transferred to systematic building."
+          href="/journey/productivity-breakthrough"
+          tags={["productivity", "ai-collaboration", "skill-transfer"]}
+        />
 
         <JourneyCard
           title="Systematic Career Growth"
@@ -200,14 +206,6 @@ export default function JourneyPage() {
           description="From institutional trauma to systematic solutions: building authentic professional identity as a systematic problem-solver. The breakthrough wasn't creating new identity - it was recognizing existing patterns."
           href="/journey/professional-identity"
           tags={["identity", "professional-development", "systematic-thinking"]}
-          status="coming-soon"
-        />
-
-        <JourneyCard
-          title="Productivity Breakthrough"
-          description="From consumption to creation: how transferable skills and AI catalyzed sustained development flow. The story of when gaming skills finally transferred to systematic building."
-          href="/journey/productivity-breakthrough"
-          tags={["productivity", "ai-collaboration", "skill-transfer"]}
           status="coming-soon"
         />
 
