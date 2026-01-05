@@ -84,6 +84,9 @@ export default function Header() {
             <Link href="/methodology" onClick={closeMobileMenu}>
               Methodology
             </Link>
+            <a href="/fun/apparent-intelligence/index.html" onClick={closeMobileMenu}>
+              Fun
+            </a>
             <Link href="/about" onClick={closeMobileMenu}>
               About
             </Link>
