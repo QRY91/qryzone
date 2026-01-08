@@ -34,12 +34,19 @@
     color: var(--color-text-primary);
     letter-spacing: -0.02em; /* Slightly tighten letter spacing */
 }
+.navLinks {
+    display: flex;
+    align-items: center;
+}
+
 .navLinks a {
     margin-left: var(--space-lg);
     color: var(--color-text-secondary);
     font-size: 0.9rem; /* Smaller nav links */
     font-weight: normal; /* Less emphasis */
     letter-spacing: 0.05em; /* Slight letter spacing for a refined feel */
+    display: inline-flex;
+    align-items: center;
 }
 .navLinks a:hover,
 .navLinks a:focus {

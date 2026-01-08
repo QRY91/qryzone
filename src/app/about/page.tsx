@@ -310,6 +310,45 @@ export default function AboutPage() {
         </ul>
       </section>
 
+      <section style={{ marginBottom: "var(--space-xxl)" }}>
+        <h2
+          style={{
+            fontSize: "1.5rem",
+            marginBottom: "var(--space-lg)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          How I work (including with AI)
+        </h2>
+        <p style={{ marginBottom: "var(--space-md)" }}>
+          Most text on this site was drafted with AI assistance. The underlying
+          ideas, experiences, and frameworks come from 5+ years of notes and
+          lived experience. AI helps with the communication bottleneck - turning
+          rough thinking into readable prose.
+        </p>
+        <p style={{ marginBottom: "var(--space-md)" }}>
+          I'm transparent about this because I think it matters. AI makes
+          mistakes, sometimes confidently wrong ones. I catch what I can, but
+          I'm not pretending this is all hand-crafted prose. The value is in the
+          thinking, not the word count.
+        </p>
+        <p
+          style={{
+            fontSize: "0.9rem",
+            color: "var(--color-text-secondary)",
+          }}
+        >
+          If you spot errors,{" "}
+          <a
+            href="https://github.com/QRY91/qryzone/issues"
+            style={{ color: "var(--color-accent)" }}
+          >
+            let me know
+          </a>
+          . I'd rather fix things than pretend they're perfect.
+        </p>
+      </section>
+
       <section
         style={{
           background: "var(--color-surface)",
@@ -382,16 +421,6 @@ export default function AboutPage() {
             Professional Resume →
           </a>
         </div>
-        <p
-          style={{
-            marginTop: "var(--space-lg)",
-            fontSize: "0.9rem",
-            color: "var(--color-text-secondary)",
-            fontStyle: "italic",
-          }}
-        >
-          Currently finishing graduate degree, available summer 2025
-        </p>
       </section>
     </div>
   );
