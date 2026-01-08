@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# qry.zone
+
+Personal site built with [11ty](https://www.11ty.dev/).
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run the development server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:8080](http://localhost:8080) to view the site. The server auto-reloads on file changes.
 
-## Learn More
+## Build
 
-To learn more about Next.js, take a look at the following resources:
+Generate static files to `_site/`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Structure
 
-## Deploy on Vercel
+```
+src/
+├── _includes/       # HTML partials (header, footer, base layout)
+├── _data/           # JSON data files (explore.json)
+├── assets/
+│   ├── css/         # Stylesheets
+│   ├── js/          # JavaScript (header menu, explore filter, Three.js)
+│   └── images/      # Static assets
+├── index.html       # Homepage
+├── about.html
+├── explore.html
+├── fun/             # Satirical side projects
+└── notes/           # Seedling notes
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The `_site/` folder contains static HTML that can be deployed anywhere:
+- GitHub Pages
+- Netlify
+- Vercel
+- Any static host
+
+## License
+
+MIT

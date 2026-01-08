@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database-first debugging - qry.zone</title>
+    <meta name="description" content="When the problem isn&#39;t in the code, it&#39;s in the data">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/globals.css">
+    <link rel="stylesheet" href="/assets/css/header.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.177.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.177.0/examples/jsm/"
+        }
+    }
+    </script>
+    
+</head>
+<body class="flex flex-col min-h-screen">
+    <div class="overlay" id="overlay"></div>
+<header class="header">
+    <nav class="nav container">
+        <a href="/" class="logo-link">
+            <img src="/assets/images/logo_burn.png" alt="QRY.zone Logo" width="32" height="32" class="logo-image">
+        </a>
+        <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="/explore/">Explore</a>
+            <a href="/about/">About</a>
+            <a href="/fun/">Fun</a>
+            <a href="https://github.com/QRY91" aria-label="GitHub">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+            </a>
+        </div>
+    </nav>
+</header>
+
+    <main class="container" style="flex-grow: 1; padding-top: var(--space-xl); padding-bottom: var(--space-xl);">
+        
+<article class="article">
+    <header class="article-header">
+        <span class="status-badge status-seedling">seedling</span>
+        <h1>Database-first debugging</h1>
+        <p class="article-subtitle">A lesson from production firefighting</p>
+    </header>
+
+    <section>
+        <blockquote>
+            "Assuming that a breakage is caused by a code change is often true, but not always.
+            If we had spent less time looking at the recent changes, and more time looking at the
+            database itself, we would have found it much faster."
+        </blockquote>
+
+        <p>
+            From a production debugging session. We were chasing a performance issue through git
+            blame and commit diffs for hours. The actual problem was 12.8 million stale database
+            records - damcologs where only 27k contained actual content.
+        </p>
+
+        <p>
+            After cleanup: 406,624 records. Down from 13,279,954. Integration server CPU usage
+            dropped immediately. The "bug" wasn't in the code at all.
+        </p>
+    </section>
+
+    <section>
+        <h2>The pattern</h2>
+        <p>
+            When something breaks, the instinct is to look at what changed recently. git diff,
+            recent commits, recent deploys. This is usually right. But when it's wrong, you
+            burn hours.
+        </p>
+        <p>
+            Sometimes the problem has been there for months, slowly accumulating until it tips
+            over. The database grew. The load changed. Something external shifted.
+        </p>
+        <p>
+            <strong style="color: var(--color-accent)">The fix:</strong> Before diving into
+            code archaeology, spend 10 minutes looking at the actual data. Database size, record
+            counts, query performance. Often the answer is sitting there, waiting.
+        </p>
+    </section>
+
+    <footer class="article-footer">
+        <p>From work notes, May 2022. Mileviewer performance investigation.</p>
+    </footer>
+</article>
+
+    </main>
+    <footer class="footer">
+    <div class="container">
+        <p>&copy;QRY</p>
+    </div>
+</footer>
+
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7e9d8b03c4e27e92268d848a78589ca0"}'></script>
+    <script src="/assets/js/header.js"></script>
+    
+</body>
+</html>

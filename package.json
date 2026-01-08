@@ -1,33 +1,15 @@
 {
   "name": "qryzone",
-  "version": "0.1.0",
-  "private": true,
-  "engines": {
-    "node": ">=24.x"
-  },
+  "version": "1.0.0",
+  "description": "Personal site - qry.zone",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@types/three": "^0.177.0",
-    "gray-matter": "^4.0.3",
-    "next": "14.2.28",
-    "next-mdx-remote": "^5.0.0",
-    "posthog-js": "^1.252.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "three": "^0.177.0"
+    "start": "eleventy --serve",
+    "build": "eleventy"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.2",
-    "typescript": "^5"
+    "@11ty/eleventy": "^3.0.0"
+  },
+  "dependencies": {
+    "three": "^0.177.0"
   }
 }

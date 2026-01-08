@@ -1,0 +1,363 @@
+---
+layout: base.njk
+title: NixOS Learning Roadmap - qry.zone
+description: Systematic approach to learning declarative system configuration and reproducible environments
+---
+
+<article class="article">
+    <header class="article-header">
+        <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block;">
+            &larr; Back to Explore
+        </a>
+        <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            NixOS Learning Roadmap
+        </h1>
+        <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg);">
+            Systematic approach to learning declarative system configuration and reproducible environments
+        </p>
+    </header>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <div style="background: #e0f2fe; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h2 style="font-size: 1.3rem; font-weight: 600; margin-bottom: var(--space-md);">Strategic Learning Philosophy</h2>
+            <p>
+                Learning NixOS requires systematic approach due to its fundamentally different paradigm from traditional Linux distributions. This roadmap provides a structured path from concepts to production-ready configurations, emphasizing hands-on experience and practical application over theoretical knowledge.
+            </p>
+        </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono);">
+            Pre-Implementation Preparation Strategy
+        </h2>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Why Learn Before Building
+        </h3>
+        <p style="margin-bottom: var(--space-lg);">
+            The strategic approach involves learning NixOS concepts and testing on expendable hardware before implementing on primary development machines. This reduces risk while building confidence with the declarative configuration paradigm.
+        </p>
+
+        <div style="background: #f0fdf4; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Risk Mitigation Benefits:</h4>
+            <ul>
+                <li style="margin-bottom: var(--space-sm);"><strong>Confidence building:</strong> Master concepts before critical implementation</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Mistake recovery:</strong> Learn troubleshooting on non-essential systems</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Configuration development:</strong> Build and test modular configs safely</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Timeline optimization:</strong> Arrive at new hardware with working knowledge</li>
+            </ul>
+        </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono);">
+            Phase 0: Conceptual Foundation
+        </h2>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Essential NixOS Concepts
+        </h3>
+        <p style="margin-bottom: var(--space-lg);">
+            Before touching any configuration files, understanding the philosophical and technical foundations prevents confusion and provides context for later practical work.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border: 1px solid var(--color-border); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Core Concepts to Master:</h4>
+            <ul>
+                <li style="margin-bottom: var(--space-sm);"><strong>Declarative configuration:</strong> Entire system state in <code>/etc/nixos/configuration.nix</code></li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Nix language fundamentals:</strong> Function syntax, attribute sets, modules</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Package management paradigm:</strong> Immutable packages vs traditional package managers</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Flakes methodology:</strong> Modern Nix approach with reproducible inputs</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Generation management:</strong> Rollback capabilities and system versioning</li>
+            </ul>
+        </div>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Learning Resources Strategy
+        </h3>
+        <div style="background: #fef3c7; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Recommended Learning Sequence:</h4>
+            <ol>
+                <li style="margin-bottom: var(--space-sm);"><strong>NixOS Manual:</strong> First 3 chapters for foundational understanding</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Nix Pills:</strong> Deep conceptual foundation and philosophy</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Practical Nix flakes tutorial:</strong> Modern workflow patterns</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>"Nix from first principles":</strong> Blog series for systematic understanding</li>
+            </ol>
+        </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono);">
+            Phase 1: Hands-On Experimentation
+        </h2>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Test Hardware Installation
+        </h3>
+        <p style="margin-bottom: var(--space-lg);">
+            Practical experience begins with installing NixOS on expendable hardware to understand the installation process, hardware detection, and basic system configuration.
+        </p>
+
+        <div style="background: #e0f2fe; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Basic Installation Workflow:</h4>
+            <div style="background: #1a1a1a; color: #4ade80; padding: var(--space-md); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; overflow-x: auto;">
+                <div># Download NixOS ISO and boot from USB</div>
+                <div># Connect to network and run installer</div>
+                <div># System generates hardware-configuration.nix</div>
+                <div># Create basic configuration.nix</div>
+                <div># nixos-rebuild switch</div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            First Configuration Development
+        </h3>
+        <div style="background: var(--color-surface); padding: var(--space-lg); border: 1px solid var(--color-border); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Starter Configuration Example:</h4>
+            <div style="background: #1a1a1a; color: #4ade80; padding: var(--space-md); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; overflow-x: auto;">
+                <div>{ config, pkgs, ... }: {</div>
+                <div>  boot.loader.systemd-boot.enable = true;</div>
+                <div>  networking.hostName = "nixos-test";</div>
+                <div></div>
+                <div>  users.users.qry = {</div>
+                <div>    isNormalUser = true;</div>
+                <div>    extraGroups = [ "wheel" "networkmanager" ];</div>
+                <div>  };</div>
+                <div></div>
+                <div>  environment.systemPackages = with pkgs; [</div>
+                <div>    vim git curl tmux</div>
+                <div>  ];</div>
+                <div></div>
+                <div>  system.stateVersion = "24.05";</div>
+                <div>}</div>
+            </div>
+        </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono);">
+            Phase 2: Flakes Methodology
+        </h2>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Modern Nix Workflow
+        </h3>
+        <p style="margin-bottom: var(--space-lg);">
+            Flakes represent the current best practice for NixOS configuration management, providing reproducible inputs and cleaner project structure. Learning flakes early prevents having to migrate later.
+        </p>
+
+        <div style="background: #f0fdf4; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Flakes Architecture Benefits:</h4>
+            <ul>
+                <li style="margin-bottom: var(--space-sm);"><strong>Reproducible inputs:</strong> Lock file ensures consistent dependency versions</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Modular structure:</strong> Clean separation of concerns and reusable components</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Version control friendly:</strong> Everything in git with proper dependency tracking</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Cross-machine consistency:</strong> Same flake produces identical systems</li>
+            </ul>
+        </div>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Flake Structure Development
+        </h3>
+        <div style="background: var(--color-surface); padding: var(--space-lg); border: 1px solid var(--color-border); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Organized Configuration Layout:</h4>
+            <div style="background: #1a1a1a; color: #4ade80; padding: var(--space-md); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; overflow-x: auto;">
+                <div>~/nixos-config/</div>
+                <div>|-- flake.nix                 # Main flake definition</div>
+                <div>|-- flake.lock                # Locked dependency versions</div>
+                <div>|-- hosts/</div>
+                <div>|   +-- framework12/          # Host-specific configs</div>
+                <div>|-- modules/                  # Reusable components</div>
+                <div>|   |-- terminal.nix</div>
+                <div>|   |-- development.nix</div>
+                <div>|   +-- ai-tools.nix</div>
+                <div>|-- packages/                 # Custom packages</div>
+                <div>|   |-- uroboro.nix</div>
+                <div>|   +-- wherewasi.nix</div>
+                <div>+-- users/</div>
+                <div>    +-- qry.nix              # User configuration</div>
+            </div>
+        </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono);">
+            Phase 3: Production Implementation
+        </h2>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Hardware-Specific Optimization
+        </h3>
+        <p style="margin-bottom: var(--space-lg);">
+            Moving from test hardware to production systems requires hardware-specific optimizations and careful configuration of power management, audio, and device-specific features.
+        </p>
+
+        <div style="background: #fef3c7; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Framework 12 Optimization Example:</h4>
+            <div style="background: #1a1a1a; color: #4ade80; padding: var(--space-md); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; overflow-x: auto;">
+                <div># Hardware-specific configuration</div>
+                <div>boot.kernelPackages = pkgs.linuxPackages_latest;</div>
+                <div>services.thermald.enable = true;</div>
+                <div>services.auto-cpufreq.enable = true;</div>
+                <div>hardware.bluetooth.enable = true;</div>
+                <div>services.pipewire.enable = true;</div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Development Environment Integration
+        </h3>
+        <p style="margin-bottom: var(--space-lg);">
+            Production NixOS configurations should include comprehensive development tooling, from terminal environments to language-specific toolchains and AI development tools.
+        </p>
+
+        <div style="background: #e0f2fe; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Development Module Structure:</h4>
+            <ul>
+                <li style="margin-bottom: var(--space-sm);"><strong>Terminal environment:</strong> Shell, multiplexer, productivity tools</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Editor configuration:</strong> Neovim with LSP servers and development plugins</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Language toolchains:</strong> Go, Python, Rust, Node.js with version management</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>AI development stack:</strong> Ollama service, Python AI libraries, local models</li>
+            </ul>
+        </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono);">
+            Phase 4: Custom Tool Integration
+        </h2>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Packaging Personal Tools
+        </h3>
+        <p style="margin-bottom: var(--space-lg);">
+            Advanced NixOS usage involves packaging your own tools and services, creating a completely declarative and reproducible development environment.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border: 1px solid var(--color-border); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Custom Package Example:</h4>
+            <div style="background: #1a1a1a; color: #4ade80; padding: var(--space-md); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; overflow-x: auto;">
+                <div># packages/uroboro.nix</div>
+                <div>{ lib, buildGoModule, fetchFromGitHub }:</div>
+                <div></div>
+                <div>buildGoModule rec {</div>
+                <div>  pname = "uroboro";</div>
+                <div>  version = "1.0.0";</div>
+                <div>  src = /home/qry/projects/uroboro;</div>
+                <div>  vendorHash = "sha256-...";</div>
+                <div></div>
+                <div>  meta = with lib; {</div>
+                <div>    description = "Self-documenting content pipeline";</div>
+                <div>    license = licenses.mit;</div>
+                <div>  };</div>
+                <div>}</div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Service Configuration
+        </h3>
+        <p style="margin-bottom: var(--space-lg);">
+            Systemd service integration allows your custom tools to run as proper system services with automatic startup, logging, and monitoring capabilities.
+        </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono);">
+            Learning Success Milestones
+        </h2>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Progressive Competency Markers
+        </h3>
+        <div style="background: #f0fdf4; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Phase Completion Criteria:</h4>
+            <ul>
+                <li style="margin-bottom: var(--space-sm);"><strong>Phase 0:</strong> Understand declarative paradigm and Nix language basics</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Phase 1:</strong> Successfully install and configure NixOS on test hardware</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Phase 2:</strong> Convert configuration to flakes and understand modular structure</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Phase 3:</strong> Production system running with hardware optimizations</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Phase 4:</strong> Custom tools packaged and integrated as system services</li>
+            </ul>
+        </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono);">
+            Risk Management Strategy
+        </h2>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            Backup and Recovery Planning
+        </h3>
+        <div style="background: #fef3c7; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <h4 style="font-weight: 600; margin-bottom: var(--space-md);">Essential Safety Measures:</h4>
+            <ul>
+                <li style="margin-bottom: var(--space-sm);"><strong>Backup current setup:</strong> Complete system backup before NixOS installation</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Alternative boot media:</strong> Keep working Linux USB available</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Configuration versioning:</strong> Git repository for all NixOS configurations</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Generation management:</strong> Understand rollback procedures</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Documentation discipline:</strong> Document all changes and reasoning</li>
+            </ul>
+        </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono);">
+            Adapting This Roadmap
+        </h2>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            For Individual Learning
+        </h3>
+        <div style="background: var(--color-surface); padding: var(--space-lg); border: 1px solid var(--color-border); border-radius: var(--border-radius); margin-bottom: var(--space-lg);">
+            <ol>
+                <li style="margin-bottom: var(--space-sm);"><strong>Assess your risk tolerance:</strong> How much downtime can you afford?</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Identify test hardware:</strong> What systems can you experiment on safely?</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Set learning timeline:</strong> How much time can you dedicate to each phase?</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Define success criteria:</strong> What capabilities do you need before switching?</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Plan backup strategies:</strong> How will you recover if things go wrong?</li>
+            </ol>
+        </div>
+
+        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary);">
+            For Teams and Organizations
+        </h3>
+        <ul style="margin-bottom: var(--space-lg);">
+            <li style="margin-bottom: var(--space-sm);"><strong>Support experimentation time:</strong> Allow team members to learn declarative configuration</li>
+            <li style="margin-bottom: var(--space-sm);"><strong>Share learning resources:</strong> Create internal guides and configuration examples</li>
+            <li style="margin-bottom: var(--space-sm);"><strong>Document institutional configurations:</strong> Build reusable modules for common setups</li>
+            <li style="margin-bottom: var(--space-sm);"><strong>Gradual adoption strategy:</strong> Start with non-critical systems for team learning</li>
+        </ul>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono);">
+            Key Learning Insights
+        </h2>
+
+        <div style="background: #e0f2fe; padding: var(--space-lg); border-radius: var(--border-radius);">
+            <ul>
+                <li style="margin-bottom: var(--space-sm);"><strong>Paradigm shift requires patience:</strong> Declarative thinking differs fundamentally from imperative system administration</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Early mistakes are valuable:</strong> Learning recovery procedures builds confidence</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Modular design pays off:</strong> Time invested in clean configuration structure saves future effort</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Community resources are essential:</strong> Hardware-specific configurations often available from community</li>
+                <li style="margin-bottom: var(--space-sm);"><strong>Documentation discipline creates reproducibility:</strong> Well-documented configs enable sharing and maintenance</li>
+            </ul>
+        </div>
+    </section>
+
+    <section style="margin-top: var(--space-xxl); padding-top: var(--space-xl); border-top: 1px solid var(--color-border);">
+        <h3 style="font-size: 1.2rem; font-weight: 600; margin-bottom: var(--space-md);">Related Learning Journey</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-md);">
+            <a href="/hidden/journey/framework-nixos-roadmap/" style="display: block; padding: var(--space-md); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none; color: inherit;">
+                <h4 style="font-weight: 600; margin-bottom: var(--space-sm); color: var(--color-text-primary);">Framework NixOS Roadmap</h4>
+                <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin: 0;">Resilient, local-first development environments</p>
+            </a>
+            <a href="/hidden/journey/systematic-career-growth/" style="display: block; padding: var(--space-md); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none; color: inherit;">
+                <h4 style="font-weight: 600; margin-bottom: var(--space-sm); color: var(--color-text-primary);">Systematic Career Growth</h4>
+                <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin: 0;">How transferable skills enable systematic learning</p>
+            </a>
+        </div>
+    </section>
+</article>

@@ -1,0 +1,263 @@
+---
+layout: base.njk
+title: Explore - qry.zone
+description: Browse all notes, ideas, and projects
+---
+
+<style>
+.explore-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    line-height: 1.7;
+}
+.explore-container h1 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-md);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+}
+.explore-intro {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xl);
+}
+.filter-section {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+}
+.filter-label {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+.filter-group {
+    margin-bottom: var(--space-md);
+}
+#tags-container {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+}
+#status-container {
+    display: flex;
+    gap: var(--space-sm);
+}
+.tag-btn {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    background: var(--color-background);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+.tag-btn:hover {
+    border-color: var(--color-accent);
+}
+.tag-btn.active {
+    background: var(--color-accent);
+    color: var(--color-background);
+    border-color: var(--color-accent);
+}
+.tag-btn.small {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+}
+.status-btn {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    background: var(--color-background);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+.status-btn:hover, .status-btn.active {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+.actions-row {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+#random-btn {
+    font-size: 0.8rem;
+    padding: 4px 12px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-accent);
+    background: transparent;
+    color: var(--color-accent);
+    cursor: pointer;
+}
+#clear-btn {
+    font-size: 0.8rem;
+    padding: 4px 12px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: none;
+}
+#results-count {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    display: none;
+}
+#random-section {
+    display: none;
+    margin-bottom: var(--space-xl);
+    padding: var(--space-md);
+    background: #2d3a2d;
+    border: 1px solid #4a5f4a;
+    border-radius: var(--border-radius);
+}
+.random-label {
+    font-size: 0.8rem;
+    color: #81c784;
+    margin-bottom: var(--space-sm);
+}
+#recently-updated {
+    margin-bottom: var(--space-xl);
+}
+.section-title {
+    font-size: 0.9rem;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+}
+.content-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    margin-bottom: var(--space-sm);
+}
+.content-card.compact {
+    padding: var(--space-sm);
+}
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-xs);
+    gap: var(--space-sm);
+}
+.card-title {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+}
+.content-card.compact .card-title {
+    font-size: 0.85rem;
+}
+.card-description {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: var(--space-sm);
+    line-height: 1.4;
+}
+.card-tags {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+}
+.connections {
+    margin-top: var(--space-sm);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+.connections a {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+.status-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid;
+    white-space: nowrap;
+}
+.legend {
+    margin-top: var(--space-xxl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+.legend-items {
+    display: flex;
+    gap: var(--space-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+</style>
+
+<div class="explore-container">
+    <h1>Explore</h1>
+    <p class="explore-intro">
+        <span id="item-count">24</span> notes, ideas, and projects. Filter by topic or
+        maturity, or pick something random.
+    </p>
+
+    <!-- Recently updated (hidden when filtering) -->
+    <section id="recently-updated">
+        <h2 class="section-title">Recently updated</h2>
+        <div id="recent-content"></div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filter-section">
+        <div class="filter-group">
+            <div class="filter-label">Topics</div>
+            <div id="tags-container"></div>
+        </div>
+
+        <div class="filter-group">
+            <div class="filter-label">Maturity</div>
+            <div id="status-container">
+                <button class="status-btn" data-status="seedling">seedling</button>
+                <button class="status-btn" data-status="growing">growing</button>
+                <button class="status-btn" data-status="evergreen">evergreen</button>
+            </div>
+        </div>
+
+        <div class="actions-row">
+            <button id="random-btn">Random</button>
+            <button id="clear-btn">Clear filters</button>
+            <span id="results-count"></span>
+        </div>
+    </section>
+
+    <!-- Random pick -->
+    <section id="random-section">
+        <div class="random-label">Random pick:</div>
+        <div class="random-content"></div>
+    </section>
+
+    <!-- Content list -->
+    <section>
+        <h2 class="section-title" id="section-title">Everything</h2>
+        <div id="content-container"></div>
+    </section>
+
+    <!-- Legend -->
+    <section class="legend">
+        <div class="legend-items">
+            <span><span class="status-badge" style="background:#2d3a2d;color:#81c784;border-color:#4a5f4a">seedling</span> rough idea</span>
+            <span><span class="status-badge" style="background:#3a3a2d;color:#f0dfaf;border-color:#5f5f4a">growing</span> in progress</span>
+            <span><span class="status-badge" style="background:#2d3a3a;color:#7fc7c7;border-color:#4a5f5f">evergreen</span> stable</span>
+        </div>
+    </section>
+</div>
+
+<script>
+// Embed explore data
+window.exploreData = {{ explore.items | dump | safe }};
+</script>
+<script src="/assets/js/explore.js"></script>

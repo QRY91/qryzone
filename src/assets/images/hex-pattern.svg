@@ -1,0 +1,11 @@
+<!-- public/hex-pattern.svg -->
+<svg width="60" height="52" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="hexagons" patternUnits="userSpaceOnUse" width="60" height="52" patternTransform="scale(1) rotate(0)">
+      <path d="M30 0 l15 8.66 v17.32 l-15 8.66 l-15 -8.66 v-17.32 Z M0 26 l15 8.66 v17.32 l-15 8.66" 
+            fill="none" stroke="#4a4a4a" stroke-width="0.5"/> 
+            <!-- Adjust stroke color to be very faint, e.g., var(--color-border) or even darker/more transparent -->
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#hexagons)"/>
+</svg>

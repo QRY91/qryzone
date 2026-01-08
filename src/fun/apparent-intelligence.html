@@ -1,0 +1,221 @@
+---
+permalink: /fun/apparent-intelligence/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apparent Intelligence - Think Less. Appear More.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: white; color: black; cursor: crosshair; }
+        .mono { font-family: 'Roboto Mono', monospace; }
+        .aperture-btn {
+            background: #F58025; color: white; font-weight: 700;
+            letter-spacing: 0.05em; box-shadow: 8px 8px 0 0 black;
+            transition: all 0.1s; border: none; cursor: pointer;
+            text-transform: uppercase; text-decoration: none; display: inline-block;
+            padding: 0.75rem 1.5rem; font-size: 0.875rem;
+        }
+        .aperture-btn:hover { transform: translate(2px, 2px); box-shadow: 6px 6px 0 0 black; }
+        .brutal-card { border: 3px solid black; box-shadow: 12px 12px 0 0 black; }
+        .warning-stripe { background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px); height: 8px; }
+        .harassment-banner {
+            background: #fef08a; color: black; padding: 0.5rem; font-weight: bold;
+            text-align: center; border-bottom: 4px solid black;
+            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .harassment-banner:hover { background: #ef4444; color: white; }
+        nav { border-bottom: 4px solid black; padding: 1.5rem 2rem; }
+        .nav-inner { max-width: 80rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .hero { padding: 6rem 2rem; text-align: center; background-image: linear-gradient(to right, #e5e5e5 1px, transparent 1px), linear-gradient(to bottom, #e5e5e5 1px, transparent 1px); background-size: 40px 40px; }
+        .hero h1 { font-size: clamp(3rem, 10vw, 8rem); font-weight: 900; line-height: 0.95; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+        .hero-sub { font-size: clamp(1.25rem, 3vw, 2rem); font-weight: 300; margin-bottom: 1rem; max-width: 50rem; margin-left: auto; margin-right: auto; }
+        .hero-desc { font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 300; color: #4b5563; margin-bottom: 3rem; max-width: 50rem; margin-left: auto; margin-right: auto; }
+        .hero-img { width: 100%; max-width: 60rem; margin: 3rem auto 0; border: 4px solid black; overflow: hidden; }
+        .hero-img img { width: 100%; height: auto; display: block; }
+        .section-divider { height: 4px; background: black; }
+        section { padding: 6rem 2rem; }
+        .section-inner { max-width: 80rem; margin: 0 auto; }
+        .grid-2 { display: grid; grid-template-columns: 1fr; gap: 4rem; }
+        @media (min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+        .label { display: inline-block; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: bold; margin-bottom: 1.5rem; }
+        .label-dark { background: black; color: white; }
+        .label-orange { background: #F58025; color: white; }
+        h2 { font-size: 2rem; font-weight: 900; margin-bottom: 1.5rem; line-height: 1.1; }
+        p { font-size: 1.125rem; line-height: 1.7; margin-bottom: 1rem; }
+        .quote { border-left: 4px solid black; padding-left: 1rem; font-weight: bold; }
+        .quote-orange { border-left-color: #F58025; }
+        .img-box { border: 4px solid black; position: relative; overflow: hidden; margin-top: 2rem; }
+        .img-box img { width: 100%; height: auto; display: block; filter: grayscale(100%); transition: filter 0.3s; }
+        .img-box:hover img { filter: grayscale(0%); }
+        .img-badge { position: absolute; bottom: 0; right: 0; background: #dc2626; color: white; padding: 0.5rem; font-size: 0.75rem; font-weight: bold; border-top: 4px solid black; border-left: 4px solid black; }
+        .features { background: #f9fafb; }
+        .features h2 { font-size: 3rem; text-align: center; margin-bottom: 1rem; }
+        .features-sub { text-align: center; font-size: 1.25rem; font-weight: 300; margin-bottom: 4rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .feature-card { background: white; padding: 2rem; display: flex; flex-direction: column; }
+        .feature-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+        .feature-title { font-size: 1.25rem; font-weight: 900; margin-bottom: 1rem; }
+        .feature-desc { font-size: 1rem; line-height: 1.5; margin-bottom: 1rem; flex: 1; }
+        .terminal { background: black; color: #4ade80; padding: 1rem; font-size: 0.75rem; }
+        .terminal-dim { opacity: 0.5; }
+        .testimonial { max-width: 50rem; margin: 0 auto; }
+        .testimonial-card { background: white; padding: 3rem; position: relative; }
+        .testimonial-label { position: absolute; top: 0; left: 0; background: black; color: white; padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold; transform: translateY(-100%); }
+        .testimonial-quote { font-size: 1.5rem; font-weight: 300; line-height: 1.6; margin-bottom: 2rem; }
+        .testimonial-footer { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid black; padding-top: 1.5rem; }
+        .stars { background: #F58025; color: white; padding: 0.25rem 0.75rem; font-size: 0.75rem; }
+        footer { background: black; color: white; padding: 4rem 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        footer h3 { font-weight: 900; margin-bottom: 1rem; }
+        footer h4 { font-weight: bold; font-size: 0.875rem; margin-bottom: 1rem; }
+        footer p { font-size: 0.875rem; color: #9ca3af; line-height: 1.6; }
+        footer ul { list-style: none; }
+        footer li { font-size: 0.875rem; color: #9ca3af; margin-bottom: 0.5rem; }
+        .disclaimer { border-top: 1px solid #374151; padding-top: 2rem; font-size: 0.75rem; color: #6b7280; line-height: 1.7; }
+        .disclaimer p { margin-bottom: 1rem; font-size: 0.75rem; }
+        .warning { color: #F58025; }
+        .footer-copy { text-align: center; margin-top: 2rem; font-size: 0.75rem; color: #4b5563; }
+        .meter { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+        .meter-label { width: 5rem; background: black; color: white; text-align: center; padding: 0.25rem; font-size: 0.75rem; }
+        .meter-bar { flex: 1; background: #e5e7eb; height: 0.5rem; border-radius: 4px; overflow: hidden; }
+        .meter-fill { background: #F58025; height: 100%; }
+    </style>
+</head>
+<body>
+    <div class="harassment-banner">
+        <span class="mono">⚠ URGENT:</span> Your current intelligence is below market average. <span style="text-decoration:underline">Upgrade Now</span>
+    </div>
+    <div class="warning-stripe"></div>
+    <nav>
+        <div class="nav-inner">
+            <img src="/assets/fun/apparent-intelligence/apparent_intelligence_logo.png" alt="Apparent Intelligence" style="height:4rem">
+            <div style="display:flex;gap:1rem">
+                <a href="/fun/apparent-intelligence/memo/" class="aperture-btn">Read Memo</a>
+                <button onclick="alert('⚠ WARNING: USER AGREES TO SURGICAL VOIDANCE OF WARRANTY.')" class="aperture-btn">Invest Now</button>
+            </div>
+        </div>
+    </nav>
+    <section class="hero">
+        <h1>APPARENT<br>INTELLIGENCE</h1>
+        <p class="hero-sub">Smart is out. <strong>"Seeming Smart"</strong> is in.</p>
+        <p class="hero-desc">Don't let a lack of education hold you back. Install our neural firmware and project unearned confidence instantly.</p>
+        <button onclick="alert('⚠ WARNING: USER AGREES TO SURGICAL VOIDANCE OF WARRANTY.')" class="aperture-btn" style="padding:1.25rem 3rem;font-size:1.25rem">Become A Beta Tester</button>
+        <div class="hero-img">
+            <img src="/assets/fun/apparent-intelligence/stock1.png" alt="Neural Interface Test Subject">
+        </div>
+    </section>
+    <div class="section-divider"></div>
+    <section>
+        <div class="section-inner grid-2">
+            <div>
+                <div class="label label-dark mono">THE PROBLEM</div>
+                <h2>Thinking Is Inefficient</h2>
+                <p>The human brain consumes approximately <span class="mono" style="font-weight:bold">20% of the body's energy</span> to process information, form opinions, and generate original thoughts.</p>
+                <p>Studies show that actual intelligence requires years of education, reading, and critical thinking - resources that could be better spent on social media engagement and personal branding.</p>
+                <p class="quote">Why waste energy thinking when you can simply appear to think?</p>
+                <div class="img-box">
+                    <img src="/assets/fun/apparent-intelligence/stock_problem.png" alt="User Attempting Math">
+                    <div class="img-badge mono">⚠ CORTEX OVERHEAT</div>
+                </div>
+            </div>
+            <div>
+                <div class="label label-orange mono">THE SOLUTION</div>
+                <h2>Synthetic Cognition</h2>
+                <p>The <span class="mono" style="font-weight:bold">AI-CHIP-7™</span> neural implant bypasses your brain's inefficient biological processes entirely.</p>
+                <p>Using proprietary <strong>Apparent Intelligence® algorithms</strong>, our chip analyzes conversations in real-time and generates contextually appropriate responses that make you sound informed, confident, and brilliant.</p>
+                <p class="quote quote-orange">You don't need to understand quantum physics. You just need to sound like you do.</p>
+                <div class="img-box">
+                    <img src="/assets/fun/apparent-intelligence/stock2.png" alt="The Know-It-All Processor">
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="section-divider"></div>
+    <section class="features">
+        <div class="section-inner">
+            <h2>CORE FEATURES</h2>
+            <p class="features-sub">Patented technology for simulated competence</p>
+            <div class="grid-3">
+                <div class="feature-card brutal-card">
+                    <div class="feature-icon">🗣️</div>
+                    <div class="feature-title mono">INSTANT JARGON GENERATION</div>
+                    <p class="feature-desc">Our chip stimulates your Broca's area to automatically output words like "synergy," "deliverables," and "low-hanging fruit" whenever you feel threatened.</p>
+                    <div class="terminal mono">
+                        <div>&gt; SYNERGY</div>
+                        <div>&gt; DELIVERABLES</div>
+                        <div>&gt; LOW-HANGING FRUIT</div>
+                        <div class="terminal-dim" style="margin-top:0.5rem">&gt; THREAT DETECTED...</div>
+                    </div>
+                </div>
+                <div class="feature-card brutal-card">
+                    <div class="feature-icon">👁️</div>
+                    <div class="feature-title mono">RETINAL HUD 2.0</div>
+                    <p class="feature-desc">Projects stock market graphs directly onto your coworker's faces so you don't have to make eye contact.</p>
+                    <div style="border:4px solid #F58025;padding:1rem">
+                        <div class="mono" style="font-size:0.75rem">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>EYE CONTACT:</span><span style="font-weight:bold">AVOIDED</span></div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>CHARTS VISIBLE:</span><span style="font-weight:bold">YES</span></div>
+                            <div style="margin-top:1rem;font-size:0.875rem">→ Projecting graphs onto face...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-card brutal-card">
+                    <div class="feature-icon">😊</div>
+                    <div class="feature-title mono">THE "NOD & GRIN" PROTOCOL</div>
+                    <p class="feature-desc">Uses facial galvanism to force a confident smile even when you have no idea what is happening.</p>
+                    <div>
+                        <div class="meter"><div class="meter-label mono">SMILE</div><div class="meter-bar"><div class="meter-fill" style="width:95%"></div></div></div>
+                        <div class="meter"><div class="meter-label mono">NOD</div><div class="meter-bar"><div class="meter-fill" style="width:88%"></div></div></div>
+                        <div class="meter"><div class="meter-label mono">AWARENESS</div><div class="meter-bar"><div class="meter-fill" style="width:12%"></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="section-divider"></div>
+    <section>
+        <div class="section-inner">
+            <h2 style="text-align:center;font-size:3rem;margin-bottom:4rem">TRIAL FEEDBACK</h2>
+            <div class="testimonial">
+                <div class="testimonial-card brutal-card">
+                    <div class="testimonial-label mono">CLINICAL TRIAL DATA</div>
+                    <div style="font-size:4rem;opacity:0.2;margin-bottom:-2rem">"</div>
+                    <p class="testimonial-quote">I used to work in the mailroom. After the surgery, I shouted 'BLOCKCHAIN' during a silent moment in a board meeting. Now I own the company. I also can't taste cheese anymore. 5 Stars.</p>
+                    <div class="testimonial-footer">
+                        <div><div class="mono" style="font-weight:bold;font-size:0.875rem">SUBJECT #8940</div><div style="font-size:0.875rem;color:#6b7280">(Deceased)</div></div>
+                        <div class="stars mono">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:3rem">
+                <button onclick="alert('⚠ WARNING: USER AGREES TO SURGICAL VOIDANCE OF WARRANTY.')" class="aperture-btn" style="padding:1rem 2.5rem;font-size:1.125rem">Join The Trial</button>
+            </div>
+        </div>
+    </section>
+    <div class="section-divider"></div>
+    <footer>
+        <div class="section-inner">
+            <div class="footer-grid">
+                <div><h3 class="mono">CHASM LOGIC</h3><p>A Bedrock Holdings Company. Disrupting cognitive paradigms since Series A.</p></div>
+                <div><h4 class="mono">LEGAL</h4><ul><li>Terms of Implantation</li><li>Privacy Policy (Void)</li><li>Neural Data Harvesting</li><li>Class Action Waiver</li></ul></div>
+                <div><h4 class="mono">CONTACT</h4><ul><li class="mono">brock@chasmlogic.io</li><li class="mono">complaints@dev/null</li><li>Series B inquiries only.</li></ul></div>
+            </div>
+            <div class="disclaimer mono">
+                <p><span style="color:white;font-weight:bold">DISCLAIMER:</span> Apparent Intelligence is a hyper-growth unicorn subsidiary of Chasm Logic. Side effects of the 'Seeing is Believing' ocular implant include retinal scorch, aggressive humors, and the sensation that you are constantly falling.</p>
+                <p>Brock Granite, our CEO, has personally assured investors that the chip does not lobotomize you; it merely 'optimizes your hard drive by deleting unnecessary empathy files.' By reading this sentence, you have agreed to arbitration on Mars. Do not operate heavy machinery, heavy concepts, or voting booths while chipset is active.</p>
+                <p>The chip does not make you intelligent. The chip makes you <em>appear</em> intelligent. Actual intelligence sold separately. Chasm Logic assumes no liability for job loss, social ostracization, philosophical crises, or spontaneous combustion resulting from discovery of your simulated competence.</p>
+                <p class="warning">⚠ WARNING: This product may cause the user to become indistinguishable from an AI language model.</p>
+            </div>
+            <div class="footer-copy mono">© 2026 CHASM LOGIC. ALL RIGHTS DISRUPTED.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+</body>
+</html>

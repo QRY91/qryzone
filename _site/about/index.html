@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - qry.zone</title>
+    <meta name="description" content="The non-traditional route to software development">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/globals.css">
+    <link rel="stylesheet" href="/assets/css/header.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.177.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.177.0/examples/jsm/"
+        }
+    }
+    </script>
+    
+</head>
+<body class="flex flex-col min-h-screen">
+    <div class="overlay" id="overlay"></div>
+<header class="header">
+    <nav class="nav container">
+        <a href="/" class="logo-link">
+            <img src="/assets/images/logo_burn.png" alt="QRY.zone Logo" width="32" height="32" class="logo-image">
+        </a>
+        <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="/explore/">Explore</a>
+            <a href="/about/">About</a>
+            <a href="/fun/">Fun</a>
+            <a href="https://github.com/QRY91" aria-label="GitHub">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+            </a>
+        </div>
+    </nav>
+</header>
+
+    <main class="container" style="flex-grow: 1; padding-top: var(--space-xl); padding-bottom: var(--space-xl);">
+        
+<style>
+.about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    line-height: 1.7;
+}
+.about-container h1 {
+    font-size: 2rem;
+    margin-bottom: var(--space-xl);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+}
+.about-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-lg);
+    color: var(--color-text-primary);
+}
+.about-container h3 {
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-mono);
+}
+.about-section {
+    margin-bottom: var(--space-xxl);
+}
+.quote-box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: var(--space-lg);
+    border-radius: var(--border-radius);
+    font-style: italic;
+    color: var(--color-text-secondary);
+    margin: var(--space-lg) 0;
+}
+.capability-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--space-lg);
+}
+.capability-list li {
+    margin-bottom: var(--space-sm);
+}
+.capability-list strong {
+    color: var(--color-accent);
+}
+.work-item {
+    margin-bottom: var(--space-lg);
+}
+.evidence {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+.contact-section {
+    background: var(--color-surface);
+    padding: var(--space-xl);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+.contact-section h2 {
+    font-size: 1.3rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+}
+.contact-links {
+    display: flex;
+    gap: var(--space-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.contact-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background: var(--color-background);
+}
+</style>
+
+<div class="about-container">
+    <h1>The whole story</h1>
+
+    <section class="about-section">
+        <h2>The non-traditional route</h2>
+        <p>
+            I took the scenic route to software development. Psychology studies →
+            game design → callcenter → bootcamp → startup burnout → back to school
+            at 33. Not exactly the typical CS path, but it gave me something
+            useful: a systematic approach to understanding why things break and
+            how to build better alternatives.
+        </p>
+        <p>
+            Months out of bootcamp, I was handling enterprise logistics for Maersk
+            as a solo developer. Complex API integrations, German customs systems,
+            client relationships, project management - work that should require a
+            team. That's when I learned the difference between building software
+            and building <em>systems that actually work</em>.
+        </p>
+    </section>
+
+    <section class="about-section">
+        <h2>Learning through institutional dysfunction</h2>
+        <p>
+            Then came the education in organizational toxicity. Quality work
+            punished. Systematic thinking labeled as "slowness" while depending on
+            the solutions it produced. The classic double-bind: do it fast or do
+            it right, but somehow also make it perfect.
+        </p>
+        <p>
+            Instead of just complaining, I documented everything. Patterns,
+            failures, what worked, what didn't. That documentation became the
+            foundation for building tools that solve these problems
+            systematically.
+        </p>
+        <div class="quote-box">
+            "I learn to spite those who punish it. If I can suffer and learn and
+            build systems that prevent others from experiencing that dysfunction,
+            then the suffering becomes valuable. If I die with the knowledge, the
+            systems never get built, and the dysfunction repeats."
+        </div>
+    </section>
+
+    <section class="about-section">
+        <h2>Current capabilities</h2>
+        <p>What you get when you hire someone who took the long way around:</p>
+        <ul class="capability-list">
+            <li>
+                <strong>Multi-domain experience:</strong>
+                Psychology, game design, cybersecurity, enterprise systems -
+                different contexts, same systematic thinking
+            </li>
+            <li>
+                <strong>Problem transformation:</strong>
+                Converting institutional trauma into systematic solutions others can use
+            </li>
+            <li>
+                <strong>Documentation obsession:</strong>
+                Everything captured systematically - enables knowledge transfer
+                without human bottlenecks
+            </li>
+            <li>
+                <strong>AI integration expertise:</strong>
+                Transparent collaboration that builds capability rather than dependency
+            </li>
+            <li>
+                <strong>Local-first philosophy:</strong>
+                Privacy-respecting tools that work offline and don't phone home
+            </li>
+        </ul>
+    </section>
+
+    <section class="about-section">
+        <h2>Recent work highlights</h2>
+
+        <div class="work-item">
+            <h3>Panopticron - Enterprise Monitoring</h3>
+            <p>
+                Built enterprise-level monitoring system for 6-person agency. Live
+                production system with worker-based data sync, custom visualization,
+                service-oriented architecture. Academic validation through
+                IEEE-formatted report delivered in 16 hours.
+            </p>
+            <p class="evidence">
+                <strong>Evidence:</strong>
+                <a href="https://panopticron.vercel.app/" target="_blank" rel="noopener noreferrer">
+                    Live at panopticron.vercel.app
+                </a>
+            </p>
+        </div>
+
+        <div class="work-item">
+            <h3>QRY Tool Ecosystem</h3>
+            <p>
+                Local-first developer tools addressing documented problems: context
+                preservation, work visibility, systematic learning, AI collaboration
+                methodology. Each tool solves a specific dysfunction I've
+                experienced and documented.
+            </p>
+            <p class="evidence">
+                <strong>Evidence:</strong>
+                <a href="https://github.com/QRY91/qryzone" target="_blank" rel="noopener noreferrer">
+                    Active development on GitHub
+                </a>
+            </p>
+        </div>
+
+        <div class="work-item">
+            <h3>Educational Game Design</h3>
+            <p>
+                Quantum mechanics through dice game mechanics. Complex concepts made
+                accessible without dumbing down. Proven methodology for translating
+                difficult technical topics into intuitive interactive systems.
+            </p>
+            <p class="evidence">
+                <strong>Evidence:</strong>
+                <a href="https://github.com/QRY91/quantum_dice" target="_blank" rel="noopener noreferrer">
+                    Game development on GitHub
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <h2>What I'm looking for</h2>
+        <p>
+            Environments where systematic problem-solving is valued over velocity
+            theater. Teams that build solutions rather than just implement
+            predetermined requirements. Organizations that understand the
+            difference between "moving fast" and "building sustainably."
+        </p>
+        <p>I'm particularly interested in:</p>
+        <ul class="capability-list">
+            <li>
+                <strong>Developer tools companies</strong> -
+                Building tools that make other developers more effective
+            </li>
+            <li>
+                <strong>Platform engineering</strong> -
+                Infrastructure that enables rather than constrains
+            </li>
+            <li>
+                <strong>R&D environments</strong> -
+                Systematic exploration of complex problems
+            </li>
+            <li>
+                <strong>Educational technology</strong> -
+                Making complex concepts accessible without oversimplification
+            </li>
+        </ul>
+    </section>
+
+    <section class="about-section">
+        <h2>How I work (including with AI)</h2>
+        <p>
+            Most text on this site was drafted with AI assistance. The underlying
+            ideas, experiences, and frameworks come from 5+ years of notes and
+            lived experience. AI helps with the communication bottleneck - turning
+            rough thinking into readable prose.
+        </p>
+        <p>
+            I'm transparent about this because I think it matters. AI makes
+            mistakes, sometimes confidently wrong ones. I catch what I can, but
+            I'm not pretending this is all hand-crafted prose. The value is in the
+            thinking, not the word count.
+        </p>
+        <p class="evidence">
+            If you spot errors,
+            <a href="https://github.com/QRY91/qryzone/issues">let me know</a>.
+            I'd rather fix things than pretend they're perfect.
+        </p>
+    </section>
+
+    <section class="contact-section">
+        <h2>Contact</h2>
+        <p>Want to talk about systematic solutions to documented problems?</p>
+        <div class="contact-links">
+            <a href="mailto:glenn@qry.zone" class="contact-link">glenn@qry.zone</a>
+            <a href="https://github.com/QRY91" class="contact-link">GitHub →</a>
+            <a href="https://www.bokondo.net/" target="_blank" rel="noopener noreferrer" class="contact-link">Professional Resume →</a>
+        </div>
+    </section>
+</div>
+
+    </main>
+    <footer class="footer">
+    <div class="container">
+        <p>&copy;QRY</p>
+    </div>
+</footer>
+
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7e9d8b03c4e27e92268d848a78589ca0"}'></script>
+    <script src="/assets/js/header.js"></script>
+    
+</body>
+</html>

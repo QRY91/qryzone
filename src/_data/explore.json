@@ -1,0 +1,200 @@
+{
+  "items": [
+    {
+      "title": "About",
+      "description": "The non-traditional route to software development",
+      "href": "/about/",
+      "tags": ["personal", "career"],
+      "status": "evergreen",
+      "lastUpdated": "2025-01-08"
+    },
+    {
+      "title": "Productivity breakthrough",
+      "description": "How transferable skills and AI catalyzed sustained development flow",
+      "href": "/journey/productivity-breakthrough/",
+      "tags": ["learning", "ai-collaboration", "personal"],
+      "status": "evergreen",
+      "connections": ["AI hyperresponder profile", "Hybrid AI transition"],
+      "lastUpdated": "2025-01-05"
+    },
+    {
+      "title": "QRY Methodology",
+      "description": "Query, Refine, Yield - systematic problem solving",
+      "href": "/methodology/",
+      "tags": ["systematic-thinking", "learning"],
+      "status": "evergreen",
+      "lastUpdated": "2025-01-03"
+    },
+    {
+      "title": "Homelab permacomputing strategy",
+      "description": "Building distributed infrastructure using heterogeneous hardware",
+      "href": "/hidden/thinking/homelab-permacomputing-strategy/",
+      "tags": ["permacomputing", "local-first", "systematic-thinking"],
+      "status": "growing",
+      "connections": ["Technical depth assessment", "CLI-first development"],
+      "lastUpdated": "2025-01-07"
+    },
+    {
+      "title": "CLI-first development",
+      "description": "Terminal-centric workflows and why they matter",
+      "href": "/hidden/thinking/cli-first-development/",
+      "tags": ["developer-tools", "systematic-thinking", "local-first"],
+      "status": "growing",
+      "connections": ["Homelab permacomputing strategy"],
+      "lastUpdated": "2025-01-06"
+    },
+    {
+      "title": "AI hyperresponder profile",
+      "description": "Why some people get disproportionate value from AI collaboration",
+      "href": "/hidden/thinking/ai-hyperresponder/",
+      "tags": ["ai-collaboration", "learning", "neurodivergent"],
+      "status": "growing",
+      "connections": ["Productivity breakthrough", "Hybrid AI transition"],
+      "lastUpdated": "2025-01-04"
+    },
+    {
+      "title": "DevTools landscape analysis",
+      "description": "Understanding the developer tools market",
+      "href": "/hidden/thinking/devtools-landscape/",
+      "tags": ["developer-tools", "analysis"],
+      "status": "growing",
+      "lastUpdated": "2025-01-02"
+    },
+    {
+      "title": "Technical depth assessment",
+      "description": "Evaluating and building genuine technical capability",
+      "href": "/hidden/thinking/technical-depth-assessment/",
+      "tags": ["learning", "systematic-thinking", "career"],
+      "status": "seedling",
+      "connections": ["Homelab permacomputing strategy"]
+    },
+    {
+      "title": "Professional positioning strategy",
+      "description": "How to present non-traditional backgrounds",
+      "href": "/hidden/thinking/professional-positioning-strategy/",
+      "tags": ["career", "personal"],
+      "status": "seedling",
+      "connections": ["Career realignment", "About"]
+    },
+    {
+      "title": "Hybrid AI transition",
+      "description": "80/20 sustainable AI integration for workflows",
+      "href": "/hidden/thinking/hybrid-ai-transition/",
+      "tags": ["ai-collaboration", "systematic-thinking"],
+      "status": "seedling",
+      "connections": ["AI hyperresponder profile", "Productivity breakthrough"]
+    },
+    {
+      "title": "Priority bubbling UI",
+      "description": "Interface patterns for attention-respecting software",
+      "href": "/hidden/thinking/priority-bubbling-ui/",
+      "tags": ["developer-tools", "design"],
+      "status": "seedling"
+    },
+    {
+      "title": "Framework cluster economics",
+      "description": "Cost analysis of development infrastructure",
+      "href": "/hidden/thinking/framework-cluster-economics/",
+      "tags": ["local-first", "analysis"],
+      "status": "seedling",
+      "connections": ["Homelab permacomputing strategy"]
+    },
+    {
+      "title": "Career realignment",
+      "description": "Navigating career transitions at 33",
+      "href": "/hidden/journey/career-realignment/",
+      "tags": ["career", "personal", "learning"],
+      "status": "seedling",
+      "connections": ["About", "Professional positioning strategy"]
+    },
+    {
+      "title": "Professional identity architecture",
+      "description": "Building identity from institutional trauma",
+      "href": "/hidden/journey/professional-identity/",
+      "tags": ["career", "personal"],
+      "status": "seedling",
+      "connections": ["About", "Career realignment"]
+    },
+    {
+      "title": "NixOS learning progression",
+      "description": "Systematic approach to learning NixOS",
+      "href": "/hidden/journey/nixos-learning-progression/",
+      "tags": ["learning", "local-first", "developer-tools"],
+      "status": "seedling",
+      "connections": ["CLI-first development", "Homelab permacomputing strategy"]
+    },
+    {
+      "title": "Database-first debugging",
+      "description": "When the problem isn't in the code, it's in the data",
+      "href": "/notes/database-first-debugging/",
+      "tags": ["debugging", "systematic-thinking", "learning"],
+      "status": "seedling",
+      "connections": ["Optimization through removal"],
+      "lastUpdated": "2025-01-08"
+    },
+    {
+      "title": "Optimization through removal",
+      "description": "The fastest code is code that doesn't run",
+      "href": "/notes/optimization-through-removal/",
+      "tags": ["debugging", "systematic-thinking"],
+      "status": "seedling",
+      "connections": ["Database-first debugging"],
+      "lastUpdated": "2025-01-08"
+    },
+    {
+      "title": "The sailboat test",
+      "description": "A filter for what tools deserve to exist",
+      "href": "/notes/sailboat-test/",
+      "tags": ["permacomputing", "local-first", "systematic-thinking"],
+      "status": "seedling",
+      "connections": ["Homelab permacomputing strategy"],
+      "lastUpdated": "2025-01-08"
+    },
+    {
+      "title": "Economic honesty",
+      "description": "This is all fucking insane but I have a mortgage",
+      "href": "/notes/economic-honesty/",
+      "tags": ["personal", "career"],
+      "status": "seedling",
+      "lastUpdated": "2025-01-08"
+    },
+    {
+      "title": "Learning to spite",
+      "description": "Transforming institutional dysfunction into fuel",
+      "href": "/notes/learning-to-spite/",
+      "tags": ["learning", "personal"],
+      "status": "seedling",
+      "connections": ["QRY Methodology", "About"],
+      "lastUpdated": "2025-01-08"
+    },
+    {
+      "title": "uroboro",
+      "description": "Context capture that makes development work visible",
+      "href": "https://www.uroboro.dev/",
+      "tags": ["developer-tools", "local-first"],
+      "status": "growing",
+      "lastUpdated": "2025-01-08"
+    },
+    {
+      "title": "doggowoof",
+      "description": "Local monitoring that learns your patterns",
+      "href": "https://github.com/QRY91/doggowoof",
+      "tags": ["developer-tools", "local-first"],
+      "status": "seedling"
+    },
+    {
+      "title": "wherewasi",
+      "description": "Context preservation across work sessions",
+      "href": "https://github.com/QRY91/wherewasi",
+      "tags": ["developer-tools", "local-first"],
+      "status": "seedling"
+    },
+    {
+      "title": "quantum-dice",
+      "description": "Learn quantum mechanics through dice game mechanics",
+      "href": "https://github.com/QRY91/quantum-dice",
+      "tags": ["learning", "games"],
+      "status": "growing"
+    }
+  ]
+}

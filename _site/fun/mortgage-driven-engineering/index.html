@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgage Driven Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mde-bg: #0a0a0a;
+            --mde-fg: #00ff00;
+            --mde-fg-dim: #007700;
+            --mde-fg-bright: #33ff33;
+            --mde-accent: #ff6600;
+            --mde-accent-dim: #994400;
+            --mde-border: #333;
+            --mde-card-bg: #111;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--mde-bg);
+            color: var(--mde-fg);
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .terminal { max-width: 900px; margin: 0 auto; }
+        header { margin-bottom: 2rem; border-bottom: 1px solid var(--mde-border); padding-bottom: 1rem; }
+        .ascii-logo {
+            color: var(--mde-accent);
+            font-size: 6px;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            text-shadow: 0 0 10px var(--mde-accent-dim);
+            white-space: pre;
+        }
+        .tagline { color: var(--mde-fg-dim); font-size: 1rem; }
+        .subtitle { color: var(--mde-fg); font-style: italic; margin-top: 0.5rem; }
+        nav { margin-bottom: 2rem; padding: 0.5rem 0; }
+        nav a { color: var(--mde-fg); text-decoration: none; }
+        nav a:hover { color: var(--mde-fg-bright); text-decoration: underline; }
+        .prompt { color: var(--mde-accent); font-weight: bold; }
+        .command { margin: 1.5rem 0 0.5rem 0; color: var(--mde-fg-bright); }
+        .output { padding-left: 1rem; border-left: 2px solid var(--mde-border); margin-bottom: 1.5rem; }
+        .output p { margin: 0.5rem 0; }
+        .output ul { margin: 0.5rem 0; padding-left: 1.5rem; }
+        .output li { margin: 0.25rem 0; }
+        .dim { color: var(--mde-fg-dim); }
+        .slogan-grid { display: grid; gap: 1rem; margin: 1rem 0 2rem 0; }
+        .slogan-card {
+            background: var(--mde-card-bg);
+            border: 1px solid var(--mde-border);
+            padding: 1.5rem;
+            transition: border-color 0.2s;
+        }
+        .slogan-card:hover { border-color: var(--mde-fg); }
+        .slogan-card.expansion { border-style: dashed; }
+        .slogan-text {
+            font-size: 1.1rem;
+            color: var(--mde-fg-bright);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--mde-fg-dim);
+        }
+        .slogan-desc { color: var(--mde-fg-dim); font-size: 0.85rem; }
+        .manifesto em { color: var(--mde-accent); font-style: normal; }
+        footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--mde-border); }
+        @media (max-width: 600px) {
+            .ascii-logo { font-size: 4px; }
+            .slogan-text { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <header>
+            <pre class="ascii-logo">
+███╗   ███╗ ██████╗ ██████╗ ████████╗ ██████╗  █████╗  ██████╗ ███████╗
+████╗ ████║██╔═══██╗██╔══██╗╚══██╔══╝██╔════╝ ██╔══██╗██╔════╝ ██╔════╝
+██╔████╔██║██║   ██║██████╔╝   ██║   ██║  ███╗███████║██║  ███╗█████╗
+██║╚██╔╝██║██║   ██║██╔══██╗   ██║   ██║   ██║██╔══██║██║   ██║██╔══╝
+██║ ╚═╝ ██║╚██████╔╝██║  ██║   ██║   ╚██████╔╝██║  ██║╚██████╔╝███████╗
+╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+██████╗ ██████╗ ██╗██╗   ██╗███████╗███╗   ██╗
+██╔══██╗██╔══██╗██║██║   ██║██╔════╝████╗  ██║
+██║  ██║██████╔╝██║██║   ██║█████╗  ██╔██╗ ██║
+██║  ██║██╔══██╗██║╚██╗ ██╔╝██╔══╝  ██║╚██╗██║
+██████╔╝██║  ██║██║ ╚████╔╝ ███████╗██║ ╚████║
+╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝
+███████╗███╗   ██╗ ██████╗ ██╗███╗   ██╗███████╗███████╗██████╗ ██╗███╗   ██╗ ██████╗
+██╔════╝████╗  ██║██╔════╝ ██║████╗  ██║██╔════╝██╔════╝██╔══██╗██║████╗  ██║██╔════╝
+█████╗  ██╔██╗ ██║██║  ███╗██║██╔██╗ ██║█████╗  █████╗  ██████╔╝██║██╔██╗ ██║██║  ███╗
+██╔══╝  ██║╚██╗██║██║   ██║██║██║╚██╗██║██╔══╝  ██╔══╝  ██╔══██╗██║██║╚██╗██║██║   ██║
+███████╗██║ ╚████║╚██████╔╝██║██║ ╚████║███████╗███████╗██║  ██║██║██║ ╚████║╚██████╔╝
+╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝
+            </pre>
+            <p class="tagline">// "This is all fucking insane but I have a mortgage."</p>
+            <p class="subtitle">"Real people get left behind in the golden parachute techbro dreamworld."</p>
+        </header>
+
+        <nav>
+            <span class="prompt">$</span> <a href="/fun/">../fun</a> | <a href="#slogans">slogans</a> | <a href="#thesis">thesis</a> | <a href="#resources">resources</a>
+        </nav>
+
+        <main>
+            <section>
+                <div class="command"><span class="prompt">$</span> cat README.md</div>
+                <div class="output">
+                    <p>A satirical merch collection for tech workers caught between their principles and their rent payments.</p>
+                    <p>Think hacker zine meets shitpost meets economic reality meets gift economy.</p>
+                    <p class="dim">// All designs freely available. Shop is just a convenience layer.</p>
+                </div>
+            </section>
+
+            <section id="slogans">
+                <div class="command"><span class="prompt">$</span> ls -la ./slogans/core/</div>
+                <div class="slogan-grid">
+                    <div class="slogan-card"><div class="slogan-text">"This is all fucking insane but I have a mortgage."</div><div class="slogan-desc">The unofficial motto of tech workers everywhere</div></div>
+                    <div class="slogan-card"><div class="slogan-text">"Peak Techbro Hype-Wizardry"</div><div class="slogan-desc">For the connoisseurs of venture capital theater</div></div>
+                    <div class="slogan-card"><div class="slogan-text">"Commons Over Kingdoms"</div><div class="slogan-desc">Subtle rebellion against Big Tech dominance</div></div>
+                    <div class="slogan-card"><div class="slogan-text">"Local-First or GTFO"</div><div class="slogan-desc">If it doesn't work offline, it's not a tool—it's a service dependency</div></div>
+                    <div class="slogan-card"><div class="slogan-text">"Cargo Cult Science with VC Funding"</div><div class="slogan-desc">When companies throw money at correlation hoping causation falls out</div></div>
+                </div>
+
+                <div class="command"><span class="prompt">$</span> ls -la ./slogans/expansion/</div>
+                <div class="slogan-grid">
+                    <div class="slogan-card expansion"><div class="slogan-text">"I Survived Another Pivot"</div><div class="slogan-desc">Badge of honor for the battle-scarred</div></div>
+                    <div class="slogan-card expansion"><div class="slogan-text">"Inevitabilism is a Rhetorical Strategy"</div><div class="slogan-desc">Calling out "AI is inevitable" as a debate tactic, not reality</div></div>
+                    <div class="slogan-card expansion"><div class="slogan-text">"Built Different (Same as Everyone Else)"</div><div class="slogan-desc">When every company claims to be "disruptive" while following identical playbooks</div></div>
+                    <div class="slogan-card expansion"><div class="slogan-text">"It's Just CRUD with Extra Steps"</div><div class="slogan-desc">When complex architectures boil down to Create, Read, Update, Delete</div></div>
+                    <div class="slogan-card expansion"><div class="slogan-text">"Autocomplete with Delusions of Grandeur"</div><div class="slogan-desc">When predictive text gets called "artificial intelligence"</div></div>
+                    <div class="slogan-card expansion"><div class="slogan-text">"Even My Critique Gets Commodified"</div><div class="slogan-desc">The system commodifies everything, including its own criticism</div></div>
+                </div>
+            </section>
+
+            <section id="thesis">
+                <div class="command"><span class="prompt">$</span> cat THESIS.md</div>
+                <div class="output manifesto">
+                    <p>The tech industry runs on a simple dynamic: most people know the current trends are varying degrees of insane, but economic leverage determines intellectual freedom.</p>
+                    <p>Until you have "fuck you" money, you nod along with "AI will revolutionize everything" while quietly building actual useful tools.</p>
+                    <p>This is for everyone who's ever sat in a meeting thinking <em>"this is completely insane"</em> while nodding because they need health insurance.</p>
+                </div>
+            </section>
+
+            <section id="resources">
+                <div class="command"><span class="prompt">$</span> cat GIFT_ECONOMY.md</div>
+                <div class="output">
+                    <p><strong>// The Deal</strong></p>
+                    <ul>
+                        <li>Want to buy a shirt? Cool. We'll ship it.</li>
+                        <li>Want to print your own? Here are the design files. No charge.</li>
+                        <li>Want to remix it? Go for it. No trademarks here.</li>
+                        <li>It belongs to everyone who pays rent.</li>
+                    </ul>
+                    <p class="dim">This project demonstrates its own thesis: we're selling critique of capitalism while being trapped within it.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="command"><span class="prompt">$</span> echo $STATUS</div>
+            <div class="output">
+                <p>MIT License | No VC Funding | No Growth Hacking | Pure Vibes</p>
+                <p class="dim">No vibe it, no buy it. No problem. It's vibes.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

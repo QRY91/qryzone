@@ -1,0 +1,261 @@
+---
+layout: base.njk
+title: Homelab Permacomputing Strategy - qry.zone
+description: A systematic approach to building distributed computing infrastructure using heterogeneous hardware and permacomputing principles
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Homelab Permacomputing Strategy
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        A systematic approach to building distributed computing infrastructure using heterogeneous hardware,
+        permacomputing principles, and resourceful engineering.
+      </p>
+    </div>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
+        The Resourceful Infrastructure Framework
+      </h2>
+      <p style="margin-bottom: var(--space-lg)">
+        Most homelab approaches assume uniform, modern hardware. This framework embraces the opposite:
+        <strong>systematic utilization of whatever hardware you have</strong>, from ancient Pentium II
+        machines to modern workstations, each playing specialized roles in a distributed system.
+      </p>
+
+      <div style="background: var(--color-surface); border-left: 4px solid var(--color-accent); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); font-style: italic; color: var(--color-text-secondary)">
+        "Cave with a box of scraps" engineering: When you can't buy your way to a solution,
+        you engineer your way to one.
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
+        Hardware Capability Assessment
+      </h2>
+      <p style="margin-bottom: var(--space-lg)">
+        Before assigning roles, systematically assess what you're working with:
+      </p>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        The Stratification Approach
+      </h3>
+      <ul style="margin-bottom: var(--space-lg)">
+        <li><strong>Ultra-Low Spec</strong> (Penny-class): Sub-1GHz, &lt;64MB RAM - Static services, monitoring</li>
+        <li><strong>Legacy Workable</strong> (Debby-class): Multi-core, 2-8GB RAM - Dedicated services, experimentation</li>
+        <li><strong>Modern Capable</strong> (Poppy-class): High-performance, GPU - AI workloads, development</li>
+        <li><strong>Portable Power</strong> (Framework-class): Laptop form factor - Nomadic computing, privacy-first</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
+        Machine Role Specialization
+      </h2>
+      <p style="margin-bottom: var(--space-lg)">
+        Each machine class has optimal use patterns based on its constraints and capabilities:
+      </p>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        The Ancient Servants (Ultra-Low Spec)
+      </h3>
+      <p style="margin-bottom: var(--space-md)">
+        These machines excel at tasks that require persistence rather than performance:
+      </p>
+      <ul style="margin-bottom: var(--space-lg)">
+        <li><strong>Configuration Distribution</strong>: Serve dotfiles, scripts, and system configs via basic HTTP</li>
+        <li><strong>Network Monitoring</strong>: Continuous ping monitoring, basic health checks</li>
+        <li><strong>Time Services</strong>: NTP server for local network synchronization</li>
+        <li><strong>Morning Digest Base</strong>: Overnight data collection from simple sources</li>
+      </ul>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        The Reliable Workhorses (Legacy Workable)
+      </h3>
+      <p style="margin-bottom: var(--space-md)">
+        These handle the bulk of always-on services that need more capability than ancient hardware can provide:
+      </p>
+      <ul style="margin-bottom: var(--space-lg)">
+        <li><strong>Network Services</strong>: Pi-hole, local DNS, basic routing</li>
+        <li><strong>Development Infrastructure</strong>: Git servers, documentation wikis, CI runners</li>
+        <li><strong>Dashboard Displays</strong>: System monitoring, home automation interfaces</li>
+        <li><strong>Experimentation Playground</strong>: Safe testing environment for new configurations</li>
+      </ul>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        The Power Players (Modern Capable)
+      </h3>
+      <p style="margin-bottom: var(--space-md)">
+        These tackle computationally intensive tasks and orchestrate the entire system:
+      </p>
+      <ul style="margin-bottom: var(--space-lg)">
+        <li><strong>Local AI Inference</strong>: 7B parameter models, quantized LLMs via Ollama</li>
+        <li><strong>Development Powerhouse</strong>: Compilation, containerization, VM hosting</li>
+        <li><strong>System Orchestration</strong>: Managing deployments to lower-tier machines</li>
+        <li><strong>Heavy Processing</strong>: Data analysis, multimedia work, gaming</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
+        Distributed AI Strategy
+      </h2>
+      <p style="margin-bottom: var(--space-lg)">
+        Rather than trying to run everything on one machine, distribute AI tasks across your infrastructure:
+      </p>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        The Pipeline Approach
+      </h3>
+      <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
+        <p style="margin-bottom: var(--space-sm)"><strong>Data Collection</strong> (Ancient machines): Fetch raw data from APIs, RSS feeds, local sensors</p>
+        <p style="margin-bottom: var(--space-sm)"><strong>Preprocessing</strong> (Legacy machines): Filter, format, and structure data for analysis</p>
+        <p style="margin-bottom: var(--space-sm)"><strong>Analysis</strong> (Modern machines): Apply LLMs for summarization, decision-making, insight generation</p>
+        <p><strong>Distribution</strong> (All tiers): Serve results back to appropriate interfaces</p>
+      </div>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        Capability-Matched Tasks
+      </h3>
+      <ul style="margin-bottom: var(--space-lg)">
+        <li><strong>Ultra-low spec</strong>: Basic text processing, simple data aggregation</li>
+        <li><strong>Legacy workable</strong>: Traditional ML models, basic NLP with classical approaches</li>
+        <li><strong>Modern capable</strong>: Transformer models, vision tasks, complex reasoning</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
+        Network Architecture Principles
+      </h2>
+      <p style="margin-bottom: var(--space-lg)">
+        Your heterogeneous infrastructure needs thoughtful network design:
+      </p>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        Segmentation Strategy
+      </h3>
+      <ul style="margin-bottom: var(--space-lg)">
+        <li><strong>Homelab subnet</strong>: Isolated network segment for experimental machines</li>
+        <li><strong>Production services</strong>: Stable, always-on services on reliable hardware</li>
+        <li><strong>Development sandbox</strong>: Safe environment for testing new configurations</li>
+        <li><strong>External access</strong>: Carefully controlled exposure of specific services</li>
+      </ul>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        Service Discovery
+      </h3>
+      <ul style="margin-bottom: var(--space-lg)">
+        <li><strong>Central DNS</strong>: One machine handles name resolution for the entire lab</li>
+        <li><strong>SSH everywhere</strong>: Consistent remote access across all Linux machines</li>
+        <li><strong>Service mesh</strong>: Each machine advertises its capabilities and services</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
+        Implementation Roadmap
+      </h2>
+      <p style="margin-bottom: var(--space-lg)">
+        Start small and expand systematically:
+      </p>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        Phase 1: Assessment and Basic Services
+      </h3>
+      <ol style="margin-bottom: var(--space-lg)">
+        <li>Inventory and capability-test all available hardware</li>
+        <li>Set up basic networking and SSH access</li>
+        <li>Deploy one simple service on each tier</li>
+        <li>Establish monitoring and basic automation</li>
+      </ol>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        Phase 2: Service Specialization
+      </h3>
+      <ol style="margin-bottom: var(--space-lg)">
+        <li>Migrate services to optimal hardware based on resource usage</li>
+        <li>Implement cross-machine communication and coordination</li>
+        <li>Add redundancy for critical services</li>
+        <li>Develop custom tooling for your specific setup</li>
+      </ol>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        Phase 3: Advanced Integration
+      </h3>
+      <ol style="margin-bottom: var(--space-lg)">
+        <li>Implement distributed AI pipeline</li>
+        <li>Add sophisticated monitoring and alerting</li>
+        <li>Develop custom applications that leverage your entire infrastructure</li>
+        <li>Document and systematize your operational procedures</li>
+      </ol>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
+        Strategic Insights
+      </h2>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        Embrace Constraints as Features
+      </h3>
+      <p style="margin-bottom: var(--space-lg)">
+        Ancient hardware forces you to write efficient code and design lean systems.
+        These constraints often lead to better architecture than unlimited resources would.
+      </p>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        Permacomputing Philosophy
+      </h3>
+      <p style="margin-bottom: var(--space-lg)">
+        Long-running, low-power tasks on older hardware often provide better reliability
+        than high-performance solutions. A Pentium II running for months is more valuable
+        than a modern server that crashes weekly.
+      </p>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        Learning Through Limitation
+      </h3>
+      <p style="margin-bottom: var(--space-lg)">
+        Working with diverse hardware teaches you more about computing fundamentals than
+        any single modern system. The contrast between a Pentium II and a modern Framework
+        laptop is a master class in computer architecture evolution.
+      </p>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
+        Distributed Resilience
+      </h3>
+      <p style="margin-bottom: var(--space-lg)">
+        When your infrastructure spans multiple machines with different capabilities,
+        you naturally build systems that can gracefully degrade and recover from failures.
+      </p>
+    </section>
+
+    <section style="background: var(--color-surface); padding: var(--space-xl); border: 1px solid var(--color-border); border-radius: var(--border-radius); margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
+        Key Takeaway
+      </h2>
+      <p>
+        Resourceful infrastructure isn't about making do with less--it's about
+        systematically maximizing the value of everything you have. The goal isn't
+        to build the cheapest homelab, but to build the most thoughtfully distributed one.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl); padding-top: var(--space-lg); border-top: 1px solid var(--color-border)">
+      <p style="font-size: 0.9rem; color: var(--color-text-secondary)">
+        <strong>Related:</strong> This framework pairs well with systematic thinking about
+        <a href="/hidden/thinking/technical-depth-assessment/" style="color: var(--color-accent)">technical depth assessment</a> and
+        <a href="/hidden/workshop/microstudio-workflow/" style="color: var(--color-accent)">microstudio workflow architecture</a>.
+      </p>
+    </section>
+
+  </div>
+</article>

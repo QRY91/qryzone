@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>qry.zone</title>
+    <meta name="description" content="Notes, tools, and half-formed ideas about building software">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/globals.css">
+    <link rel="stylesheet" href="/assets/css/header.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.177.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.177.0/examples/jsm/"
+        }
+    }
+    </script>
+    
+</head>
+<body class="flex flex-col min-h-screen">
+    <div class="overlay" id="overlay"></div>
+<header class="header">
+    <nav class="nav container">
+        <a href="/" class="logo-link">
+            <img src="/assets/images/logo_burn.png" alt="QRY.zone Logo" width="32" height="32" class="logo-image">
+        </a>
+        <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="/explore/">Explore</a>
+            <a href="/about/">About</a>
+            <a href="/fun/">Fun</a>
+            <a href="https://github.com/QRY91" aria-label="GitHub">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+            </a>
+        </div>
+    </nav>
+</header>
+
+    <main class="container" style="flex-grow: 1; padding-top: var(--space-xl); padding-bottom: var(--space-xl);">
+        
+<style>
+.home-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    line-height: 1.7;
+}
+.hero {
+    text-align: center;
+    margin-bottom: var(--space-xxl);
+}
+.three-container {
+    width: 100%;
+    height: 400px;
+    position: relative;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--space-lg);
+}
+.loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    color: var(--color-accent);
+}
+.hero-text {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+}
+.hero-subtext {
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+}
+.section-title {
+    font-size: 1rem;
+    margin-bottom: var(--space-md);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+}
+.topics-section, .featured-section, .entry-section {
+    margin-bottom: var(--space-xxl);
+}
+.topics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+.topic-link {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background: var(--color-surface);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+.topic-link:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+.featured-grid {
+    display: grid;
+    gap: var(--space-md);
+}
+.featured-card {
+    text-decoration: none;
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    background: var(--color-surface);
+    display: block;
+}
+.featured-card:hover {
+    border-color: var(--color-accent);
+}
+.featured-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xs);
+}
+.featured-title {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+}
+.featured-description {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+.status-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid;
+}
+.status-seedling { background: #2d3a2d; color: #81c784; border-color: #4a5f4a; }
+.status-growing { background: #3a3a2d; color: #f0dfaf; border-color: #5f5f4a; }
+.status-evergreen { background: #2d3a3a; color: #7fc7c7; border-color: #4a5f5f; }
+.entry-links {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.entry-link-primary {
+    color: var(--color-accent);
+    text-decoration: none;
+    padding: var(--space-sm) var(--space-lg);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius);
+}
+.entry-link-secondary {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    padding: var(--space-sm) var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+}
+.legend {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-lg);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+.legend-items {
+    display: flex;
+    gap: var(--space-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+</style>
+
+<div class="home-container">
+    <!-- Hero -->
+    <section class="hero">
+        <div id="three-container" class="three-container">
+            <div class="loading-indicator">Loading visualization...</div>
+        </div>
+        <p class="hero-text">
+            Notes, tools, and half-formed ideas about building software that
+            respects your time and attention.
+        </p>
+        <p class="hero-subtext">
+            Wander around. Most things are unfinished. That's fine.
+        </p>
+    </section>
+
+    <!-- Topics -->
+    <section class="topics-section">
+        <h2 class="section-title">Topics</h2>
+        <div class="topics-grid">
+            <a href="/explore/?tag=local-first" class="topic-link" title="tools that work offline">local-first</a>
+            <a href="/explore/?tag=permacomputing" class="topic-link" title="sustainable tech philosophy">permacomputing</a>
+            <a href="/explore/?tag=systematic-thinking" class="topic-link" title="frameworks over heuristics">systematic-thinking</a>
+            <a href="/explore/?tag=developer-tools" class="topic-link" title="things I'm building">developer-tools</a>
+            <a href="/explore/?tag=learning" class="topic-link" title="how I figure things out">learning</a>
+            <a href="/explore/?tag=ai-collaboration" class="topic-link" title="using AI honestly">ai-collaboration</a>
+        </div>
+    </section>
+
+    <!-- Featured -->
+    <section class="featured-section">
+        <h2 class="section-title">Worth reading</h2>
+        <div class="featured-grid">
+            <a href="/journey/productivity-breakthrough/" class="featured-card">
+                <div class="featured-header">
+                    <span class="featured-title">Productivity breakthrough</span>
+                    <span class="status-badge status-evergreen">evergreen</span>
+                </div>
+                <span class="featured-description">How transferable skills and AI catalyzed sustained flow</span>
+            </a>
+            <a href="/hidden/thinking/homelab-permacomputing-strategy/" class="featured-card">
+                <div class="featured-header">
+                    <span class="featured-title">Homelab permacomputing</span>
+                    <span class="status-badge status-growing">growing</span>
+                </div>
+                <span class="featured-description">Building distributed infrastructure from whatever hardware you have</span>
+            </a>
+            <a href="https://www.uroboro.dev/" class="featured-card" target="_blank" rel="noopener noreferrer">
+                <div class="featured-header">
+                    <span class="featured-title">uroboro ↗</span>
+                    <span class="status-badge status-growing">growing</span>
+                </div>
+                <span class="featured-description">Context capture that makes development work visible</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Entry points -->
+    <section class="entry-section">
+        <div class="entry-links">
+            <a href="/explore/" class="entry-link-primary">Browse everything</a>
+            <a href="/about/" class="entry-link-secondary">Who is this</a>
+        </div>
+    </section>
+
+    <!-- Status legend -->
+    <section class="legend">
+        <div class="legend-items">
+            <span><span class="status-badge status-seedling">seedling</span> rough idea</span>
+            <span><span class="status-badge status-growing">growing</span> in progress</span>
+            <span><span class="status-badge status-evergreen">evergreen</span> stable</span>
+        </div>
+    </section>
+</div>
+
+<script type="module" src="/assets/js/three-scene.js"></script>
+
+    </main>
+    <footer class="footer">
+    <div class="container">
+        <p>&copy;QRY</p>
+    </div>
+</footer>
+
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7e9d8b03c4e27e92268d848a78589ca0"}'></script>
+    <script src="/assets/js/header.js"></script>
+    
+</body>
+</html>
