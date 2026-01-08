@@ -1,0 +1,267 @@
+---
+permalink: /fun/magic-8-ball/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is It AI? - Magic 8 Ball</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        .banner {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 3rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ball-container {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .ball {
+            width: clamp(250px, 60vw, 350px);
+            height: clamp(250px, 60vw, 350px);
+            background: radial-gradient(circle at 30% 30%, #3a3a3a, #0a0a0a 70%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 -10px 30px rgba(0, 0, 0, 0.4),
+                inset 0 10px 30px rgba(255, 255, 255, 0.05);
+            transition: transform 0.1s ease;
+        }
+
+        .ball:hover {
+            transform: scale(1.02);
+        }
+
+        .ball:active {
+            transform: scale(0.98);
+        }
+
+        .ball.shaking {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            10% { transform: translateX(-10px) rotate(-5deg); }
+            20% { transform: translateX(10px) rotate(5deg); }
+            30% { transform: translateX(-10px) rotate(-3deg); }
+            40% { transform: translateX(10px) rotate(3deg); }
+            50% { transform: translateX(-5px) rotate(-2deg); }
+            60% { transform: translateX(5px) rotate(2deg); }
+            70% { transform: translateX(-3px) rotate(-1deg); }
+            80% { transform: translateX(3px) rotate(1deg); }
+            90% { transform: translateX(-1px) rotate(0deg); }
+        }
+
+        .window {
+            width: clamp(100px, 25vw, 140px);
+            height: clamp(100px, 25vw, 140px);
+            background: radial-gradient(circle at 50% 50%, #1a1a3a, #0a0a1a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                inset 0 0 30px rgba(100, 100, 200, 0.2),
+                inset 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+        }
+
+        .response {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.65rem, 2.5vw, 0.9rem);
+            font-weight: 700;
+            text-align: center;
+            color: #a5b4fc;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-shadow: 0 0 10px rgba(165, 180, 252, 0.5);
+        }
+
+        .response.visible {
+            opacity: 1;
+        }
+
+        .response.fade-out {
+            opacity: 0;
+        }
+
+        .instructions {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+
+        .instructions span {
+            color: #7c3aed;
+        }
+
+        .eight {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 900;
+            color: #fff;
+            opacity: 0.9;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-link {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #7c3aed;
+        }
+
+        .credits {
+            position: fixed;
+            bottom: 1.5rem;
+            font-size: 0.75rem;
+            color: #444;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back to fun</a>
+
+    <h1 class="banner">Is It AI?</h1>
+
+    <div class="ball-container" onclick="shake()">
+        <div class="ball" id="ball">
+            <span class="eight">8</span>
+            <div class="window">
+                <div class="response" id="response">Click to reveal</div>
+            </div>
+        </div>
+    </div>
+
+    <p class="instructions">
+        <span>Click</span> or <span>tap</span> to shake the ball
+    </p>
+
+    <div class="credits">qry.zone/fun</div>
+
+    <script>
+        const responses = [
+            // Affirmative (AI)
+            "Definitely AI",
+            "Signs point to AI",
+            "AI generated",
+            "100% synthetic",
+            "The algorithm says yes",
+            "Made by machines",
+            "Silicon authored",
+            "GPT vibes detected",
+
+            // Negative (Human)
+            "Surprisingly human",
+            "Human made",
+            "Not AI",
+            "Authentic flesh bag",
+            "Carbon-based origin",
+            "No bots here",
+            "Human verified",
+            "Organic content",
+
+            // Uncertain
+            "Ask again later",
+            "Cannot compute",
+            "Sources unclear",
+            "Maybe a cyborg?",
+            "Probability: 50%",
+            "Turing test needed",
+            "Inconclusive",
+            "Try again",
+
+            // Funny
+            "Does it matter?",
+            "We're all AI now",
+            "Error 404: Truth not found",
+            "The AI is coming from inside the house",
+            "Hire a detective",
+            "Check for typos",
+            "Look for the watermark"
+        ];
+
+        const ball = document.getElementById('ball');
+        const responseEl = document.getElementById('response');
+        let isShaking = false;
+
+        function shake() {
+            if (isShaking) return;
+            isShaking = true;
+
+            // Fade out current response
+            responseEl.classList.remove('visible');
+            responseEl.classList.add('fade-out');
+
+            // Add shake animation
+            ball.classList.add('shaking');
+
+            // After shake, show new response
+            setTimeout(() => {
+                ball.classList.remove('shaking');
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                responseEl.textContent = randomResponse;
+                responseEl.classList.remove('fade-out');
+                responseEl.classList.add('visible');
+                isShaking = false;
+            }, 500);
+        }
+
+        // Show initial hint
+        setTimeout(() => {
+            responseEl.classList.add('visible');
+        }, 500);
+    </script>
+</body>
+</html>
