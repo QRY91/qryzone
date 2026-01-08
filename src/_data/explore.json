@@ -195,6 +195,47 @@
       "href": "https://github.com/QRY91/quantum-dice",
       "tags": ["learning", "games"],
       "status": "growing"
+    },
+    {
+      "title": "Ideas",
+      "description": "Ideas are cheap. Take as many as you want.",
+      "href": "/ideas/",
+      "tags": ["open-source", "creative"],
+      "status": "evergreen",
+      "lastUpdated": "2026-01-08"
+    },
+    {
+      "title": "Social media brainfarts",
+      "description": "On the commodification of our least interesting impulses",
+      "href": "/notes/social-media-brainfarts/",
+      "tags": ["personal", "society"],
+      "status": "seedling",
+      "lastUpdated": "2026-01-08"
+    },
+    {
+      "title": "Powers for good",
+      "description": "On complicity through silence in tech",
+      "href": "/notes/powers-for-good/",
+      "tags": ["personal", "career", "ethics"],
+      "status": "seedling",
+      "connections": ["About"],
+      "lastUpdated": "2026-01-08"
+    },
+    {
+      "title": "Managing attention",
+      "description": "On reclaiming focus from the noise",
+      "href": "/notes/managing-attention/",
+      "tags": ["personal", "systematic-thinking"],
+      "status": "seedling",
+      "lastUpdated": "2026-01-08"
+    },
+    {
+      "title": "UX challenges",
+      "description": "When difficulty comes from controls, not gameplay",
+      "href": "/notes/ux-challenges/",
+      "tags": ["games", "design", "analysis"],
+      "status": "seedling",
+      "lastUpdated": "2026-01-08"
     }
   ]
 }

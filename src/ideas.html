@@ -1,0 +1,244 @@
+---
+layout: base.njk
+title: Ideas - qry.zone
+description: Ideas are cheap. Take as many as you want.
+---
+
+<style>
+.ideas-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+.ideas-header {
+    text-align: center;
+    margin-bottom: var(--space-xxl);
+}
+.ideas-title {
+    font-size: 2rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    margin-bottom: var(--space-md);
+}
+.ideas-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+.ideas-philosophy {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.ideas-controls {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
+}
+.ideas-search {
+    flex: 1;
+    min-width: 200px;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+}
+.ideas-filter {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+}
+.ideas-grid {
+    display: grid;
+    gap: var(--space-md);
+}
+.idea-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    transition: border-color 0.2s;
+}
+.idea-card:hover {
+    border-color: var(--color-accent);
+}
+.idea-title {
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    font-size: 1.1rem;
+}
+.idea-description {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+    line-height: 1.6;
+}
+.idea-meta {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+.idea-category {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    color: var(--color-text-secondary);
+}
+.idea-tag {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    background: #2d3a2d;
+    border-radius: 3px;
+    color: #81c784;
+}
+.ideas-count {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-top: var(--space-lg);
+}
+.ideas-loading {
+    text-align: center;
+    padding: var(--space-xxl);
+    color: var(--color-text-secondary);
+}
+.ideas-cta {
+    text-align: center;
+    margin-top: var(--space-xxl);
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--border-radius);
+}
+.ideas-cta p {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+}
+.ideas-cta a {
+    color: var(--color-accent);
+}
+</style>
+
+<div class="ideas-container">
+    <header class="ideas-header">
+        <h1 class="ideas-title">Ideas</h1>
+        <p class="ideas-subtitle">Ideas are cheap. Take as many as you want.</p>
+        <p class="ideas-philosophy">
+            If you build it before me, show me! Value comes from execution, not hoarding.
+            This is the hacker ethos - libre/free sharing of inspiration.
+        </p>
+    </header>
+
+    <div class="ideas-controls">
+        <input type="text" id="ideas-search" class="ideas-search" placeholder="Search ideas...">
+        <select id="ideas-category" class="ideas-filter">
+            <option value="">All categories</option>
+            <option value="games">Games</option>
+            <option value="tools">Tools</option>
+            <option value="creative">Creative</option>
+            <option value="dev">Dev</option>
+        </select>
+    </div>
+
+    <div id="ideas-grid" class="ideas-grid">
+        <div class="ideas-loading">Loading ideas database...</div>
+    </div>
+
+    <div id="ideas-count" class="ideas-count"></div>
+
+    <div class="ideas-cta">
+        <p>Got something you built from one of these? Have your own idea to share?</p>
+        <a href="https://github.com/QRY91/qryzone/issues" target="_blank" rel="noopener">Open an issue</a> or
+        <a href="/about/">get in touch</a>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.min.js"></script>
+<script>
+(async function() {
+    const grid = document.getElementById('ideas-grid');
+    const countEl = document.getElementById('ideas-count');
+    const searchInput = document.getElementById('ideas-search');
+    const categorySelect = document.getElementById('ideas-category');
+
+    // Initialize SQL.js
+    const SQL = await initSqlJs({
+        locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+    });
+
+    // Fetch the database
+    const response = await fetch('/assets/ideas.db');
+    const buffer = await response.arrayBuffer();
+    const db = new SQL.Database(new Uint8Array(buffer));
+
+    function renderIdeas(search = '', category = '') {
+        let query = 'SELECT * FROM ideas WHERE 1=1';
+        const params = [];
+
+        if (search) {
+            query += ' AND (title LIKE ? OR description LIKE ? OR tags LIKE ?)';
+            const searchTerm = `%${search}%`;
+            params.push(searchTerm, searchTerm, searchTerm);
+        }
+
+        if (category) {
+            query += ' AND category = ?';
+            params.push(category);
+        }
+
+        query += ' ORDER BY id DESC';
+
+        const stmt = db.prepare(query);
+        stmt.bind(params);
+
+        const ideas = [];
+        while (stmt.step()) {
+            ideas.push(stmt.getAsObject());
+        }
+        stmt.free();
+
+        if (ideas.length === 0) {
+            grid.innerHTML = '<div class="ideas-loading">No ideas match your search.</div>';
+            countEl.textContent = '';
+            return;
+        }
+
+        grid.innerHTML = ideas.map(idea => `
+            <div class="idea-card">
+                <h3 class="idea-title">${idea.title}</h3>
+                <p class="idea-description">${idea.description}</p>
+                <div class="idea-meta">
+                    <span class="idea-category">${idea.category}</span>
+                    ${idea.tags.split(',').map(tag =>
+                        `<span class="idea-tag">${tag.trim()}</span>`
+                    ).join('')}
+                </div>
+            </div>
+        `).join('');
+
+        countEl.textContent = `${ideas.length} idea${ideas.length === 1 ? '' : 's'}`;
+    }
+
+    // Initial render
+    renderIdeas();
+
+    // Event listeners
+    searchInput.addEventListener('input', (e) => {
+        renderIdeas(e.target.value, categorySelect.value);
+    });
+
+    categorySelect.addEventListener('change', (e) => {
+        renderIdeas(searchInput.value, e.target.value);
+    });
+})();
+</script>
