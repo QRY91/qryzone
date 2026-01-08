@@ -127,6 +127,165 @@ description: Ideas are cheap. Take as many as you want.
 .ideas-cta a {
     color: var(--color-accent);
 }
+
+/* AI Generator styles */
+.generator-section {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background: linear-gradient(135deg, #2d3a2d 0%, #1f2f1f 100%);
+    border: 1px solid #4a5f4a;
+    border-radius: var(--border-radius);
+}
+.generator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+.generator-title {
+    font-family: var(--font-mono);
+    color: #81c784;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+.generator-title::before {
+    content: "⚡";
+}
+.generator-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    background: #3a3a2d;
+    border-radius: 3px;
+    color: #f0dfaf;
+}
+.generator-info {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+}
+.generator-btn {
+    padding: var(--space-sm) var(--space-lg);
+    background: #4a5f4a;
+    border: 1px solid #6a8f6a;
+    border-radius: var(--border-radius);
+    color: #81c784;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.generator-btn:hover:not(:disabled) {
+    background: #5a7f5a;
+    border-color: #81c784;
+}
+.generator-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.generator-progress {
+    margin-top: var(--space-md);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+.generator-progress-bar {
+    height: 4px;
+    background: #1f2f1f;
+    border-radius: 2px;
+    margin-top: var(--space-sm);
+    overflow: hidden;
+}
+.generator-progress-fill {
+    height: 100%;
+    background: #81c784;
+    width: 0%;
+    transition: width 0.3s;
+}
+.generated-idea {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    border: 2px solid #81c784;
+    border-radius: var(--border-radius);
+    animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.generated-label {
+    font-size: 0.7rem;
+    color: #81c784;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+}
+.generated-text {
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+.generator-error {
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    background: #3a2d2d;
+    border: 1px solid #8f4a4a;
+    border-radius: var(--border-radius);
+    color: #c78181;
+    font-size: 0.85rem;
+}
+.webgpu-warning {
+    color: #f0dfaf;
+    font-size: 0.8rem;
+}
+.generator-controls {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    align-items: center;
+}
+.model-select {
+    padding: var(--space-sm) var(--space-md);
+    background: #1f2f1f;
+    border: 1px solid #4a5f4a;
+    border-radius: var(--border-radius);
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+.clear-btn {
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: 1px solid #5f4a4a;
+    border-radius: var(--border-radius);
+    color: #c78181;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.clear-btn:hover {
+    background: #3a2d2d;
+    border-color: #8f4a4a;
+}
+.clear-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.cache-status {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-sm);
+}
+.generator-disclaimer {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin-top: var(--space-sm);
+    opacity: 0.8;
+}
 </style>
 
 <div class="ideas-container">
@@ -138,6 +297,41 @@ description: Ideas are cheap. Take as many as you want.
             This is the hacker ethos - libre/free sharing of inspiration.
         </p>
     </header>
+
+    <!-- AI Generator Section -->
+    <section class="generator-section" id="generator-section">
+        <div class="generator-header">
+            <span class="generator-title">Generate new idea</span>
+            <span class="generator-badge">local AI</span>
+        </div>
+        <p class="generator-info">
+            Runs entirely in your browser via WebGPU. No data leaves your device.
+            <br>Model cached locally after download.
+            <span class="webgpu-warning" id="webgpu-warning"></span>
+        </p>
+        <div class="generator-controls">
+            <select id="model-select" class="model-select">
+                <option value="TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC" data-size="~600MB">TinyLlama 1.1B (~600MB)</option>
+                <option value="Qwen2.5-1.5B-Instruct-q4f16_1-MLC" data-size="~1GB">Qwen 1.5B (~1GB)</option>
+                <option value="Phi-3.5-mini-instruct-q4f16_1-MLC" data-size="~2.2GB">Phi-3.5 Mini (~2.2GB)</option>
+            </select>
+            <button class="generator-btn" id="generate-btn">
+                Generate idea
+            </button>
+            <button class="clear-btn" id="clear-btn" title="Clear cached model from browser storage">
+                Clear cache
+            </button>
+        </div>
+        <p class="generator-disclaimer">Disclaimer: some free ideas are only worth as much as their cost.</p>
+        <div class="generator-progress" id="generator-progress" style="display: none;">
+            <span id="progress-text">Initializing...</span>
+            <div class="generator-progress-bar">
+                <div class="generator-progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+        <div id="generated-output"></div>
+        <div id="generator-error"></div>
+    </section>
 
     <div class="ideas-controls">
         <input type="text" id="ideas-search" class="ideas-search" placeholder="Search ideas...">
@@ -164,19 +358,182 @@ description: Ideas are cheap. Take as many as you want.
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.min.js"></script>
+<script type="module">
+// WebLLM for idea generation
+const generateBtn = document.getElementById('generate-btn');
+const clearBtn = document.getElementById('clear-btn');
+const modelSelect = document.getElementById('model-select');
+const progressEl = document.getElementById('generator-progress');
+const progressText = document.getElementById('progress-text');
+const progressFill = document.getElementById('progress-fill');
+const outputEl = document.getElementById('generated-output');
+const errorEl = document.getElementById('generator-error');
+const warningEl = document.getElementById('webgpu-warning');
+
+let engine = null;
+let currentModel = null;
+let isGenerating = false;
+
+// Check WebGPU support
+async function checkWebGPU() {
+    if (!navigator.gpu) {
+        warningEl.textContent = '⚠️ WebGPU not supported. Try Chrome/Edge with WebGPU enabled.';
+        generateBtn.disabled = true;
+        return false;
+    }
+    try {
+        const adapter = await navigator.gpu.requestAdapter();
+        if (!adapter) {
+            warningEl.textContent = '⚠️ No WebGPU adapter found. Check chrome://flags for "Unsafe WebGPU Support".';
+            generateBtn.disabled = true;
+            return false;
+        }
+        return true;
+    } catch (e) {
+        warningEl.textContent = '⚠️ WebGPU error: ' + e.message;
+        generateBtn.disabled = true;
+        return false;
+    }
+}
+
+checkWebGPU();
+
+// Sample ideas to use as context
+const sampleIdeas = [
+    "A task management app with calendar slots filtered by tags",
+    "A 2D space exploration game with two scopes: deep space and planetary",
+    "A shmup with monochrome/color switching mechanics",
+    "Field recordings as base layers for generative music tracks",
+    "A social deduction game where players pretend to be buggy or clean functions",
+    "Connect keyboard input to a synth so typing creates melodies"
+];
+
+// Clear cached models
+clearBtn.addEventListener('click', async () => {
+    if (confirm('Clear all cached AI models from browser storage?')) {
+        try {
+            clearBtn.disabled = true;
+            clearBtn.textContent = 'Clearing...';
+
+            // Clear IndexedDB (where WebLLM stores models)
+            const databases = await indexedDB.databases();
+            for (const db of databases) {
+                if (db.name && (db.name.includes('webllm') || db.name.includes('mlc'))) {
+                    indexedDB.deleteDatabase(db.name);
+                }
+            }
+
+            // Clear Cache Storage
+            const cacheNames = await caches.keys();
+            for (const name of cacheNames) {
+                if (name.includes('webllm') || name.includes('mlc')) {
+                    await caches.delete(name);
+                }
+            }
+
+            engine = null;
+            currentModel = null;
+            clearBtn.textContent = 'Cleared!';
+            setTimeout(() => {
+                clearBtn.textContent = 'Clear cache';
+                clearBtn.disabled = false;
+            }, 2000);
+        } catch (err) {
+            console.error('Clear error:', err);
+            clearBtn.textContent = 'Clear cache';
+            clearBtn.disabled = false;
+        }
+    }
+});
+
+generateBtn.addEventListener('click', async () => {
+    if (isGenerating) return;
+    isGenerating = true;
+    generateBtn.disabled = true;
+    modelSelect.disabled = true;
+    errorEl.innerHTML = '';
+    outputEl.innerHTML = '';
+
+    const selectedModel = modelSelect.value;
+    const modelSize = modelSelect.options[modelSelect.selectedIndex].dataset.size;
+
+    try {
+        progressEl.style.display = 'block';
+
+        // Load new model if different from current
+        if (!engine || currentModel !== selectedModel) {
+            progressText.textContent = `Loading model (${modelSize}, first time only)...`;
+            progressFill.style.width = '0%';
+
+            const webllm = await import('https://esm.run/@mlc-ai/web-llm');
+
+            engine = await webllm.CreateMLCEngine(
+                selectedModel,
+                {
+                    initProgressCallback: (progress) => {
+                        progressText.textContent = progress.text || 'Loading...';
+                        if (progress.progress !== undefined) {
+                            progressFill.style.width = (progress.progress * 100) + '%';
+                        }
+                    }
+                }
+            );
+            currentModel = selectedModel;
+        }
+
+        progressText.textContent = 'Generating idea...';
+        progressFill.style.width = '100%';
+
+        const context = sampleIdeas.slice(0, 3).join('\n- ');
+
+        const prompt = `You are a creative technologist brainstorming project ideas. Here are some example ideas for inspiration:
+- ${context}
+
+Generate ONE new, creative project idea in a similar style. Be specific and concise (2-3 sentences max). Focus on unique mechanics or approaches. Just output the idea itself, no preamble.`;
+
+        const response = await engine.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            max_tokens: 150,
+            temperature: 0.9,
+        });
+
+        const generatedText = response.choices[0].message.content.trim();
+
+        outputEl.innerHTML = `
+            <div class="generated-idea">
+                <div class="generated-label">AI Generated (${modelSelect.options[modelSelect.selectedIndex].text.split(' (')[0]})</div>
+                <div class="generated-text">${generatedText}</div>
+            </div>
+        `;
+
+        generateBtn.textContent = 'Generate another';
+
+    } catch (err) {
+        console.error('Generation error:', err);
+        errorEl.innerHTML = `<div class="generator-error">Error: ${err.message}</div>`;
+        engine = null;
+        currentModel = null;
+    } finally {
+        isGenerating = false;
+        generateBtn.disabled = false;
+        modelSelect.disabled = false;
+        progressEl.style.display = 'none';
+    }
+});
+</script>
+
 <script>
+// SQLite ideas database
 (async function() {
     const grid = document.getElementById('ideas-grid');
     const countEl = document.getElementById('ideas-count');
     const searchInput = document.getElementById('ideas-search');
     const categorySelect = document.getElementById('ideas-category');
 
-    // Initialize SQL.js
     const SQL = await initSqlJs({
         locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
     });
 
-    // Fetch the database
     const response = await fetch('/assets/ideas.db');
     const buffer = await response.arrayBuffer();
     const db = new SQL.Database(new Uint8Array(buffer));
@@ -229,10 +586,8 @@ description: Ideas are cheap. Take as many as you want.
         countEl.textContent = `${ideas.length} idea${ideas.length === 1 ? '' : 's'}`;
     }
 
-    // Initial render
     renderIdeas();
 
-    // Event listeners
     searchInput.addEventListener('input', (e) => {
         renderIdeas(e.target.value, categorySelect.value);
     });
