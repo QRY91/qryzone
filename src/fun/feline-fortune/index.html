@@ -469,6 +469,47 @@ permalink: /fun/feline-fortune/
             .cat-slot.locked {
                 background: rgba(0, 0, 0, 0.2);
                 border-color: rgba(0, 0, 0, 0.3);
+                position: relative;
+                cursor: help;
+            }
+
+            .cat-slot.locked::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                bottom: calc(100% + 8px);
+                left: 50%;
+                transform: translateX(-50%);
+                background: #2c2c2c;
+                color: white;
+                padding: 0.5rem 0.75rem;
+                border-radius: 8px;
+                font-size: 0.75rem;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.2s ease, visibility 0.2s ease;
+                z-index: 100;
+                pointer-events: none;
+            }
+
+            .cat-slot.locked::before {
+                content: "";
+                position: absolute;
+                bottom: calc(100% + 2px);
+                left: 50%;
+                transform: translateX(-50%);
+                border: 6px solid transparent;
+                border-top-color: #2c2c2c;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.2s ease, visibility 0.2s ease;
+                z-index: 100;
+            }
+
+            .cat-slot.locked:hover::after,
+            .cat-slot.locked:hover::before {
+                opacity: 1;
+                visibility: visible;
             }
 
             .cat-slot.unlocked {
@@ -476,6 +517,46 @@ permalink: /fun/feline-fortune/
                 cursor: pointer;
                 -webkit-tap-highlight-color: transparent;
                 touch-action: manipulation;
+                position: relative;
+            }
+
+            .cat-slot.unlocked::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                bottom: calc(100% + 8px);
+                left: 50%;
+                transform: translateX(-50%);
+                background: #2c2c2c;
+                color: white;
+                padding: 0.5rem 0.75rem;
+                border-radius: 8px;
+                font-size: 0.75rem;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.2s ease, visibility 0.2s ease;
+                z-index: 100;
+                pointer-events: none;
+            }
+
+            .cat-slot.unlocked::before {
+                content: "";
+                position: absolute;
+                bottom: calc(100% + 2px);
+                left: 50%;
+                transform: translateX(-50%);
+                border: 6px solid transparent;
+                border-top-color: #2c2c2c;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.2s ease, visibility 0.2s ease;
+                z-index: 100;
+            }
+
+            .cat-slot.unlocked:hover::after,
+            .cat-slot.unlocked:hover::before {
+                opacity: 1;
+                visibility: visible;
             }
 
             .cat-slot.unlocked:hover {
@@ -765,6 +846,117 @@ permalink: /fun/feline-fortune/
             .restart-btn:active {
                 transform: translateY(0);
             }
+
+            .reset-progress-btn {
+                background: transparent;
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                color: #666;
+                padding: 0.5rem 1rem;
+                border-radius: 15px;
+                font-size: 0.8rem;
+                cursor: pointer;
+                width: 100%;
+                margin-top: 1rem;
+                font-family: inherit;
+                transition: all 0.3s ease;
+            }
+
+            .reset-progress-btn:hover {
+                background: rgba(0, 0, 0, 0.1);
+                color: #c0392b;
+                border-color: #c0392b;
+            }
+
+            .confirm-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 2000;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+
+            .confirm-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .confirm-modal {
+                background: linear-gradient(145deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+                border-radius: 20px;
+                padding: 2rem;
+                text-align: center;
+                max-width: 400px;
+                margin: 1rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                border: 4px solid rgba(255, 255, 255, 0.4);
+                transform: scale(0.8);
+                transition: transform 0.3s ease;
+            }
+
+            .confirm-overlay.show .confirm-modal {
+                transform: scale(1);
+            }
+
+            .confirm-icon {
+                font-size: 4rem;
+                margin-bottom: 1rem;
+            }
+
+            .confirm-title {
+                font-size: 1.5rem;
+                color: #c0392b;
+                margin-bottom: 0.5rem;
+            }
+
+            .confirm-message {
+                color: #444;
+                margin-bottom: 1.5rem;
+                font-size: 1rem;
+                line-height: 1.4;
+            }
+
+            .confirm-buttons {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+            }
+
+            .confirm-btn {
+                padding: 0.8rem 1.5rem;
+                border-radius: 20px;
+                font-size: 1rem;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-family: inherit;
+                border: none;
+            }
+
+            .confirm-btn.cancel {
+                background: #95a5a6;
+                color: white;
+            }
+
+            .confirm-btn.cancel:hover {
+                background: #7f8c8d;
+            }
+
+            .confirm-btn.danger {
+                background: #c0392b;
+                color: white;
+            }
+
+            .confirm-btn.danger:hover {
+                background: #a93226;
+            }
         </style>
     </head>
     <body>
@@ -852,6 +1044,7 @@ permalink: /fun/feline-fortune/
                 <div class="achievements-section">
                     <h3 class="section-title">Achievements</h3>
                     <div class="achievements" id="achievementsList"></div>
+                    <button class="reset-progress-btn" id="resetProgressBtn">Reset All Progress</button>
                 </div>
             </div>
         </div>
@@ -867,6 +1060,18 @@ permalink: /fun/feline-fortune/
             </div>
         </div>
 
+        <div class="confirm-overlay" id="confirmResetOverlay">
+            <div class="confirm-modal">
+                <div class="confirm-icon">⚠️</div>
+                <h2 class="confirm-title">Reset All Progress?</h2>
+                <p class="confirm-message">This will erase everything: all your Fish Coins, unlocked cats, and achievements. This cannot be undone!</p>
+                <div class="confirm-buttons">
+                    <button class="confirm-btn cancel" id="cancelResetBtn">Keep Playing</button>
+                    <button class="confirm-btn danger" id="confirmResetBtn">Reset Everything</button>
+                </div>
+            </div>
+        </div>
+
         <script>
             // Game state
             const gameState = {
@@ -879,6 +1084,12 @@ permalink: /fun/feline-fortune/
                 currentCompanion: 0,
                 unlockedCats: [0],
                 achievements: [],
+                // New tracking for cat unlocks
+                hitJackpot: false,
+                wentBroke: false,
+                currentLoseStreak: 0,
+                maxLoseStreak: 0,
+                peakCoins: 100,
             };
 
             // Slot symbols with weights (lower number = rarer)
@@ -892,20 +1103,20 @@ permalink: /fun/feline-fortune/
                 { emoji: "🍖", weight: 4, name: "Treat" },
             ];
 
-            // Available cats to unlock
+            // Available cats to unlock - each has a specific condition
             const availableCats = [
-                { emoji: "😺", name: "Whiskers", mood: "Feeling lucky!" },
-                { emoji: "😸", name: "Smiley", mood: "Grinning with joy!" },
-                { emoji: "😹", name: "Giggles", mood: "Laughing at luck!" },
-                { emoji: "😻", name: "Hearty", mood: "In love with wins!" },
-                { emoji: "🙀", name: "Surprised", mood: "Shocked by luck!" },
-                { emoji: "😿", name: "Pouty", mood: "Sad about losses..." },
-                { emoji: "😾", name: "Grumpy", mood: "Angry at bad luck!" },
-                { emoji: "🐱", name: "Lucky", mood: "Born lucky!" },
-                { emoji: "🐈", name: "Shadow", mood: "Mysterious fortune..." },
-                { emoji: "🐈‍⬛", name: "Midnight", mood: "Dark magic luck!" },
-                { emoji: "🦁", name: "Leo", mood: "King of fortune!" },
-                { emoji: "🐅", name: "Tiger", mood: "Fierce and lucky!" },
+                { emoji: "😺", name: "Whiskers", mood: "Feeling lucky!", condition: "Starter cat", check: () => true },
+                { emoji: "😸", name: "Smiley", mood: "Grinning with joy!", condition: "Win your first spin", check: () => gameState.totalWins >= 1 },
+                { emoji: "😹", name: "Giggles", mood: "Laughing at luck!", condition: "Win 5 times", check: () => gameState.totalWins >= 5 },
+                { emoji: "😻", name: "Hearty", mood: "In love with wins!", condition: "Win 100+ coins at once", check: () => gameState.biggestWin >= 100 },
+                { emoji: "🙀", name: "Surprised", mood: "Shocked by luck!", condition: "Hit the fish jackpot", check: () => gameState.hitJackpot },
+                { emoji: "😿", name: "Pouty", mood: "Sad about losses...", condition: "Go broke once", check: () => gameState.wentBroke },
+                { emoji: "😾", name: "Grumpy", mood: "Angry at bad luck!", condition: "Lose 10 spins in a row", check: () => gameState.maxLoseStreak >= 10 },
+                { emoji: "🐱", name: "Lucky", mood: "Born lucky!", condition: "Win 25 times", check: () => gameState.totalWins >= 25 },
+                { emoji: "🐈", name: "Shadow", mood: "Mysterious fortune...", condition: "Play 100 spins", check: () => gameState.totalSpins >= 100 },
+                { emoji: "🐈‍⬛", name: "Midnight", mood: "Dark magic luck!", condition: "Win 500+ coins at once", check: () => gameState.biggestWin >= 500 },
+                { emoji: "🦁", name: "Leo", mood: "King of fortune!", condition: "Have 1000+ coins", check: () => gameState.peakCoins >= 1000 },
+                { emoji: "🐅", name: "Tiger", mood: "Fierce and lucky!", condition: "Unlock all other cats", check: () => gameState.unlockedCats.length >= 11 },
             ];
 
             // Achievements
@@ -937,6 +1148,10 @@ permalink: /fun/feline-fortune/
             const jackpotAnimation = document.getElementById("jackpotAnimation");
             const gameOverOverlay = document.getElementById("gameOverOverlay");
             const restartBtn = document.getElementById("restartBtn");
+            const resetProgressBtn = document.getElementById("resetProgressBtn");
+            const confirmResetOverlay = document.getElementById("confirmResetOverlay");
+            const cancelResetBtn = document.getElementById("cancelResetBtn");
+            const confirmResetBtn = document.getElementById("confirmResetBtn");
 
             function init() {
                 loadGameState();
@@ -957,6 +1172,9 @@ permalink: /fun/feline-fortune/
                 document.getElementById("betUp").addEventListener("click", increaseBet);
                 slotArm.addEventListener("click", spin);
                 restartBtn.addEventListener("click", restartGame);
+                resetProgressBtn.addEventListener("click", showResetConfirm);
+                cancelResetBtn.addEventListener("click", hideResetConfirm);
+                confirmResetBtn.addEventListener("click", resetAllProgress);
             }
 
             function getRandomSymbol() {
@@ -1039,12 +1257,15 @@ permalink: /fun/feline-fortune/
             function handleWin(amount, results) {
                 gameState.fishCoins += amount;
                 gameState.totalWins++;
+                gameState.currentLoseStreak = 0;
                 if (amount > gameState.biggestWin) gameState.biggestWin = amount;
+                if (gameState.fishCoins > gameState.peakCoins) gameState.peakCoins = gameState.fishCoins;
 
                 const isJackpot = results.every((r) => r.emoji === "🐟");
                 const isBigWin = amount >= gameState.currentBet * 20;
 
                 if (isJackpot) {
+                    gameState.hitJackpot = true;
                     showWinMessage(`JACKPOT! +${amount} coins!`, true);
                     createFireworks();
                 } else if (isBigWin) {
@@ -1058,15 +1279,24 @@ permalink: /fun/feline-fortune/
                     reels.forEach((reel) => reel.classList.remove("winning"));
                 }, 1500);
 
-                tryUnlockCat();
+                checkCatUnlocks();
             }
 
             function handleLoss() {
+                gameState.currentLoseStreak++;
+                if (gameState.currentLoseStreak > gameState.maxLoseStreak) {
+                    gameState.maxLoseStreak = gameState.currentLoseStreak;
+                }
+
                 const minBet = 5;
                 if (gameState.fishCoins < minBet) {
+                    gameState.wentBroke = true;
+                    checkCatUnlocks();
                     setTimeout(showGameOver, 500);
                     return;
                 }
+
+                checkCatUnlocks();
 
                 const encouragements = [
                     "Better luck next time!",
@@ -1089,6 +1319,49 @@ permalink: /fun/feline-fortune/
                 updateDisplay();
                 saveGameState();
                 showWinMessage("Fresh start! Good luck!");
+            }
+
+            function showResetConfirm() {
+                confirmResetOverlay.classList.add("show");
+            }
+
+            function hideResetConfirm() {
+                confirmResetOverlay.classList.remove("show");
+            }
+
+            function resetAllProgress() {
+                // Reset all game state to defaults
+                gameState.fishCoins = 100;
+                gameState.currentBet = 10;
+                gameState.spinning = false;
+                gameState.totalSpins = 0;
+                gameState.totalWins = 0;
+                gameState.biggestWin = 0;
+                gameState.currentCompanion = 0;
+                gameState.unlockedCats = [0];
+                gameState.achievements = [];
+                gameState.hitJackpot = false;
+                gameState.wentBroke = false;
+                gameState.currentLoseStreak = 0;
+                gameState.maxLoseStreak = 0;
+                gameState.peakCoins = 100;
+
+                // Clear localStorage
+                localStorage.removeItem("feline-fortune-save");
+                localStorage.removeItem("feline-fortune-last-bonus");
+
+                // Hide modals
+                confirmResetOverlay.classList.remove("show");
+                gameOverOverlay.classList.remove("show");
+
+                // Refresh UI
+                updateDisplay();
+                updateCompanion();
+                initializeCatCollection();
+                initializeAchievements();
+                saveGameState();
+
+                showWinMessage("All progress reset. Welcome back!");
             }
 
             function showWinMessage(message, isJackpot = false) {
@@ -1114,14 +1387,19 @@ permalink: /fun/feline-fortune/
                 }
             }
 
-            function tryUnlockCat() {
-                if (gameState.unlockedCats.length >= availableCats.length) return;
-                const unlockChance = gameState.biggestWin >= 100 ? 0.3 : 0.1;
-                if (Math.random() < unlockChance) {
-                    const nextCatIndex = gameState.unlockedCats.length;
-                    gameState.unlockedCats.push(nextCatIndex);
-                    showWinMessage(`New cat unlocked: ${availableCats[nextCatIndex].name}!`);
+            function checkCatUnlocks() {
+                let newUnlocks = [];
+                availableCats.forEach((cat, index) => {
+                    if (!gameState.unlockedCats.includes(index) && cat.check()) {
+                        gameState.unlockedCats.push(index);
+                        newUnlocks.push(cat.name);
+                    }
+                });
+                if (newUnlocks.length > 0) {
                     updateCatCollection();
+                    newUnlocks.forEach(name => {
+                        setTimeout(() => showWinMessage(`New cat unlocked: ${name}!`), 500);
+                    });
                 }
             }
 
@@ -1176,10 +1454,12 @@ permalink: /fun/feline-fortune/
                     if (gameState.unlockedCats.includes(i)) {
                         catSlot.classList.add("unlocked");
                         catSlot.textContent = availableCats[i].emoji;
+                        catSlot.dataset.tooltip = availableCats[i].name;
                         catSlot.addEventListener("click", () => selectCompanion(i));
                     } else {
                         catSlot.classList.add("locked");
                         catSlot.textContent = "🔒";
+                        catSlot.dataset.tooltip = availableCats[i].condition;
                     }
                     catCollection.appendChild(catSlot);
                 }
