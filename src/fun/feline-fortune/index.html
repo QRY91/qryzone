@@ -1,0 +1,1159 @@
+---
+layout: false
+permalink: /fun/feline-fortune/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Feline Fortune - The purrfect cat-themed casino game with maneki-neko slots!"
+        />
+        <title>Feline Fortune Casino</title>
+
+        <!-- PWA Meta Tags -->
+        <meta name="theme-color" content="#ff6b9d" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <meta name="apple-mobile-web-app-title" content="Feline Fortune" />
+        <meta name="mobile-web-app-capable" content="yes" />
+
+        <!-- Mobile Optimizations -->
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+
+        <!-- iOS Splash Screens -->
+        <link
+            rel="apple-touch-startup-image"
+            href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 375 812'><rect width='375' height='812' fill='%23ff6b9d'/><text x='187.5' y='400' font-size='60' text-anchor='middle' fill='white'>🐱</text><text x='187.5' y='470' font-size='24' text-anchor='middle' fill='white'>Feline Fortune</text></svg>"
+        />
+
+        <!-- Favicon -->
+        <link
+            rel="icon"
+            href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>"
+        />
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                background: linear-gradient(
+                    135deg,
+                    #ff6b9d 0%,
+                    #feca57 50%,
+                    #ff9ff3 100%
+                );
+                min-height: 100vh;
+                overflow-x: hidden;
+                position: relative;
+            }
+
+            /* Floating cat paws background */
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image:
+                    radial-gradient(
+                        circle at 20% 30%,
+                        rgba(255, 255, 255, 0.1) 2px,
+                        transparent 2px
+                    ),
+                    radial-gradient(
+                        circle at 80% 70%,
+                        rgba(255, 255, 255, 0.1) 2px,
+                        transparent 2px
+                    ),
+                    radial-gradient(
+                        circle at 40% 80%,
+                        rgba(255, 255, 255, 0.1) 2px,
+                        transparent 2px
+                    );
+                background-size:
+                    100px 100px,
+                    150px 150px,
+                    200px 200px;
+                animation: float 20s ease-in-out infinite;
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            @keyframes float {
+                0%,
+                100% {
+                    transform: translateY(0px);
+                }
+                50% {
+                    transform: translateY(-20px);
+                }
+            }
+
+            .back-link {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                background: rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(10px);
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                color: #2c2c2c;
+                text-decoration: none;
+                font-weight: bold;
+                z-index: 100;
+                border: 2px solid rgba(255, 255, 255, 0.4);
+            }
+
+            .back-link:hover {
+                background: rgba(255, 255, 255, 0.5);
+            }
+
+            .header {
+                text-align: center;
+                padding: 1rem;
+                padding-top: 3rem;
+                background: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(10px);
+                border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+                color: #2c2c2c;
+                text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+                margin-bottom: 0.5rem;
+            }
+
+            .header p {
+                color: #444;
+                font-size: 1.1rem;
+                font-weight: bold;
+            }
+
+            .game-container {
+                max-width: 900px;
+                margin: 2rem auto;
+                padding: 0 1rem;
+                display: grid;
+                grid-template-columns: 1fr 300px;
+                gap: 2rem;
+            }
+
+            .slot-machine {
+                background: linear-gradient(
+                    145deg,
+                    #ff9a9e 0%,
+                    #fecfef 50%,
+                    #fecfef 100%
+                );
+                border-radius: 20px;
+                padding: 2rem;
+                box-shadow:
+                    0 10px 30px rgba(0, 0, 0, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                border: 4px solid rgba(255, 255, 255, 0.4);
+                position: relative;
+            }
+
+            .machine-top {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            .machine-title {
+                font-size: 1.8rem;
+                color: #2c2c2c;
+                margin-bottom: 1rem;
+                text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+            }
+
+            .currency-display {
+                background: #2c2c2c;
+                color: #feca57;
+                padding: 0.7rem 1.5rem;
+                border-radius: 25px;
+                font-size: 1.3rem;
+                font-weight: bold;
+                display: inline-block;
+                box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+                border: 2px solid #feca57;
+            }
+
+            .reels-container {
+                background: #1a1a1a;
+                border-radius: 15px;
+                padding: 1rem;
+                margin-bottom: 2rem;
+                box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.5);
+                border: 3px solid #333;
+            }
+
+            .reels {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+                height: 120px;
+            }
+
+            .reel {
+                background: #fff;
+                border-radius: 10px;
+                border: 3px solid #feca57;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 3rem;
+                position: relative;
+                overflow: hidden;
+                box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+            }
+
+            .reel.spinning {
+                animation: spin 1s linear infinite;
+            }
+
+            .reel.winning {
+                background: linear-gradient(45deg, #feca57, #ff6b9d);
+                animation: flash 0.5s ease-in-out 3;
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(254, 202, 87, 0.8);
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotateY(0deg);
+                }
+                100% {
+                    transform: rotateY(360deg);
+                }
+            }
+
+            @keyframes flash {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.7;
+                }
+            }
+
+            .controls {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+
+            .bet-controls {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .bet-btn {
+                background: #ff6b9d;
+                color: white;
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                cursor: pointer;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                box-shadow: 0 3px 10px rgba(255, 107, 157, 0.3);
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            .bet-btn:hover {
+                background: #ff4081;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
+            }
+
+            .bet-amount {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #2c2c2c;
+                min-width: 60px;
+                text-align: center;
+            }
+
+            .maneki-neko-arm {
+                position: relative;
+                width: 80px;
+                height: 100px;
+                cursor: pointer;
+                margin: 0 auto;
+                transition: all 0.3s ease;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+
+            .maneki-neko-arm:hover {
+                transform: scale(1.1);
+            }
+
+            .maneki-neko-arm.pulling {
+                animation: pull 0.8s ease-out;
+            }
+
+            @keyframes pull {
+                0% {
+                    transform: rotate(0deg);
+                }
+                50% {
+                    transform: rotate(-15deg) scale(1.1);
+                }
+                100% {
+                    transform: rotate(0deg);
+                }
+            }
+
+            .arm-base {
+                width: 60px;
+                height: 80px;
+                background: linear-gradient(145deg, #feca57, #ff9a9e);
+                border-radius: 30px 30px 15px 15px;
+                margin: 0 auto;
+                position: relative;
+                border: 3px solid #2c2c2c;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+
+            .arm-base::before {
+                content: "🐱";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 2rem;
+            }
+
+            .arm-handle {
+                width: 20px;
+                height: 30px;
+                background: #2c2c2c;
+                border-radius: 10px;
+                position: absolute;
+                right: -25px;
+                top: 20px;
+                border: 2px solid #666;
+            }
+
+            .win-message {
+                text-align: center;
+                margin: 1rem 0;
+                min-height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .win-text {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #2c2c2c;
+                text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+                opacity: 0;
+                transform: scale(0.5);
+                transition: all 0.5s ease;
+            }
+
+            .win-text.show {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            .sidebar {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .companion-section,
+            .collection-section,
+            .achievements-section {
+                background: rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(10px);
+                border-radius: 15px;
+                padding: 1.5rem;
+                border: 2px solid rgba(255, 255, 255, 0.4);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+                color: #2c2c2c;
+                margin-bottom: 1rem;
+                text-align: center;
+                text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+            }
+
+            .companion-cat {
+                text-align: center;
+                padding: 1rem;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 10px;
+                margin-bottom: 1rem;
+                border: 2px solid rgba(255, 255, 255, 0.6);
+            }
+
+            .cat-sprite {
+                font-size: 4rem;
+                margin-bottom: 0.5rem;
+                display: block;
+                animation: catIdle 3s ease-in-out infinite;
+            }
+
+            @keyframes catIdle {
+                0%,
+                100% {
+                    transform: translateY(0px);
+                }
+                50% {
+                    transform: translateY(-5px);
+                }
+            }
+
+            .cat-name {
+                font-weight: bold;
+                color: #2c2c2c;
+                margin-bottom: 0.5rem;
+            }
+
+            .cat-mood {
+                font-size: 0.9rem;
+                color: #666;
+            }
+
+            .unlocked-cats {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+            }
+
+            .cat-slot {
+                aspect-ratio: 1;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                border: 2px solid rgba(255, 255, 255, 0.6);
+                background: rgba(255, 255, 255, 0.3);
+                transition: all 0.3s ease;
+            }
+
+            .cat-slot.locked {
+                background: rgba(0, 0, 0, 0.2);
+                border-color: rgba(0, 0, 0, 0.3);
+            }
+
+            .cat-slot.unlocked {
+                background: rgba(255, 255, 255, 0.6);
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+
+            .cat-slot.unlocked:hover {
+                transform: scale(1.1);
+                box-shadow: 0 3px 10px rgba(255, 107, 157, 0.4);
+            }
+
+            .achievements {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .achievement {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.4);
+            }
+
+            .achievement.unlocked {
+                background: rgba(254, 202, 87, 0.3);
+                border-color: rgba(254, 202, 87, 0.6);
+            }
+
+            .achievement-icon {
+                font-size: 1.2rem;
+            }
+
+            .achievement-text {
+                font-size: 0.9rem;
+                color: #2c2c2c;
+            }
+
+            .paytable {
+                margin-top: 1rem;
+                font-size: 0.8rem;
+                color: #2c2c2c;
+                background: rgba(255, 255, 255, 0.2);
+                padding: 1rem;
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
+
+            .paytable-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 0.3rem;
+            }
+
+            @media (max-width: 768px) {
+                .game-container {
+                    grid-template-columns: 1fr;
+                    gap: 1rem;
+                }
+
+                .header h1 {
+                    font-size: 2rem;
+                }
+
+                .reels {
+                    height: 100px;
+                }
+
+                .reel {
+                    font-size: 2.5rem;
+                }
+
+                .controls {
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .maneki-neko-arm {
+                    width: 100px;
+                    height: 120px;
+                }
+
+                .bet-controls {
+                    justify-content: center;
+                }
+
+                .bet-btn {
+                    padding: 0.8rem 1.2rem;
+                    font-size: 1rem;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .header {
+                    padding: 1rem 0.5rem;
+                    padding-top: 3rem;
+                }
+
+                .game-container {
+                    margin: 1rem auto;
+                    padding: 0 0.5rem;
+                }
+
+                .slot-machine,
+                .companion-section,
+                .collection-section,
+                .achievements-section {
+                    padding: 1rem;
+                }
+
+                .reels {
+                    height: 80px;
+                    gap: 0.5rem;
+                }
+
+                .reel {
+                    font-size: 2rem;
+                }
+
+                .machine-title {
+                    font-size: 1.4rem;
+                }
+
+                .currency-display {
+                    font-size: 1.1rem;
+                    padding: 0.5rem 1rem;
+                }
+
+                .paytable {
+                    font-size: 0.7rem;
+                }
+
+                .unlocked-cats {
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 0.3rem;
+                }
+
+                .cat-slot {
+                    font-size: 1.2rem;
+                }
+
+                .achievement {
+                    padding: 0.7rem;
+                }
+            }
+
+            /* iOS Safe Area Support */
+            @supports (padding: max(0px)) {
+                .header {
+                    padding-top: max(3rem, env(safe-area-inset-top));
+                }
+
+                .game-container {
+                    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+                }
+            }
+
+            /* Touch-friendly improvements */
+            @media (hover: none) and (pointer: coarse) {
+                .btn:hover,
+                .bet-btn:hover,
+                .cat-slot.unlocked:hover {
+                    transform: none;
+                }
+
+                .btn:active,
+                .bet-btn:active,
+                .cat-slot.unlocked:active {
+                    transform: scale(0.95);
+                }
+
+                .maneki-neko-arm:hover {
+                    transform: none;
+                }
+
+                .maneki-neko-arm:active {
+                    transform: scale(0.95);
+                }
+            }
+
+            .jackpot-animation {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 1000;
+            }
+
+            .firework {
+                position: absolute;
+                font-size: 2rem;
+                animation: firework 2s ease-out forwards;
+            }
+
+            @keyframes firework {
+                0% {
+                    transform: scale(0) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(2) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">← Back to Fun</a>
+
+        <div class="header">
+            <h1>Feline Fortune Casino</h1>
+            <p>The purrfect place for lucky cats!</p>
+        </div>
+
+        <div class="game-container">
+            <div class="slot-machine">
+                <div class="machine-top">
+                    <div class="machine-title">Maneki-Neko Slots</div>
+                    <div class="currency-display">
+                        <span id="fishCoins">100</span> Fish Coins
+                    </div>
+                </div>
+
+                <div class="reels-container">
+                    <div class="reels">
+                        <div class="reel" id="reel1">🐟</div>
+                        <div class="reel" id="reel2">🧶</div>
+                        <div class="reel" id="reel3">🐾</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <div class="bet-controls">
+                        <button class="bet-btn" id="betDown">-</button>
+                        <div class="bet-amount" id="betAmount">10</div>
+                        <button class="bet-btn" id="betUp">+</button>
+                    </div>
+
+                    <div class="maneki-neko-arm" id="slotArm">
+                        <div class="arm-base">
+                            <div class="arm-handle"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="win-message">
+                    <div class="win-text" id="winText"></div>
+                </div>
+
+                <div class="paytable">
+                    <div class="paytable-row">
+                        <span>🐟🐟🐟</span><span>100x</span>
+                    </div>
+                    <div class="paytable-row">
+                        <span>🧶🧶🧶</span><span>50x</span>
+                    </div>
+                    <div class="paytable-row">
+                        <span>🐾🐾🐾</span><span>25x</span>
+                    </div>
+                    <div class="paytable-row">
+                        <span>🎾🎾🎾</span><span>15x</span>
+                    </div>
+                    <div class="paytable-row">
+                        <span>🥛🥛🥛</span><span>10x</span>
+                    </div>
+                    <div class="paytable-row">
+                        <span>Any 2 Match</span><span>2x</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="companion-section">
+                    <h3 class="section-title">Your Companion</h3>
+                    <div class="companion-cat">
+                        <span class="cat-sprite" id="companionSprite">😺</span>
+                        <div class="cat-name" id="companionName">Whiskers</div>
+                        <div class="cat-mood" id="companionMood">
+                            Feeling lucky!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collection-section">
+                    <h3 class="section-title">Cat Collection</h3>
+                    <div class="unlocked-cats" id="catCollection"></div>
+                </div>
+
+                <div class="achievements-section">
+                    <h3 class="section-title">Achievements</h3>
+                    <div class="achievements" id="achievementsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="jackpot-animation" id="jackpotAnimation"></div>
+
+        <script>
+            // Game state
+            const gameState = {
+                fishCoins: 100,
+                currentBet: 10,
+                spinning: false,
+                totalSpins: 0,
+                totalWins: 0,
+                biggestWin: 0,
+                currentCompanion: 0,
+                unlockedCats: [0],
+                achievements: [],
+            };
+
+            // Slot symbols with weights (lower number = rarer)
+            const symbols = [
+                { emoji: "🐟", weight: 1, name: "Fish" },
+                { emoji: "🧶", weight: 2, name: "Yarn" },
+                { emoji: "🐾", weight: 3, name: "Paw" },
+                { emoji: "🎾", weight: 5, name: "Ball" },
+                { emoji: "🥛", weight: 8, name: "Milk" },
+                { emoji: "🐭", weight: 6, name: "Mouse" },
+                { emoji: "🍖", weight: 4, name: "Treat" },
+            ];
+
+            // Available cats to unlock
+            const availableCats = [
+                { emoji: "😺", name: "Whiskers", mood: "Feeling lucky!" },
+                { emoji: "😸", name: "Smiley", mood: "Grinning with joy!" },
+                { emoji: "😹", name: "Giggles", mood: "Laughing at luck!" },
+                { emoji: "😻", name: "Hearty", mood: "In love with wins!" },
+                { emoji: "🙀", name: "Surprised", mood: "Shocked by luck!" },
+                { emoji: "😿", name: "Pouty", mood: "Sad about losses..." },
+                { emoji: "😾", name: "Grumpy", mood: "Angry at bad luck!" },
+                { emoji: "🐱", name: "Lucky", mood: "Born lucky!" },
+                { emoji: "🐈", name: "Shadow", mood: "Mysterious fortune..." },
+                { emoji: "🐈‍⬛", name: "Midnight", mood: "Dark magic luck!" },
+                { emoji: "🦁", name: "Leo", mood: "King of fortune!" },
+                { emoji: "🐅", name: "Tiger", mood: "Fierce and lucky!" },
+            ];
+
+            // Achievements
+            const achievements = [
+                { id: "first_spin", name: "First Spin", description: "Spin your first slot!", icon: "🎰", unlocked: false },
+                { id: "first_win", name: "Beginner's Luck", description: "Win your first spin!", icon: "🍀", unlocked: false },
+                { id: "big_win", name: "Big Winner", description: "Win 100+ coins in one spin!", icon: "💰", unlocked: false },
+                { id: "jackpot", name: "Jackpot!", description: "Hit the fish jackpot!", icon: "🐟", unlocked: false },
+                { id: "high_roller", name: "High Roller", description: "Bet 50+ coins", icon: "💎", unlocked: false },
+                { id: "collector", name: "Cat Collector", description: "Unlock 5 cats", icon: "🐱", unlocked: false },
+                { id: "lucky_streak", name: "Lucky Streak", description: "Win 5 spins in a row", icon: "⭐", unlocked: false },
+            ];
+
+            // DOM elements
+            const fishCoinsDisplay = document.getElementById("fishCoins");
+            const betAmountDisplay = document.getElementById("betAmount");
+            const slotArm = document.getElementById("slotArm");
+            const reels = [
+                document.getElementById("reel1"),
+                document.getElementById("reel2"),
+                document.getElementById("reel3"),
+            ];
+            const winText = document.getElementById("winText");
+            const companionSprite = document.getElementById("companionSprite");
+            const companionName = document.getElementById("companionName");
+            const companionMood = document.getElementById("companionMood");
+            const catCollection = document.getElementById("catCollection");
+            const achievementsList = document.getElementById("achievementsList");
+            const jackpotAnimation = document.getElementById("jackpotAnimation");
+
+            function init() {
+                loadGameState();
+                updateDisplay();
+                setupEventListeners();
+                initializeCatCollection();
+                initializeAchievements();
+                updateCompanion();
+            }
+
+            function setupEventListeners() {
+                document.getElementById("betDown").addEventListener("click", decreaseBet);
+                document.getElementById("betUp").addEventListener("click", increaseBet);
+                slotArm.addEventListener("click", spin);
+            }
+
+            function getRandomSymbol() {
+                const totalWeight = symbols.reduce((sum, symbol) => sum + symbol.weight, 0);
+                let random = Math.random() * totalWeight;
+                for (const symbol of symbols) {
+                    random -= symbol.weight;
+                    if (random <= 0) return symbol;
+                }
+                return symbols[symbols.length - 1];
+            }
+
+            function spin() {
+                if (gameState.spinning || gameState.fishCoins < gameState.currentBet) return;
+
+                gameState.spinning = true;
+                gameState.fishCoins -= gameState.currentBet;
+                gameState.totalSpins++;
+
+                slotArm.classList.add("pulling");
+                setTimeout(() => slotArm.classList.remove("pulling"), 800);
+
+                reels.forEach((reel) => reel.classList.add("spinning"));
+
+                const results = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
+
+                setTimeout(() => {
+                    reels[0].textContent = results[0].emoji;
+                    reels[0].classList.remove("spinning");
+                }, 1000);
+
+                setTimeout(() => {
+                    reels[1].textContent = results[1].emoji;
+                    reels[1].classList.remove("spinning");
+                }, 1500);
+
+                setTimeout(() => {
+                    reels[2].textContent = results[2].emoji;
+                    reels[2].classList.remove("spinning");
+
+                    const winAmount = calculateWin(results);
+                    if (winAmount > 0) {
+                        handleWin(winAmount, results);
+                    } else {
+                        handleLoss();
+                    }
+
+                    gameState.spinning = false;
+                    updateDisplay();
+                    saveGameState();
+                    checkAchievements();
+                }, 2000);
+
+                updateDisplay();
+            }
+
+            function calculateWin(results) {
+                const [r1, r2, r3] = results;
+                const bet = gameState.currentBet;
+
+                if (r1.emoji === r2.emoji && r2.emoji === r3.emoji) {
+                    switch (r1.emoji) {
+                        case "🐟": return bet * 100;
+                        case "🧶": return bet * 50;
+                        case "🐾": return bet * 25;
+                        case "🎾": return bet * 15;
+                        case "🥛": return bet * 10;
+                        case "🐭": return bet * 12;
+                        case "🍖": return bet * 20;
+                    }
+                }
+
+                if (r1.emoji === r2.emoji || r2.emoji === r3.emoji || r1.emoji === r3.emoji) {
+                    return bet * 2;
+                }
+
+                return 0;
+            }
+
+            function handleWin(amount, results) {
+                gameState.fishCoins += amount;
+                gameState.totalWins++;
+                if (amount > gameState.biggestWin) gameState.biggestWin = amount;
+
+                const isJackpot = results.every((r) => r.emoji === "🐟");
+                const isBigWin = amount >= gameState.currentBet * 20;
+
+                if (isJackpot) {
+                    showWinMessage(`JACKPOT! +${amount} coins!`, true);
+                    createFireworks();
+                } else if (isBigWin) {
+                    showWinMessage(`BIG WIN! +${amount} coins!`);
+                } else {
+                    showWinMessage(`WIN! +${amount} coins!`);
+                }
+
+                reels.forEach((reel) => reel.classList.add("winning"));
+                setTimeout(() => {
+                    reels.forEach((reel) => reel.classList.remove("winning"));
+                }, 1500);
+
+                tryUnlockCat();
+            }
+
+            function handleLoss() {
+                const encouragements = [
+                    "Better luck next time!",
+                    "Keep trying!",
+                    "Almost there!",
+                    "Fortune favors the brave!",
+                    "Try again!",
+                ];
+                showWinMessage(encouragements[Math.floor(Math.random() * encouragements.length)]);
+            }
+
+            function showWinMessage(message, isJackpot = false) {
+                winText.textContent = message;
+                winText.classList.add("show");
+                winText.style.color = isJackpot ? "#ff6b9d" : "#2c2c2c";
+                winText.style.fontSize = isJackpot ? "2rem" : "1.5rem";
+                setTimeout(() => winText.classList.remove("show"), 3000);
+            }
+
+            function createFireworks() {
+                const fireworkSymbols = ["🎆", "✨", "🎇", "⭐", "🌟", "💫"];
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        const firework = document.createElement("div");
+                        firework.className = "firework";
+                        firework.textContent = fireworkSymbols[Math.floor(Math.random() * fireworkSymbols.length)];
+                        firework.style.left = Math.random() * 100 + "vw";
+                        firework.style.top = Math.random() * 100 + "vh";
+                        jackpotAnimation.appendChild(firework);
+                        setTimeout(() => firework.remove(), 2000);
+                    }, i * 100);
+                }
+            }
+
+            function tryUnlockCat() {
+                if (gameState.unlockedCats.length >= availableCats.length) return;
+                const unlockChance = gameState.biggestWin >= 100 ? 0.3 : 0.1;
+                if (Math.random() < unlockChance) {
+                    const nextCatIndex = gameState.unlockedCats.length;
+                    gameState.unlockedCats.push(nextCatIndex);
+                    showWinMessage(`New cat unlocked: ${availableCats[nextCatIndex].name}!`);
+                    updateCatCollection();
+                }
+            }
+
+            function increaseBet() {
+                const maxBet = Math.min(100, gameState.fishCoins);
+                if (gameState.currentBet < maxBet) {
+                    gameState.currentBet = Math.min(gameState.currentBet + 5, maxBet);
+                    updateDisplay();
+                    saveGameState();
+                }
+            }
+
+            function decreaseBet() {
+                if (gameState.currentBet > 5) {
+                    gameState.currentBet -= 5;
+                    updateDisplay();
+                    saveGameState();
+                }
+            }
+
+            function updateDisplay() {
+                fishCoinsDisplay.textContent = gameState.fishCoins;
+                betAmountDisplay.textContent = gameState.currentBet;
+                updateCompanionMood();
+            }
+
+            function updateCompanion() {
+                const companion = availableCats[gameState.currentCompanion];
+                companionSprite.textContent = companion.emoji;
+                companionName.textContent = companion.name;
+                updateCompanionMood();
+            }
+
+            function updateCompanionMood() {
+                const companion = availableCats[gameState.currentCompanion];
+                if (gameState.fishCoins >= 500) {
+                    companionMood.textContent = "Rich and happy!";
+                } else if (gameState.fishCoins <= 10) {
+                    companionMood.textContent = "Worried about coins...";
+                } else if (gameState.biggestWin >= 100) {
+                    companionMood.textContent = "Still excited from big win!";
+                } else {
+                    companionMood.textContent = companion.mood;
+                }
+            }
+
+            function initializeCatCollection() {
+                catCollection.innerHTML = "";
+                for (let i = 0; i < 12; i++) {
+                    const catSlot = document.createElement("div");
+                    catSlot.className = "cat-slot";
+                    if (gameState.unlockedCats.includes(i)) {
+                        catSlot.classList.add("unlocked");
+                        catSlot.textContent = availableCats[i].emoji;
+                        catSlot.addEventListener("click", () => selectCompanion(i));
+                    } else {
+                        catSlot.classList.add("locked");
+                        catSlot.textContent = "🔒";
+                    }
+                    catCollection.appendChild(catSlot);
+                }
+            }
+
+            function updateCatCollection() {
+                const catSlots = catCollection.querySelectorAll(".cat-slot");
+                gameState.unlockedCats.forEach((catIndex) => {
+                    if (catSlots[catIndex] && catSlots[catIndex].classList.contains("locked")) {
+                        catSlots[catIndex].classList.remove("locked");
+                        catSlots[catIndex].classList.add("unlocked");
+                        catSlots[catIndex].textContent = availableCats[catIndex].emoji;
+                        catSlots[catIndex].addEventListener("click", () => selectCompanion(catIndex));
+                    }
+                });
+            }
+
+            function selectCompanion(catIndex) {
+                if (gameState.unlockedCats.includes(catIndex)) {
+                    gameState.currentCompanion = catIndex;
+                    updateCompanion();
+                    saveGameState();
+                    showWinMessage(`${availableCats[catIndex].name} is now your companion!`);
+                }
+            }
+
+            function initializeAchievements() {
+                achievementsList.innerHTML = "";
+                achievements.forEach((achievement) => {
+                    const achievementElement = document.createElement("div");
+                    achievementElement.className = "achievement";
+                    if (gameState.achievements.includes(achievement.id)) {
+                        achievementElement.classList.add("unlocked");
+                        achievement.unlocked = true;
+                    }
+                    achievementElement.innerHTML = `
+                        <span class="achievement-icon">${achievement.icon}</span>
+                        <div class="achievement-text">
+                            <strong>${achievement.name}</strong><br>
+                            <small>${achievement.description}</small>
+                        </div>
+                    `;
+                    achievementsList.appendChild(achievementElement);
+                });
+            }
+
+            function checkAchievements() {
+                const newAchievements = [];
+                if (gameState.totalSpins >= 1 && !gameState.achievements.includes("first_spin")) newAchievements.push("first_spin");
+                if (gameState.totalWins >= 1 && !gameState.achievements.includes("first_win")) newAchievements.push("first_win");
+                if (gameState.biggestWin >= 100 && !gameState.achievements.includes("big_win")) newAchievements.push("big_win");
+                if (gameState.biggestWin >= gameState.currentBet * 100 && !gameState.achievements.includes("jackpot")) newAchievements.push("jackpot");
+                if (gameState.currentBet >= 50 && !gameState.achievements.includes("high_roller")) newAchievements.push("high_roller");
+                if (gameState.unlockedCats.length >= 5 && !gameState.achievements.includes("collector")) newAchievements.push("collector");
+
+                newAchievements.forEach((achievementId) => {
+                    gameState.achievements.push(achievementId);
+                    const achievement = achievements.find((a) => a.id === achievementId);
+                    if (achievement) showWinMessage(`Achievement Unlocked: ${achievement.name}!`);
+                });
+
+                if (newAchievements.length > 0) {
+                    initializeAchievements();
+                    saveGameState();
+                }
+            }
+
+            function saveGameState() {
+                localStorage.setItem("feline-fortune-save", JSON.stringify(gameState));
+            }
+
+            function loadGameState() {
+                const saved = localStorage.getItem("feline-fortune-save");
+                if (saved) Object.assign(gameState, JSON.parse(saved));
+            }
+
+            function checkDailyBonus() {
+                const today = new Date().toDateString();
+                const lastBonus = localStorage.getItem("feline-fortune-last-bonus");
+                if (lastBonus !== today) {
+                    gameState.fishCoins += 50;
+                    localStorage.setItem("feline-fortune-last-bonus", today);
+                    showWinMessage("Daily bonus: +50 Fish Coins!");
+                    updateDisplay();
+                    saveGameState();
+                }
+            }
+
+            setInterval(saveGameState, 30000);
+
+            document.addEventListener("DOMContentLoaded", () => {
+                init();
+                checkDailyBonus();
+            });
+        </script>
+    </body>
+</html>

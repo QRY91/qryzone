@@ -19,9 +19,9 @@
     },
     {
       "title": "QRY Methodology",
-      "description": "Query, Refine, Yield - systematic problem solving",
+      "description": "Query, Refine, Yield - a problem solving framework",
       "href": "/methodology/",
-      "tags": ["systematic-thinking", "learning"],
+      "tags": ["learning"],
       "status": "evergreen",
       "lastUpdated": "2025-01-03"
     },
@@ -29,7 +29,7 @@
       "title": "Homelab permacomputing strategy",
       "description": "Building distributed infrastructure using heterogeneous hardware",
       "href": "/hidden/thinking/homelab-permacomputing-strategy/",
-      "tags": ["permacomputing", "local-first", "systematic-thinking"],
+      "tags": ["permacomputing", "local-first"],
       "status": "growing",
       "connections": ["Technical depth assessment", "CLI-first development"],
       "lastUpdated": "2025-01-07"
@@ -38,7 +38,7 @@
       "title": "CLI-first development",
       "description": "Terminal-centric workflows and why they matter",
       "href": "/hidden/thinking/cli-first-development/",
-      "tags": ["developer-tools", "systematic-thinking", "local-first"],
+      "tags": ["developer-tools", "local-first"],
       "status": "growing",
       "connections": ["Homelab permacomputing strategy"],
       "lastUpdated": "2025-01-06"
@@ -64,7 +64,7 @@
       "title": "Technical depth assessment",
       "description": "Evaluating and building genuine technical capability",
       "href": "/hidden/thinking/technical-depth-assessment/",
-      "tags": ["learning", "systematic-thinking", "career"],
+      "tags": ["learning", "career"],
       "status": "seedling",
       "connections": ["Homelab permacomputing strategy"]
     },
@@ -80,7 +80,7 @@
       "title": "Hybrid AI transition",
       "description": "80/20 sustainable AI integration for workflows",
       "href": "/hidden/thinking/hybrid-ai-transition/",
-      "tags": ["ai-collaboration", "systematic-thinking"],
+      "tags": ["ai-collaboration"],
       "status": "seedling",
       "connections": ["AI hyperresponder profile", "Productivity breakthrough"]
     },
@@ -127,7 +127,7 @@
       "title": "Database-first debugging",
       "description": "When the problem isn't in the code, it's in the data",
       "href": "/notes/database-first-debugging/",
-      "tags": ["debugging", "systematic-thinking", "learning"],
+      "tags": ["debugging", "learning"],
       "status": "seedling",
       "connections": ["Optimization through removal"],
       "lastUpdated": "2025-01-08"
@@ -136,7 +136,7 @@
       "title": "Optimization through removal",
       "description": "The fastest code is code that doesn't run",
       "href": "/notes/optimization-through-removal/",
-      "tags": ["debugging", "systematic-thinking"],
+      "tags": ["debugging"],
       "status": "seedling",
       "connections": ["Database-first debugging"],
       "lastUpdated": "2025-01-08"
@@ -145,7 +145,7 @@
       "title": "The sailboat test",
       "description": "A filter for what tools deserve to exist",
       "href": "/notes/sailboat-test/",
-      "tags": ["permacomputing", "local-first", "systematic-thinking"],
+      "tags": ["permacomputing", "local-first"],
       "status": "seedling",
       "connections": ["Homelab permacomputing strategy"],
       "lastUpdated": "2025-01-08"
@@ -225,7 +225,7 @@
       "title": "Managing attention",
       "description": "On reclaiming focus from the noise",
       "href": "/notes/managing-attention/",
-      "tags": ["personal", "systematic-thinking"],
+      "tags": ["personal"],
       "status": "seedling",
       "lastUpdated": "2026-01-08"
     },

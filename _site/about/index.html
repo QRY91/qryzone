@@ -62,13 +62,9 @@
     font-family: var(--font-mono);
 }
 .about-container h2 {
-    font-size: 1.5rem;
-    margin-bottom: var(--space-lg);
-    color: var(--color-text-primary);
-}
-.about-container h3 {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-md);
     color: var(--color-accent);
-    margin-bottom: var(--space-sm);
     font-family: var(--font-mono);
 }
 .about-section {
@@ -83,24 +79,6 @@
     color: var(--color-text-secondary);
     margin: var(--space-lg) 0;
 }
-.capability-list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: var(--space-lg);
-}
-.capability-list li {
-    margin-bottom: var(--space-sm);
-}
-.capability-list strong {
-    color: var(--color-accent);
-}
-.work-item {
-    margin-bottom: var(--space-lg);
-}
-.evidence {
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
-}
 .contact-section {
     background: var(--color-surface);
     padding: var(--space-xl);
@@ -108,16 +86,12 @@
     border-radius: var(--border-radius);
     text-align: center;
 }
-.contact-section h2 {
-    font-size: 1.3rem;
-    color: var(--color-accent);
-    font-family: var(--font-mono);
-}
 .contact-links {
     display: flex;
     gap: var(--space-lg);
     justify-content: center;
     flex-wrap: wrap;
+    margin-top: var(--space-md);
 }
 .contact-link {
     color: var(--color-accent);
@@ -130,185 +104,60 @@
 </style>
 
 <div class="about-container">
-    <h1>The whole story</h1>
+    <h1>About</h1>
 
     <section class="about-section">
-        <h2>The non-traditional route</h2>
+        <h2>The scenic route</h2>
         <p>
-            I took the scenic route to software development. Psychology studies →
-            game design → callcenter → bootcamp → startup burnout → back to school
-            at 33. Not exactly the typical CS path, but it gave me something
-            useful: a systematic approach to understanding why things break and
-            how to build better alternatives.
+            Psychology studies, game design, callcenter, bootcamp, startup burnout, back to school at 33. Not the typical CS path.
         </p>
         <p>
-            Months out of bootcamp, I was handling enterprise logistics for Maersk
-            as a solo developer. Complex API integrations, German customs systems,
-            client relationships, project management - work that should require a
-            team. That's when I learned the difference between building software
-            and building <em>systems that actually work</em>.
+            Months out of bootcamp, I was handling enterprise logistics for Maersk as a solo developer. API integrations, German customs systems, client relationships - work that should require a team. That's when I learned the difference between writing code and building systems that actually work.
         </p>
     </section>
 
     <section class="about-section">
-        <h2>Learning through institutional dysfunction</h2>
+        <h2>Learning through dysfunction</h2>
         <p>
-            Then came the education in organizational toxicity. Quality work
-            punished. Systematic thinking labeled as "slowness" while depending on
-            the solutions it produced. The classic double-bind: do it fast or do
-            it right, but somehow also make it perfect.
+            Then came the education in organizational toxicity. Quality work punished. Careful thinking labeled as "slowness" while depending on the solutions it produced. The classic double-bind: do it fast or do it right, but somehow also make it perfect.
         </p>
         <p>
-            Instead of just complaining, I documented everything. Patterns,
-            failures, what worked, what didn't. That documentation became the
-            foundation for building tools that solve these problems
-            systematically.
+            Instead of just complaining, I documented everything. Patterns, failures, what worked, what didn't. That documentation became the foundation for the tools I build now.
         </p>
         <div class="quote-box">
-            "I learn to spite those who punish it. If I can suffer and learn and
-            build systems that prevent others from experiencing that dysfunction,
-            then the suffering becomes valuable. If I die with the knowledge, the
-            systems never get built, and the dysfunction repeats."
+            "I learn to spite those who punish it. If I can suffer and learn and build systems that prevent others from experiencing that dysfunction, then the suffering becomes valuable."
         </div>
     </section>
 
     <section class="about-section">
-        <h2>Current capabilities</h2>
-        <p>What you get when you hire someone who took the long way around:</p>
-        <ul class="capability-list">
-            <li>
-                <strong>Multi-domain experience:</strong>
-                Psychology, game design, cybersecurity, enterprise systems -
-                different contexts, same systematic thinking
-            </li>
-            <li>
-                <strong>Problem transformation:</strong>
-                Converting institutional trauma into systematic solutions others can use
-            </li>
-            <li>
-                <strong>Documentation obsession:</strong>
-                Everything captured systematically - enables knowledge transfer
-                without human bottlenecks
-            </li>
-            <li>
-                <strong>AI integration expertise:</strong>
-                Transparent collaboration that builds capability rather than dependency
-            </li>
-            <li>
-                <strong>Local-first philosophy:</strong>
-                Privacy-respecting tools that work offline and don't phone home
-            </li>
-        </ul>
-    </section>
-
-    <section class="about-section">
-        <h2>Recent work highlights</h2>
-
-        <div class="work-item">
-            <h3>Panopticron - Enterprise Monitoring</h3>
-            <p>
-                Built enterprise-level monitoring system for 6-person agency. Live
-                production system with worker-based data sync, custom visualization,
-                service-oriented architecture. Academic validation through
-                IEEE-formatted report delivered in 16 hours.
-            </p>
-            <p class="evidence">
-                <strong>Evidence:</strong>
-                <a href="https://panopticron.vercel.app/" target="_blank" rel="noopener noreferrer">
-                    Live at panopticron.vercel.app
-                </a>
-            </p>
-        </div>
-
-        <div class="work-item">
-            <h3>QRY Tool Ecosystem</h3>
-            <p>
-                Local-first developer tools addressing documented problems: context
-                preservation, work visibility, systematic learning, AI collaboration
-                methodology. Each tool solves a specific dysfunction I've
-                experienced and documented.
-            </p>
-            <p class="evidence">
-                <strong>Evidence:</strong>
-                <a href="https://github.com/QRY91/qryzone" target="_blank" rel="noopener noreferrer">
-                    Active development on GitHub
-                </a>
-            </p>
-        </div>
-
-        <div class="work-item">
-            <h3>Educational Game Design</h3>
-            <p>
-                Quantum mechanics through dice game mechanics. Complex concepts made
-                accessible without dumbing down. Proven methodology for translating
-                difficult technical topics into intuitive interactive systems.
-            </p>
-            <p class="evidence">
-                <strong>Evidence:</strong>
-                <a href="https://github.com/QRY91/quantum_dice" target="_blank" rel="noopener noreferrer">
-                    Game development on GitHub
-                </a>
-            </p>
-        </div>
-    </section>
-
-    <section class="about-section">
-        <h2>What I'm looking for</h2>
+        <h2>Current work</h2>
         <p>
-            Environments where systematic problem-solving is valued over velocity
-            theater. Teams that build solutions rather than just implement
-            predetermined requirements. Organizations that understand the
-            difference between "moving fast" and "building sustainably."
-        </p>
-        <p>I'm particularly interested in:</p>
-        <ul class="capability-list">
-            <li>
-                <strong>Developer tools companies</strong> -
-                Building tools that make other developers more effective
-            </li>
-            <li>
-                <strong>Platform engineering</strong> -
-                Infrastructure that enables rather than constrains
-            </li>
-            <li>
-                <strong>R&D environments</strong> -
-                Systematic exploration of complex problems
-            </li>
-            <li>
-                <strong>Educational technology</strong> -
-                Making complex concepts accessible without oversimplification
-            </li>
-        </ul>
-    </section>
-
-    <section class="about-section">
-        <h2>How I work (including with AI)</h2>
-        <p>
-            Most text on this site was drafted with AI assistance. The underlying
-            ideas, experiences, and frameworks come from 5+ years of notes and
-            lived experience. AI helps with the communication bottleneck - turning
-            rough thinking into readable prose.
+            Building local-first developer tools that solve problems I've documented: context preservation (<a href="https://github.com/QRY91/uroboro">uroboro</a>), work visibility, AI collaboration methodology. Each tool addresses a specific dysfunction I've experienced.
         </p>
         <p>
-            I'm transparent about this because I think it matters. AI makes
-            mistakes, sometimes confidently wrong ones. I catch what I can, but
-            I'm not pretending this is all hand-crafted prose. The value is in the
-            thinking, not the word count.
+            For the full professional history, see <a href="https://www.bokondo.net/" target="_blank" rel="noopener noreferrer">my resume</a>.
         </p>
-        <p class="evidence">
-            If you spot errors,
-            <a href="https://github.com/QRY91/qryzone/issues">let me know</a>.
-            I'd rather fix things than pretend they're perfect.
+    </section>
+
+    <section class="about-section">
+        <h2>How this site works</h2>
+        <p>
+            Most text here was drafted with AI assistance. The ideas and experiences are mine - 5+ years of notes and lived experience. AI helps turn rough thinking into readable prose.
+        </p>
+        <p>
+            I'm transparent about this because AI makes mistakes, sometimes confidently wrong ones. I catch what I can, but I'm not pretending this is all hand-crafted. The value is in the thinking.
+        </p>
+        <p>
+            If you spot errors, <a href="https://github.com/QRY91/qryzone/issues">let me know</a>.
         </p>
     </section>
 
     <section class="contact-section">
         <h2>Contact</h2>
-        <p>Want to talk about systematic solutions to documented problems?</p>
         <div class="contact-links">
             <a href="mailto:glenn@qry.zone" class="contact-link">glenn@qry.zone</a>
-            <a href="https://github.com/QRY91" class="contact-link">GitHub →</a>
-            <a href="https://www.bokondo.net/" target="_blank" rel="noopener noreferrer" class="contact-link">Professional Resume →</a>
+            <a href="https://github.com/QRY91" class="contact-link">GitHub</a>
+            <a href="https://www.bokondo.net/" target="_blank" rel="noopener noreferrer" class="contact-link">Resume</a>
         </div>
     </section>
 </div>
