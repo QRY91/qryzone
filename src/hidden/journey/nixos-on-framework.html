@@ -1,0 +1,136 @@
+---
+layout: base.njk
+title: NixOS on Framework - qry.zone
+description: Learning declarative configuration on modular hardware
+---
+
+<article class="article">
+    <header class="article-header">
+        <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block;">
+            &larr; Back to Explore
+        </a>
+        <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            NixOS on Framework
+        </h1>
+        <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg);">
+            Reproducible development on repairable hardware
+        </p>
+    </header>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            Why this combination
+        </h2>
+        <p style="margin-bottom: var(--space-lg);">
+            Framework builds laptops you can fix and upgrade. NixOS lets you define your entire system in code and rebuild it identically. Both prioritize user control over convenience. They pair well.
+        </p>
+        <p style="margin-bottom: var(--space-lg);">
+            48GB RAM means running 22B parameter models locally. 2TB NVMe plus expansion storage means room for models, projects, and experiments. The modular expansion cards let you swap between USB, storage, or display outputs as needed.
+        </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            The learning curve
+        </h2>
+        <p style="margin-bottom: var(--space-lg);">
+            NixOS is different. You don't install packages the normal way. You declare what you want, rebuild, and the system matches your declaration. Takes a while to stop reaching for apt/dnf/pacman.
+        </p>
+        <p style="margin-bottom: var(--space-lg);">
+            Start with the NixOS manual and Nix Pills. Install in a VM first, then old hardware, then your daily driver. The paradigm shift from "run commands to change state" to "declare desired state" is the hard part.
+        </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            Flakes for reproducibility
+        </h2>
+        <p style="margin-bottom: var(--space-lg);">
+            Flakes lock your dependencies. Your system tomorrow builds the same as today.
+        </p>
+        <div style="background: #1a1a1a; color: #4ade80; padding: var(--space-md); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; overflow-x: auto; margin-bottom: var(--space-lg);">
+            <div># flake.nix</div>
+            <div>{</div>
+            <div>  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";</div>
+            <div></div>
+            <div>  outputs = { self, nixpkgs }: {</div>
+            <div>    nixosConfigurations.framework = nixpkgs.lib.nixosSystem {</div>
+            <div>      system = "x86_64-linux";</div>
+            <div>      modules = [</div>
+            <div>        ./hardware-configuration.nix</div>
+            <div>        ./configuration.nix</div>
+            <div>      ];</div>
+            <div>    };</div>
+            <div>  };</div>
+            <div>}</div>
+        </div>
+        <p style="margin-bottom: var(--space-lg);">
+            Break config into modules as it grows: terminal.nix, development.nix, ai-tools.nix. Each module handles one thing.
+        </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            Framework hardware config
+        </h2>
+        <div style="background: #1a1a1a; color: #4ade80; padding: var(--space-md); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; overflow-x: auto; margin-bottom: var(--space-lg);">
+            <div># Hardware-specific bits</div>
+            <div>boot.kernelPackages = pkgs.linuxPackages_latest;</div>
+            <div>services.thermald.enable = true;</div>
+            <div>services.auto-cpufreq.enable = true;</div>
+            <div>hardware.bluetooth.enable = true;</div>
+            <div>services.pipewire.enable = true;</div>
+        </div>
+        <p style="margin-bottom: var(--space-lg);">
+            Framework has good NixOS community support. The wiki and forums have hardware-specific configurations for most modules.
+        </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            Local AI setup
+        </h2>
+        <div style="background: #1a1a1a; color: #4ade80; padding: var(--space-md); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; overflow-x: auto; margin-bottom: var(--space-lg);">
+            <div># modules/ai-tools.nix</div>
+            <div>{ pkgs, ... }: {</div>
+            <div>  services.ollama = {</div>
+            <div>    enable = true;</div>
+            <div>    acceleration = "cpu";</div>
+            <div>  };</div>
+            <div></div>
+            <div>  environment.systemPackages = with pkgs; [</div>
+            <div>    aider-chat python3Full</div>
+            <div>  ];</div>
+            <div>}</div>
+        </div>
+        <p style="margin-bottom: var(--space-lg);">
+            Ollama as a system service. Models in /var/lib/ollama. Works with aider for AI pair programming, or anything that talks to local endpoints.
+        </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            What I actually use
+        </h2>
+        <p style="margin-bottom: var(--space-lg);">
+            Zellij for terminal multiplexing. Neovim with LSP. Ripgrep, fd, fzf, bat. Go and Python for most projects. Git for everything.
+        </p>
+        <p style="margin-bottom: var(--space-lg);">
+            The whole setup rebuilds from a git repo. If hardware dies tomorrow, new machine is identical within an hour of install.
+        </p>
+    </section>
+
+    <section style="margin-top: var(--space-xxl); padding-top: var(--space-xl); border-top: 1px solid var(--color-border);">
+        <h3 style="font-size: 1rem; margin-bottom: var(--space-md); color: var(--color-text-secondary);">
+            Related
+        </h3>
+        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+            <a href="/hidden/journey/linux-distro-selection/" style="color: var(--color-accent); text-decoration: none;">
+                Linux distro selection &rarr;
+            </a>
+            <a href="/hidden/journey/career-growth/" style="color: var(--color-accent); text-decoration: none;">
+                What I've built &rarr;
+            </a>
+        </div>
+    </section>
+</article>

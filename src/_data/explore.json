@@ -92,12 +92,12 @@
       "status": "seedling"
     },
     {
-      "title": "Framework cluster economics",
-      "description": "Cost analysis of development infrastructure",
-      "href": "/hidden/thinking/framework-cluster-economics/",
+      "title": "Local AI economics",
+      "description": "When local hardware makes sense vs cloud subscriptions",
+      "href": "/hidden/thinking/local-ai-economics/",
       "tags": ["local-first", "analysis"],
       "status": "seedling",
-      "connections": ["Homelab permacomputing strategy"]
+      "connections": ["Homelab permacomputing strategy", "NixOS on Framework"]
     },
     {
       "title": "Career realignment",
@@ -116,12 +116,12 @@
       "connections": ["About", "Career realignment"]
     },
     {
-      "title": "NixOS learning progression",
-      "description": "Systematic approach to learning NixOS",
-      "href": "/hidden/journey/nixos-learning-progression/",
+      "title": "NixOS on Framework",
+      "description": "Declarative configuration on modular hardware",
+      "href": "/hidden/journey/nixos-on-framework/",
       "tags": ["learning", "local-first", "developer-tools"],
       "status": "seedling",
-      "connections": ["CLI-first development", "Homelab permacomputing strategy"]
+      "connections": ["CLI-first development", "Linux distro selection"]
     },
     {
       "title": "Database-first debugging",

@@ -1,0 +1,136 @@
+---
+layout: base.njk
+title: Local AI Economics - qry.zone
+description: When does local hardware make sense vs. cloud AI subscriptions?
+---
+
+<article class="article">
+    <header class="article-header">
+        <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block;">
+            &larr; Back to Explore
+        </a>
+        <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            Local AI Economics
+        </h1>
+        <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg);">
+            When building your own hardware makes sense
+        </p>
+    </header>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            The question
+        </h2>
+        <p style="margin-bottom: var(--space-lg);">
+            Cloud AI subscriptions add up. If you're spending $60/month on ChatGPT Plus + Claude Pro + Cursor, that's $720/year. Heavy API usage can push that to $300-500/month. At some point, owning hardware beats renting.
+        </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            What a local cluster costs
+        </h2>
+        <p style="margin-bottom: var(--space-lg);">
+            A 4x Framework Desktop setup with 128GB RAM each (512GB total, ~384GB usable for models):
+        </p>
+        <div style="background: #1a1a1a; color: #4ade80; padding: var(--space-md); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.9rem; margin-bottom: var(--space-lg);">
+            <div>Hardware (4 units):     $10,000-12,000</div>
+            <div>Rack, switch, UPS:      $1,000-2,000</div>
+            <div>Cables, misc:           $200-400</div>
+            <div>---</div>
+            <div>Total upfront:          $12,000-15,000</div>
+            <div></div>
+            <div>Annual operating:</div>
+            <div>  Electricity:          $420-525</div>
+            <div>  Internet upgrade:     $600-1,200</div>
+            <div>  Maintenance reserve:  $1,700</div>
+            <div>---</div>
+            <div>Total per year:         $2,700-3,400</div>
+        </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            Break-even math
+        </h2>
+        <p style="margin-bottom: var(--space-lg);">
+            <strong>Light user ($100/month cloud):</strong> $12,000 / $1,200 annual savings = 10 years. Not worth it.
+        </p>
+        <p style="margin-bottom: var(--space-lg);">
+            <strong>Heavy user ($400/month cloud):</strong> $12,000 / $4,800 annual savings = 2.5 years. Viable.
+        </p>
+        <p style="margin-bottom: var(--space-lg);">
+            <strong>Team ($700+/month cloud):</strong> $15,000 / $8,400 annual savings = 1.8 years. Strong case.
+        </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            What you can run locally
+        </h2>
+        <p style="margin-bottom: var(--space-lg);">
+            With 384GB addressable memory across the cluster:
+        </p>
+        <ul style="margin-bottom: var(--space-lg);">
+            <li>Llama 3.3 70B - fits in ~40GB</li>
+            <li>Qwen 2.5 72B - similar requirements</li>
+            <li>DeepSeek V3 - with quantization</li>
+            <li>Llama 405B - distributed across nodes</li>
+            <li>Any custom fine-tuned models you build</li>
+        </ul>
+        <p style="margin-bottom: var(--space-lg);">
+            Local gets you ~10ms latency vs ~200ms cloud. No rate limiting. No quotas. No sending your code to someone else's servers.
+        </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            When to build local
+        </h2>
+        <ul style="margin-bottom: var(--space-lg);">
+            <li>Monthly cloud costs exceed $300-400</li>
+            <li>You care about data privacy</li>
+            <li>You want to experiment without watching the meter</li>
+            <li>You're comfortable managing hardware</li>
+            <li>You're planning 3+ years of heavy AI use</li>
+        </ul>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            When to stay cloud
+        </h2>
+        <ul style="margin-bottom: var(--space-lg);">
+            <li>Monthly costs under $200</li>
+            <li>You need the absolute latest models immediately</li>
+            <li>You don't want to maintain hardware</li>
+            <li>Your usage is casual or project-based</li>
+        </ul>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl);">
+        <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
+            The non-financial stuff
+        </h2>
+        <p style="margin-bottom: var(--space-lg);">
+            Independence has value that's hard to put a number on. You're not subject to price increases, service changes, or rate limiting during critical work. Your infrastructure stays yours.
+        </p>
+        <p style="margin-bottom: var(--space-lg);">
+            The flip side: when hardware fails at 2am on a deadline, there's no support ticket to file.
+        </p>
+    </section>
+
+    <section style="margin-top: var(--space-xxl); padding-top: var(--space-xl); border-top: 1px solid var(--color-border);">
+        <h3 style="font-size: 1rem; margin-bottom: var(--space-md); color: var(--color-text-secondary);">
+            Related
+        </h3>
+        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+            <a href="/hidden/thinking/homelab-permacomputing-strategy/" style="color: var(--color-accent); text-decoration: none;">
+                Homelab permacomputing &rarr;
+            </a>
+            <a href="/hidden/journey/nixos-on-framework/" style="color: var(--color-accent); text-decoration: none;">
+                NixOS on Framework &rarr;
+            </a>
+        </div>
+    </section>
+</article>
