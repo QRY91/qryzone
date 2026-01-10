@@ -1,0 +1,640 @@
+---
+layout: false
+permalink: /fun/lissajous/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Interactive Lissajous curve generator and explorer" />
+        <title>Lissajous Lab</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --bg-deep: #0a0a0f;
+                --bg-surface: #12121a;
+                --bg-elevated: #1a1a24;
+                --accent: #e056fd;
+                --accent-dim: rgba(224, 86, 253, 0.3);
+                --accent-glow: rgba(224, 86, 253, 0.15);
+                --text-primary: #e0e0e0;
+                --text-secondary: #7a7a8a;
+                --border: #2a2a3a;
+            }
+
+            body {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-deep);
+                color: var(--text-primary);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .back-link {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                color: var(--accent);
+                text-decoration: none;
+                font-size: 0.85rem;
+                z-index: 100;
+                transition: all 0.2s ease;
+            }
+
+            .back-link:hover {
+                border-color: var(--accent);
+                box-shadow: 0 0 10px var(--accent-glow);
+            }
+
+            .top-btn {
+                position: fixed;
+                top: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 4px;
+                color: var(--accent);
+                font-size: 1rem;
+                cursor: pointer;
+                z-index: 100;
+                transition: all 0.2s ease;
+            }
+
+            .top-btn:hover {
+                border-color: var(--accent);
+                box-shadow: 0 0 10px var(--accent-glow);
+            }
+
+            .help-btn { right: 1rem; }
+            .fullscreen-btn { right: 4rem; }
+
+            body.fullscreen .game-header,
+            body.fullscreen .controls,
+            body.fullscreen .back-link {
+                display: none;
+            }
+
+            body.fullscreen .canvas-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                padding: 0;
+            }
+
+            body.fullscreen #canvas { border: none; }
+            body.fullscreen .top-btn { background: rgba(10, 10, 15, 0.8); }
+
+            .game-header {
+                text-align: center;
+                padding: 2rem 1rem 1rem;
+                padding-top: 4rem;
+            }
+
+            .game-title {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+                font-weight: 500;
+                color: var(--accent);
+                margin-bottom: 0.5rem;
+                text-shadow: 0 0 20px var(--accent-glow);
+            }
+
+            .stats-bar {
+                display: flex;
+                justify-content: center;
+                gap: 2rem;
+                flex-wrap: wrap;
+                font-size: 0.85rem;
+                margin-bottom: 1rem;
+            }
+
+            .stat {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .stat-label { color: var(--text-secondary); }
+            .stat-value { color: var(--accent); font-size: 1rem; }
+
+            .canvas-container {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 1rem;
+                min-height: 300px;
+            }
+
+            #canvas {
+                border: 1px solid var(--border);
+                max-width: 100%;
+            }
+
+            .controls {
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            .control-row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+
+            button {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-elevated);
+                border: 1px solid var(--accent-dim);
+                color: var(--text-primary);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                transition: all 0.2s ease;
+            }
+
+            button:hover {
+                border-color: var(--accent);
+                background: var(--accent-glow);
+            }
+
+            button.primary {
+                background: var(--accent-glow);
+                border-color: var(--accent);
+                color: var(--accent);
+                min-width: 100px;
+            }
+
+            button.active {
+                background: var(--accent);
+                color: var(--bg-deep);
+                border-color: var(--accent);
+            }
+
+            .slider-control {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .slider-control input[type="range"] {
+                width: 100px;
+                accent-color: var(--accent);
+            }
+
+            .slider-label {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+                min-width: 40px;
+            }
+
+            .slider-value {
+                font-size: 0.85rem;
+                color: var(--accent);
+                min-width: 30px;
+            }
+
+            .presets-label {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+            }
+
+            /* Modal */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.85);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 200;
+                padding: 1rem;
+            }
+
+            .modal-overlay.show { display: flex; }
+
+            .modal {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                max-width: 500px;
+                width: 100%;
+                max-height: 80vh;
+                overflow-y: auto;
+                padding: 1.5rem;
+            }
+
+            .modal h2 {
+                color: var(--accent);
+                margin-bottom: 1rem;
+                font-size: 1.25rem;
+            }
+
+            .modal p, .modal ul {
+                color: var(--text-secondary);
+                line-height: 1.6;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .modal ul { margin-left: 1.5rem; }
+            .modal code {
+                background: var(--bg-elevated);
+                padding: 0.1rem 0.3rem;
+                border-radius: 3px;
+                color: var(--accent);
+            }
+            .modal-close { margin-top: 1rem; width: 100%; }
+
+            @media (max-width: 480px) {
+                .control-row { gap: 0.4rem; }
+                button { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+                .slider-control input[type="range"] { width: 70px; }
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">← back</a>
+        <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen (F)">⛶</button>
+        <button class="top-btn help-btn" id="helpBtn" title="Help (?)">?</button>
+
+        <header class="game-header">
+            <h1 class="game-title">Lissajous Lab</h1>
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Ratio:</span>
+                    <span class="stat-value" id="ratioDisplay">1:2</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Phase:</span>
+                    <span class="stat-value" id="phaseDisplay">0°</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <div class="controls">
+            <div class="control-row">
+                <button class="primary" id="animateBtn" class="active">Animate Phase</button>
+                <button id="randomBtn">Random</button>
+                <button id="clearBtn">Clear</button>
+            </div>
+            <div class="control-row">
+                <div class="slider-control">
+                    <span class="slider-label">A:</span>
+                    <input type="range" id="aSlider" min="1" max="12" value="1">
+                    <span class="slider-value" id="aDisplay">1</span>
+                </div>
+                <div class="slider-control">
+                    <span class="slider-label">B:</span>
+                    <input type="range" id="bSlider" min="1" max="12" value="2">
+                    <span class="slider-value" id="bDisplay">2</span>
+                </div>
+                <div class="slider-control">
+                    <span class="slider-label">Phase:</span>
+                    <input type="range" id="phaseSlider" min="0" max="360" value="0">
+                </div>
+            </div>
+            <div class="control-row">
+                <span class="presets-label">Presets:</span>
+                <button data-preset="1:2">1:2</button>
+                <button data-preset="2:3">2:3</button>
+                <button data-preset="3:4">3:4</button>
+                <button data-preset="3:5">3:5</button>
+                <button data-preset="5:6">5:6</button>
+                <button data-preset="7:8">7:8</button>
+            </div>
+            <div class="control-row">
+                <div class="slider-control">
+                    <span class="slider-label">Speed:</span>
+                    <input type="range" id="speedSlider" min="1" max="20" value="5">
+                </div>
+                <div class="slider-control">
+                    <span class="slider-label">Fade:</span>
+                    <input type="range" id="fadeSlider" min="0" max="20" value="3">
+                </div>
+                <div class="slider-control">
+                    <span class="slider-label">Width:</span>
+                    <input type="range" id="widthSlider" min="1" max="5" value="2">
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal-overlay" id="helpModal">
+            <div class="modal">
+                <h2>Lissajous Curves</h2>
+                <p><a href="https://en.wikipedia.org/wiki/Lissajous_curve" target="_blank" style="color: var(--accent)">Parametric curves</a> created by the equations:</p>
+                <p style="text-align: center; color: var(--accent);">
+                    x = sin(A×t + δ)<br>
+                    y = sin(B×t)
+                </p>
+                <p>The ratio A:B determines the shape, and the phase δ causes the curve to morph.</p>
+                <p><strong>Famous Ratios:</strong></p>
+                <ul>
+                    <li><code>1:1</code> - Circle/ellipse (depending on phase)</li>
+                    <li><code>1:2</code> - Figure eight / parabola</li>
+                    <li><code>2:3</code> - Classic knot pattern</li>
+                    <li><code>3:4</code> - Complex interlocking loops</li>
+                </ul>
+                <p><strong>Controls:</strong></p>
+                <ul>
+                    <li><strong>A, B</strong> - Frequency ratio</li>
+                    <li><strong>Phase</strong> - Rotation/morphing of the curve</li>
+                    <li><strong>Animate</strong> - Auto-cycle through phases</li>
+                </ul>
+                <p><strong>Keyboard:</strong></p>
+                <ul>
+                    <li><strong>Space</strong> - Toggle animation</li>
+                    <li><strong>R</strong> - Random ratio</li>
+                    <li><strong>Arrow Left/Right</strong> - Adjust phase</li>
+                    <li><strong>F</strong> - Fullscreen</li>
+                </ul>
+                <button class="modal-close" id="closeHelp">Got it</button>
+            </div>
+        </div>
+
+        <script>
+            // Parameters
+            let freqA = 1;
+            let freqB = 2;
+            let phase = 0;
+            let animatePhase = true;
+            let animSpeed = 5;
+            let fadeRate = 3;
+            let lineWidth = 2;
+
+            // Canvas
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // History for smooth drawing
+            let points = [];
+            const MAX_POINTS = 2000;
+
+            // Initialize
+            function init() {
+                const container = document.querySelector('.canvas-container');
+                const maxWidth = container.clientWidth - 20;
+                const maxHeight = container.clientHeight - 20;
+                const size = Math.min(maxWidth, maxHeight, 600);
+
+                canvas.width = size;
+                canvas.height = size;
+
+                clear();
+            }
+
+            function clear() {
+                ctx.fillStyle = '#0a0a0f';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                points = [];
+            }
+
+            // Calculate point on Lissajous curve
+            function getPoint(t) {
+                const x = Math.sin(freqA * t + phase * Math.PI / 180);
+                const y = Math.sin(freqB * t);
+                return {
+                    x: canvas.width / 2 + x * (canvas.width / 2 - 40),
+                    y: canvas.height / 2 + y * (canvas.height / 2 - 40)
+                };
+            }
+
+            // Draw the curve
+            let t = 0;
+            function draw() {
+                // Fade effect
+                if (fadeRate > 0) {
+                    ctx.fillStyle = `rgba(10, 10, 15, ${fadeRate / 100})`;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+
+                // Add new points
+                for (let i = 0; i < animSpeed; i++) {
+                    const point = getPoint(t);
+                    points.push(point);
+                    if (points.length > MAX_POINTS) points.shift();
+                    t += 0.02;
+                }
+
+                // Draw curve with gradient
+                if (points.length > 1) {
+                    for (let i = 1; i < points.length; i++) {
+                        const progress = i / points.length;
+                        const hue = (progress * 60 + 280) % 360; // Purple to pink
+
+                        ctx.beginPath();
+                        ctx.moveTo(points[i-1].x, points[i-1].y);
+                        ctx.lineTo(points[i].x, points[i].y);
+                        ctx.strokeStyle = `hsla(${hue}, 80%, 60%, ${progress * 0.8})`;
+                        ctx.lineWidth = lineWidth;
+                        ctx.lineCap = 'round';
+                        ctx.stroke();
+                    }
+                }
+
+                // Draw current point
+                if (points.length > 0) {
+                    const last = points[points.length - 1];
+                    ctx.beginPath();
+                    ctx.arc(last.x, last.y, 4, 0, Math.PI * 2);
+                    ctx.fillStyle = '#e056fd';
+                    ctx.fill();
+
+                    // Glow
+                    ctx.beginPath();
+                    ctx.arc(last.x, last.y, 8, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(224, 86, 253, 0.3)';
+                    ctx.fill();
+                }
+
+                // Animate phase
+                if (animatePhase) {
+                    phase = (phase + 0.3) % 360;
+                    document.getElementById('phaseSlider').value = Math.round(phase);
+                    document.getElementById('phaseDisplay').textContent = Math.round(phase) + '°';
+                }
+
+                requestAnimationFrame(draw);
+            }
+
+            // Update display
+            function updateDisplay() {
+                document.getElementById('ratioDisplay').textContent = `${freqA}:${freqB}`;
+                document.getElementById('aDisplay').textContent = freqA;
+                document.getElementById('bDisplay').textContent = freqB;
+                document.getElementById('phaseDisplay').textContent = Math.round(phase) + '°';
+            }
+
+            // Controls
+            const animateBtn = document.getElementById('animateBtn');
+            animateBtn.addEventListener('click', () => {
+                animatePhase = !animatePhase;
+                animateBtn.classList.toggle('active', animatePhase);
+                animateBtn.textContent = animatePhase ? 'Stop Animation' : 'Animate Phase';
+            });
+            animateBtn.classList.add('active');
+
+            document.getElementById('randomBtn').addEventListener('click', () => {
+                freqA = Math.floor(Math.random() * 10) + 1;
+                freqB = Math.floor(Math.random() * 10) + 1;
+                document.getElementById('aSlider').value = freqA;
+                document.getElementById('bSlider').value = freqB;
+                updateDisplay();
+                clear();
+            });
+
+            document.getElementById('clearBtn').addEventListener('click', clear);
+
+            // Sliders
+            document.getElementById('aSlider').addEventListener('input', (e) => {
+                freqA = parseInt(e.target.value);
+                updateDisplay();
+                clear();
+            });
+
+            document.getElementById('bSlider').addEventListener('input', (e) => {
+                freqB = parseInt(e.target.value);
+                updateDisplay();
+                clear();
+            });
+
+            document.getElementById('phaseSlider').addEventListener('input', (e) => {
+                phase = parseInt(e.target.value);
+                document.getElementById('phaseDisplay').textContent = phase + '°';
+                animatePhase = false;
+                animateBtn.classList.remove('active');
+                animateBtn.textContent = 'Animate Phase';
+            });
+
+            document.getElementById('speedSlider').addEventListener('input', (e) => {
+                animSpeed = parseInt(e.target.value);
+            });
+
+            document.getElementById('fadeSlider').addEventListener('input', (e) => {
+                fadeRate = parseInt(e.target.value);
+            });
+
+            document.getElementById('widthSlider').addEventListener('input', (e) => {
+                lineWidth = parseInt(e.target.value);
+            });
+
+            // Preset buttons
+            document.querySelectorAll('[data-preset]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const [a, b] = btn.dataset.preset.split(':').map(Number);
+                    freqA = a;
+                    freqB = b;
+                    document.getElementById('aSlider').value = a;
+                    document.getElementById('bSlider').value = b;
+                    updateDisplay();
+                    clear();
+                });
+            });
+
+            // Help modal
+            const helpModal = document.getElementById('helpModal');
+            document.getElementById('helpBtn').addEventListener('click', () => {
+                helpModal.classList.add('show');
+            });
+            document.getElementById('closeHelp').addEventListener('click', () => {
+                helpModal.classList.remove('show');
+            });
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === helpModal) helpModal.classList.remove('show');
+            });
+
+            // Fullscreen
+            let isFullscreen = false;
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+            function toggleFullscreen() {
+                isFullscreen = !isFullscreen;
+                document.body.classList.toggle('fullscreen', isFullscreen);
+                fullscreenBtn.title = isFullscreen ? 'Exit Fullscreen (Esc)' : 'Fullscreen (F)';
+                setTimeout(init, 50);
+            }
+
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+
+                switch(e.key.toLowerCase()) {
+                    case 'f':
+                        toggleFullscreen();
+                        break;
+                    case 'escape':
+                        if (isFullscreen) toggleFullscreen();
+                        if (helpModal.classList.contains('show')) helpModal.classList.remove('show');
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        animateBtn.click();
+                        break;
+                    case 'r':
+                        document.getElementById('randomBtn').click();
+                        break;
+                    case 'c':
+                        clear();
+                        break;
+                    case 'arrowleft':
+                        phase = (phase - 5 + 360) % 360;
+                        document.getElementById('phaseSlider').value = phase;
+                        document.getElementById('phaseDisplay').textContent = phase + '°';
+                        break;
+                    case 'arrowright':
+                        phase = (phase + 5) % 360;
+                        document.getElementById('phaseSlider').value = phase;
+                        document.getElementById('phaseDisplay').textContent = phase + '°';
+                        break;
+                }
+            });
+
+            // Resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(init, 250);
+            });
+
+            // Start
+            init();
+            updateDisplay();
+            requestAnimationFrame(draw);
+        </script>
+    </body>
+</html>

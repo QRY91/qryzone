@@ -9,9 +9,9 @@ permalink: /fun/aviary/
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Aviary - A bird meditation timer with badge collection"
+            content="Aviary - A nature soundscape mixer with bird songs and ambient sounds"
         />
-        <title>Aviary - Bird Meditation | qry.zone</title>
+        <title>Aviary - Nature Soundscapes | qry.zone</title>
 
         <meta name="theme-color" content="#4a90e2" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -43,7 +43,7 @@ permalink: /fun/aviary/
 
             body {
                 font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #2c5364 0%, #203a43 50%, #0f2027 100%);
                 min-height: 100vh;
                 display: flex;
                 flex-direction: column;
@@ -72,9 +72,9 @@ permalink: /fun/aviary/
             .header {
                 text-align: center;
                 padding: 2rem 1rem 1rem;
-                background: rgba(255, 255, 255, 0.1);
+                background: rgba(255, 255, 255, 0.05);
                 backdrop-filter: blur(10px);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
 
             .header h1 {
@@ -85,110 +85,168 @@ permalink: /fun/aviary/
             }
 
             .header p {
-                color: rgba(255, 255, 255, 0.9);
+                color: rgba(255, 255, 255, 0.8);
                 font-size: 1.1rem;
             }
 
             .main-content {
                 flex: 1;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 2rem 1rem;
-                max-width: 800px;
+                display: grid;
+                grid-template-columns: 1fr 350px;
+                gap: 1.5rem;
+                padding: 1.5rem;
+                max-width: 1200px;
                 margin: 0 auto;
                 width: 100%;
             }
 
-            .audio-player {
+            /* Sound Library */
+            .sound-library {
                 background: rgba(255, 255, 255, 0.95);
+                border-radius: 15px;
+                padding: 1.5rem;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            }
+
+            .category-tabs {
+                display: flex;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .category-tab {
+                padding: 0.5rem 1rem;
+                border: none;
                 border-radius: 20px;
-                padding: 2rem;
-                margin-bottom: 2rem;
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                width: 100%;
-                max-width: 500px;
+                background: rgba(0, 0, 0, 0.05);
+                cursor: pointer;
+                font-size: 0.9rem;
+                transition: all 0.2s;
+                color: #555;
             }
 
-            .track-info {
+            .category-tab:hover {
+                background: rgba(0, 0, 0, 0.1);
+            }
+
+            .category-tab.active {
+                background: linear-gradient(135deg, #2c5364, #203a43);
+                color: white;
+            }
+
+            .sounds-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .sound-card {
+                background: rgba(255, 255, 255, 0.8);
+                border: 2px solid transparent;
+                border-radius: 12px;
+                padding: 1rem;
+                cursor: pointer;
+                transition: all 0.2s;
                 text-align: center;
-                margin-bottom: 2rem;
             }
 
-            .track-title {
-                font-size: 1.3rem;
-                font-weight: 600;
-                color: #2c3e50;
+            .sound-card:hover {
+                border-color: #2c5364;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            .sound-card.active {
+                border-color: #4caf50;
+                background: rgba(76, 175, 80, 0.1);
+            }
+
+            .sound-card.loading {
+                opacity: 0.6;
+            }
+
+            .sound-emoji {
+                font-size: 2rem;
                 margin-bottom: 0.5rem;
             }
 
-            .track-duration {
+            .sound-name {
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: #2c3e50;
+                margin-bottom: 0.25rem;
+            }
+
+            .sound-desc {
+                font-size: 0.75rem;
                 color: #7f8c8d;
-                font-size: 0.9rem;
             }
 
-            .controls {
+            /* Mixer Panel */
+            .mixer-panel {
                 display: flex;
-                justify-content: center;
-                align-items: center;
+                flex-direction: column;
                 gap: 1rem;
-                margin-bottom: 2rem;
             }
 
-            .btn {
-                border: none;
-                border-radius: 50%;
-                width: 60px;
-                height: 60px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                font-size: 1.5rem;
-                color: white;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
+            .mixer-section {
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 15px;
+                padding: 1.5rem;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             }
 
-            .btn-play {
-                background: linear-gradient(135deg, #4caf50, #45a049);
-                width: 80px;
-                height: 80px;
-                font-size: 2rem;
-            }
-
-            .btn-play:hover {
-                transform: scale(1.1);
-                box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-            }
-
-            .btn-secondary {
-                background: linear-gradient(135deg, #2196f3, #1976d2);
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-            }
-
-            .btn-secondary:hover {
-                transform: scale(1.1);
-                box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
-            }
-
-            .volume-control {
+            .mixer-title {
+                font-size: 1.1rem;
+                color: #2c3e50;
+                margin-bottom: 1rem;
                 display: flex;
                 align-items: center;
                 gap: 0.5rem;
+            }
+
+            .master-controls {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
                 margin-bottom: 1rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .master-play {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                border: none;
+                background: linear-gradient(135deg, #4caf50, #45a049);
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            }
+
+            .master-play:hover {
+                transform: scale(1.05);
+            }
+
+            .master-play.playing {
+                background: linear-gradient(135deg, #ff9800, #f57c00);
+            }
+
+            .master-volume {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
             }
 
             .volume-slider {
                 flex: 1;
-                height: 4px;
-                border-radius: 2px;
+                height: 6px;
+                border-radius: 3px;
                 background: #ddd;
                 outline: none;
                 -webkit-appearance: none;
@@ -196,21 +254,123 @@ permalink: /fun/aviary/
 
             .volume-slider::-webkit-slider-thumb {
                 -webkit-appearance: none;
-                width: 16px;
-                height: 16px;
+                width: 18px;
+                height: 18px;
                 border-radius: 50%;
-                background: #4caf50;
+                background: #2c5364;
                 cursor: pointer;
             }
 
+            .active-layers {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+
+            .layer-item {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 0.75rem;
+                background: rgba(0, 0, 0, 0.03);
+                border-radius: 10px;
+                animation: fadeIn 0.3s ease;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateX(-10px); }
+                to { opacity: 1; transform: translateX(0); }
+            }
+
+            .layer-emoji {
+                font-size: 1.5rem;
+            }
+
+            .layer-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .layer-name {
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: #2c3e50;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .layer-volume {
+                width: 80px;
+            }
+
+            .layer-remove {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                border: none;
+                background: rgba(244, 67, 54, 0.1);
+                color: #f44336;
+                cursor: pointer;
+                font-size: 1rem;
+                transition: all 0.2s;
+            }
+
+            .layer-remove:hover {
+                background: #f44336;
+                color: white;
+            }
+
+            .empty-mixer {
+                text-align: center;
+                padding: 2rem;
+                color: #7f8c8d;
+            }
+
+            .empty-mixer-icon {
+                font-size: 3rem;
+                margin-bottom: 0.5rem;
+                opacity: 0.5;
+            }
+
+            /* Presets */
+            .presets-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .preset-btn {
+                padding: 0.75rem;
+                border: 2px solid rgba(0, 0, 0, 0.1);
+                border-radius: 10px;
+                background: white;
+                cursor: pointer;
+                transition: all 0.2s;
+                text-align: left;
+            }
+
+            .preset-btn:hover {
+                border-color: #2c5364;
+                background: rgba(44, 83, 100, 0.05);
+            }
+
+            .preset-name {
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: #2c3e50;
+                margin-bottom: 0.25rem;
+            }
+
+            .preset-desc {
+                font-size: 0.7rem;
+                color: #7f8c8d;
+            }
+
+            /* Timer Section */
             .timer-section {
-                background: rgba(255, 255, 255, 0.95);
-                border-radius: 15px;
-                padding: 1.5rem;
-                margin-bottom: 2rem;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                width: 100%;
-                max-width: 500px;
                 text-align: center;
             }
 
@@ -225,75 +385,51 @@ permalink: /fun/aviary/
             .timer-controls {
                 display: flex;
                 justify-content: center;
-                gap: 1rem;
+                gap: 0.5rem;
                 flex-wrap: wrap;
             }
 
             .timer-btn {
-                background: linear-gradient(135deg, #667eea, #764ba2);
+                background: linear-gradient(135deg, #2c5364, #203a43);
                 color: white;
                 border: none;
-                padding: 0.7rem 1.5rem;
-                border-radius: 25px;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
                 cursor: pointer;
-                font-size: 0.9rem;
-                transition: all 0.3s ease;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-                min-height: 44px;
+                font-size: 0.85rem;
+                transition: all 0.2s;
             }
 
             .timer-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
             }
 
-            .badges-section {
-                background: rgba(255, 255, 255, 0.95);
-                border-radius: 15px;
-                padding: 2rem;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                width: 100%;
-                max-width: 500px;
-            }
-
-            .badges-title {
-                text-align: center;
-                font-size: 1.5rem;
-                color: #2c3e50;
-                margin-bottom: 1.5rem;
-            }
-
+            /* Badges Section */
             .badges-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-                gap: 1rem;
-                margin-bottom: 1rem;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.5rem;
             }
 
             .badge {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: 1rem;
-                border-radius: 10px;
+                padding: 0.5rem;
+                border-radius: 8px;
                 transition: all 0.3s ease;
                 text-align: center;
-                background: rgba(255, 255, 255, 0.5);
-                border: 2px solid transparent;
+                background: rgba(0, 0, 0, 0.03);
             }
 
             .badge.earned {
                 background: linear-gradient(135deg, #ffd700, #ffa500);
-                border-color: #ff8c00;
-                transform: scale(1.05);
-                box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+                box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
             }
 
             .badge-icon {
-                font-size: 2rem;
-                margin-bottom: 0.5rem;
+                font-size: 1.5rem;
                 filter: grayscale(100%);
                 transition: filter 0.3s ease;
             }
@@ -303,183 +439,36 @@ permalink: /fun/aviary/
             }
 
             .badge-name {
-                font-size: 0.8rem;
+                font-size: 0.65rem;
                 font-weight: 600;
                 color: #2c3e50;
             }
 
-            .badge-time {
-                font-size: 0.7rem;
-                color: #7f8c8d;
-                margin-top: 0.2rem;
-            }
-
             .progress-bar {
                 width: 100%;
-                height: 8px;
-                background: rgba(255, 255, 255, 0.3);
-                border-radius: 4px;
+                height: 6px;
+                background: rgba(0, 0, 0, 0.1);
+                border-radius: 3px;
                 overflow: hidden;
-                margin-top: 1rem;
+                margin-top: 0.75rem;
             }
 
             .progress-fill {
                 height: 100%;
                 background: linear-gradient(90deg, #4caf50, #45a049);
-                border-radius: 4px;
+                border-radius: 3px;
                 transition: width 0.3s ease;
                 width: 0%;
             }
 
             .total-time {
                 text-align: center;
-                margin-top: 1rem;
+                margin-top: 0.5rem;
                 color: #7f8c8d;
-                font-size: 0.9rem;
+                font-size: 0.8rem;
             }
 
-            .track-list {
-                background: rgba(255, 255, 255, 0.95);
-                border-radius: 15px;
-                padding: 1.5rem;
-                margin-bottom: 2rem;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                width: 100%;
-                max-width: 500px;
-            }
-
-            .track-item {
-                display: flex;
-                align-items: center;
-                padding: 1rem;
-                border-radius: 10px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                margin-bottom: 0.5rem;
-                border: 2px solid transparent;
-            }
-
-            .track-item:hover {
-                background: rgba(103, 126, 234, 0.1);
-                border-color: rgba(103, 126, 234, 0.3);
-            }
-
-            .track-item.active {
-                background: linear-gradient(
-                    135deg,
-                    rgba(103, 126, 234, 0.2),
-                    rgba(118, 75, 162, 0.2)
-                );
-                border-color: #667eea;
-            }
-
-            .track-emoji {
-                font-size: 1.5rem;
-                margin-right: 1rem;
-            }
-
-            .track-details {
-                flex: 1;
-            }
-
-            .track-name {
-                font-weight: 600;
-                color: #2c3e50;
-                margin-bottom: 0.2rem;
-            }
-
-            .track-description {
-                font-size: 0.9rem;
-                color: #7f8c8d;
-            }
-
-            @media (max-width: 768px) {
-                .header h1 {
-                    font-size: 2rem;
-                }
-
-                .main-content {
-                    padding: 1rem;
-                }
-
-                .audio-player,
-                .timer-section,
-                .badges-section,
-                .track-list {
-                    padding: 1.5rem;
-                }
-
-                .timer-display {
-                    font-size: 2rem;
-                }
-
-                .badges-grid {
-                    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-                }
-
-                .controls {
-                    flex-wrap: wrap;
-                    gap: 1rem;
-                }
-
-                .btn {
-                    min-width: 50px;
-                    min-height: 50px;
-                }
-
-                .timer-btn {
-                    min-width: 80px;
-                    padding: 0.8rem 1.2rem;
-                }
-
-                .track-item {
-                    padding: 1.2rem;
-                    margin-bottom: 0.8rem;
-                }
-            }
-
-            @media (max-width: 480px) {
-                .header {
-                    padding: 1rem 0.5rem;
-                }
-
-                .main-content {
-                    padding: 0.5rem;
-                }
-
-                .audio-player,
-                .timer-section,
-                .badges-section,
-                .track-list {
-                    padding: 1rem;
-                    margin-bottom: 1rem;
-                }
-
-                .controls {
-                    flex-direction: column;
-                    align-items: center;
-                }
-
-                .volume-control {
-                    width: 100%;
-                    max-width: 300px;
-                }
-            }
-
-            @supports (padding: max(0px)) {
-                .header {
-                    padding-top: max(1rem, env(safe-area-inset-top));
-                }
-
-                .main-content {
-                    padding-bottom: max(2rem, env(safe-area-inset-bottom));
-                }
-            }
-
-            .hidden {
-                display: none !important;
-            }
-
+            /* Notification */
             .floating-notification {
                 position: fixed;
                 top: 20px;
@@ -498,6 +487,44 @@ permalink: /fun/aviary/
                 transform: translateX(0);
             }
 
+            /* Responsive */
+            @media (max-width: 900px) {
+                .main-content {
+                    grid-template-columns: 1fr;
+                }
+
+                .mixer-panel {
+                    order: -1;
+                }
+            }
+
+            @media (max-width: 600px) {
+                .header h1 {
+                    font-size: 1.8rem;
+                }
+
+                .sounds-grid {
+                    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                }
+
+                .presets-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .badges-grid {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+            }
+
+            @supports (padding: max(0px)) {
+                .header {
+                    padding-top: max(1rem, env(safe-area-inset-top));
+                }
+
+                .main-content {
+                    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+                }
+            }
         </style>
     </head>
     <body>
@@ -505,112 +532,58 @@ permalink: /fun/aviary/
 
         <div class="header">
             <h1>🐦 Aviary</h1>
-            <p>Find peace in the songs of nature</p>
+            <p>Create your perfect nature soundscape</p>
         </div>
 
         <div class="main-content">
-            <div class="track-list">
-                <div class="track-item active" data-track="morning-chorus">
-                    <div class="track-emoji">🌅</div>
-                    <div class="track-details">
-                        <div class="track-name">Morning Chorus</div>
-                        <div class="track-description">Mixed garden birdsong</div>
-                    </div>
-                </div>
-                <div class="track-item" data-track="robin-song">
-                    <div class="track-emoji">🐦</div>
-                    <div class="track-details">
-                        <div class="track-name">European Robin</div>
-                        <div class="track-description">Sweet, warbling melody</div>
-                    </div>
-                </div>
-                <div class="track-item" data-track="cardinal-call">
-                    <div class="track-emoji">🔴</div>
-                    <div class="track-details">
-                        <div class="track-name">Northern Cardinal</div>
-                        <div class="track-description">Bright whistling calls</div>
-                    </div>
-                </div>
-                <div class="track-item" data-track="great-tit">
-                    <div class="track-emoji">💛</div>
-                    <div class="track-details">
-                        <div class="track-name">Great Tit</div>
-                        <div class="track-description">Cheerful two-note song</div>
-                    </div>
-                </div>
-                <div class="track-item" data-track="blackbird">
-                    <div class="track-emoji">🖤</div>
-                    <div class="track-details">
-                        <div class="track-name">Common Blackbird</div>
-                        <div class="track-description">Rich, flute-like song</div>
-                    </div>
-                </div>
-                <div class="track-item" data-track="bluebird">
-                    <div class="track-emoji">💙</div>
-                    <div class="track-details">
-                        <div class="track-name">Eastern Bluebird</div>
-                        <div class="track-description">Soft, melodious warble</div>
-                    </div>
-                </div>
-                <div class="track-item" data-track="chaffinch">
-                    <div class="track-emoji">🎵</div>
-                    <div class="track-details">
-                        <div class="track-name">Common Chaffinch</div>
-                        <div class="track-description">Lively descending song</div>
-                    </div>
-                </div>
+            <div class="sound-library">
+                <div class="category-tabs" id="categoryTabs"></div>
+                <div class="sounds-grid" id="soundsGrid"></div>
             </div>
 
-            <div class="audio-player">
-                <div class="track-info">
-                    <div class="track-title" id="currentTrackTitle">
-                        Morning Chorus
+            <div class="mixer-panel">
+                <div class="mixer-section">
+                    <div class="mixer-title">🎛️ Mixer</div>
+                    <div class="master-controls">
+                        <button class="master-play" id="masterPlay">▶️</button>
+                        <div class="master-volume">
+                            <span>🔉</span>
+                            <input type="range" class="volume-slider" id="masterVolume" min="0" max="100" value="70" />
+                            <span>🔊</span>
+                        </div>
                     </div>
-                    <div class="track-duration" id="currentTrackDuration">
-                        Ready to play
+                    <div class="active-layers" id="activeLayers">
+                        <div class="empty-mixer">
+                            <div class="empty-mixer-icon">🎵</div>
+                            <div>Click sounds to add them to your mix</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="controls">
-                    <button class="btn btn-secondary" id="prevBtn">⏮</button>
-                    <button class="btn btn-play" id="playBtn">▶️</button>
-                    <button class="btn btn-secondary" id="nextBtn">⏭</button>
+                <div class="mixer-section">
+                    <div class="mixer-title">🌍 Presets</div>
+                    <div class="presets-grid" id="presetsGrid"></div>
                 </div>
 
-                <div class="volume-control">
-                    <span>🔉</span>
-                    <input
-                        type="range"
-                        class="volume-slider"
-                        id="volumeSlider"
-                        min="0"
-                        max="100"
-                        value="70"
-                    />
-                    <span>🔊</span>
+                <div class="mixer-section timer-section">
+                    <div class="mixer-title">⏱️ Timer</div>
+                    <div class="timer-display" id="timerDisplay">00:00</div>
+                    <div class="timer-controls">
+                        <button class="timer-btn" data-minutes="5">5m</button>
+                        <button class="timer-btn" data-minutes="10">10m</button>
+                        <button class="timer-btn" data-minutes="15">15m</button>
+                        <button class="timer-btn" data-minutes="30">30m</button>
+                        <button class="timer-btn" id="stopTimerBtn">Stop</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="timer-section">
-                <div class="timer-display" id="timerDisplay">00:00</div>
-                <div class="timer-controls">
-                    <button class="timer-btn" data-minutes="5">5 min</button>
-                    <button class="timer-btn" data-minutes="10">10 min</button>
-                    <button class="timer-btn" data-minutes="15">15 min</button>
-                    <button class="timer-btn" data-minutes="30">30 min</button>
-                    <button class="timer-btn" id="stopTimerBtn">Stop</button>
-                </div>
-            </div>
-
-            <div class="badges-section">
-                <h3 class="badges-title">🏆 Bird Badges</h3>
-                <div class="badges-grid" id="badgesGrid">
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="total-time" id="totalTimeDisplay">
-                    Total meditation time: 0 minutes
+                <div class="mixer-section">
+                    <div class="mixer-title">🏆 Badges</div>
+                    <div class="badges-grid" id="badgesGrid"></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="total-time" id="totalTimeDisplay">0 minutes</div>
                 </div>
             </div>
         </div>
@@ -620,69 +593,161 @@ permalink: /fun/aviary/
         </div>
 
         <script>
-            // App State
-            const state = {
-                currentTrack: "morning-chorus",
-                isPlaying: false,
-                volume: 0.7,
-                timer: null,
-                timerDuration: 0,
-                timerStartTime: 0,
-                totalMeditationTime: 0,
-                audioContext: null,
-                audioSource: null,
-                audioElement: null,
-                usingSynthesis: false,
-                synthNodes: [],
+            // ============================================
+            // SOUND LIBRARY
+            // ============================================
+            const soundLibrary = {
+                birds: {
+                    name: "Birds",
+                    emoji: "🐦",
+                    sounds: {
+                        "garden-birds": {
+                            name: "Garden Birds",
+                            emoji: "🌅",
+                            desc: "Mixed birdsong",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/8/80/Birds_singing_in_garden.ogg",
+                        },
+                        "robin": {
+                            name: "European Robin",
+                            emoji: "🐦",
+                            desc: "Warbling melody",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/8/8d/Erithacus_rubecula.ogg",
+                        },
+                        "cardinal": {
+                            name: "Cardinal",
+                            emoji: "🔴",
+                            desc: "Whistling calls",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Northern_Cardinal.ogg",
+                        },
+                        "great-tit": {
+                            name: "Great Tit",
+                            emoji: "💛",
+                            desc: "Two-note song",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/d/df/Parus_major.ogg",
+                        },
+                        "blackbird": {
+                            name: "Blackbird",
+                            emoji: "🖤",
+                            desc: "Flute-like song",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Turdus_merula.ogg",
+                        },
+                        "bluebird": {
+                            name: "Bluebird",
+                            emoji: "💙",
+                            desc: "Soft warble",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Sialia_sialis_-_Eastern_Bluebird_-_XC79976.ogg",
+                        },
+                        "chaffinch": {
+                            name: "Chaffinch",
+                            emoji: "🎵",
+                            desc: "Descending song",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Fringilla_coelebs.ogg",
+                        },
+                        "nightjar": {
+                            name: "Nightjar",
+                            emoji: "🌙",
+                            desc: "Churring call",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Caprimulgus_europaeus.ogg",
+                        },
+                    },
+                },
+                ambient: {
+                    name: "Ambient",
+                    emoji: "🌿",
+                    sounds: {
+                        "rain": {
+                            name: "Rain",
+                            emoji: "🌧️",
+                            desc: "Gentle rainfall",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/3/3d/Rain.ogg",
+                        },
+                        "brook": {
+                            name: "Brook",
+                            emoji: "💧",
+                            desc: "Babbling stream",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/8/88/Brook.ogg",
+                        },
+                        "waterfall": {
+                            name: "Waterfall",
+                            emoji: "🌊",
+                            desc: "Rushing water",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/a/ac/Waterfall.ogg",
+                        },
+                        "wind": {
+                            name: "Wind",
+                            emoji: "🍃",
+                            desc: "Gentle breeze",
+                            synth: "wind",
+                        },
+                        "thunder": {
+                            name: "Thunder",
+                            emoji: "⛈️",
+                            desc: "Distant storm",
+                            synth: "thunder",
+                        },
+                    },
+                },
+                creatures: {
+                    name: "Creatures",
+                    emoji: "🦗",
+                    sounds: {
+                        "cicadas": {
+                            name: "Cicadas",
+                            emoji: "🦗",
+                            desc: "Summer buzz",
+                            url: "https://upload.wikimedia.org/wikipedia/commons/0/02/Cicada.ogg",
+                        },
+                        "crickets": {
+                            name: "Crickets",
+                            emoji: "🌙",
+                            desc: "Night chirping",
+                            synth: "crickets",
+                        },
+                        "frogs": {
+                            name: "Frogs",
+                            emoji: "🐸",
+                            desc: "Pond chorus",
+                            synth: "frogs",
+                        },
+                    },
+                },
             };
 
-            // Free bird sound URLs from Wikimedia Commons (CC licensed)
-            const tracks = {
-                "morning-chorus": {
-                    name: "Morning Chorus",
-                    description: "Mixed garden birdsong",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/8/80/Birds_singing_in_garden.ogg",
-                    synthConfig: { baseFreq: 2000, variance: 800, tempo: 0.15 },
+            // Presets
+            const presets = [
+                {
+                    name: "Forest Morning",
+                    desc: "Birds & brook",
+                    layers: ["garden-birds", "robin", "brook"],
                 },
-                "robin-song": {
-                    name: "European Robin",
-                    description: "Sweet, warbling melody",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/8/8d/Erithacus_rubecula.ogg",
-                    synthConfig: { baseFreq: 2800, variance: 600, tempo: 0.12 },
+                {
+                    name: "Summer Night",
+                    desc: "Crickets & frogs",
+                    layers: ["crickets", "frogs", "nightjar"],
                 },
-                "cardinal-call": {
-                    name: "Northern Cardinal",
-                    description: "Bright whistling calls",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Northern_Cardinal.ogg",
-                    synthConfig: { baseFreq: 3200, variance: 1000, tempo: 0.2 },
+                {
+                    name: "Rainy Day",
+                    desc: "Rain & distant birds",
+                    layers: ["rain", "blackbird"],
                 },
-                "great-tit": {
-                    name: "Great Tit",
-                    description: "Cheerful two-note song",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/d/df/Parus_major.ogg",
-                    synthConfig: { baseFreq: 3500, variance: 500, tempo: 0.25 },
+                {
+                    name: "Tropical",
+                    desc: "Cicadas & waterfall",
+                    layers: ["cicadas", "waterfall", "frogs"],
                 },
-                "blackbird": {
-                    name: "Common Blackbird",
-                    description: "Rich, flute-like song",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Turdus_merula.ogg",
-                    synthConfig: { baseFreq: 1800, variance: 700, tempo: 0.18 },
+                {
+                    name: "Peaceful Stream",
+                    desc: "Water & songbirds",
+                    layers: ["brook", "great-tit", "chaffinch"],
                 },
-                "bluebird": {
-                    name: "Eastern Bluebird",
-                    description: "Soft, melodious warble",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Sialia_sialis_-_Eastern_Bluebird_-_XC79976.ogg",
-                    synthConfig: { baseFreq: 2600, variance: 900, tempo: 0.14 },
+                {
+                    name: "Stormy",
+                    desc: "Thunder & rain",
+                    layers: ["thunder", "rain", "wind"],
                 },
-                "chaffinch": {
-                    name: "Common Chaffinch",
-                    description: "Lively descending song",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Fringilla_coelebs.ogg",
-                    synthConfig: { baseFreq: 2200, variance: 1000, tempo: 0.1 },
-                },
-            };
+            ];
 
-            // Bird badges configuration
+            // Badges
             const badges = [
                 { id: "sparrow", name: "Sparrow", icon: "🐦", requiredMinutes: 5 },
                 { id: "penguin", name: "Penguin", icon: "🐧", requiredMinutes: 15 },
@@ -694,305 +759,541 @@ permalink: /fun/aviary/
                 { id: "phoenix", name: "Phoenix", icon: "🌟", requiredMinutes: 1200 },
             ];
 
-            // DOM Elements
-            const playBtn = document.getElementById("playBtn");
-            const prevBtn = document.getElementById("prevBtn");
-            const nextBtn = document.getElementById("nextBtn");
-            const volumeSlider = document.getElementById("volumeSlider");
-            const timerDisplay = document.getElementById("timerDisplay");
-            const timerButtons = document.querySelectorAll(".timer-btn[data-minutes]");
-            const stopTimerBtn = document.getElementById("stopTimerBtn");
-            const currentTrackTitle = document.getElementById("currentTrackTitle");
-            const currentTrackDuration = document.getElementById("currentTrackDuration");
-            const trackItems = document.querySelectorAll(".track-item");
-            const badgesGrid = document.getElementById("badgesGrid");
-            const progressFill = document.getElementById("progressFill");
-            const totalTimeDisplay = document.getElementById("totalTimeDisplay");
-            const notification = document.getElementById("notification");
-            const notificationText = document.getElementById("notificationText");
+            // ============================================
+            // STATE
+            // ============================================
+            const state = {
+                audioContext: null,
+                masterGain: null,
+                activeLayers: new Map(), // id -> { audio, gainNode, synthInterval }
+                isPlaying: false,
+                masterVolume: 0.7,
+                currentCategory: "birds",
+                timer: null,
+                timerDuration: 0,
+                timerStartTime: 0,
+                totalMeditationTime: 0,
+            };
 
-            // Initialize app
-            function init() {
-                loadSavedData();
-                setupEventListeners();
-                updateUI();
-                createBadges();
-                updateBadges();
-            }
-
-            // Load saved data from localStorage
-            function loadSavedData() {
-                const saved = localStorage.getItem("aviary-data");
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    state.totalMeditationTime = data.totalMeditationTime || 0;
-                    state.volume = data.volume || 0.7;
-                    state.currentTrack = data.currentTrack || "morning-chorus";
-                }
-            }
-
-            // Save data to localStorage
-            function saveData() {
-                const data = {
-                    totalMeditationTime: state.totalMeditationTime,
-                    volume: state.volume,
-                    currentTrack: state.currentTrack,
-                };
-                localStorage.setItem("aviary-data", JSON.stringify(data));
-            }
-
-            // Setup event listeners
-            function setupEventListeners() {
-                playBtn.addEventListener("click", togglePlayPause);
-                prevBtn.addEventListener("click", previousTrack);
-                nextBtn.addEventListener("click", nextTrack);
-                volumeSlider.addEventListener("input", setVolume);
-
-                timerButtons.forEach((btn) => {
-                    btn.addEventListener("click", () => {
-                        const minutes = parseInt(btn.dataset.minutes);
-                        startTimer(minutes);
-                    });
-                });
-
-                stopTimerBtn.addEventListener("click", stopTimer);
-
-                trackItems.forEach((item) => {
-                    item.addEventListener("click", () => {
-                        const trackId = item.dataset.track;
-                        selectTrack(trackId);
-                    });
-                });
-            }
-
-            // Initialize audio context
-            function initAudioContext() {
+            // ============================================
+            // AUDIO ENGINE
+            // ============================================
+            function initAudio() {
                 if (!state.audioContext) {
                     state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    state.masterGain = state.audioContext.createGain();
+                    state.masterGain.connect(state.audioContext.destination);
+                    state.masterGain.gain.value = state.masterVolume;
                 }
-                if (state.audioContext.state === 'suspended') {
+                if (state.audioContext.state === "suspended") {
                     state.audioContext.resume();
                 }
             }
 
-            // Stop all synthesis
-            function stopSynthesis() {
-                state.synthNodes.forEach(node => {
-                    try {
-                        node.stop();
-                        node.disconnect();
-                    } catch (e) {}
-                });
-                state.synthNodes = [];
+            function getSound(id) {
+                for (const category of Object.values(soundLibrary)) {
+                    if (category.sounds[id]) {
+                        return category.sounds[id];
+                    }
+                }
+                return null;
             }
 
-            // Create bird chirp synthesis (fallback when audio fails)
-            function startSynthesis() {
-                initAudioContext();
-                stopSynthesis();
+            async function addLayer(id) {
+                if (state.activeLayers.has(id)) return;
 
-                const track = tracks[state.currentTrack];
-                const config = track.synthConfig;
+                initAudio();
+                const sound = getSound(id);
+                if (!sound) return;
+
+                const layer = {
+                    id,
+                    sound,
+                    volume: 0.7,
+                    gainNode: state.audioContext.createGain(),
+                };
+                layer.gainNode.connect(state.masterGain);
+                layer.gainNode.gain.value = 0; // Start silent for fade-in
+
+                if (sound.url) {
+                    // Load audio file
+                    const audio = new Audio();
+                    audio.loop = true;
+                    audio.src = sound.url;
+
+                    // Create media source
+                    const source = state.audioContext.createMediaElementSource(audio);
+                    source.connect(layer.gainNode);
+                    layer.audio = audio;
+                    layer.source = source;
+
+                    if (state.isPlaying) {
+                        try {
+                            await audio.play();
+                            fadeIn(layer.gainNode, layer.volume);
+                        } catch (e) {
+                            console.log("Audio play failed:", e);
+                        }
+                    }
+                } else if (sound.synth) {
+                    // Use synthesis
+                    layer.synth = sound.synth;
+                    if (state.isPlaying) {
+                        startSynth(layer);
+                        fadeIn(layer.gainNode, layer.volume);
+                    }
+                }
+
+                state.activeLayers.set(id, layer);
+                renderMixer();
+                updateSoundCards();
+            }
+
+            function removeLayer(id) {
+                const layer = state.activeLayers.get(id);
+                if (!layer) return;
+
+                fadeOut(layer.gainNode, () => {
+                    if (layer.audio) {
+                        layer.audio.pause();
+                        layer.audio.src = "";
+                    }
+                    if (layer.synthInterval) {
+                        clearInterval(layer.synthInterval);
+                    }
+                    if (layer.synthNodes) {
+                        layer.synthNodes.forEach(n => {
+                            try { n.stop(); n.disconnect(); } catch(e) {}
+                        });
+                    }
+                    layer.gainNode.disconnect();
+                    state.activeLayers.delete(id);
+                    renderMixer();
+                    updateSoundCards();
+                });
+            }
+
+            function setLayerVolume(id, volume) {
+                const layer = state.activeLayers.get(id);
+                if (layer) {
+                    layer.volume = volume;
+                    layer.gainNode.gain.setTargetAtTime(volume, state.audioContext.currentTime, 0.1);
+                }
+            }
+
+            function fadeIn(gainNode, targetVolume, duration = 0.5) {
+                gainNode.gain.setValueAtTime(0, state.audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(targetVolume, state.audioContext.currentTime + duration);
+            }
+
+            function fadeOut(gainNode, callback, duration = 0.5) {
+                gainNode.gain.linearRampToValueAtTime(0, state.audioContext.currentTime + duration);
+                setTimeout(callback, duration * 1000);
+            }
+
+            // ============================================
+            // SYNTHESIS
+            // ============================================
+            function startSynth(layer) {
+                layer.synthNodes = [];
+
+                switch (layer.synth) {
+                    case "wind":
+                        startWindSynth(layer);
+                        break;
+                    case "crickets":
+                        startCricketsSynth(layer);
+                        break;
+                    case "frogs":
+                        startFrogsSynth(layer);
+                        break;
+                    case "thunder":
+                        startThunderSynth(layer);
+                        break;
+                }
+            }
+
+            function startWindSynth(layer) {
+                const ctx = state.audioContext;
+                const bufferSize = 2 * ctx.sampleRate;
+                const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = ctx.createBufferSource();
+                noise.buffer = noiseBuffer;
+                noise.loop = true;
+
+                const filter = ctx.createBiquadFilter();
+                filter.type = "lowpass";
+                filter.frequency.value = 400;
+
+                const lfo = ctx.createOscillator();
+                lfo.frequency.value = 0.1;
+                const lfoGain = ctx.createGain();
+                lfoGain.gain.value = 200;
+
+                lfo.connect(lfoGain);
+                lfoGain.connect(filter.frequency);
+
+                noise.connect(filter);
+                filter.connect(layer.gainNode);
+
+                noise.start();
+                lfo.start();
+
+                layer.synthNodes.push(noise, lfo);
+            }
+
+            function startCricketsSynth(layer) {
                 const ctx = state.audioContext;
 
-                // Create multiple "birds" for a richer soundscape
-                const numBirds = 3;
-
-                function createBirdChirp(birdIndex) {
-                    if (!state.isPlaying || !state.usingSynthesis) return;
+                function chirp() {
+                    if (!state.isPlaying) return;
 
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
-                    const filter = ctx.createBiquadFilter();
 
-                    // Randomize each bird's characteristics
-                    const freqOffset = (birdIndex - 1) * 300;
-                    const baseFreq = config.baseFreq + freqOffset + (Math.random() - 0.5) * config.variance;
+                    osc.frequency.value = 4000 + Math.random() * 1000;
+                    osc.type = "sine";
 
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(baseFreq, ctx.currentTime);
-
-                    // Create chirp pattern - frequency sweep
-                    const chirpDuration = 0.1 + Math.random() * 0.15;
-                    const sweepUp = Math.random() > 0.5;
-                    const targetFreq = sweepUp ? baseFreq * 1.3 : baseFreq * 0.7;
-                    osc.frequency.linearRampToValueAtTime(targetFreq, ctx.currentTime + chirpDuration * 0.5);
-                    osc.frequency.linearRampToValueAtTime(baseFreq, ctx.currentTime + chirpDuration);
-
-                    // Filter for more natural sound
-                    filter.type = 'bandpass';
-                    filter.frequency.value = baseFreq;
-                    filter.Q.value = 5;
-
-                    // Volume envelope
                     gain.gain.setValueAtTime(0, ctx.currentTime);
-                    gain.gain.linearRampToValueAtTime(state.volume * 0.15, ctx.currentTime + 0.02);
-                    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + chirpDuration);
+
+                    // Rapid on-off pattern
+                    const now = ctx.currentTime;
+                    for (let i = 0; i < 6; i++) {
+                        gain.gain.setValueAtTime(0.3, now + i * 0.05);
+                        gain.gain.setValueAtTime(0, now + i * 0.05 + 0.025);
+                    }
+
+                    osc.connect(gain);
+                    gain.connect(layer.gainNode);
+
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.35);
+
+                    layer.synthNodes.push(osc);
+                }
+
+                chirp();
+                layer.synthInterval = setInterval(chirp, 800 + Math.random() * 400);
+            }
+
+            function startFrogsSynth(layer) {
+                const ctx = state.audioContext;
+
+                function croak() {
+                    if (!state.isPlaying) return;
+
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+
+                    const baseFreq = 150 + Math.random() * 100;
+                    osc.frequency.setValueAtTime(baseFreq, ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(baseFreq * 0.7, ctx.currentTime + 0.15);
+                    osc.type = "sawtooth";
+
+                    gain.gain.setValueAtTime(0, ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.02);
+                    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.2);
+
+                    const filter = ctx.createBiquadFilter();
+                    filter.type = "lowpass";
+                    filter.frequency.value = 500;
 
                     osc.connect(filter);
                     filter.connect(gain);
-                    gain.connect(ctx.destination);
+                    gain.connect(layer.gainNode);
 
                     osc.start();
-                    osc.stop(ctx.currentTime + chirpDuration + 0.1);
+                    osc.stop(ctx.currentTime + 0.25);
 
-                    state.synthNodes.push(osc);
-
-                    // Schedule next chirp with some randomness
-                    const nextDelay = (config.tempo + Math.random() * 0.3) * 1000;
-                    setTimeout(() => createBirdChirp(birdIndex), nextDelay);
+                    layer.synthNodes.push(osc);
                 }
 
-                // Start each bird with slight offset
-                for (let i = 0; i < numBirds; i++) {
-                    setTimeout(() => createBirdChirp(i), i * 200);
-                }
-
-                currentTrackDuration.textContent = "Playing (synthesized)";
+                croak();
+                layer.synthInterval = setInterval(croak, 1500 + Math.random() * 2000);
             }
 
-            // Load and play audio from URL
-            async function playAudio() {
-                const track = tracks[state.currentTrack];
+            function startThunderSynth(layer) {
+                const ctx = state.audioContext;
 
-                // Stop any existing audio
-                stopAudio();
+                function rumble() {
+                    if (!state.isPlaying) return;
 
-                currentTrackDuration.textContent = "Loading...";
+                    const bufferSize = ctx.sampleRate * 3;
+                    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                    const data = buffer.getChannelData(0);
 
-                // Try to load the audio file
-                state.audioElement = new Audio();
-                state.audioElement.volume = state.volume;
-                state.audioElement.loop = true;
-
-                // Set up event handlers
-                state.audioElement.oncanplaythrough = () => {
-                    if (state.isPlaying && !state.usingSynthesis) {
-                        state.audioElement.play();
-                        currentTrackDuration.textContent = "Playing";
+                    for (let i = 0; i < bufferSize; i++) {
+                        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 1.5));
                     }
-                };
 
-                state.audioElement.onerror = () => {
-                    console.log("Audio failed to load, falling back to synthesis");
-                    state.usingSynthesis = true;
-                    startSynthesis();
-                };
+                    const source = ctx.createBufferSource();
+                    source.buffer = buffer;
 
-                state.audioElement.onended = () => {
-                    if (state.isPlaying && !state.audioElement.loop) {
-                        state.audioElement.play();
-                    }
-                };
+                    const filter = ctx.createBiquadFilter();
+                    filter.type = "lowpass";
+                    filter.frequency.value = 150;
 
-                // Try to load the audio
-                try {
-                    state.audioElement.src = track.url;
-                    state.audioElement.load();
-                    state.usingSynthesis = false;
+                    const gain = ctx.createGain();
+                    gain.gain.value = 0.8;
 
-                    // Set a timeout - if not playing within 5 seconds, fall back to synthesis
-                    setTimeout(() => {
-                        if (state.isPlaying && state.audioElement.readyState < 3) {
-                            console.log("Audio loading too slow, falling back to synthesis");
-                            state.usingSynthesis = true;
-                            startSynthesis();
+                    source.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(layer.gainNode);
+
+                    source.start();
+
+                    layer.synthNodes.push(source);
+                }
+
+                rumble();
+                layer.synthInterval = setInterval(rumble, 8000 + Math.random() * 12000);
+            }
+
+            // ============================================
+            // PLAYBACK CONTROL
+            // ============================================
+            async function play() {
+                initAudio();
+                state.isPlaying = true;
+
+                for (const [id, layer] of state.activeLayers) {
+                    if (layer.audio) {
+                        try {
+                            await layer.audio.play();
+                            fadeIn(layer.gainNode, layer.volume);
+                        } catch (e) {
+                            console.log("Play failed:", e);
                         }
-                    }, 5000);
-                } catch (e) {
-                    state.usingSynthesis = true;
-                    startSynthesis();
-                }
-            }
-
-            // Stop all audio
-            function stopAudio() {
-                if (state.audioElement) {
-                    state.audioElement.pause();
-                    state.audioElement.src = '';
-                    state.audioElement = null;
-                }
-                stopSynthesis();
-            }
-
-            // Toggle play/pause
-            function togglePlayPause() {
-                state.isPlaying = !state.isPlaying;
-                playBtn.textContent = state.isPlaying ? "⏸️" : "▶️";
-                playBtn.setAttribute("aria-label", state.isPlaying ? "Pause" : "Play");
-
-                if (state.isPlaying) {
-                    playAudio();
-                } else {
-                    stopAudio();
-                    currentTrackDuration.textContent = "Paused";
-                }
-            }
-
-            // Select track
-            function selectTrack(trackId) {
-                const wasPlaying = state.isPlaying;
-
-                // Stop current audio
-                if (state.isPlaying) {
-                    stopAudio();
-                    state.isPlaying = false;
-                }
-
-                state.currentTrack = trackId;
-                playBtn.textContent = "▶️";
-
-                // Update UI
-                trackItems.forEach((item) => {
-                    item.classList.remove("active");
-                    if (item.dataset.track === trackId) {
-                        item.classList.add("active");
+                    } else if (layer.synth) {
+                        startSynth(layer);
+                        fadeIn(layer.gainNode, layer.volume);
                     }
+                }
+
+                updatePlayButton();
+            }
+
+            function pause() {
+                state.isPlaying = false;
+
+                for (const [id, layer] of state.activeLayers) {
+                    fadeOut(layer.gainNode, () => {
+                        if (layer.audio) {
+                            layer.audio.pause();
+                        }
+                        if (layer.synthInterval) {
+                            clearInterval(layer.synthInterval);
+                            layer.synthInterval = null;
+                        }
+                        if (layer.synthNodes) {
+                            layer.synthNodes.forEach(n => {
+                                try { n.stop(); n.disconnect(); } catch(e) {}
+                            });
+                            layer.synthNodes = [];
+                        }
+                    }, 0.3);
+                }
+
+                updatePlayButton();
+            }
+
+            function togglePlayPause() {
+                if (state.activeLayers.size === 0) {
+                    showNotification("Add sounds to your mix first!");
+                    return;
+                }
+
+                if (state.isPlaying) {
+                    pause();
+                } else {
+                    play();
+                }
+            }
+
+            function updatePlayButton() {
+                const btn = document.getElementById("masterPlay");
+                btn.textContent = state.isPlaying ? "⏸️" : "▶️";
+                btn.classList.toggle("playing", state.isPlaying);
+            }
+
+            // ============================================
+            // PRESETS
+            // ============================================
+            function loadPreset(preset) {
+                // Clear existing
+                for (const id of state.activeLayers.keys()) {
+                    removeLayer(id);
+                }
+
+                // Wait a bit then add new layers
+                setTimeout(() => {
+                    preset.layers.forEach((id, i) => {
+                        setTimeout(() => addLayer(id), i * 100);
+                    });
+
+                    setTimeout(() => {
+                        if (state.activeLayers.size > 0 && !state.isPlaying) {
+                            play();
+                        }
+                    }, preset.layers.length * 100 + 200);
+                }, 600);
+
+                showNotification(`Loaded: ${preset.name}`);
+            }
+
+            // ============================================
+            // UI RENDERING
+            // ============================================
+            function renderCategories() {
+                const container = document.getElementById("categoryTabs");
+                container.innerHTML = "";
+
+                Object.entries(soundLibrary).forEach(([id, category]) => {
+                    const tab = document.createElement("button");
+                    tab.className = `category-tab ${id === state.currentCategory ? "active" : ""}`;
+                    tab.textContent = `${category.emoji} ${category.name}`;
+                    tab.onclick = () => {
+                        state.currentCategory = id;
+                        renderCategories();
+                        renderSounds();
+                    };
+                    container.appendChild(tab);
+                });
+            }
+
+            function renderSounds() {
+                const container = document.getElementById("soundsGrid");
+                const category = soundLibrary[state.currentCategory];
+                container.innerHTML = "";
+
+                Object.entries(category.sounds).forEach(([id, sound]) => {
+                    const card = document.createElement("div");
+                    card.className = `sound-card ${state.activeLayers.has(id) ? "active" : ""}`;
+                    card.innerHTML = `
+                        <div class="sound-emoji">${sound.emoji}</div>
+                        <div class="sound-name">${sound.name}</div>
+                        <div class="sound-desc">${sound.desc}</div>
+                    `;
+                    card.onclick = () => {
+                        if (state.activeLayers.has(id)) {
+                            removeLayer(id);
+                        } else {
+                            addLayer(id);
+                        }
+                    };
+                    container.appendChild(card);
+                });
+            }
+
+            function updateSoundCards() {
+                document.querySelectorAll(".sound-card").forEach(card => {
+                    const id = Object.keys(soundLibrary[state.currentCategory].sounds)[
+                        Array.from(card.parentNode.children).indexOf(card)
+                    ];
+                    card.classList.toggle("active", state.activeLayers.has(id));
+                });
+            }
+
+            function renderMixer() {
+                const container = document.getElementById("activeLayers");
+
+                if (state.activeLayers.size === 0) {
+                    container.innerHTML = `
+                        <div class="empty-mixer">
+                            <div class="empty-mixer-icon">🎵</div>
+                            <div>Click sounds to add them to your mix</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = "";
+
+                for (const [id, layer] of state.activeLayers) {
+                    const item = document.createElement("div");
+                    item.className = "layer-item";
+                    item.innerHTML = `
+                        <div class="layer-emoji">${layer.sound.emoji}</div>
+                        <div class="layer-info">
+                            <div class="layer-name">${layer.sound.name}</div>
+                        </div>
+                        <input type="range" class="volume-slider layer-volume"
+                               min="0" max="100" value="${layer.volume * 100}" />
+                        <button class="layer-remove">✕</button>
+                    `;
+
+                    item.querySelector(".layer-volume").oninput = (e) => {
+                        setLayerVolume(id, e.target.value / 100);
+                    };
+
+                    item.querySelector(".layer-remove").onclick = () => {
+                        removeLayer(id);
+                    };
+
+                    container.appendChild(item);
+                }
+            }
+
+            function renderPresets() {
+                const container = document.getElementById("presetsGrid");
+                container.innerHTML = "";
+
+                presets.forEach(preset => {
+                    const btn = document.createElement("button");
+                    btn.className = "preset-btn";
+                    btn.innerHTML = `
+                        <div class="preset-name">${preset.name}</div>
+                        <div class="preset-desc">${preset.desc}</div>
+                    `;
+                    btn.onclick = () => loadPreset(preset);
+                    container.appendChild(btn);
+                });
+            }
+
+            function renderBadges() {
+                const container = document.getElementById("badgesGrid");
+                container.innerHTML = "";
+
+                badges.forEach(badge => {
+                    const isEarned = state.totalMeditationTime >= badge.requiredMinutes;
+                    const el = document.createElement("div");
+                    el.className = `badge ${isEarned ? "earned" : ""}`;
+                    el.innerHTML = `
+                        <div class="badge-icon">${badge.icon}</div>
+                        <div class="badge-name">${badge.name}</div>
+                    `;
+                    container.appendChild(el);
                 });
 
-                const track = tracks[trackId];
-                currentTrackTitle.textContent = track.name;
-                currentTrackDuration.textContent = "Ready to play";
-                saveData();
+                updateBadgeProgress();
+            }
 
-                // If was playing, start the new track
-                if (wasPlaying) {
-                    state.isPlaying = true;
-                    playBtn.textContent = "⏸️";
-                    playAudio();
+            function updateBadgeProgress() {
+                let nextBadge = badges.find(b => state.totalMeditationTime < b.requiredMinutes);
+                let progress = 0;
+
+                if (nextBadge) {
+                    progress = (state.totalMeditationTime / nextBadge.requiredMinutes) * 100;
+                } else {
+                    progress = 100;
                 }
+
+                document.getElementById("progressFill").style.width = `${Math.min(progress, 100)}%`;
+                document.getElementById("totalTimeDisplay").textContent =
+                    `${state.totalMeditationTime} minutes total`;
             }
 
-            // Previous track
-            function previousTrack() {
-                const trackIds = Object.keys(tracks);
-                const currentIndex = trackIds.indexOf(state.currentTrack);
-                const prevIndex = currentIndex > 0 ? currentIndex - 1 : trackIds.length - 1;
-                selectTrack(trackIds[prevIndex]);
-            }
-
-            // Next track
-            function nextTrack() {
-                const trackIds = Object.keys(tracks);
-                const currentIndex = trackIds.indexOf(state.currentTrack);
-                const nextIndex = currentIndex < trackIds.length - 1 ? currentIndex + 1 : 0;
-                selectTrack(trackIds[nextIndex]);
-            }
-
-            // Set volume
-            function setVolume() {
-                state.volume = volumeSlider.value / 100;
-                if (state.audioElement) {
-                    state.audioElement.volume = state.volume;
-                }
-                saveData();
-            }
-
-            // Start timer
+            // ============================================
+            // TIMER
+            // ============================================
             function startTimer(minutes) {
-                if (state.timer) {
-                    clearInterval(state.timer);
-                }
+                if (state.timer) clearInterval(state.timer);
 
                 state.timerDuration = minutes * 60;
                 state.timerStartTime = Date.now();
@@ -1010,146 +1311,114 @@ permalink: /fun/aviary/
                     }
                 }, 1000);
 
-                // Auto "play" if not already
-                if (!state.isPlaying) {
-                    togglePlayPause();
+                if (!state.isPlaying && state.activeLayers.size > 0) {
+                    play();
                 }
 
-                showNotification(`Timer started: ${minutes} minutes`);
+                showNotification(`Timer: ${minutes} minutes`);
             }
 
-            // Stop timer
             function stopTimer() {
                 if (state.timer) {
-                    // Calculate meditation time
                     const elapsed = Math.floor((Date.now() - state.timerStartTime) / 1000);
-                    const meditationMinutes = Math.floor(elapsed / 60);
+                    const minutes = Math.floor(elapsed / 60);
 
-                    if (meditationMinutes > 0) {
-                        state.totalMeditationTime += meditationMinutes;
+                    if (minutes > 0) {
+                        state.totalMeditationTime += minutes;
                         saveData();
-                        updateBadges();
-                        showNotification(
-                            `Great session! You meditated for ${meditationMinutes} minute${meditationMinutes > 1 ? "s" : ""}.`
-                        );
+                        renderBadges();
+                        showNotification(`Added ${minutes} minutes!`);
                     }
 
                     clearInterval(state.timer);
                     state.timer = null;
-                    updateTimerDisplay();
+                    updateTimerDisplay(0);
                 }
             }
 
-            // Timer complete
             function timerComplete() {
-                const meditationMinutes = Math.floor(state.timerDuration / 60);
-                state.totalMeditationTime += meditationMinutes;
+                const minutes = Math.floor(state.timerDuration / 60);
+                state.totalMeditationTime += minutes;
 
                 clearInterval(state.timer);
                 state.timer = null;
 
-                updateTimerDisplay();
+                updateTimerDisplay(0);
                 saveData();
-                updateBadges();
+                renderBadges();
+                pause();
 
-                showNotification(
-                    `🎉 Meditation complete! You've earned ${meditationMinutes} meditation minutes.`
-                );
-
-                // Stop playing
-                state.isPlaying = false;
-                playBtn.textContent = "▶️";
-                stopAudio();
-                currentTrackDuration.textContent = "Session complete";
+                showNotification(`🎉 Complete! +${minutes} minutes`);
             }
 
-            // Update timer display
-            function updateTimerDisplay(seconds = 0) {
-                timerDisplay.textContent = formatTime(seconds);
+            function updateTimerDisplay(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                document.getElementById("timerDisplay").textContent =
+                    `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
             }
 
-            // Create badges
-            function createBadges() {
-                badgesGrid.innerHTML = "";
-
-                badges.forEach((badge) => {
-                    const badgeElement = document.createElement("div");
-                    badgeElement.className = "badge";
-                    badgeElement.innerHTML = `
-                        <div class="badge-icon">${badge.icon}</div>
-                        <div class="badge-name">${badge.name}</div>
-                        <div class="badge-time">${badge.requiredMinutes}m</div>
-                    `;
-                    badgesGrid.appendChild(badgeElement);
-                });
-            }
-
-            // Update badges
-            function updateBadges() {
-                const badgeElements = badgesGrid.querySelectorAll(".badge");
-                let nextBadgeProgress = 0;
-
-                badges.forEach((badge, index) => {
-                    const badgeElement = badgeElements[index];
-                    const isEarned = state.totalMeditationTime >= badge.requiredMinutes;
-
-                    if (isEarned) {
-                        badgeElement.classList.add("earned");
-                    } else {
-                        badgeElement.classList.remove("earned");
-                        if (nextBadgeProgress === 0) {
-                            nextBadgeProgress = (state.totalMeditationTime / badge.requiredMinutes) * 100;
-                        }
-                    }
-                });
-
-                // Update progress bar
-                progressFill.style.width = `${Math.min(nextBadgeProgress, 100)}%`;
-
-                // Update total time display
-                totalTimeDisplay.textContent = `Total meditation time: ${state.totalMeditationTime} minutes`;
-            }
-
-            // Show notification
-            function showNotification(message) {
-                notificationText.textContent = message;
-                notification.classList.add("show");
-
-                setTimeout(() => {
-                    notification.classList.remove("show");
-                }, 3000);
-            }
-
-            // Format time in MM:SS format
-            function formatTime(seconds) {
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = Math.floor(seconds % 60);
-                return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
-            }
-
-            // Update UI
-            function updateUI() {
-                // Validate saved track still exists
-                if (!tracks[state.currentTrack]) {
-                    state.currentTrack = "morning-chorus";
+            // ============================================
+            // PERSISTENCE
+            // ============================================
+            function loadData() {
+                const saved = localStorage.getItem("aviary-data");
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    state.totalMeditationTime = data.totalMeditationTime || 0;
+                    state.masterVolume = data.masterVolume || 0.7;
                 }
-
-                const track = tracks[state.currentTrack];
-                currentTrackTitle.textContent = track.name;
-                currentTrackDuration.textContent = "Ready to play";
-                volumeSlider.value = state.volume * 100;
-                totalTimeDisplay.textContent = `Total meditation time: ${state.totalMeditationTime} minutes`;
-
-                // Update active track in list
-                trackItems.forEach((item) => {
-                    item.classList.remove("active");
-                    if (item.dataset.track === state.currentTrack) {
-                        item.classList.add("active");
-                    }
-                });
             }
 
-            // Initialize the app when DOM is loaded
+            function saveData() {
+                localStorage.setItem("aviary-data", JSON.stringify({
+                    totalMeditationTime: state.totalMeditationTime,
+                    masterVolume: state.masterVolume,
+                }));
+            }
+
+            // ============================================
+            // NOTIFICATIONS
+            // ============================================
+            function showNotification(message) {
+                const el = document.getElementById("notification");
+                document.getElementById("notificationText").textContent = message;
+                el.classList.add("show");
+                setTimeout(() => el.classList.remove("show"), 3000);
+            }
+
+            // ============================================
+            // INIT
+            // ============================================
+            function init() {
+                loadData();
+
+                // Render UI
+                renderCategories();
+                renderSounds();
+                renderMixer();
+                renderPresets();
+                renderBadges();
+
+                // Event listeners
+                document.getElementById("masterPlay").onclick = togglePlayPause;
+
+                document.getElementById("masterVolume").value = state.masterVolume * 100;
+                document.getElementById("masterVolume").oninput = (e) => {
+                    state.masterVolume = e.target.value / 100;
+                    if (state.masterGain) {
+                        state.masterGain.gain.setTargetAtTime(state.masterVolume, state.audioContext.currentTime, 0.1);
+                    }
+                    saveData();
+                };
+
+                document.querySelectorAll(".timer-btn[data-minutes]").forEach(btn => {
+                    btn.onclick = () => startTimer(parseInt(btn.dataset.minutes));
+                });
+
+                document.getElementById("stopTimerBtn").onclick = stopTimer;
+            }
+
             document.addEventListener("DOMContentLoaded", init);
         </script>
     </body>

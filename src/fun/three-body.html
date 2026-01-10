@@ -1,0 +1,751 @@
+---
+layout: false
+permalink: /fun/three-body/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Three-body gravitational problem simulation" />
+        <title>Three-Body Problem</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --bg-deep: #030308;
+                --bg-surface: #0a0a12;
+                --bg-elevated: #12121c;
+                --accent: #fca311;
+                --accent-dim: rgba(252, 163, 17, 0.3);
+                --accent-glow: rgba(252, 163, 17, 0.15);
+                --text-primary: #e0e0e0;
+                --text-secondary: #7a7a8a;
+                --border: #1a1a2a;
+            }
+
+            body {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-deep);
+                color: var(--text-primary);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .back-link {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                color: var(--accent);
+                text-decoration: none;
+                font-size: 0.85rem;
+                z-index: 100;
+                transition: all 0.2s ease;
+            }
+
+            .back-link:hover {
+                border-color: var(--accent);
+                box-shadow: 0 0 10px var(--accent-glow);
+            }
+
+            .top-btn {
+                position: fixed;
+                top: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 4px;
+                color: var(--accent);
+                font-size: 1rem;
+                cursor: pointer;
+                z-index: 100;
+                transition: all 0.2s ease;
+            }
+
+            .top-btn:hover {
+                border-color: var(--accent);
+                box-shadow: 0 0 10px var(--accent-glow);
+            }
+
+            .help-btn { right: 1rem; }
+            .fullscreen-btn { right: 4rem; }
+
+            body.fullscreen .game-header,
+            body.fullscreen .controls,
+            body.fullscreen .back-link {
+                display: none;
+            }
+
+            body.fullscreen .canvas-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                padding: 0;
+            }
+
+            body.fullscreen #canvas { border: none; }
+            body.fullscreen .top-btn { background: rgba(3, 3, 8, 0.8); }
+
+            .game-header {
+                text-align: center;
+                padding: 2rem 1rem 1rem;
+                padding-top: 4rem;
+            }
+
+            .game-title {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+                font-weight: 500;
+                color: var(--accent);
+                margin-bottom: 0.5rem;
+                text-shadow: 0 0 20px var(--accent-glow);
+            }
+
+            .stats-bar {
+                display: flex;
+                justify-content: center;
+                gap: 2rem;
+                flex-wrap: wrap;
+                font-size: 0.85rem;
+                margin-bottom: 1rem;
+            }
+
+            .stat {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .stat-label { color: var(--text-secondary); }
+            .stat-value { color: var(--accent); }
+
+            .canvas-container {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 1rem;
+                min-height: 300px;
+            }
+
+            #canvas {
+                border: 1px solid var(--border);
+                cursor: crosshair;
+                max-width: 100%;
+                touch-action: none;
+                background: radial-gradient(ellipse at center, #0a0a12 0%, #030308 100%);
+            }
+
+            .controls {
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            .control-row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+
+            button {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-elevated);
+                border: 1px solid var(--accent-dim);
+                color: var(--text-primary);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                transition: all 0.2s ease;
+            }
+
+            button:hover {
+                border-color: var(--accent);
+                background: var(--accent-glow);
+            }
+
+            button.primary {
+                background: var(--accent-glow);
+                border-color: var(--accent);
+                color: var(--accent);
+                min-width: 100px;
+            }
+
+            button.active {
+                background: var(--accent);
+                color: var(--bg-deep);
+                border-color: var(--accent);
+            }
+
+            .slider-control {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .slider-control input[type="range"] {
+                width: 80px;
+                accent-color: var(--accent);
+            }
+
+            .slider-label {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+                min-width: 50px;
+            }
+
+            .slider-value {
+                font-size: 0.75rem;
+                color: var(--accent);
+                min-width: 30px;
+            }
+
+            .presets-label {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+            }
+
+            /* Modal */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.85);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 200;
+                padding: 1rem;
+            }
+
+            .modal-overlay.show { display: flex; }
+
+            .modal {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                max-width: 500px;
+                width: 100%;
+                max-height: 80vh;
+                overflow-y: auto;
+                padding: 1.5rem;
+            }
+
+            .modal h2 {
+                color: var(--accent);
+                margin-bottom: 1rem;
+                font-size: 1.25rem;
+            }
+
+            .modal p, .modal ul {
+                color: var(--text-secondary);
+                line-height: 1.6;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .modal ul { margin-left: 1.5rem; }
+            .modal-close { margin-top: 1rem; width: 100%; }
+
+            @media (max-width: 480px) {
+                .control-row { gap: 0.4rem; }
+                button { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+                .slider-control input[type="range"] { width: 60px; }
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">← back</a>
+        <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen (F)">⛶</button>
+        <button class="top-btn help-btn" id="helpBtn" title="Help (?)">?</button>
+
+        <header class="game-header">
+            <h1 class="game-title">Three-Body Problem</h1>
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Time:</span>
+                    <span class="stat-value" id="timeDisplay">0.0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Energy:</span>
+                    <span class="stat-value" id="energyDisplay">0.00</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label" id="statusLabel">Running</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <div class="controls">
+            <div class="control-row">
+                <button class="primary" id="playPauseBtn">Pause</button>
+                <button id="resetBtn">Reset</button>
+                <button id="clearTrailsBtn">Clear Trails</button>
+                <button id="randomBtn">Randomize</button>
+            </div>
+            <div class="control-row">
+                <span class="presets-label">Presets:</span>
+                <button data-preset="figure8" class="active">Figure-8</button>
+                <button data-preset="lagrange">Lagrange</button>
+                <button data-preset="butterfly">Butterfly</button>
+                <button data-preset="broucke">Broucke</button>
+                <button data-preset="chaos">Chaos</button>
+            </div>
+            <div class="control-row">
+                <div class="slider-control">
+                    <span class="slider-label">Speed:</span>
+                    <input type="range" id="speedSlider" min="1" max="5" value="2">
+                    <span class="slider-value" id="speedDisplay">2x</span>
+                </div>
+                <div class="slider-control">
+                    <span class="slider-label">Trails:</span>
+                    <input type="range" id="trailSlider" min="100" max="2000" value="800">
+                </div>
+                <div class="slider-control">
+                    <span class="slider-label">Fade:</span>
+                    <input type="range" id="fadeSlider" min="0" max="20" value="2">
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal-overlay" id="helpModal">
+            <div class="modal">
+                <h2>Three-Body Problem</h2>
+                <p>The <a href="https://en.wikipedia.org/wiki/Three-body_problem" target="_blank" style="color: var(--accent)">three-body problem</a> is a famous unsolved problem in physics. Three masses interact gravitationally, creating chaotic, unpredictable motion.</p>
+                <p>Unlike two bodies (which follow simple ellipses), three bodies have no general closed-form solution - their paths must be computed step by step.</p>
+                <p><strong>Presets:</strong></p>
+                <ul>
+                    <li><strong>Figure-8</strong> - A remarkable periodic solution discovered in 1993</li>
+                    <li><strong>Lagrange</strong> - Equilateral triangle configuration</li>
+                    <li><strong>Butterfly</strong> - Another periodic choreography</li>
+                    <li><strong>Broucke</strong> - Stable periodic orbit</li>
+                    <li><strong>Chaos</strong> - Unpredictable chaotic motion</li>
+                </ul>
+                <p><strong>Keyboard:</strong></p>
+                <ul>
+                    <li><strong>Space</strong> - Play/Pause</li>
+                    <li><strong>R</strong> - Reset to current preset</li>
+                    <li><strong>C</strong> - Clear trails</li>
+                    <li><strong>F</strong> - Fullscreen</li>
+                </ul>
+                <button class="modal-close" id="closeHelp">Got it</button>
+            </div>
+        </div>
+
+        <script>
+            // Physics
+            const G = 1;
+            const DT = 0.001;
+            const SOFTENING = 0.01; // Prevent division by zero
+
+            // State
+            let bodies = [];
+            let running = true;
+            let time = 0;
+            let speed = 2;
+            let trailLength = 800;
+            let fadeRate = 2;
+            let currentPreset = 'figure8';
+
+            // Canvas
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            let scale = 100;
+            let cx, cy;
+
+            // Body colors
+            const COLORS = ['#fca311', '#14b8a6', '#ec4899'];
+
+            // Presets - initial conditions for known periodic solutions
+            const PRESETS = {
+                figure8: {
+                    // Famous figure-8 solution by Chenciner and Montgomery
+                    scale: 120,
+                    bodies: [
+                        { x: -0.97000436, y: 0.24308753, vx: 0.4662036850, vy: 0.4323657300, m: 1 },
+                        { x: 0.97000436, y: -0.24308753, vx: 0.4662036850, vy: 0.4323657300, m: 1 },
+                        { x: 0, y: 0, vx: -0.93240737, vy: -0.86473146, m: 1 }
+                    ]
+                },
+                lagrange: {
+                    // Equilateral triangle (Lagrange configuration)
+                    scale: 150,
+                    bodies: [
+                        { x: 0, y: 1, vx: 0.5, vy: 0, m: 1 },
+                        { x: -0.866, y: -0.5, vx: -0.25, vy: 0.433, m: 1 },
+                        { x: 0.866, y: -0.5, vx: -0.25, vy: -0.433, m: 1 }
+                    ]
+                },
+                butterfly: {
+                    // Butterfly orbit
+                    scale: 120,
+                    bodies: [
+                        { x: -1, y: 0, vx: 0.306893, vy: 0.125507, m: 1 },
+                        { x: 1, y: 0, vx: 0.306893, vy: 0.125507, m: 1 },
+                        { x: 0, y: 0, vx: -0.613786, vy: -0.251014, m: 1 }
+                    ]
+                },
+                broucke: {
+                    // Broucke orbit
+                    scale: 150,
+                    bodies: [
+                        { x: -0.9892620043, y: 0, vx: 0, vy: 1.9169244185, m: 1 },
+                        { x: 2.2096177241, y: 0, vx: 0, vy: -0.1910268738, m: 1 },
+                        { x: -1.2203557197, y: 0, vx: 0, vy: -1.7258975447, m: 1 }
+                    ]
+                },
+                chaos: {
+                    // Chaotic configuration
+                    scale: 100,
+                    bodies: [
+                        { x: -1, y: 0, vx: 0, vy: 0.5, m: 1 },
+                        { x: 1, y: 0, vx: 0, vy: -0.5, m: 1 },
+                        { x: 0, y: 1.5, vx: 0.3, vy: 0, m: 1 }
+                    ]
+                }
+            };
+
+            // Initialize
+            function init() {
+                const container = document.querySelector('.canvas-container');
+                const maxWidth = container.clientWidth - 20;
+                const maxHeight = container.clientHeight - 20;
+                const size = Math.min(maxWidth, maxHeight, 700);
+
+                canvas.width = size;
+                canvas.height = size;
+                cx = size / 2;
+                cy = size / 2;
+
+                loadPreset(currentPreset);
+            }
+
+            function loadPreset(name) {
+                const preset = PRESETS[name];
+                if (!preset) return;
+
+                currentPreset = name;
+                scale = preset.scale;
+                time = 0;
+
+                bodies = preset.bodies.map((b, i) => ({
+                    x: b.x,
+                    y: b.y,
+                    vx: b.vx,
+                    vy: b.vy,
+                    m: b.m,
+                    color: COLORS[i],
+                    trail: []
+                }));
+
+                clearTrails();
+                updateStats();
+
+                // Update active button
+                document.querySelectorAll('[data-preset]').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.preset === name);
+                });
+            }
+
+            function randomize() {
+                time = 0;
+                scale = 100;
+
+                bodies = [];
+                for (let i = 0; i < 3; i++) {
+                    bodies.push({
+                        x: (Math.random() - 0.5) * 2,
+                        y: (Math.random() - 0.5) * 2,
+                        vx: (Math.random() - 0.5) * 0.8,
+                        vy: (Math.random() - 0.5) * 0.8,
+                        m: 0.5 + Math.random() * 1,
+                        color: COLORS[i],
+                        trail: []
+                    });
+                }
+
+                // Zero out net momentum for stability
+                let px = 0, py = 0, totalMass = 0;
+                bodies.forEach(b => {
+                    px += b.vx * b.m;
+                    py += b.vy * b.m;
+                    totalMass += b.m;
+                });
+                bodies.forEach(b => {
+                    b.vx -= px / totalMass;
+                    b.vy -= py / totalMass;
+                });
+
+                clearTrails();
+                document.querySelectorAll('[data-preset]').forEach(btn => btn.classList.remove('active'));
+            }
+
+            function clearTrails() {
+                ctx.fillStyle = '#030308';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                bodies.forEach(b => b.trail = []);
+            }
+
+            // Physics step using Velocity Verlet
+            function step() {
+                const n = bodies.length;
+
+                // Calculate accelerations
+                const ax = new Array(n).fill(0);
+                const ay = new Array(n).fill(0);
+
+                for (let i = 0; i < n; i++) {
+                    for (let j = i + 1; j < n; j++) {
+                        const dx = bodies[j].x - bodies[i].x;
+                        const dy = bodies[j].y - bodies[i].y;
+                        const r2 = dx * dx + dy * dy + SOFTENING;
+                        const r = Math.sqrt(r2);
+                        const f = G / (r2 * r);
+
+                        ax[i] += f * bodies[j].m * dx;
+                        ay[i] += f * bodies[j].m * dy;
+                        ax[j] -= f * bodies[i].m * dx;
+                        ay[j] -= f * bodies[i].m * dy;
+                    }
+                }
+
+                // Update positions and velocities
+                for (let i = 0; i < n; i++) {
+                    bodies[i].vx += ax[i] * DT;
+                    bodies[i].vy += ay[i] * DT;
+                    bodies[i].x += bodies[i].vx * DT;
+                    bodies[i].y += bodies[i].vy * DT;
+
+                    // Store trail
+                    bodies[i].trail.push({ x: bodies[i].x, y: bodies[i].y });
+                    if (bodies[i].trail.length > trailLength) {
+                        bodies[i].trail.shift();
+                    }
+                }
+
+                time += DT;
+            }
+
+            // Calculate total energy (for monitoring conservation)
+            function totalEnergy() {
+                let ke = 0, pe = 0;
+                for (let i = 0; i < bodies.length; i++) {
+                    const b = bodies[i];
+                    ke += 0.5 * b.m * (b.vx * b.vx + b.vy * b.vy);
+                    for (let j = i + 1; j < bodies.length; j++) {
+                        const dx = bodies[j].x - b.x;
+                        const dy = bodies[j].y - b.y;
+                        const r = Math.sqrt(dx * dx + dy * dy + SOFTENING);
+                        pe -= G * b.m * bodies[j].m / r;
+                    }
+                }
+                return ke + pe;
+            }
+
+            // Convert world coordinates to canvas
+            function toCanvas(x, y) {
+                return {
+                    x: cx + x * scale,
+                    y: cy - y * scale
+                };
+            }
+
+            // Draw
+            function draw() {
+                // Fade effect
+                if (fadeRate > 0) {
+                    ctx.fillStyle = `rgba(3, 3, 8, ${fadeRate / 100})`;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+
+                // Draw trails
+                bodies.forEach(body => {
+                    if (body.trail.length < 2) return;
+
+                    ctx.beginPath();
+                    const start = toCanvas(body.trail[0].x, body.trail[0].y);
+                    ctx.moveTo(start.x, start.y);
+
+                    for (let i = 1; i < body.trail.length; i++) {
+                        const p = toCanvas(body.trail[i].x, body.trail[i].y);
+                        ctx.lineTo(p.x, p.y);
+                    }
+
+                    ctx.strokeStyle = body.color;
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                });
+
+                // Draw bodies
+                bodies.forEach(body => {
+                    const p = toCanvas(body.x, body.y);
+                    const radius = 6 + body.m * 4;
+
+                    // Glow
+                    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius * 3);
+                    gradient.addColorStop(0, body.color + '80');
+                    gradient.addColorStop(1, 'transparent');
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, radius * 3, 0, Math.PI * 2);
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+
+                    // Body
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = body.color;
+                    ctx.fill();
+                });
+            }
+
+            // Update stats
+            function updateStats() {
+                document.getElementById('timeDisplay').textContent = time.toFixed(1);
+                document.getElementById('energyDisplay').textContent = totalEnergy().toFixed(2);
+                document.getElementById('statusLabel').textContent = running ? 'Running' : 'Paused';
+            }
+
+            // Animation loop
+            function animate() {
+                if (running) {
+                    for (let i = 0; i < speed * 10; i++) {
+                        step();
+                    }
+                    draw();
+                    updateStats();
+                }
+                requestAnimationFrame(animate);
+            }
+
+            // Controls
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            playPauseBtn.addEventListener('click', () => {
+                running = !running;
+                playPauseBtn.textContent = running ? 'Pause' : 'Play';
+                updateStats();
+            });
+
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                loadPreset(currentPreset);
+            });
+
+            document.getElementById('clearTrailsBtn').addEventListener('click', clearTrails);
+            document.getElementById('randomBtn').addEventListener('click', randomize);
+
+            // Preset buttons
+            document.querySelectorAll('[data-preset]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    loadPreset(btn.dataset.preset);
+                });
+            });
+
+            // Sliders
+            const speedSlider = document.getElementById('speedSlider');
+            const speedDisplay = document.getElementById('speedDisplay');
+            speedSlider.addEventListener('input', (e) => {
+                speed = parseInt(e.target.value);
+                speedDisplay.textContent = speed + 'x';
+            });
+
+            document.getElementById('trailSlider').addEventListener('input', (e) => {
+                trailLength = parseInt(e.target.value);
+            });
+
+            document.getElementById('fadeSlider').addEventListener('input', (e) => {
+                fadeRate = parseInt(e.target.value);
+            });
+
+            // Help modal
+            const helpModal = document.getElementById('helpModal');
+            document.getElementById('helpBtn').addEventListener('click', () => {
+                helpModal.classList.add('show');
+            });
+            document.getElementById('closeHelp').addEventListener('click', () => {
+                helpModal.classList.remove('show');
+            });
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === helpModal) helpModal.classList.remove('show');
+            });
+
+            // Fullscreen
+            let isFullscreen = false;
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+            function toggleFullscreen() {
+                isFullscreen = !isFullscreen;
+                document.body.classList.toggle('fullscreen', isFullscreen);
+                fullscreenBtn.title = isFullscreen ? 'Exit Fullscreen (Esc)' : 'Fullscreen (F)';
+                setTimeout(init, 50);
+            }
+
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+
+                switch(e.key.toLowerCase()) {
+                    case 'f':
+                        toggleFullscreen();
+                        break;
+                    case 'escape':
+                        if (isFullscreen) toggleFullscreen();
+                        if (helpModal.classList.contains('show')) helpModal.classList.remove('show');
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        running = !running;
+                        playPauseBtn.textContent = running ? 'Pause' : 'Play';
+                        updateStats();
+                        break;
+                    case 'r':
+                        loadPreset(currentPreset);
+                        break;
+                    case 'c':
+                        clearTrails();
+                        break;
+                }
+            });
+
+            // Resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(init, 250);
+            });
+
+            // Start
+            init();
+            requestAnimationFrame(animate);
+        </script>
+    </body>
+</html>

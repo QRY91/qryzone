@@ -1,0 +1,790 @@
+---
+layout: false
+permalink: /fun/boids/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Boids flocking simulation with predator and obstacle modes" />
+        <title>Boids</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --bg-deep: #0a0a0f;
+                --bg-surface: #12121a;
+                --bg-elevated: #1a1a24;
+                --accent: #ffd166;
+                --accent-dim: rgba(255, 209, 102, 0.3);
+                --accent-glow: rgba(255, 209, 102, 0.15);
+                --text-primary: #e0e0e0;
+                --text-secondary: #7a7a8a;
+                --border: #2a2a3a;
+            }
+
+            body {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-deep);
+                color: var(--text-primary);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .back-link {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                color: var(--accent);
+                text-decoration: none;
+                font-size: 0.85rem;
+                z-index: 100;
+                transition: all 0.2s ease;
+            }
+
+            .back-link:hover {
+                border-color: var(--accent);
+                box-shadow: 0 0 10px var(--accent-glow);
+            }
+
+            .top-btn {
+                position: fixed;
+                top: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 4px;
+                color: var(--accent);
+                font-size: 1rem;
+                cursor: pointer;
+                z-index: 100;
+                transition: all 0.2s ease;
+            }
+
+            .top-btn:hover {
+                border-color: var(--accent);
+                box-shadow: 0 0 10px var(--accent-glow);
+            }
+
+            .help-btn { right: 1rem; }
+            .fullscreen-btn { right: 4rem; }
+
+            body.fullscreen .game-header,
+            body.fullscreen .controls,
+            body.fullscreen .back-link {
+                display: none;
+            }
+
+            body.fullscreen .canvas-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                padding: 0;
+            }
+
+            body.fullscreen #canvas { border: none; }
+            body.fullscreen .top-btn { background: rgba(10, 10, 15, 0.8); }
+
+            .game-header {
+                text-align: center;
+                padding: 2rem 1rem 1rem;
+                padding-top: 4rem;
+            }
+
+            .game-title {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+                font-weight: 500;
+                color: var(--accent);
+                margin-bottom: 0.5rem;
+                text-shadow: 0 0 20px var(--accent-glow);
+            }
+
+            .stats-bar {
+                display: flex;
+                justify-content: center;
+                gap: 2rem;
+                flex-wrap: wrap;
+                font-size: 0.85rem;
+                margin-bottom: 1rem;
+            }
+
+            .stat {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .stat-label { color: var(--text-secondary); }
+            .stat-value { color: var(--accent); }
+
+            .canvas-container {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 1rem;
+                min-height: 300px;
+            }
+
+            #canvas {
+                border: 1px solid var(--border);
+                cursor: crosshair;
+                max-width: 100%;
+                touch-action: none;
+            }
+
+            .controls {
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            .control-row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+
+            button {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-elevated);
+                border: 1px solid var(--accent-dim);
+                color: var(--text-primary);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                transition: all 0.2s ease;
+            }
+
+            button:hover {
+                border-color: var(--accent);
+                background: var(--accent-glow);
+            }
+
+            button.primary {
+                background: var(--accent-glow);
+                border-color: var(--accent);
+                color: var(--accent);
+                min-width: 100px;
+            }
+
+            button.active {
+                background: var(--accent);
+                color: var(--bg-deep);
+                border-color: var(--accent);
+            }
+
+            .slider-control {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .slider-control input[type="range"] {
+                width: 70px;
+                accent-color: var(--accent);
+            }
+
+            .slider-label {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+                min-width: 60px;
+            }
+
+            .slider-value {
+                font-size: 0.75rem;
+                color: var(--accent);
+                min-width: 30px;
+            }
+
+            /* Modal */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.85);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 200;
+                padding: 1rem;
+            }
+
+            .modal-overlay.show { display: flex; }
+
+            .modal {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                max-width: 500px;
+                width: 100%;
+                max-height: 80vh;
+                overflow-y: auto;
+                padding: 1.5rem;
+            }
+
+            .modal h2 {
+                color: var(--accent);
+                margin-bottom: 1rem;
+                font-size: 1.25rem;
+            }
+
+            .modal p, .modal ul {
+                color: var(--text-secondary);
+                line-height: 1.6;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .modal ul { margin-left: 1.5rem; }
+            .modal-close { margin-top: 1rem; width: 100%; }
+
+            @media (max-width: 480px) {
+                .control-row { gap: 0.4rem; }
+                button { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+                .slider-control input[type="range"] { width: 50px; }
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">← back</a>
+        <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen (F)">⛶</button>
+        <button class="top-btn help-btn" id="helpBtn" title="Help (?)">?</button>
+
+        <header class="game-header">
+            <h1 class="game-title">Boids</h1>
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Flock:</span>
+                    <span class="stat-value" id="boidCount">150</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Obstacles:</span>
+                    <span class="stat-value" id="obstacleCount">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label" id="statusLabel">Running</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <div class="controls">
+            <div class="control-row">
+                <button class="primary" id="playPauseBtn">Pause</button>
+                <button id="resetBtn">Reset</button>
+                <button id="predatorBtn">Predator Mode</button>
+                <button id="clearObstaclesBtn">Clear Obstacles</button>
+            </div>
+            <div class="control-row">
+                <div class="slider-control">
+                    <span class="slider-label">Boids:</span>
+                    <input type="range" id="countSlider" min="20" max="300" value="150">
+                    <span class="slider-value" id="countDisplay">150</span>
+                </div>
+                <div class="slider-control">
+                    <span class="slider-label">Speed:</span>
+                    <input type="range" id="speedSlider" min="1" max="8" value="4">
+                </div>
+                <div class="slider-control">
+                    <span class="slider-label">Trails:</span>
+                    <input type="range" id="trailSlider" min="0" max="20" value="5">
+                </div>
+            </div>
+            <div class="control-row">
+                <div class="slider-control">
+                    <span class="slider-label">Separation:</span>
+                    <input type="range" id="sepSlider" min="0" max="30" value="15">
+                </div>
+                <div class="slider-control">
+                    <span class="slider-label">Alignment:</span>
+                    <input type="range" id="aliSlider" min="0" max="30" value="10">
+                </div>
+                <div class="slider-control">
+                    <span class="slider-label">Cohesion:</span>
+                    <input type="range" id="cohSlider" min="0" max="30" value="10">
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal-overlay" id="helpModal">
+            <div class="modal">
+                <h2>Boids Flocking</h2>
+                <p>Emergent flocking behavior from three simple rules, created by Craig Reynolds in 1986. <a href="https://en.wikipedia.org/wiki/Boids" target="_blank" style="color: var(--accent)">Learn more</a></p>
+                <p><strong>The Three Rules:</strong></p>
+                <ul>
+                    <li><strong>Separation</strong> - Avoid crowding neighbors</li>
+                    <li><strong>Alignment</strong> - Steer towards average heading of neighbors</li>
+                    <li><strong>Cohesion</strong> - Steer towards center of neighbors</li>
+                </ul>
+                <p><strong>Interactions:</strong></p>
+                <ul>
+                    <li><strong>Click</strong> - Add obstacles the flock avoids</li>
+                    <li><strong>Predator Mode</strong> - Mouse becomes a predator that scatters the flock</li>
+                </ul>
+                <p><strong>Keyboard:</strong></p>
+                <ul>
+                    <li><strong>Space</strong> - Play/Pause</li>
+                    <li><strong>R</strong> - Reset flock</li>
+                    <li><strong>P</strong> - Toggle predator mode</li>
+                    <li><strong>C</strong> - Clear obstacles</li>
+                    <li><strong>F</strong> - Fullscreen</li>
+                </ul>
+                <button class="modal-close" id="closeHelp">Got it</button>
+            </div>
+        </div>
+
+        <script>
+            // Configuration
+            let boidCount = 150;
+            let maxSpeed = 4;
+            let separationWeight = 1.5;
+            let alignmentWeight = 1.0;
+            let cohesionWeight = 1.0;
+            let perceptionRadius = 50;
+            let separationRadius = 25;
+            let trailLength = 5;
+
+            // State
+            let boids = [];
+            let obstacles = [];
+            let running = true;
+            let predatorMode = false;
+            let mousePos = null;
+
+            // Canvas
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Boid class
+            class Boid {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * maxSpeed * 2;
+                    this.vy = (Math.random() - 0.5) * maxSpeed * 2;
+                    this.trail = [];
+                    this.hue = Math.random() * 60 + 30; // Gold/orange range
+                }
+
+                update() {
+                    // Store trail
+                    if (trailLength > 0) {
+                        this.trail.push({ x: this.x, y: this.y });
+                        if (this.trail.length > trailLength) this.trail.shift();
+                    }
+
+                    // Get steering forces
+                    const sep = this.separation();
+                    const ali = this.alignment();
+                    const coh = this.cohesion();
+                    const obs = this.avoidObstacles();
+                    const pred = this.avoidPredator();
+
+                    // Apply forces
+                    this.vx += sep.x * separationWeight + ali.x * alignmentWeight + coh.x * cohesionWeight + obs.x + pred.x;
+                    this.vy += sep.y * separationWeight + ali.y * alignmentWeight + coh.y * cohesionWeight + obs.y + pred.y;
+
+                    // Limit speed
+                    const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                    if (speed > maxSpeed) {
+                        this.vx = (this.vx / speed) * maxSpeed;
+                        this.vy = (this.vy / speed) * maxSpeed;
+                    }
+
+                    // Update position
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Wrap around edges - clear trail to avoid lines across canvas
+                    let wrapped = false;
+                    if (this.x < 0) { this.x = canvas.width; wrapped = true; }
+                    if (this.x > canvas.width) { this.x = 0; wrapped = true; }
+                    if (this.y < 0) { this.y = canvas.height; wrapped = true; }
+                    if (this.y > canvas.height) { this.y = 0; wrapped = true; }
+
+                    if (wrapped) this.trail = [];
+                }
+
+                separation() {
+                    let steerX = 0, steerY = 0, count = 0;
+                    for (const other of boids) {
+                        if (other === this) continue;
+                        const d = this.distTo(other);
+                        if (d < separationRadius && d > 0) {
+                            steerX += (this.x - other.x) / d;
+                            steerY += (this.y - other.y) / d;
+                            count++;
+                        }
+                    }
+                    if (count > 0) {
+                        steerX /= count;
+                        steerY /= count;
+                    }
+                    return { x: steerX * 0.1, y: steerY * 0.1 };
+                }
+
+                alignment() {
+                    let avgVx = 0, avgVy = 0, count = 0;
+                    for (const other of boids) {
+                        if (other === this) continue;
+                        if (this.distTo(other) < perceptionRadius) {
+                            avgVx += other.vx;
+                            avgVy += other.vy;
+                            count++;
+                        }
+                    }
+                    if (count > 0) {
+                        avgVx /= count;
+                        avgVy /= count;
+                        return { x: (avgVx - this.vx) * 0.05, y: (avgVy - this.vy) * 0.05 };
+                    }
+                    return { x: 0, y: 0 };
+                }
+
+                cohesion() {
+                    let avgX = 0, avgY = 0, count = 0;
+                    for (const other of boids) {
+                        if (other === this) continue;
+                        if (this.distTo(other) < perceptionRadius) {
+                            avgX += other.x;
+                            avgY += other.y;
+                            count++;
+                        }
+                    }
+                    if (count > 0) {
+                        avgX /= count;
+                        avgY /= count;
+                        return { x: (avgX - this.x) * 0.005, y: (avgY - this.y) * 0.005 };
+                    }
+                    return { x: 0, y: 0 };
+                }
+
+                avoidObstacles() {
+                    let steerX = 0, steerY = 0;
+                    for (const obs of obstacles) {
+                        const dx = this.x - obs.x;
+                        const dy = this.y - obs.y;
+                        const d = Math.sqrt(dx * dx + dy * dy);
+                        if (d < obs.r + 30 && d > 0) {
+                            const force = (obs.r + 30 - d) / (obs.r + 30);
+                            steerX += (dx / d) * force * 2;
+                            steerY += (dy / d) * force * 2;
+                        }
+                    }
+                    return { x: steerX, y: steerY };
+                }
+
+                avoidPredator() {
+                    if (!predatorMode || !mousePos) return { x: 0, y: 0 };
+                    const dx = this.x - mousePos.x;
+                    const dy = this.y - mousePos.y;
+                    const d = Math.sqrt(dx * dx + dy * dy);
+                    if (d < 100 && d > 0) {
+                        const force = (100 - d) / 100;
+                        return { x: (dx / d) * force * 3, y: (dy / d) * force * 3 };
+                    }
+                    return { x: 0, y: 0 };
+                }
+
+                distTo(other) {
+                    const dx = this.x - other.x;
+                    const dy = this.y - other.y;
+                    return Math.sqrt(dx * dx + dy * dy);
+                }
+
+                draw() {
+                    // Draw trail
+                    if (this.trail.length > 1) {
+                        ctx.beginPath();
+                        ctx.moveTo(this.trail[0].x, this.trail[0].y);
+                        for (let i = 1; i < this.trail.length; i++) {
+                            ctx.lineTo(this.trail[i].x, this.trail[i].y);
+                        }
+                        ctx.strokeStyle = `hsla(${this.hue}, 80%, 50%, 0.3)`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+
+                    // Draw boid as triangle
+                    const angle = Math.atan2(this.vy, this.vx);
+                    const size = 8;
+
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(angle);
+
+                    ctx.beginPath();
+                    ctx.moveTo(size, 0);
+                    ctx.lineTo(-size * 0.6, size * 0.4);
+                    ctx.lineTo(-size * 0.6, -size * 0.4);
+                    ctx.closePath();
+
+                    ctx.fillStyle = `hsl(${this.hue}, 80%, 55%)`;
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            // Initialize
+            function init() {
+                const container = document.querySelector('.canvas-container');
+                const maxWidth = container.clientWidth - 20;
+                const maxHeight = container.clientHeight - 20;
+                const size = Math.min(maxWidth, maxHeight, 700);
+
+                canvas.width = size;
+                canvas.height = size;
+
+                createBoids();
+            }
+
+            function createBoids() {
+                boids = [];
+                for (let i = 0; i < boidCount; i++) {
+                    boids.push(new Boid());
+                }
+                document.getElementById('boidCount').textContent = boidCount;
+            }
+
+            // Draw obstacles
+            function drawObstacles() {
+                obstacles.forEach(obs => {
+                    ctx.beginPath();
+                    ctx.arc(obs.x, obs.y, obs.r, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 100, 100, 0.3)';
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255, 100, 100, 0.6)';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                });
+            }
+
+            // Draw predator indicator
+            function drawPredator() {
+                if (predatorMode && mousePos) {
+                    ctx.beginPath();
+                    ctx.arc(mousePos.x, mousePos.y, 15, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 50, 50, 0.6)';
+                    ctx.fill();
+
+                    // Fear radius
+                    ctx.beginPath();
+                    ctx.arc(mousePos.x, mousePos.y, 100, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(255, 50, 50, 0.2)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+
+            // Animation loop
+            function animate() {
+                if (running) {
+                    ctx.fillStyle = 'rgba(10, 10, 15, 0.3)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    drawObstacles();
+                    drawPredator();
+
+                    boids.forEach(b => {
+                        b.update();
+                        b.draw();
+                    });
+                }
+                requestAnimationFrame(animate);
+            }
+
+            // Mouse interaction
+            canvas.addEventListener('click', (e) => {
+                if (predatorMode) return;
+                const rect = canvas.getBoundingClientRect();
+                obstacles.push({
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top,
+                    r: 20
+                });
+                document.getElementById('obstacleCount').textContent = obstacles.length;
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                mousePos = {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                mousePos = null;
+            });
+
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                mousePos = {
+                    x: e.touches[0].clientX - rect.left,
+                    y: e.touches[0].clientY - rect.top
+                };
+            });
+
+            canvas.addEventListener('touchend', () => {
+                mousePos = null;
+            });
+
+            // Controls
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            playPauseBtn.addEventListener('click', () => {
+                running = !running;
+                playPauseBtn.textContent = running ? 'Pause' : 'Play';
+                document.getElementById('statusLabel').textContent = running ? 'Running' : 'Paused';
+            });
+
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                createBoids();
+                obstacles = [];
+                document.getElementById('obstacleCount').textContent = 0;
+            });
+
+            const predatorBtn = document.getElementById('predatorBtn');
+            predatorBtn.addEventListener('click', () => {
+                predatorMode = !predatorMode;
+                predatorBtn.classList.toggle('active', predatorMode);
+                canvas.style.cursor = predatorMode ? 'none' : 'crosshair';
+            });
+
+            document.getElementById('clearObstaclesBtn').addEventListener('click', () => {
+                obstacles = [];
+                document.getElementById('obstacleCount').textContent = 0;
+            });
+
+            // Sliders
+            const countSlider = document.getElementById('countSlider');
+            const countDisplay = document.getElementById('countDisplay');
+            countSlider.addEventListener('input', (e) => {
+                boidCount = parseInt(e.target.value);
+                countDisplay.textContent = boidCount;
+                createBoids();
+            });
+
+            document.getElementById('speedSlider').addEventListener('input', (e) => {
+                maxSpeed = parseInt(e.target.value);
+            });
+
+            document.getElementById('trailSlider').addEventListener('input', (e) => {
+                trailLength = parseInt(e.target.value);
+                boids.forEach(b => b.trail = []);
+            });
+
+            document.getElementById('sepSlider').addEventListener('input', (e) => {
+                separationWeight = parseInt(e.target.value) / 10;
+            });
+
+            document.getElementById('aliSlider').addEventListener('input', (e) => {
+                alignmentWeight = parseInt(e.target.value) / 10;
+            });
+
+            document.getElementById('cohSlider').addEventListener('input', (e) => {
+                cohesionWeight = parseInt(e.target.value) / 10;
+            });
+
+            // Help modal
+            const helpModal = document.getElementById('helpModal');
+            document.getElementById('helpBtn').addEventListener('click', () => {
+                helpModal.classList.add('show');
+            });
+            document.getElementById('closeHelp').addEventListener('click', () => {
+                helpModal.classList.remove('show');
+            });
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === helpModal) helpModal.classList.remove('show');
+            });
+
+            // Fullscreen
+            let isFullscreen = false;
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+            function toggleFullscreen() {
+                isFullscreen = !isFullscreen;
+                document.body.classList.toggle('fullscreen', isFullscreen);
+                fullscreenBtn.title = isFullscreen ? 'Exit Fullscreen (Esc)' : 'Fullscreen (F)';
+                setTimeout(init, 50);
+            }
+
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+
+                switch(e.key.toLowerCase()) {
+                    case 'f':
+                        toggleFullscreen();
+                        break;
+                    case 'escape':
+                        if (isFullscreen) toggleFullscreen();
+                        if (helpModal.classList.contains('show')) helpModal.classList.remove('show');
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        running = !running;
+                        playPauseBtn.textContent = running ? 'Pause' : 'Play';
+                        document.getElementById('statusLabel').textContent = running ? 'Running' : 'Paused';
+                        break;
+                    case 'r':
+                        createBoids();
+                        obstacles = [];
+                        document.getElementById('obstacleCount').textContent = 0;
+                        break;
+                    case 'p':
+                        predatorBtn.click();
+                        break;
+                    case 'c':
+                        obstacles = [];
+                        document.getElementById('obstacleCount').textContent = 0;
+                        break;
+                }
+            });
+
+            // Resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(init, 250);
+            });
+
+            // Start
+            init();
+            requestAnimationFrame(animate);
+        </script>
+    </body>
+</html>
