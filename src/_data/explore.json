@@ -22,7 +22,7 @@
       "href": "/notes/database-first-debugging/",
       "tags": ["debugging", "learning"],
       "status": "seedling",
-      "connections": ["Optimization through removal"],
+      "connections": ["Optimization through removal", "Recursive mirror"],
       "lastUpdated": "2025-01-08"
     },
     {
@@ -91,6 +91,15 @@
       "tags": ["games", "design", "analysis"],
       "status": "seedling",
       "lastUpdated": "2026-01-08"
+    },
+    {
+      "title": "Recursive mirror",
+      "description": "What happens when you ask an AI to analyze your writing voice?",
+      "href": "/notes/recursive-mirror/",
+      "tags": ["ai-collaboration", "personal", "meta", "writing"],
+      "status": "seedling",
+      "connections": ["About", "Database-first debugging"],
+      "lastUpdated": "2026-01-10"
     },
     {
       "title": "uroboro",

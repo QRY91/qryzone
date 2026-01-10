@@ -1,0 +1,154 @@
+---
+layout: base.njk
+title: Recursive mirror - qry.zone
+description: What happens when you ask an AI to analyze your writing voice?
+---
+
+<style>
+.footnote-ref {
+    cursor: help;
+    color: var(--color-accent);
+    border-bottom: 1px dotted var(--color-accent);
+    position: relative;
+    font-size: 0.85em;
+    vertical-align: super;
+    padding: 0 2px;
+}
+.footnote-ref:hover::after {
+    content: attr(data-note);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.85rem;
+    width: max-content;
+    max-width: 450px;
+    min-width: 280px;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-variant-position: normal;
+    vertical-align: baseline;
+}
+.appendix {
+    margin-top: var(--space-xxl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+.appendix h2 {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+}
+</style>
+
+<article class="article">
+    <header class="article-header">
+        <span class="status-badge status-seedling">seedling</span>
+        <h1>Recursive mirror</h1>
+        <p class="article-subtitle">What happens when you ask an AI to analyze your writing voice?</p>
+    </header>
+
+    <section>
+        <p>
+            I have five years of raw journal entries. Unfiltered. No audience in mind. Just me talking to myself about games, music production, philosophy, frustration, and the occasional boat gender question.<span class="footnote-ref" data-note="'boat nuts (truck nuts) or boat tits?' - an actual journal entry">[1]</span>
+        </p>
+
+        <p>
+            This site exists because I wanted to share some of that thinking. But there's a transformation involved. Raw thought → readable prose. And I use AI to help with that transformation.
+        </p>
+
+        <p>
+            So here's the meta question: Can an AI analyze my raw voice well enough to help preserve it during the transformation?
+        </p>
+    </section>
+
+    <section>
+        <h2>The process</h2>
+        <p>
+            I pointed Claude at my journal directory<span class="footnote-ref" data-note="11 markdown files across 5 categories: ideas, thoughts, feelings, jokes">[2]</span> and asked it to identify patterns. Then compare those patterns to what's already on this site.
+        </p>
+
+        <p>
+            The result is a reference document - a catalog of my voice patterns with examples, transformation rules, and guidelines for AI collaboration.<span class="footnote-ref" data-note="370+ lines of raw journal content analyzed">[3]</span> A style guide, but for something harder to pin down than fonts and colors.
+        </p>
+    </section>
+
+    <section>
+        <h2>What it found</h2>
+        <p>
+            Some patterns I knew. Fragment punches. Self-questioning. The "Please." at the end of earnest requests. Others I didn't consciously recognize:
+        </p>
+
+        <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+                <strong>Staccato rhythm</strong> - Short. Short. Longer flowing thought. Short.
+            </li>
+            <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+                <strong>Profanity as punctuation</strong> - Not filler. Emphasis. ("This is all fucking insane but I have a mortgage.")
+            </li>
+            <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+                <strong>Rhetorical escalation</strong> - Questions that answer themselves through absurdity.
+            </li>
+            <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+                <strong>Call to action closers</strong> - "Figure it out." "Let's get to work."
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>The weird part</h2>
+        <p>
+            This post was written using that analysis. The AI knows what patterns to preserve, what to add, what to avoid. It's reading my journals, reading its own analysis of my journals, then writing in my voice based on that analysis.
+        </p>
+
+        <p>
+            Recursive mirror.
+        </p>
+
+        <p>
+            Does it work? You're reading the output. The ideas are mine - the phrasing is a collaboration. Not sure that's different from working with any editor who knows your style.<span class="footnote-ref" data-note="58 tool calls, ~24k tokens — full breakdown in appendix">[4]</span>
+        </p>
+    </section>
+
+    <section>
+        <h2>What I got out of it</h2>
+        <p>
+            Beyond the obvious outputs (this post, the reference doc), the process surfaced project ideas I'd forgotten about. A debug-themed social deduction game. A "cynical originality checker" that shows you how unoriginal your ideas are. A keyboard-to-synth that turns typing patterns into melodies.
+        </p>
+
+        <p>
+            Five years of notes. Plenty of material. Some of it might actually become something.
+        </p>
+
+        <p>
+            Let's get to work.
+        </p>
+    </section>
+
+    <section class="appendix" id="appendix">
+        <h2>The Artifacts</h2>
+        <p style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+            <a href="/notes/recursive-mirror/voice-analysis/" style="flex: 1; min-width: 180px; padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none;">
+                <strong style="display: block; color: var(--color-accent);">Voice Analysis</strong>
+                <span style="font-size: 0.85rem; color: var(--color-text-secondary);">Patterns, rhythm, tone markers</span>
+            </a>
+            <a href="/notes/recursive-mirror/voice-comparison/" style="flex: 1; min-width: 180px; padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none;">
+                <strong style="display: block; color: var(--color-accent);">Voice Comparison</strong>
+                <span style="font-size: 0.85rem; color: var(--color-text-secondary);">Side-by-side rewrite diff</span>
+            </a>
+            <a href="/notes/recursive-mirror/appendix/" style="flex: 1; min-width: 180px; padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none;">
+                <strong style="display: block; color: var(--color-accent);">Session Appendix</strong>
+                <span style="font-size: 0.85rem; color: var(--color-text-secondary);">58 tool calls, decision log</span>
+            </a>
+        </p>
+    </section>
+
+    <footer class="article-footer">
+        <p>Related: <a href="/about/">About</a> - <a href="/ideas/">Ideas</a></p>
+    </footer>
+</article>

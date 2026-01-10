@@ -1,0 +1,243 @@
+---
+layout: base.njk
+title: Recursive mirror / Voice Comparison - qry.zone
+description: Side-by-side comparison of polished vs raw voice
+---
+
+<style>
+.comparison-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.diff-header {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+.diff-header > div {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+.diff-header .before {
+    background: rgba(255, 100, 100, 0.15);
+    border: 1px solid rgba(255, 100, 100, 0.3);
+    border-bottom: none;
+}
+.diff-header .after {
+    background: rgba(100, 255, 100, 0.15);
+    border: 1px solid rgba(100, 255, 100, 0.3);
+    border-bottom: none;
+}
+.diff-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+@media (max-width: 800px) {
+    .diff-columns {
+        grid-template-columns: 1fr;
+    }
+    .diff-header {
+        flex-direction: column;
+    }
+}
+.diff-panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+.diff-panel.before {
+    border-color: rgba(255, 100, 100, 0.3);
+}
+.diff-panel.after {
+    border-color: rgba(100, 255, 100, 0.3);
+}
+.diff-panel h1 {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-md);
+    color: var(--color-accent);
+}
+.diff-panel h2 {
+    font-size: 1rem;
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+    color: var(--color-text-secondary);
+}
+.diff-panel blockquote {
+    border-left: 2px solid var(--color-border);
+    padding-left: var(--space-md);
+    margin: var(--space-md) 0;
+    font-style: italic;
+    color: var(--color-text-secondary);
+}
+.diff-panel p {
+    margin-bottom: var(--space-md);
+}
+.diff-panel .highlight {
+    background: rgba(255, 255, 100, 0.2);
+    padding: 0 2px;
+}
+.analysis-section {
+    margin-top: var(--space-xxl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+}
+.change-list {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md) var(--space-lg);
+}
+.change-list li {
+    margin-bottom: var(--space-sm);
+}
+.change-list strong {
+    color: var(--color-accent);
+}
+</style>
+
+<article class="article comparison-container">
+    <header class="article-header">
+        <p style="margin-bottom: var(--space-xs);"><a href="/notes/recursive-mirror/">&larr; Back to post</a></p>
+        <h1>Voice Comparison</h1>
+        <p class="article-subtitle">"Database-first debugging" — polished vs raw</p>
+    </header>
+
+    <section>
+        <div class="diff-header">
+            <div class="before">— BEFORE (polished)</div>
+            <div class="after">+ AFTER (raw voice)</div>
+        </div>
+
+        <div class="diff-columns">
+            <div class="diff-panel before">
+                <h1>Database-first debugging</h1>
+                <p><em>A lesson from production firefighting</em></p>
+
+                <blockquote>
+                    "Assuming that a breakage is caused by a code change is often true, but not always.
+                    If we had spent less time looking at the recent changes, and more time looking at the
+                    database itself, we would have found it much faster."
+                </blockquote>
+
+                <p>
+                    From a production debugging session. We were chasing a performance issue through git
+                    blame and commit diffs for hours. The actual problem was 12.8 million stale database
+                    records - damcologs where only 27k contained actual content.
+                </p>
+
+                <p>
+                    After cleanup: 406,624 records. Down from 13,279,954. Integration server CPU usage
+                    dropped immediately. The "bug" wasn't in the code at all.
+                </p>
+
+                <h2>The pattern</h2>
+                <p>
+                    When something breaks, the instinct is to look at what changed recently. git diff,
+                    recent commits, recent deploys. This is usually right. But when it's wrong, you
+                    burn hours.
+                </p>
+                <p>
+                    Sometimes the problem has been there for months, slowly accumulating until it tips
+                    over. The database grew. The load changed. Something external shifted.
+                </p>
+                <p>
+                    <strong>The fix:</strong> Before diving into code archaeology, spend 10 minutes
+                    looking at the actual data. Database size, record counts, query performance.
+                    Often the answer is sitting there, waiting.
+                </p>
+            </div>
+
+            <div class="diff-panel after">
+                <h1>Database-first debugging</h1>
+                <p><em>When the problem isn't in the code</em></p>
+
+                <p>
+                    Hours. We spent hours on this.
+                </p>
+
+                <p>
+                    Git blame. Commit diffs. "What changed recently?" The usual. Performance tanking
+                    on the integration server, so obviously someone pushed something bad. Right?
+                </p>
+
+                <p>
+                    Wrong.
+                </p>
+
+                <p>
+                    12.8 million records in damcologs. Only 27k had actual content. The rest? Ghosts.
+                    Accumulated over months while we weren't looking.
+                </p>
+
+                <p>
+                    After cleanup: 406,624 records. CPU usage dropped immediately.
+                </p>
+
+                <p>
+                    The "bug" wasn't in the code at all. We were debugging the wrong thing.
+                </p>
+
+                <hr style="border: none; border-top: 1px solid var(--color-border); margin: var(--space-lg) 0;">
+
+                <p>
+                    The instinct is always: what changed? Usually that's right. But when it's wrong,
+                    you burn hours chasing commits that didn't break anything.
+                </p>
+
+                <p>
+                    Sometimes the problem has been there for months. Accumulating. Waiting.
+                </p>
+
+                <p>
+                    Before the code archaeology: look at the data. Ten minutes. Database size,
+                    record counts, query stats. Often the answer is just sitting there.
+                </p>
+
+                <p>
+                    Would've saved us a day.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="analysis-section">
+        <h2>What Changed</h2>
+
+        <div class="change-list">
+            <ul>
+                <li><strong>Removed the upfront blockquote lesson</strong> — raw voice shows, doesn't tell. The lesson emerges from the story.</li>
+                <li><strong>Fragment punches</strong> — "Hours. We spent hours on this." / "Wrong." / "Ghosts."</li>
+                <li><strong>Removed "The pattern" / "The fix:" labels</strong> — raw voice doesn't label its structure. The --- separator does the work.</li>
+                <li><strong>Added self-questioning</strong> — "Right?" invites the reader into the mistake.</li>
+                <li><strong>Shorter paragraphs</strong> — staccato rhythm. Let lines breathe.</li>
+                <li><strong>Punchier closer</strong> — "Would've saved us a day." vs the explanatory original ending.</li>
+                <li><strong>War story, not lesson plan</strong> — you feel the frustration, then get the insight.</li>
+            </ul>
+        </div>
+
+        <h2 style="margin-top: var(--space-xl);">Patterns Applied</h2>
+        <p>From the <a href="/notes/recursive-mirror/voice-analysis/">voice analysis</a>:</p>
+        <ul>
+            <li><strong>Fragment Punch:</strong> "Hours.", "Wrong.", "Ghosts."</li>
+            <li><strong>Self-Question:</strong> "Right?"</li>
+            <li><strong>Breathing Separator:</strong> --- instead of section headers</li>
+            <li><strong>Staccato → Reflection:</strong> Short punches, then longer explanation, then punch close</li>
+            <li><strong>Earnest Closer:</strong> "Would've saved us a day." — regret without melodrama</li>
+        </ul>
+    </section>
+
+    <footer class="article-footer">
+        <p>
+            <a href="/notes/recursive-mirror/">&larr; Back to Recursive mirror</a> ·
+            <a href="/notes/recursive-mirror/voice-analysis/">Voice Analysis</a> ·
+            <a href="/notes/recursive-mirror/appendix/">Session Appendix</a>
+        </p>
+    </footer>
+</article>

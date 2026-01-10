@@ -1,0 +1,363 @@
+---
+layout: base.njk
+title: Recursive mirror / Appendix - qry.zone
+description: Technical breakdown of the voice analysis session
+---
+
+<style>
+.appendix-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.tool-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-md) 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+.tool-table th,
+.tool-table td {
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+}
+.tool-table th {
+    color: var(--color-text-secondary);
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+.tool-table tr:hover {
+    background: var(--color-surface);
+}
+.file-list {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    overflow-x: auto;
+}
+.file-list .category {
+    color: var(--color-accent);
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-xs);
+}
+.file-list .category:first-child {
+    margin-top: 0;
+}
+.file-list .file {
+    padding-left: var(--space-md);
+    color: var(--color-text-secondary);
+}
+.conversation-snippet {
+    background: var(--color-surface);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+    font-size: 0.9rem;
+}
+.conversation-snippet .role {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
+}
+.conversation-snippet .content {
+    font-style: italic;
+}
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+.stat-row:last-child {
+    border-bottom: none;
+}
+.stat-label {
+    color: var(--color-text-secondary);
+}
+.phase-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+}
+.phase-number {
+    background: var(--color-accent);
+    color: var(--color-background);
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+</style>
+
+<article class="article appendix-container">
+    <header class="article-header">
+        <p style="margin-bottom: var(--space-xs);"><a href="/notes/recursive-mirror/">&larr; Back to post</a></p>
+        <h1>Technical Appendix</h1>
+        <p class="article-subtitle">Session breakdown for "Recursive mirror"</p>
+    </header>
+
+    <section>
+        <h2>Session Overview</h2>
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md);">
+            <div class="stat-row">
+                <span class="stat-label">Total tool calls</span>
+                <span>58</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Files read</span>
+                <span>16</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Files written</span>
+                <span>4</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Explore agents spawned</span>
+                <span>2</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Input tokens</span>
+                <span>~5.2k</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Output tokens</span>
+                <span>~18.8k</span>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Tool Usage Breakdown</h2>
+        <table class="tool-table">
+            <thead>
+                <tr>
+                    <th>Tool</th>
+                    <th>Count</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Read</td>
+                    <td>16</td>
+                    <td>Reading journal entries and existing site posts</td>
+                </tr>
+                <tr>
+                    <td>Bash</td>
+                    <td>16</td>
+                    <td>Directory listing, builds, session metadata extraction</td>
+                </tr>
+                <tr>
+                    <td>TodoWrite</td>
+                    <td>7</td>
+                    <td>Progress tracking through implementation</td>
+                </tr>
+                <tr>
+                    <td>Edit</td>
+                    <td>5</td>
+                    <td>Updating plan file, explore.json, post content</td>
+                </tr>
+                <tr>
+                    <td>Write</td>
+                    <td>4</td>
+                    <td>Creating voice-analysis.md, project-ideas.md, blog post</td>
+                </tr>
+                <tr>
+                    <td>Task</td>
+                    <td>2</td>
+                    <td>Parallel Explore agents for both repos</td>
+                </tr>
+                <tr>
+                    <td>Glob</td>
+                    <td>1</td>
+                    <td>Finding all HTML files in qryzone</td>
+                </tr>
+                <tr>
+                    <td>AskUserQuestion</td>
+                    <td>1</td>
+                    <td>Title style, doc depth, metadata placement</td>
+                </tr>
+                <tr>
+                    <td>ExitPlanMode</td>
+                    <td>1</td>
+                    <td>Plan approval handoff</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Analysis Pipeline</h2>
+
+        <div class="phase-header">
+            <span class="phase-number">1</span>
+            <h3 style="margin: 0;">Parallel Exploration</h3>
+        </div>
+        <p>Spawned two Explore agents simultaneously:</p>
+        <ul>
+            <li><strong>Agent 1:</strong> zenjournal-sorted structure analysis (file counts, organization, naming conventions)</li>
+            <li><strong>Agent 2:</strong> qryzone site structure (framework, content format, existing voice)</li>
+        </ul>
+
+        <div class="phase-header">
+            <span class="phase-number">2</span>
+            <h3 style="margin: 0;">Journal Deep Read</h3>
+        </div>
+        <p>Read all 11 non-private journal files in category order:</p>
+        <div class="file-list">
+            <div class="category">ideas/</div>
+            <div class="file">creative-production.md (43 lines)</div>
+            <div class="file">game-concepts.md (22 lines)</div>
+            <div class="file">tool-and-app-concepts.md (22 lines)</div>
+            <div class="file">dev-and-learning.md (22 lines)</div>
+            <div class="file">misc-notes.md (28 lines)</div>
+            <div class="category">thoughts/</div>
+            <div class="file">social-and-philosophy.md (45 lines)</div>
+            <div class="file">craft-and-work.md (44 lines)</div>
+            <div class="file">gaming-and-media.md (34 lines)</div>
+            <div class="file">tech-and-software.md (19 lines)</div>
+            <div class="category">feelings/</div>
+            <div class="file">motivation-and-growth.md (24 lines)</div>
+            <div class="category">jokes/</div>
+            <div class="file">oneliners.md (67 lines)</div>
+        </div>
+
+        <div class="phase-header">
+            <span class="phase-number">3</span>
+            <h3 style="margin: 0;">Comparative Read</h3>
+        </div>
+        <p>Read 4 existing qryzone posts to compare polished vs raw voice:</p>
+        <div class="file-list">
+            <div class="file">economic-honesty.html</div>
+            <div class="file">learning-to-spite.html</div>
+            <div class="file">managing-attention.html</div>
+            <div class="file">about.html</div>
+        </div>
+
+        <div class="phase-header">
+            <span class="phase-number">4</span>
+            <h3 style="margin: 0;">Pattern Extraction</h3>
+        </div>
+        <p>Identified patterns across both sources:</p>
+        <ul>
+            <li>Sentence structure (fragments, self-questions, rhetorical escalation)</li>
+            <li>Rhythm (staccato bursts, --- separators, earnest closers)</li>
+            <li>Tone markers (profanity as punctuation, marked sarcasm)</li>
+            <li>Vocabulary domains (gaming, music production, philosophy, tech)</li>
+            <li>Transformation delta (what changes from journal to site)</li>
+        </ul>
+
+        <div class="phase-header">
+            <span class="phase-number">5</span>
+            <h3 style="margin: 0;">Output Generation</h3>
+        </div>
+        <p>Wrote 3 files using extracted patterns:</p>
+        <div class="file-list">
+            <div class="file">notes/personal/qryzone/voice-analysis.md (comprehensive reference)</div>
+            <div class="file">notes/personal/qryzone/project-ideas.md (curated concepts)</div>
+            <div class="file">qryzone/src/notes/recursive-mirror.html (this post)</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Key Decision Points</h2>
+
+        <div class="conversation-snippet">
+            <div class="role">User prompt</div>
+            <div class="content">"ultrathink. we're going to do a writing voice analysis... take your time analyzing, there's a lot of information, and we want to soak in patterns, voice, rhythm."</div>
+        </div>
+        <p>→ Triggered plan mode, parallel exploration, comprehensive read-through rather than sampling.</p>
+
+        <div class="conversation-snippet">
+            <div class="role">User clarification</div>
+            <div class="content">"for the meta layer, we should also track your token usage, decisions made, and so on."</div>
+        </div>
+        <p>→ Added session metadata extraction to deliverables, leading to this appendix.</p>
+
+        <div class="conversation-snippet">
+            <div class="role">AskUserQuestion response</div>
+            <div class="content">Title: "Punchy/abstract". Doc depth: "Reference doc". Stats: "Technical appendix with hover footnotes".</div>
+        </div>
+        <p>→ Shaped output format: "Recursive mirror" title, comprehensive voice-analysis.md, inline footnotes linking to appendix.</p>
+
+        <div class="conversation-snippet">
+            <div class="role">User feedback</div>
+            <div class="content">"I'm not sure I can tell anymore where the voice ends and the emulation begins. this line is... a bit much. or 'glazing' as the kids say"</div>
+        </div>
+        <p>→ Cut self-congratulatory phrasing. AI patting itself on the back ≠ user's voice.</p>
+    </section>
+
+    <section>
+        <h2>Patterns Identified</h2>
+        <p>Full catalog in <a href="/notes/recursive-mirror/voice-analysis/">Voice Analysis</a>. Highlights:</p>
+
+        <h3>Fragment Punches</h3>
+        <div class="conversation-snippet">
+            <div class="content">"birb shmup"<br>"words carry meaning"<br>"Let's get to work."<br>"Make shit up. Make it real."</div>
+        </div>
+
+        <h3>Self-Questions</h3>
+        <div class="conversation-snippet">
+            <div class="content">"Can we produce a track with vocals where each word is done as separate takes?"<br>"Would it be okay for me to be infinitely more resourceful, and take more time to do things than others?"</div>
+        </div>
+
+        <h3>Rhetorical Escalation</h3>
+        <div class="conversation-snippet">
+            <div class="content">"First of all, Bitch, YOU came outta nowhere, the fuck you mean?! I've always been here, I don't know you, and yet you've found me. But sure, I'M the one who came outta nowhere, huh? Please."</div>
+        </div>
+
+        <h3>Earnest Closers</h3>
+        <div class="conversation-snippet">
+            <div class="content">"Be present, make choice. Live with intent. Please."</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Session Metadata Extraction</h2>
+        <p>Commands used to extract stats from Claude Code session file:</p>
+        <div class="file-list">
+<pre style="margin: 0; white-space: pre-wrap;"># Locate session file
+ls -lt ~/.claude/projects/-home-qry-projects-qryzone/*.jsonl | head -1
+
+# Count tool calls
+grep -o '"tool_use"' $SESSION_FILE | wc -l
+
+# Tool usage by type
+grep -oE '"name":"[^"]*"' $SESSION_FILE | sort | uniq -c | sort -rn
+
+# Sum input tokens
+grep -o '"input_tokens":[0-9]*' $SESSION_FILE | cut -d: -f2 | awk '{s+=$1} END {print s}'
+
+# Sum output tokens
+grep -o '"output_tokens":[0-9]*' $SESSION_FILE | cut -d: -f2 | awk '{s+=$1} END {print s}'
+
+# List all files read
+grep -oE 'file_path":"[^"]*' $SESSION_FILE | sed 's/file_path":"//' | sort | uniq</pre>
+        </div>
+    </section>
+
+    <footer class="article-footer">
+        <p>
+            <a href="/notes/recursive-mirror/">&larr; Back to Recursive mirror</a> ·
+            <a href="/notes/recursive-mirror/voice-analysis/">Voice Analysis</a> ·
+            <a href="/notes/recursive-mirror/voice-comparison/">Voice Comparison</a>
+        </p>
+    </footer>
+</article>

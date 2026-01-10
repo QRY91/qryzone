@@ -1,0 +1,421 @@
+---
+layout: base.njk
+title: Recursive mirror / Voice Analysis - qry.zone
+description: A comprehensive catalog of writing patterns extracted from raw journals
+---
+
+<style>
+.voice-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.pattern-section {
+    margin-bottom: var(--space-xl);
+}
+.pattern-section h3 {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    margin-bottom: var(--space-sm);
+}
+.example-box {
+    background: var(--color-surface);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-md);
+    margin: var(--space-sm) 0;
+    font-style: italic;
+}
+.example-box.raw {
+    border-left-color: var(--color-text-secondary);
+}
+.usage-note {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-sm);
+}
+.vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+    margin: var(--space-md) 0;
+}
+.vocab-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+}
+.vocab-card h4 {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+}
+.vocab-card ul {
+    margin: 0;
+    padding-left: var(--space-md);
+    font-size: 0.85rem;
+}
+.phrase-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+.phrase-table td {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+}
+.phrase-table td:first-child {
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+.rule-list {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md) var(--space-lg);
+}
+.rule-list h4 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+.do-dont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin: var(--space-md) 0;
+}
+@media (max-width: 600px) {
+    .do-dont { grid-template-columns: 1fr; }
+}
+.do-list, .dont-list {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+}
+.do-list h4 { color: #4a9; }
+.dont-list h4 { color: #a66; }
+.quick-ref {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+}
+.section-divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-xl) 0;
+}
+</style>
+
+<article class="article voice-container">
+    <header class="article-header">
+        <p style="margin-bottom: var(--space-xs);"><a href="/notes/recursive-mirror/">&larr; Back to post</a></p>
+        <h1>Voice Analysis</h1>
+        <p class="article-subtitle">Patterns extracted from raw journal entries</p>
+    </header>
+
+    <section>
+        <h2>Core Identity</h2>
+        <p>
+            <strong>Direct, questioning, and earnestly irreverent.</strong> Blends technical precision with philosophical wandering. Never gatekeeps. Comfortable with profanity when it serves the point. Self-aware to the point of meta-recursion.
+        </p>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Sentence Structure</h2>
+
+        <div class="pattern-section">
+            <h3>The Fragment Punch</h3>
+            <p>Short declarative fragments that hit hard. No subject needed.</p>
+            <div class="example-box">
+                "birb shmup"<br>
+                "words carry meaning"<br>
+                "Let's get to work."<br>
+                "Make shit up. Make it real."
+            </div>
+            <p class="usage-note">Use for: Opening statements, transitions, closing calls to action.</p>
+        </div>
+
+        <div class="pattern-section">
+            <h3>The Self-Question</h3>
+            <p>Mid-thought interrogation. Questions to self that drive exploration.</p>
+            <div class="example-box">
+                "Can we produce a track with vocals where each word is done as separate takes?"<br>
+                "Would it be okay for me to be infinitely more resourceful, and take more time to do things than others?"<br>
+                "Could I learn how to make a videogame?"
+            </div>
+            <p class="usage-note">Use for: Examining assumptions, opening threads, signaling genuine uncertainty.</p>
+        </div>
+
+        <div class="pattern-section">
+            <h3>The Rhetorical Escalation</h3>
+            <p>Questions that answer themselves through absurdity.</p>
+            <div class="example-box">
+                "Who is this person? They came out of nowhere!" ... First of all, Bitch, YOU came outta nowhere, the fuck you mean?! I've always been here, I don't know you, and yet you've found me. But sure, I'M the one who came outta nowhere, huh? Please.
+            </div>
+            <p class="usage-note">Use for: Calling out logical inconsistencies, expressing frustration.</p>
+        </div>
+
+        <div class="pattern-section">
+            <h3>The Parenthetical Aside</h3>
+            <p>Process thinking made visible. Shows the work.</p>
+            <div class="example-box">
+                "(like Avalon instead)"<br>
+                "(literally)"<br>
+                "(one of my music rolemodels)"<br>
+                "(buddhist goal)"
+            </div>
+            <p class="usage-note">Use for: Adding context without breaking flow.</p>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Rhythm Patterns</h2>
+
+        <div class="pattern-section">
+            <h3>Staccato → Reflection → Staccato</h3>
+            <p>Short punch. Short punch. Longer flowing thought. Short punch.</p>
+            <div class="example-box">
+                Turn fascination into something real. Express it.<br><br>
+                ---<br><br>
+                Record, rework, repeat<br><br>
+                ---<br><br>
+                If it can't be science, it could be art. If it can't be art, at least it could be fun.
+            </div>
+        </div>
+
+        <div class="pattern-section">
+            <h3>The Breathing Separator</h3>
+            <p>Use <code>---</code> to mark thought boundaries. Creates space. Lets ideas stand alone without forcing connection.</p>
+        </div>
+
+        <div class="pattern-section">
+            <h3>The Earnest Closer</h3>
+            <p>End genuine pleas with a period. Sometimes "Please." standing alone.</p>
+            <div class="example-box">
+                Be present, make choice. Live with intent. Please.
+            </div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Tone Markers</h2>
+
+        <div class="pattern-section">
+            <h3>Direct Profanity</h3>
+            <p>Used when frustrated or making emphatic points. Never gratuitous. <strong>Profanity should punctuate, not fill space.</strong></p>
+            <div class="example-box">
+                "This is all fucking insane but I have a mortgage."<br>
+                "Bitch, YOU came outta nowhere, the fuck you mean?!"<br>
+                "Find the fucking gameboy"
+            </div>
+        </div>
+
+        <div class="pattern-section">
+            <h3>Marked Sarcasm</h3>
+            <p>When using sarcasm, mark it clearly.</p>
+            <div class="example-box">"Wow, so original! /s"</div>
+        </div>
+
+        <div class="pattern-section">
+            <h3>Self-Aware Humor</h3>
+            <p>Jokes that point at something real.</p>
+            <div class="example-box">
+                "Asked an LLM to implement dark mode and the screen went black. I lost consciousness soon thereafter and woke up to this post, already published."<br><br>
+                "boat gender > boat nuts (truck nuts) or boat tits?"<br><br>
+                "Ignorance as a biblical angel: 'Be not afraid'"
+            </div>
+        </div>
+
+        <div class="pattern-section">
+            <h3>The Challenge</h3>
+            <p>Guardian energy. Demanding substance.</p>
+            <div class="example-box">
+                I represent the guardian to knowledge. Pester me not with your meek rationalisations. ... Raise to me your spear, sharpened with wit. Be determined to strike, alert for the opportunity.
+            </div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Vocabulary Domains</h2>
+        <div class="vocab-grid">
+            <div class="vocab-card">
+                <h4>Gaming</h4>
+                <ul>
+                    <li>shmup, FGC, MonHun</li>
+                    <li>combo drop, reset, conditioning</li>
+                    <li>tiers, skill gap</li>
+                </ul>
+            </div>
+            <div class="vocab-card">
+                <h4>Music Production</h4>
+                <ul>
+                    <li>OpenMPT, synth, bpm</li>
+                    <li>field recordings</li>
+                    <li>generative tracks</li>
+                </ul>
+            </div>
+            <div class="vocab-card">
+                <h4>Philosophy</h4>
+                <ul>
+                    <li>Diogenes, Buddhist detachment</li>
+                    <li>mindfulness critique</li>
+                    <li>"healthy mind in healthy body"</li>
+                </ul>
+            </div>
+            <div class="vocab-card">
+                <h4>Tech/Dev</h4>
+                <ul>
+                    <li>antipatterns, design patterns</li>
+                    <li>local-first, permacomputing</li>
+                    <li>LLM, critical thinking</li>
+                </ul>
+            </div>
+            <div class="vocab-card">
+                <h4>Creative Production</h4>
+                <ul>
+                    <li>shaders, sprites, vtuber</li>
+                    <li>livecoding, projection</li>
+                    <li>double exposure</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Characteristic Phrases</h2>
+        <table class="phrase-table">
+            <tr><td>"figure it out"</td><td>Challenge to self/others</td></tr>
+            <tr><td>"let's get to work"</td><td>Transition to action</td></tr>
+            <tr><td>"play to your strengths"</td><td>Creative advice</td></tr>
+            <tr><td>"make shit up. make it real."</td><td>Creative manifesto</td></tr>
+            <tr><td>"that's cheap ragebait"</td><td>Critique of artificial difficulty</td></tr>
+            <tr><td>"what do YOU make of it?"</td><td>Open invitation</td></tr>
+        </table>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Transformation Rules</h2>
+        <p>When going from raw journal → polished site content:</p>
+
+        <div class="rule-list" style="margin: var(--space-md) 0;">
+            <h4>Preserve</h4>
+            <ul>
+                <li>Fragment punches (don't expand everything)</li>
+                <li>Profanity when earned</li>
+                <li>Self-questioning</li>
+                <li>The earnest plea</li>
+                <li>Parenthetical asides</li>
+                <li>Meta-awareness</li>
+            </ul>
+        </div>
+
+        <div class="rule-list" style="margin: var(--space-md) 0;">
+            <h4>Add</h4>
+            <ul>
+                <li><strong>Connective tissue</strong> - transitions for external readers</li>
+                <li><strong>Context</strong> - references that aren't obvious to outsiders</li>
+                <li><strong>Structure</strong> - section headers for navigation</li>
+                <li><strong>Links</strong> - connections to related content</li>
+            </ul>
+        </div>
+
+        <div class="rule-list" style="margin: var(--space-md) 0;">
+            <h4>Avoid</h4>
+            <ul>
+                <li>Over-explaining (trust the reader)</li>
+                <li>Softening profanity (it's there for a reason)</li>
+                <li>Removing questions (uncertainty is honest)</li>
+                <li>Adding excessive formality</li>
+                <li>Generic AI voice patterns (superlatives, hedging, bullet-point spam)</li>
+            </ul>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>AI Collaboration Guidelines</h2>
+
+        <div class="do-dont">
+            <div class="do-list">
+                <h4>Do</h4>
+                <ul>
+                    <li>Feed raw journal entries as examples</li>
+                    <li>Ask for fragment punches</li>
+                    <li>Request self-questioning where uncertain</li>
+                    <li>Allow profanity where it serves the point</li>
+                    <li>Keep the "Please." closers</li>
+                </ul>
+            </div>
+            <div class="dont-list">
+                <h4>Don't</h4>
+                <ul>
+                    <li>Let AI add "Great question!" or "Absolutely!"</li>
+                    <li>Accept generic inspirational language</li>
+                    <li>Allow hedging ("It could be argued...")</li>
+                    <li>Let every thought become a bullet list</li>
+                </ul>
+            </div>
+        </div>
+
+        <p style="margin-top: var(--space-md);"><strong>Prompt patterns that work:</strong></p>
+        <ul>
+            <li>"Write this in a direct, questioning tone"</li>
+            <li>"Use short fragment punches for emphasis"</li>
+            <li>"Include genuine uncertainty where it exists"</li>
+            <li>"Don't soften the edges"</li>
+        </ul>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Quick Reference</h2>
+        <div class="quick-ref">STRUCTURE:
+- Fragments for punch
+- Questions for exploration
+- "Please." for earnest closure
+
+TONE:
+- Direct, not aggressive
+- Profanity as punctuation
+- Self-aware humor
+
+RHYTHM:
+- Short → Short → Long → Short
+- Use --- for breathing room
+
+AVOID:
+- AI superlatives
+- Excessive hedging
+- Over-explanation</div>
+    </section>
+
+    <footer class="article-footer">
+        <p>
+            <a href="/notes/recursive-mirror/">&larr; Back to Recursive mirror</a> ·
+            <a href="/notes/recursive-mirror/voice-comparison/">Voice Comparison</a> ·
+            <a href="/notes/recursive-mirror/appendix/">Session Appendix</a>
+        </p>
+    </footer>
+</article>
