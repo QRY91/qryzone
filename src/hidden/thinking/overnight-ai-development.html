@@ -1,7 +1,7 @@
 ---
 layout: base.njk
 title: Overnight AI Development - qry.zone
-description: Making AI development predictable with TDD kanban - separating analysis from implementation through file-based workflows and test-as-specification
+description: Using TDD as a specification language for AI agents
 ---
 
 <article class="article">
@@ -15,292 +15,94 @@ description: Making AI development predictable with TDD kanban - separating anal
         Overnight AI Development
       </h1>
       <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
-        Wake up to implementations that your AI dev team built overnight on
-        trickle power. TDD kanban applied to AI-assisted development.
+        Wake up to implementations that your AI dev team built overnight. Because code doesn't sleep.
       </p>
     </div>
 
     <section style="margin-bottom: var(--space-xxl)">
-      <div style="background: #e0f2fe; border-left: 4px solid #0284c7; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-xl)">
-        <h2 style="font-size: 1.3rem; font-weight: 600; color: #0369a1; margin-bottom: var(--space-md); font-family: var(--font-mono)">
-          The Core Insight: Tests ARE Requirements
-        </h2>
-        <p style="color: #0c4a6e; margin-bottom: var(--space-md)">
-          <strong>Traditional broken flow:</strong><br>
-          "Build a user login system" &rarr; Developer guesses &rarr; Code doesn't match expectations
-        </p>
-        <p style="color: #0c4a6e; margin-bottom: var(--space-md)">
-          <strong>AI-assisted TDD flow:</strong><br>
-          Backlog item &rarr; Analyst writes tests &rarr; Human PO approves &rarr; Dev builds to pass tests
-        </p>
-        <p style="color: #0c4a6e">
-          <strong>Key breakthrough:</strong> The analyst/test-writer does the
-          expensive thinking upfront, creating crystal-clear specifications
-          that eliminate ambiguity.
-        </p>
-      </div>
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Tests as specifications
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        "Build a user login system" is ambiguous. An AI will guess what you want, and it'll guess wrong.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        But tests are precise. A test says exactly what should happen: this input produces that output, this action triggers that event, this error shows that message. No ambiguity.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        So the workflow becomes: analyst writes tests first, human approves the test specifications, then the dev agent implements to pass those tests. The expensive thinking happens upfront in the analysis phase. Implementation becomes mechanical.
+      </p>
     </section>
 
     <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        The Kanban Flow
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        File-based kanban
       </h2>
-
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); font-family: var(--font-mono); font-size: 0.9rem; overflow-x: auto;">
-        Backlog &rarr; Analysis/Test-Writing &rarr; Human PO Approval &rarr; Development &rarr; Validation<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cheap compute)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(human decision)&nbsp;&nbsp;&nbsp;&nbsp;(expensive compute)
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Stage Breakdown
-      </h3>
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <ol>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Backlog:</strong> Human adds high-level feature requests
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Analysis:</strong> AI analyst breaks down into testable requirements
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>PO Approval:</strong> Human reviews/approves/rejects the test specifications
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Development:</strong> AI dev agent implements to pass the approved tests
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Validation:</strong> Automated testing confirms requirements met
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        File-Based Kanban Implementation
-      </h2>
-
+      <p style="margin-bottom: var(--space-md)">
+        The whole thing runs on files moving through directories:
+      </p>
       <div style="background: #1a1a1a; border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); font-family: var(--font-mono); font-size: 0.85rem; color: #e0e0e0; overflow-x: auto;">
         <pre style="margin: 0;">project/
-├── backlog/
-│   ├── feature_login.md
-│   └── enhancement_ui.md
-├── analysis/
-│   └── login_tests_and_requirements.md
-├── approved/
-│   └── login_approved.json
-├── development/
-│   ├── login_implementation.py
-│   └── login_tests.py
-├── testing/
-│   └── test_results/
-└── done/
-    └── completed_features/</pre>
+├── backlog/           # human adds feature requests
+├── analysis/          # AI analyst writes tests
+├── approved/          # human approves test specs
+├── development/       # AI dev implements
+└── done/              # completed and validated</pre>
       </div>
-
-      <p style="margin-bottom: var(--space-lg)">
-        Everything is visible, debuggable, and version-controlled. No magic
-        databases, no hidden state. Just files moving through directories.
+      <p style="margin-bottom: var(--space-md)">
+        Everything visible, debuggable, version-controlled. No magic databases, no hidden state. Just files.
       </p>
     </section>
 
     <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        The Overnight Vision
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The overnight workflow
       </h2>
-
-      <div style="background: #2f2f1f; border: 1px dashed #7f7f5f; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); font-style: italic; color: var(--color-text-secondary)">
-        "Wake up to implementations that your AI dev team built overnight on
-        trickle power. Because code doesn't sleep, but developers do."
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        The Workflow
-      </h3>
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <ol>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Before bed:</strong> Review and approve analyses
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Overnight:</strong> Start development agent (low priority, trickle power)
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Morning:</strong> Check what got built with the morning report
-          </li>
-        </ol>
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Power-Efficient Orchestration
-      </h3>
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <ul>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Resource-aware processing:</strong> Check system load before expensive operations
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Adaptive sleep:</strong> Slow down when system is busy
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Model swapping:</strong> Only load one model at a time on low-memory systems
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Rate limiting:</strong> Built-in delays for trickle-power operation
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        The Beautiful Benefits
-      </h2>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-bottom: var(--space-lg)">
-        <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius)">
-          <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: var(--color-accent)">
-            Compute Efficiency
-          </h4>
-          <ul style="font-size: 0.9rem">
-            <li style="margin-bottom: var(--space-sm)">Cheap analysis phase</li>
-            <li style="margin-bottom: var(--space-sm)">Human gate before expensive dev</li>
-            <li style="margin-bottom: var(--space-sm)">Focused development</li>
-            <li style="margin-bottom: var(--space-sm)">Overnight processing</li>
-          </ul>
-        </div>
-        <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius)">
-          <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: var(--color-accent)">
-            Quality Control
-          </h4>
-          <ul style="font-size: 0.9rem">
-            <li style="margin-bottom: var(--space-sm)">Tests written first (true TDD)</li>
-            <li style="margin-bottom: var(--space-sm)">Human validation</li>
-            <li style="margin-bottom: var(--space-sm)">Clear acceptance criteria</li>
-            <li style="margin-bottom: var(--space-sm)">Automated verification</li>
-          </ul>
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-bottom: var(--space-lg)">
-        <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius)">
-          <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: var(--color-accent)">
-            Agile Without Meetings
-          </h4>
-          <ul style="font-size: 0.9rem">
-            <li style="margin-bottom: var(--space-sm)">No sprint planning</li>
-            <li style="margin-bottom: var(--space-sm)">No daily standups</li>
-            <li style="margin-bottom: var(--space-sm)">No retrospectives</li>
-            <li style="margin-bottom: var(--space-sm)">No estimation</li>
-          </ul>
-        </div>
-        <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius)">
-          <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: var(--color-accent)">
-            Steampunk Reliability
-          </h4>
-          <ul style="font-size: 0.9rem">
-            <li style="margin-bottom: var(--space-sm)">File-based state</li>
-            <li style="margin-bottom: var(--space-sm)">Process isolation</li>
-            <li style="margin-bottom: var(--space-sm)">Graceful degradation</li>
-            <li style="margin-bottom: var(--space-sm)">Offline capable</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Safety and Rollback Strategy
-      </h2>
-
-      <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: #92400e">
-          The Overnight Safety Net:
-        </h4>
-        <ul style="margin-bottom: var(--space-md)">
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Before starting:</strong> Git commit checkpoint with stable tag
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>After development:</strong> Commit overnight work
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>If something went wrong:</strong> Reset to stable tag
-          </li>
-        </ul>
-      </div>
-
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md)">
-          Incremental Validation:
-        </h4>
-        <ul>
-          <li style="margin-bottom: var(--space-sm)">Each implementation includes its own tests</li>
-          <li style="margin-bottom: var(--space-sm)">Manual review before moving to production</li>
-          <li style="margin-bottom: var(--space-sm)">Rollback capability at every stage</li>
-          <li style="margin-bottom: var(--space-sm)">Version control for all artifacts</li>
-        </ul>
-      </div>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Ultimate Vision: Autonomous Dev Team
-      </h2>
-
-      <div style="background: #f0fdf4; border-left: 4px solid #16a34a; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: #15803d">
-          The End Goal:
-        </h4>
-        <p style="color: #166534; margin-bottom: var(--space-md)">
-          A self-managing development team that:
-        </p>
-        <ul style="color: #166534">
-          <li style="margin-bottom: var(--space-sm)">Processes your backlog while you sleep</li>
-          <li style="margin-bottom: var(--space-sm)">Produces tested, documented implementations</li>
-          <li style="margin-bottom: var(--space-sm)">Operates on minimal power (raspberry pi + solar panel)</li>
-          <li style="margin-bottom: var(--space-sm)">Never bricks your system (everything is reversible)</li>
-          <li style="margin-bottom: var(--space-sm)">Wakes you up with working code and clear status reports</li>
-        </ul>
-      </div>
-
-      <p style="margin-bottom: var(--space-lg)">
-        <strong>You remain the Product Owner</strong>, making strategic decisions
-        about what to build. The AI handles the tactical work of how to build it,
-        following your approved specifications exactly.
+      <p style="margin-bottom: var(--space-md)">
+        Before bed: review analyses, approve what looks good, reject what doesn't.
       </p>
-
-      <p style="margin-bottom: var(--space-lg)">
-        <strong>Pure steampunk engineering:</strong> Visible processes, replaceable
-        components, human oversight, and the beautiful simplicity of files and
-        scripts doing real work.
+      <p style="margin-bottom: var(--space-md)">
+        Overnight: kick off the development agent on low priority, trickle power. It processes approved items, runs tests, commits results.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Morning: check what got built. Run integration tests. Move good implementations to done, send problems back to analysis with notes.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The model swaps in and out to save memory. Rate limiting keeps power usage reasonable. Everything checkpointed so you can rollback if something goes wrong.
       </p>
     </section>
 
-    <section style="background: var(--color-surface); padding: var(--space-xl); border: 1px solid var(--color-border); border-radius: var(--border-radius); margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        The Morning Workflow
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Why this works
       </h2>
-      <ol style="margin-bottom: var(--space-md)">
-        <li style="margin-bottom: var(--space-sm)">
-          <strong>Check the morning report:</strong> See what got built overnight
-        </li>
-        <li style="margin-bottom: var(--space-sm)">
-          <strong>Review implementations:</strong> Browse the development directory
-        </li>
-        <li style="margin-bottom: var(--space-sm)">
-          <strong>Run integration tests:</strong> Verify new code works with existing system
-        </li>
-        <li style="margin-bottom: var(--space-sm)">
-          <strong>Approve good implementations:</strong> Move to done
-        </li>
-        <li style="margin-bottom: var(--space-sm)">
-          <strong>Fix issues:</strong> Add clarifications or send back to analysis
-        </li>
-        <li style="margin-bottom: var(--space-sm)">
-          <strong>Plan next night:</strong> Add new items to backlog
-        </li>
-      </ol>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Compute efficiency:</strong> Analysis is cheap. Human review is the gate before expensive development. Most bad ideas get killed early.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Quality:</strong> Tests written first means clear acceptance criteria. No "is this what you wanted?" conversations.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Rollback:</strong> Git checkpoint before overnight run, commit after. Something went wrong? Reset to stable tag.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Agile without meetings:</strong> No sprint planning, no standups, no estimation. Just a backlog and tests.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The goal
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        A self-managing development team that processes your backlog while you sleep. Tested implementations ready for review in the morning. Runs on a raspberry pi with a solar panel if you want.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        You stay the product owner - making decisions about what to build. The AI handles the mechanical work of how to build it, following your approved specifications.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Files and scripts doing real work.
+      </p>
     </section>
 
   </div>

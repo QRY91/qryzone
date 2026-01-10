@@ -1,328 +1,97 @@
 ---
 layout: base.njk
-title: Panopticron - Unified Project Monitoring Dashboard - qry.zone
-description: Case study on reducing incident response time with unified project monitoring for Vercel and GitHub CI
+title: Panopticron - qry.zone
+description: A monitoring dashboard for Vercel and GitHub CI, built to stop tab-switching
 ---
 
 <article class="article">
     <header class="article-header">
         <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block;">&larr; Back to Explore</a>
-        <h1>Panopticron: Unified Project Monitoring</h1>
-        <p class="article-subtitle">Reducing incident response time through consolidated visibility across Vercel and GitHub CI</p>
+        <h1>Panopticron</h1>
+        <p class="article-subtitle">Unified monitoring for Vercel deployments and GitHub CI</p>
     </header>
 
     <section>
-        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-xl); border: 1px solid var(--color-border);">
-            <h2 style="margin-bottom: var(--space-md);">The Core Research Question</h2>
-            <p style="font-size: 1.1rem; font-weight: 500; margin-bottom: var(--space-sm); font-style: italic;">
-                "What is the most efficient way to reduce the time between the first detection of an incident and the first steps to resolution of that incident?"
-            </p>
-            <p>
-                Panopticron answers this question through a unified monitoring dashboard built specifically for BornDigital's
-                digital project ecosystem. By consolidating Vercel deployment status, GitHub CI results, and project health
-                metrics into a single interface, the system transforms how development teams identify and respond to production issues.
-            </p>
-        </div>
-    </section>
-
-    <section>
-        <h2>Project Context: BornDigital</h2>
-
+        <h2>The problem</h2>
         <p>
-            Panopticron emerged from a practical need within BornDigital, a digital agency managing multiple client
-            projects across Vercel's deployment platform and GitHub's CI/CD infrastructure. The challenge was familiar
-            to any team managing a portfolio of web applications: critical information scattered across multiple dashboards,
-            delayed incident detection, and context-switching overhead that extended response times.
+            At BornDigital we had multiple client projects across Vercel and GitHub. Critical information lived in
+            different dashboards. When something broke, you'd find out late because nobody was constantly checking
+            four different tabs. Context-switching ate time.
         </p>
-
-        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
-            <h4 style="margin-bottom: var(--space-sm);">Key Objectives:</h4>
-            <ul>
-                <li><strong>Minimize Time-to-Detection:</strong> Surface critical issues immediately across all monitored projects</li>
-                <li><strong>Provide Actionable Context:</strong> Deliver the right information at the moment of discovery</li>
-                <li><strong>Streamline Workflow:</strong> Eliminate the need to constantly switch between Vercel, GitHub, and other tools</li>
-                <li><strong>Foster Shared Understanding:</strong> Ensure the entire team sees the same picture of project health</li>
-            </ul>
-        </div>
-    </section>
-
-    <section>
-        <h2>Technical Architecture</h2>
-
-        <h3>The Modern Stack</h3>
         <p>
-            Panopticron leverages a carefully selected technology stack designed for rapid development and real-time data handling:
-        </p>
-
-        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
-            <h4 style="margin-bottom: var(--space-sm);">Core Technologies:</h4>
-            <ul>
-                <li><strong>Refine (v4):</strong> Headless React framework providing data management, authentication, and CRUD scaffolding</li>
-                <li><strong>Next.js 14:</strong> App Router architecture for server components and optimal rendering strategies</li>
-                <li><strong>Material UI (v5):</strong> Comprehensive component library with theming support</li>
-                <li><strong>Supabase:</strong> PostgreSQL database with real-time subscriptions, authentication, and Row Level Security</li>
-                <li><strong>Vercel:</strong> Deployment platform with serverless functions for cron-based data synchronization</li>
-            </ul>
-        </div>
-
-        <h3>Three-Layer Data Architecture</h3>
-        <p>
-            The system operates on a three-layer data architecture that balances real-time responsiveness with API efficiency:
-        </p>
-
-        <ol>
-            <li><strong>Frontend Application:</strong> Next.js/Refine application handling user authentication, data presentation, and real-time UI updates</li>
-            <li><strong>Backend Datastore:</strong> Supabase stores aggregated project data, status snapshots, worker execution logs, and user approval state</li>
-            <li><strong>Data Synchronization Workers:</strong> Vercel cron jobs fetch data from external APIs (Vercel, GitHub) on configurable intervals</li>
-        </ol>
-    </section>
-
-    <section>
-        <h2>The LensCluster Visualization</h2>
-
-        <p>
-            At the heart of Panopticron's UI is the <strong>LensCluster</strong> - a fractal-inspired, high-density
-            visualization that provides at-a-glance status for each monitored project. This component exemplifies
-            the design philosophy of maximizing information density while maintaining visual clarity.
-        </p>
-
-        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
-            <h4 style="margin-bottom: var(--space-sm);">LensCluster Design Principles:</h4>
-            <ul>
-                <li><strong>Status-Driven Color Coding:</strong> Immediate visual differentiation between good (green), warning (yellow), error (red), and neutral states</li>
-                <li><strong>Hierarchical Information:</strong> Three primary "lenses" (76px) show critical integrations; four secondary lenses (32px) provide supplementary status</li>
-                <li><strong>Clickable Context:</strong> Each lens links directly to the relevant external dashboard (Vercel deployment, GitHub Actions)</li>
-                <li><strong>Theme Awareness:</strong> Colors adapt across multiple theme variants (Zenburn, Dracula, Gruvbox, Nord, Catppuccin, Solarized)</li>
-            </ul>
-        </div>
-
-        <h3>Lens Component Architecture</h3>
-        <p>
-            Individual lenses support multiple content configurations beyond simple status indicators:
-        </p>
-        <ul>
-            <li><strong>Icon + Status:</strong> Basic visual indicator with tooltip context</li>
-            <li><strong>Value Display:</strong> Numeric metrics with optional units</li>
-            <li><strong>Trend Indicators:</strong> Directional arrows showing improvement or degradation</li>
-            <li><strong>Loading States:</strong> Graceful handling of in-flight API requests</li>
-        </ul>
-
-        <p>
-            The 164px LensCluster frame maintains consistent sizing regardless of content, providing visual stability
-            across the dashboard's project grid.
+            Panopticron puts everything in one place. Deployment status, CI results, project health - one screen.
         </p>
     </section>
 
     <section>
-        <h2>Real-Time Status Integration</h2>
-
-        <h3>Vercel Deployment Monitoring</h3>
+        <h2>The stack</h2>
         <p>
-            The <code>useVercelLens</code> hook encapsulates all Vercel API interaction logic, providing:
+            <strong>Refine (v4)</strong> for data management and CRUD scaffolding. <strong>Next.js 14</strong> app router
+            for the frontend. <strong>Material UI</strong> for components with multiple color themes. <strong>Supabase</strong>
+            for the database with real-time subscriptions. Deployed on <strong>Vercel</strong> with cron jobs for data sync.
         </p>
-        <ul>
-            <li>Real-time deployment state (READY, BUILDING, QUEUED, ERROR)</li>
-            <li>Production URL resolution for direct site access</li>
-            <li>Fallback to database-cached status when API calls fail</li>
-            <li>Showcase mode support for demonstration purposes</li>
-        </ul>
-
-        <h3>GitHub CI Integration</h3>
         <p>
-            The <code>useGitHubLens</code> hook monitors CI/CD pipeline health:
-        </p>
-        <ul>
-            <li>Workflow run status (success, failure, in_progress, pending)</li>
-            <li>Default branch awareness for accurate main-line status</li>
-            <li>Direct links to GitHub Actions run details</li>
-            <li>Graceful handling of repositories without CI configuration</li>
-        </ul>
-
-        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
-            <h4 style="margin-bottom: var(--space-sm);">Data Synchronization Strategy:</h4>
-            <p>
-                Backend workers execute on 30-minute cron intervals, maintaining a balance between data freshness
-                and API rate limit conservation. The <code>WorkerLogger</code> utility provides standardized
-                execution logging to the <code>worker_runs</code> table, enabling operational monitoring through
-                the authenticated <code>/status</code> page.
-            </p>
-        </div>
-    </section>
-
-    <section>
-        <h2>Manual Override System</h2>
-
-        <p>
-            Automated priority scoring sometimes requires human judgment. Panopticron's manual override system
-            allows administrators to explicitly adjust project priority without disrupting the underlying
-            calculated scores.
-        </p>
-
-        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
-            <h4 style="margin-bottom: var(--space-sm);">Priority System Features:</h4>
-            <ul>
-                <li><strong>Calculated Priority Score:</strong> Derived from deployment status, CI health, and configurable weights</li>
-                <li><strong>Manual Priority Override:</strong> Administrator-set value that supersedes calculated score</li>
-                <li><strong>Priority History Tracking:</strong> Database triggers record score changes for audit and analysis</li>
-                <li><strong>Visual Indicator:</strong> Overridden projects display a distinct icon to signal human intervention</li>
-            </ul>
-        </div>
-
-        <p>
-            The override system reflects a core design principle: automation should augment human decision-making,
-            not replace it. When the calculated priority doesn't align with operational reality, operators can
-            intervene directly.
+            Backend workers poll Vercel and GitHub every 30 minutes. Results get cached in Supabase. The frontend reads
+            from the cache, so it loads fast and doesn't hammer external APIs.
         </p>
     </section>
 
     <section>
-        <h2>Dashboard Views</h2>
-
-        <h3>Unified Project Dashboard (/projects)</h3>
+        <h2>LensCluster visualization</h2>
         <p>
-            The primary view presents all monitored projects in a paginated, filterable grid. Each project card
-            combines the LensCluster visualization with:
+            Each project shows as a cluster of colored circles - green/yellow/red for status. Three big circles (76px)
+            for critical integrations, four smaller ones (32px) for secondary status. Click any lens and it opens the
+            relevant external page.
         </p>
-        <ul>
-            <li>Project name and production domain link</li>
-            <li>Last updated timestamp</li>
-            <li>Mini sparkline showing priority trend</li>
-            <li>Expandable details section with deployment and CI specifics</li>
-        </ul>
-
-        <h3>High-Density Dashboard (/dashboard)</h3>
         <p>
-            Designed for "wall display" scenarios, this view maximizes project count per screen through a compact
-            table layout with:
-        </p>
-        <ul>
-            <li>Ticker tape alerts for deployments, CI status, and general notifications</li>
-            <li>Advanced filtering by Vercel status, GitHub CI status, and framework</li>
-            <li>Expandable rows for drilling into individual project details</li>
-            <li>Pagination for managing large project portfolios</li>
-        </ul>
-    </section>
-
-    <section>
-        <h2>Philosophy: Working with the Garage Door Open</h2>
-
-        <p>
-            Panopticron embodies a commitment to transparent development, inspired by Robin Sloan's observation
-            about visible work in physical spaces:
-        </p>
-
-        <blockquote style="border-left: 4px solid var(--color-accent); padding-left: var(--space-md); margin: var(--space-lg) 0; font-style: italic; color: var(--color-text-secondary);">
-            "Part of the problem of social media is that there is no equivalent to the scientific glassblowers' sign,
-            or the woodworker's open door... If you could put on magic internet goggles that enabled you to see
-            through this gnarly selection bias and view the composition of reality fairly, correctly - well, just
-            come walk around Emeryville and West Berkeley. It would look like that! All the tumult of Twitter would
-            shrink into a single weird cafe - just a speck, in an enormous city made up entirely of people quietly working."
-            <footer style="font-style: normal; margin-top: var(--space-sm);">- Robin Sloan</footer>
-        </blockquote>
-
-        <p>
-            The system's public patch notes page and philosophy documentation reflect this ethos - sharing progress,
-            learnings, and challenges openly benefits both the immediate team and the broader development community.
+            The design goal was maximum information density. You open the dashboard and see immediately: these projects
+            are fine, these need attention. No reading text, just colors.
         </p>
     </section>
 
     <section>
-        <h2>User Management & Security</h2>
-
-        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
-            <h4 style="margin-bottom: var(--space-sm);">Access Control Model:</h4>
-            <ul>
-                <li><strong>Email-based Registration:</strong> Standard signup flow with password requirements</li>
-                <li><strong>Manual Admin Approval:</strong> New users require explicit administrator approval before accessing project data</li>
-                <li><strong>Row Level Security:</strong> Supabase RLS policies ensure users only access authorized data</li>
-                <li><strong>Password Reset Flow:</strong> Complete email-based recovery with proper redirect handling</li>
-            </ul>
-        </div>
-
+        <h2>Manual overrides</h2>
         <p>
-            The manual approval workflow reflects the internal nature of the tool - Panopticron monitors
-            potentially sensitive client project data, requiring explicit verification of new team members.
+            Automated scoring doesn't always match reality. Sometimes a project needs attention for reasons the
+            system can't detect. Admins can override the calculated priority - the override is visible (distinct icon)
+            so it's clear when a human intervened.
+        </p>
+        <p>
+            Automation should support decisions, not replace them.
         </p>
     </section>
 
     <section>
-        <h2>Key Technical Decisions</h2>
-
-        <h3>Why Refine?</h3>
+        <h2>Two views</h2>
         <p>
-            Refine's headless architecture provides data management primitives (useList, useCreate, useUpdate)
-            without imposing UI constraints. This allowed rapid dashboard development while maintaining full
-            control over visual design and theming.
+            <strong>/projects</strong> - The main view. Paginated grid of project cards with LensCluster,
+            last updated time, priority trend sparkline, expandable details.
         </p>
-
-        <h3>Why Supabase over Direct API Calls?</h3>
         <p>
-            Caching external API responses in Supabase provides several advantages:
-        </p>
-        <ul>
-            <li>API rate limit management through controlled polling intervals</li>
-            <li>Historical data retention for trend analysis</li>
-            <li>Faster dashboard rendering from cached data</li>
-            <li>Resilience during external service outages</li>
-        </ul>
-
-        <h3>Why Material UI?</h3>
-        <p>
-            MUI's comprehensive component library accelerated development while supporting extensive theming.
-            The multiple color theme variants (6+ dark and light modes) demonstrate the flexibility this choice provided.
+            <strong>/dashboard</strong> - High-density table for wall displays. Ticker tape alerts, advanced
+            filtering, expandable rows. Maximizes project count per screen.
         </p>
     </section>
 
     <section>
-        <h2>Results & Impact</h2>
-
-        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
-            <h4 style="margin-bottom: var(--space-sm);">Operational Improvements:</h4>
-            <ul>
-                <li><strong>Single Pane of Glass:</strong> Eliminated constant tab-switching between Vercel and GitHub dashboards</li>
-                <li><strong>Faster Incident Detection:</strong> LensCluster visualization surfaces problems within seconds of opening the dashboard</li>
-                <li><strong>Reduced Context Loss:</strong> Direct links from status indicators to relevant external pages preserve cognitive flow</li>
-                <li><strong>Team Alignment:</strong> Shared dashboard ensures everyone sees the same project health status</li>
-            </ul>
-        </div>
+        <h2>Why Supabase instead of direct API calls?</h2>
+        <p>
+            Rate limits. Historical data. Faster rendering. Resilience when external services go down.
+            The caching layer solves multiple problems.
+        </p>
     </section>
 
     <section>
-        <h2>Future Directions</h2>
-
-        <ul>
-            <li><strong>Project Detail Page:</strong> Dedicated deep-dive view for individual project analytics</li>
-            <li><strong>Enhanced Analytics Integration:</strong> Additional lens types for error rates, performance metrics</li>
-            <li><strong>Notification System:</strong> Push alerts for critical status changes</li>
-            <li><strong>In-App User Management:</strong> Admin UI for approving users without direct database access</li>
-        </ul>
+        <h2>Results</h2>
+        <p>
+            No more tab-switching between Vercel and GitHub. Problems surface immediately when you open the dashboard.
+            Direct links from status indicators preserve cognitive flow. Everyone sees the same picture.
+        </p>
     </section>
 
-    <section>
-        <h2>Key Takeaways</h2>
-
-        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); border: 1px solid var(--color-border);">
-            <ul>
-                <li><strong>Information density requires thoughtful design:</strong> The LensCluster succeeds because it prioritizes the most critical data points visually</li>
-                <li><strong>Caching external APIs improves resilience:</strong> The Supabase-backed approach handles external service issues gracefully</li>
-                <li><strong>Manual overrides preserve human judgment:</strong> Automated systems should support, not replace, operator expertise</li>
-                <li><strong>Transparent development builds trust:</strong> Public documentation of philosophy and progress creates accountability</li>
-                <li><strong>Modern stacks enable rapid iteration:</strong> Refine + Next.js + Supabase delivered production-ready functionality quickly</li>
-            </ul>
-        </div>
-    </section>
-
-    <footer class="article-footer">
-        <h3 style="margin-bottom: var(--space-md);">Related Documentation</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-md);">
-            <a href="/hidden/workshop/microstudio-context" style="display: block; padding: var(--space-md); background: var(--color-surface); border-radius: var(--border-radius); text-decoration: none; border: 1px solid var(--color-border);">
-                <h4 style="color: var(--color-accent); margin-bottom: var(--space-xs);">Microstudio Context</h4>
-                <p style="font-size: 0.9rem; color: var(--color-text-secondary);">Development philosophy and systematic approach to building tools</p>
-            </a>
-            <a href="/hidden/workshop/microstudio-project-ecosystem" style="display: block; padding: var(--space-md); background: var(--color-surface); border-radius: var(--border-radius); text-decoration: none; border: 1px solid var(--color-border);">
-                <h4 style="color: var(--color-accent); margin-bottom: var(--space-xs);">Project Ecosystem</h4>
-                <p style="font-size: 0.9rem; color: var(--color-text-secondary);">How Panopticron fits within the broader tool portfolio</p>
-            </a>
-        </div>
+    <footer class="article-footer" style="margin-top: var(--space-xxl);">
+        <p style="color: var(--color-text-secondary); font-size: 0.9rem;">
+            Built at BornDigital for internal use.
+        </p>
     </footer>
 </article>

@@ -1,7 +1,7 @@
 ---
 layout: base.njk
-title: Minimal Steampunk POC - qry.zone
-description: Proving overnight AI development works on a Raspberry Pi 3 with zero cloud dependencies and optional solar power
+title: RPi 3 Morning Digest - qry.zone
+description: Testing overnight AI processing on hardware you already own
 ---
 
 <article class="article">
@@ -12,342 +12,67 @@ description: Proving overnight AI development works on a Raspberry Pi 3 with zer
         &larr; Back to Explore
       </a>
       <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
-        Minimal Steampunk POC
+        RPi 3 Morning Digest
       </h1>
       <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
-        Proving overnight AI development works on a Raspberry Pi 3 with zero
-        cloud dependencies and optional solar power.
+        Before buying dedicated AI hardware, find out if overnight processing is actually useful. A Raspberry Pi 3, some scripts, and a cron job can answer that question for free.
       </p>
     </div>
 
     <section style="margin-bottom: var(--space-xxl)">
-      <div style="background: #e0f2fe; border-left: 4px solid #0284c7; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-xl)">
-        <h2 style="font-size: 1.3rem; font-weight: 600; color: #0369a1; margin-bottom: var(--space-md); font-family: var(--font-mono)">
-          The Zero-Cost Validation Thesis
-        </h2>
-        <p style="color: #0c4a6e">
-          Before investing in dedicated AI hardware, there is a simpler
-          question: can overnight AI processing deliver real value using
-          hardware you already own? A Raspberry Pi 3, some shell scripts, and
-          a cron job can answer this question definitively--at zero cost.
-        </p>
-      </div>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Local AI on Minimal Hardware
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Slow is fine when you're sleeping
       </h2>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        The RPi 3 as AI Platform
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        The Raspberry Pi 3 is often dismissed as too weak for AI work. This
-        dismissal reveals a bias toward real-time inference--the assumption
-        that AI must respond in seconds. But overnight processing inverts this
-        constraint entirely. When you have eight hours instead of eight
-        seconds, even slow inference becomes practical.
-      </p>
-
-      <div style="background: #f0fdf4; border-left: 4px solid #16a34a; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: #15803d">
-          Model Performance on RPi 3:
-        </h4>
-        <ul style="margin-bottom: var(--space-md)">
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>TinyLlama (637MB):</strong> 30-60 seconds per response,
-            basic quality
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Phi (1.6GB):</strong> 60-120 seconds per response, good
-            quality (requires swap)
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Orca-mini (1.9GB):</strong> 120+ seconds per response,
-            better quality
-          </li>
-        </ul>
-        <p style="color: #166534; font-style: italic">
-          At these speeds, a morning digest taking 5-10 minutes to generate is
-          entirely acceptable. The Pi processes while you sleep.
-        </p>
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Hardware Requirements
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        The entire POC runs on hardware most developers already have: any
-        Raspberry Pi 3 variant, a 16GB+ microSD card, standard USB power, and
-        network connectivity. An external USB drive is recommended for model
-        storage but not required. Heat sinks help for 24/7 operation but cost
-        under $5.
-      </p>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        File-Based Workflows
-      </h2>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        The Unix Philosophy Applied
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        The morning digest system exemplifies file-based AI workflows. Input
-        comes from the filesystem--system status, project files, TODO markers.
-        Output goes to timestamped markdown files. Everything is inspectable,
-        debuggable, and scriptable.
-      </p>
-
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-          What the Morning Digest Collects:
-        </h4>
-        <ul>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>System status:</strong> Uptime, memory, disk usage, load
-            averages
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Weather data:</strong> Fetched from wttr.in if internet is
-            available
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>AI insights:</strong> Locally generated motivation and
-            productivity tips
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Project status:</strong> Recently changed files, git
-            commits from the last 24 hours
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>TODO inventory:</strong> Scan for TODO, FIXME, and HACK
-            comments
-          </li>
-        </ul>
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Why File-Based Wins
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        When AI processing produces files rather than streaming responses,
-        debugging becomes trivial. Generation logs capture timing and errors.
-        Output files can be diffed against previous days. The entire workflow
-        can be tested without waiting for AI inference by substituting mock
-        responses.
-      </p>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Cron-Based Morning Digest
-      </h2>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        The Simplest Scheduler
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        Cron is a forty-year-old technology that still works perfectly for
-        scheduled AI work. A single line in crontab triggers the morning
-        digest script at 3 AM. No container orchestration, no job queues, no
-        cloud schedulers. Just Unix doing what Unix does.
-      </p>
-
-      <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: #92400e">
-          Automation Reliability:
-        </h4>
-        <ul style="margin-bottom: var(--space-md)">
-          <li style="margin-bottom: var(--space-sm)">
-            Cron has run reliably on Unix systems since 1975
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            No daemon management beyond systemctl enable cron
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            Failure modes are well-understood and logged
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            Recovery is simple: check logs, fix script, wait for next run
-          </li>
-        </ul>
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        The Wake-Up Experience
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        The goal is experiential validation. You go to sleep knowing your Pi
-        will think about your projects overnight. You wake up to a fresh
-        markdown file waiting. Either this becomes a habit you value, or it
-        reveals that overnight AI processing does not fit your workflow. Both
-        outcomes are useful data.
-      </p>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Solar Power Option
-      </h2>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Off-Grid AI for $65
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        The optional solar setup demonstrates that local AI can run entirely
-        off-grid. A 20W panel, 12V 7Ah battery, USB car charger, and PWM
-        charge controller totals roughly $65. This is not about environmentalism--it is
-        about proving that AI development can happen with complete infrastructure
-        independence.
-      </p>
-
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-          Power Math:
-        </h4>
-        <ul>
-          <li style="margin-bottom: var(--space-sm)">
-            RPi 3 daily consumption: 3W average x 24h = 72Wh
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            20W panel in 4 hours of sun = 80Wh
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            7Ah battery at 12V = 84Wh storage
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            Result: Self-sustaining with minimal sunlight
-          </li>
-        </ul>
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Why This Matters
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        Solar power makes the system truly autonomous. No monthly hosting
-        bills. No API rate limits. No cloud provider can deprecate your local
-        Ollama instance. The system becomes a piece of infrastructure you
-        fully own and control--the steampunk ideal realized.
-      </p>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Zero-Cost Validation
-      </h2>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        The Four-Week Proof
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        The POC is structured as a four-week progression. Week one focuses on
-        basic Ollama setup and manual AI generation. Week two builds the
-        morning digest script. Week three adds cron automation and monitors
-        stability. Week four optimizes and experiments with larger models.
-      </p>
-
-      <div style="background: #f0fdf4; border-left: 4px solid #16a34a; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md); color: #15803d">
-          Success Criteria:
-        </h4>
-        <ul style="margin-bottom: var(--space-md)">
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Technical:</strong> System operates 7+ days without manual
-            intervention
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Value:</strong> You actually read the digest each morning
-            and find it useful
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Ownership:</strong> You understand every component and can
-            debug failures
-          </li>
-          <li style="margin-bottom: var(--space-sm)">
-            <strong>Desire:</strong> You want to expand the system's
-            capabilities
-          </li>
-        </ul>
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        What Success Proves
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        If the POC succeeds, you have validated overnight AI development using
-        only existing hardware. The upgrade path becomes clear: better
-        hardware (RPi 5 with 8GB RAM), larger models (7B parameters), more
-        sophisticated workflows (multi-agent analysis). But now you are
-        investing based on proven value rather than theoretical potential.
-      </p>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        The Steampunk Principle
-      </h2>
-
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-          Complete Understanding
-        </h3>
-        <p style="margin-bottom: var(--space-md)">
-          Every component of this system is inspectable. The bash script is
-          thirty lines you can read. The cron job is one line. Ollama is open
-          source. The models are downloadable weights. There are no black
-          boxes, no opaque APIs, no cloud services that could change their
-          terms or pricing.
-        </p>
-        <p style="margin-bottom: var(--space-md)">
-          When something breaks--and it will--you can debug it. Check the
-          generation log. Verify Ollama is running. Test the model manually.
-          Examine cron logs. Every failure mode is visible and fixable.
-        </p>
-      </div>
-
-      <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-          Scaling From First Principles
-        </h3>
-        <p style="margin-bottom: var(--space-md)">
-          The POC proves principles that scale. File-based workflows work the
-          same on a Pi as on a server cluster. Cron scheduling patterns apply
-          whether you are running TinyLlama or a 70B model. The morning digest
-          concept extends naturally to code review, documentation generation,
-          test analysis.
-        </p>
-        <p style="margin-bottom: var(--space-md)">
-          Starting minimal forces you to understand what actually matters.
-          Cloud AI services hide complexity behind APIs. Running your own
-          models reveals what AI actually requires: storage for weights,
-          memory for inference, time for generation. This understanding
-          becomes invaluable when designing larger systems.
-        </p>
-      </div>
-    </section>
-
-    <section style="background: var(--color-surface); padding: var(--space-xl); border: 1px solid var(--color-border); border-radius: var(--border-radius); margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        The Overnight Promise
-      </h2>
-      <div style="background: #2f2f1f; border: 1px dashed #7f7f5f; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-md); font-style: italic; color: var(--color-text-secondary)">
-        "Free local AI compute with hardware you already own. That's pure
-        steampunk engineering."
-      </div>
       <p style="margin-bottom: var(--space-md)">
-        The minimal steampunk POC asks a simple question: does overnight AI
-        processing provide value you care about? Four weeks and zero dollars
-        later, you will have an answer. If yes, the path forward is clear. If
-        no, you have learned something important without spending anything on
-        hardware you would not use.
+        The Raspberry Pi 3 gets dismissed as too weak for AI work. That's because people assume AI needs to respond in seconds. But when you have eight hours instead of eight seconds, even slow inference works.
       </p>
-      <p>
-        Either way, you will sleep well knowing your RPi 3 is cranking out
-        your morning digest.
+      <p style="margin-bottom: var(--space-md)">
+        TinyLlama (637MB) takes 30-60 seconds per response on a Pi 3. Phi (1.6GB) takes 60-120 seconds and needs swap space. These speeds are useless for chat. They're fine for overnight batch processing.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The morning digest
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        A cron job runs at 3 AM. It collects system status, scans projects for TODOs and recent git commits, fetches weather data, and asks a local model to generate a summary. By morning there's a markdown file waiting.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The script is thirty lines of bash. The cron entry is one line. Ollama runs the model. Everything is files you can inspect and debug.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        When something breaks - and it will - you check the generation log, verify ollama is running, test the model manually, look at cron logs. Every failure mode is visible.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Optional: off-grid for $65
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        A Pi 3 draws about 3W average. A 20W solar panel, 12V battery, and charge controller run about $65 total. Four hours of sun generates 80Wh. Daily consumption is ~72Wh. The math works.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        This isn't about environmentalism. It's about proving that AI processing can happen with zero infrastructure dependencies. No hosting bills, no API limits, no cloud provider can deprecate your local ollama instance.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Four weeks to find out
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        Week one: get ollama running, generate some responses manually. Week two: build the morning digest script. Week three: add cron, watch stability. Week four: optimize and try larger models.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Success means: it runs for a week without intervention, you actually read the digest each morning, you understand every component well enough to fix it, and you want to expand it.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        If it works, the upgrade path is clear: better hardware (Pi 5 with 8GB), larger models (7B parameters), more sophisticated workflows. But now you're investing based on proven value instead of theoretical potential.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        If it doesn't work, you learned something useful without spending money on hardware you wouldn't use.
       </p>
     </section>
 
