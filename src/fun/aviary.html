@@ -514,7 +514,7 @@ permalink: /fun/aviary/
                     <div class="track-emoji">🌅</div>
                     <div class="track-details">
                         <div class="track-name">Morning Chorus</div>
-                        <div class="track-description">Mixed dawn birdsong</div>
+                        <div class="track-description">Mixed garden birdsong</div>
                     </div>
                 </div>
                 <div class="track-item" data-track="robin-song">
@@ -545,18 +545,18 @@ permalink: /fun/aviary/
                         <div class="track-description">Rich, flute-like song</div>
                     </div>
                 </div>
-                <div class="track-item" data-track="song-thrush">
-                    <div class="track-emoji">🎵</div>
+                <div class="track-item" data-track="bluebird">
+                    <div class="track-emoji">💙</div>
                     <div class="track-details">
-                        <div class="track-name">Song Thrush</div>
-                        <div class="track-description">Repeated melodic phrases</div>
+                        <div class="track-name">Eastern Bluebird</div>
+                        <div class="track-description">Soft, melodious warble</div>
                     </div>
                 </div>
-                <div class="track-item" data-track="nightingale">
-                    <div class="track-emoji">🌙</div>
+                <div class="track-item" data-track="chaffinch">
+                    <div class="track-emoji">🎵</div>
                     <div class="track-details">
-                        <div class="track-name">Nightingale</div>
-                        <div class="track-description">Complex, powerful song</div>
+                        <div class="track-name">Common Chaffinch</div>
+                        <div class="track-description">Lively descending song</div>
                     </div>
                 </div>
             </div>
@@ -640,44 +640,44 @@ permalink: /fun/aviary/
             const tracks = {
                 "morning-chorus": {
                     name: "Morning Chorus",
-                    description: "Mixed dawn birdsong",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/4/40/Birdsong_in_Tennessee_-_early_morning_-_2020-05-30.ogg",
+                    description: "Mixed garden birdsong",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/8/80/Birds_singing_in_garden.ogg",
                     synthConfig: { baseFreq: 2000, variance: 800, tempo: 0.15 },
                 },
                 "robin-song": {
                     name: "European Robin",
                     description: "Sweet, warbling melody",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/4/45/Erithacus_rubecula_-_song.ogg",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/8/8d/Erithacus_rubecula.ogg",
                     synthConfig: { baseFreq: 2800, variance: 600, tempo: 0.12 },
                 },
                 "cardinal-call": {
                     name: "Northern Cardinal",
                     description: "Bright whistling calls",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Cardinalis_cardinalis_-_Northern_Cardinal_-_XC110317.ogg",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Northern_Cardinal.ogg",
                     synthConfig: { baseFreq: 3200, variance: 1000, tempo: 0.2 },
                 },
                 "great-tit": {
                     name: "Great Tit",
                     description: "Cheerful two-note song",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Parus_major_2_-_song.ogg",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/d/df/Parus_major.ogg",
                     synthConfig: { baseFreq: 3500, variance: 500, tempo: 0.25 },
                 },
                 "blackbird": {
                     name: "Common Blackbird",
                     description: "Rich, flute-like song",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Turdus_merula_2_-_song.ogg",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Turdus_merula.ogg",
                     synthConfig: { baseFreq: 1800, variance: 700, tempo: 0.18 },
                 },
-                "song-thrush": {
-                    name: "Song Thrush",
-                    description: "Repeated melodic phrases",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Song_Thrush_song_LOMA2.ogg",
+                "bluebird": {
+                    name: "Eastern Bluebird",
+                    description: "Soft, melodious warble",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Sialia_sialis_-_Eastern_Bluebird_-_XC79976.ogg",
                     synthConfig: { baseFreq: 2600, variance: 900, tempo: 0.14 },
                 },
-                "nightingale": {
-                    name: "Nightingale",
-                    description: "Complex, powerful song",
-                    url: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Luscinia_megarhynchos_-_song.ogg",
+                "chaffinch": {
+                    name: "Common Chaffinch",
+                    description: "Lively descending song",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Fringilla_coelebs.ogg",
                     synthConfig: { baseFreq: 2200, variance: 1000, tempo: 0.1 },
                 },
             };
@@ -862,7 +862,6 @@ permalink: /fun/aviary/
 
                 // Try to load the audio file
                 state.audioElement = new Audio();
-                state.audioElement.crossOrigin = "anonymous";
                 state.audioElement.volume = state.volume;
                 state.audioElement.loop = true;
 
