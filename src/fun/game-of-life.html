@@ -1,0 +1,757 @@
+---
+layout: false
+permalink: /fun/game-of-life/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Conway's Game of Life with qry.zone logo as cells" />
+        <title>Game of Life</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --bg-deep: #3f3f3f;
+                --bg-surface: #4a4a4a;
+                --bg-elevated: #525252;
+                --accent: #f0dfaf;
+                --accent-dim: rgba(240, 223, 175, 0.3);
+                --text-primary: #dcdccc;
+                --text-secondary: #8c8c8c;
+                --border: #5a5a5a;
+            }
+
+            body {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-deep);
+                color: var(--text-primary);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .back-link {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                color: var(--accent);
+                text-decoration: none;
+                font-size: 0.85rem;
+                z-index: 100;
+                transition: all 0.2s ease;
+            }
+
+            .back-link:hover {
+                border-color: var(--accent);
+            }
+
+            .top-btn {
+                position: fixed;
+                top: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: 4px;
+                color: var(--accent);
+                font-size: 1rem;
+                cursor: pointer;
+                z-index: 100;
+                transition: all 0.2s ease;
+            }
+
+            .top-btn:hover {
+                border-color: var(--accent);
+            }
+
+            .help-btn {
+                right: 1rem;
+            }
+
+            .fullscreen-btn {
+                right: 4rem;
+            }
+
+            /* Fullscreen mode */
+            body.fullscreen .game-header,
+            body.fullscreen .controls,
+            body.fullscreen .back-link {
+                display: none;
+            }
+
+            body.fullscreen .canvas-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                padding: 0;
+            }
+
+            body.fullscreen #gameCanvas {
+                border: none;
+            }
+
+            body.fullscreen .top-btn {
+                background: rgba(63, 63, 63, 0.8);
+            }
+
+            .game-header {
+                text-align: center;
+                padding: 2rem 1rem 1rem;
+                padding-top: 4rem;
+            }
+
+            .game-title {
+                font-size: clamp(1.5rem, 5vw, 2rem);
+                font-weight: 500;
+                color: var(--accent);
+                margin-bottom: 0.5rem;
+            }
+
+            .stats-bar {
+                display: flex;
+                justify-content: center;
+                gap: 2rem;
+                flex-wrap: wrap;
+                font-size: 0.85rem;
+                margin-bottom: 1rem;
+            }
+
+            .stat {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .stat-label {
+                color: var(--text-secondary);
+            }
+
+            .stat-value {
+                color: var(--accent);
+            }
+
+            .canvas-container {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 1rem;
+                min-height: 300px;
+            }
+
+            #gameCanvas {
+                border: 1px solid var(--border);
+                cursor: crosshair;
+                max-width: 100%;
+                touch-action: none;
+            }
+
+            .controls {
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .control-row {
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+            }
+
+            button {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-elevated);
+                border: 1px solid var(--accent-dim);
+                color: var(--text-primary);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                transition: all 0.2s ease;
+            }
+
+            button:hover {
+                border-color: var(--accent);
+                background: rgba(240, 223, 175, 0.1);
+            }
+
+            button.primary {
+                background: rgba(240, 223, 175, 0.15);
+                border-color: var(--accent);
+                color: var(--accent);
+                min-width: 100px;
+            }
+
+            button.primary:hover {
+                background: rgba(240, 223, 175, 0.25);
+            }
+
+            .speed-control {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .speed-control input[type="range"] {
+                width: 100px;
+                accent-color: var(--accent);
+            }
+
+            .speed-label {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+                min-width: 50px;
+            }
+
+            .patterns-label {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+                margin-right: 0.25rem;
+            }
+
+            /* Modal */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 200;
+                padding: 1rem;
+            }
+
+            .modal-overlay.show {
+                display: flex;
+            }
+
+            .modal {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                max-width: 500px;
+                width: 100%;
+                max-height: 80vh;
+                overflow-y: auto;
+                padding: 1.5rem;
+            }
+
+            .modal h2 {
+                color: var(--accent);
+                margin-bottom: 1rem;
+                font-size: 1.25rem;
+            }
+
+            .modal p {
+                color: var(--text-secondary);
+                line-height: 1.6;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .modal ul {
+                color: var(--text-secondary);
+                margin-left: 1.5rem;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+
+            .modal-close {
+                margin-top: 1rem;
+                width: 100%;
+            }
+
+            @media (max-width: 480px) {
+                .control-row {
+                    gap: 0.4rem;
+                }
+                button {
+                    padding: 0.4rem 0.6rem;
+                    font-size: 0.75rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">← back</a>
+        <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">⛶</button>
+        <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+        <header class="game-header">
+            <h1 class="game-title">Game of Life</h1>
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Gen:</span>
+                    <span class="stat-value" id="generation">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Pop:</span>
+                    <span class="stat-value" id="population">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label" id="statusLabel">Paused</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="canvas-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <div class="controls">
+            <div class="control-row">
+                <button class="primary" id="playPauseBtn">Play</button>
+                <button id="stepBtn">Step</button>
+                <button id="clearBtn">Clear</button>
+                <button id="randomBtn">Random</button>
+            </div>
+            <div class="control-row">
+                <div class="speed-control">
+                    <span class="speed-label">Speed:</span>
+                    <input type="range" id="speedSlider" min="20" max="500" value="100">
+                </div>
+            </div>
+            <div class="control-row">
+                <span class="patterns-label">Patterns:</span>
+                <button data-pattern="glider">Glider</button>
+                <button data-pattern="blinker">Blinker</button>
+                <button data-pattern="lwss">Spaceship</button>
+                <button data-pattern="pulsar">Pulsar</button>
+                <button data-pattern="gosper">Gosper Gun</button>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal-overlay" id="helpModal">
+            <div class="modal">
+                <h2>Conway's Game of Life</h2>
+                <p>A cellular automaton where cells live or die based on their neighbors.</p>
+                <p><strong>Rules:</strong></p>
+                <ul>
+                    <li>A live cell with 2 or 3 neighbors survives</li>
+                    <li>A dead cell with exactly 3 neighbors becomes alive</li>
+                    <li>All other cells die or stay dead</li>
+                </ul>
+                <p><strong>Controls:</strong></p>
+                <ul>
+                    <li>Click or drag to draw cells</li>
+                    <li>Play/Pause to run the simulation</li>
+                    <li>Step to advance one generation</li>
+                    <li>Use pattern buttons to place classic shapes</li>
+                </ul>
+                <p><strong>Keyboard:</strong></p>
+                <ul>
+                    <li><strong>F</strong> - Toggle fullscreen</li>
+                    <li><strong>Space</strong> - Play/Pause</li>
+                    <li><strong>S</strong> - Step (when paused)</li>
+                    <li><strong>C</strong> - Clear grid</li>
+                    <li><strong>R</strong> - Random fill</li>
+                    <li><strong>Esc</strong> - Exit fullscreen</li>
+                </ul>
+                <button class="modal-close" id="closeHelp">Got it</button>
+            </div>
+        </div>
+
+        <script>
+            // Configuration
+            const CELL_SIZE = window.innerWidth < 600 ? 12 : 16;
+            const GHOST_DURATION = 5; // generations to fade out
+
+            // State
+            let gridWidth, gridHeight;
+            let grid = [];
+            let nextGrid = [];
+            let ghostCells = new Map(); // "x,y" -> remaining opacity (0-1)
+            let generation = 0;
+            let population = 0;
+            let running = false;
+            let speed = 100;
+            let lastUpdate = 0;
+
+            // Canvas
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Logo image
+            const logoImage = new Image();
+            let logoLoaded = false;
+            logoImage.onload = () => {
+                logoLoaded = true;
+                render();
+            };
+            logoImage.src = '/assets/images/logo_burn.png';
+
+            // Patterns
+            const PATTERNS = {
+                glider: [[1,0], [2,1], [0,2], [1,2], [2,2]],
+                blinker: [[0,0], [1,0], [2,0]],
+                lwss: [[1,0], [4,0], [0,1], [0,2], [4,2], [0,3], [1,3], [2,3], [3,3]],
+                pulsar: [
+                    [2,0], [3,0], [4,0], [8,0], [9,0], [10,0],
+                    [0,2], [5,2], [7,2], [12,2],
+                    [0,3], [5,3], [7,3], [12,3],
+                    [0,4], [5,4], [7,4], [12,4],
+                    [2,5], [3,5], [4,5], [8,5], [9,5], [10,5],
+                    [2,7], [3,7], [4,7], [8,7], [9,7], [10,7],
+                    [0,8], [5,8], [7,8], [12,8],
+                    [0,9], [5,9], [7,9], [12,9],
+                    [0,10], [5,10], [7,10], [12,10],
+                    [2,12], [3,12], [4,12], [8,12], [9,12], [10,12]
+                ],
+                gosper: [
+                    [0,4], [0,5], [1,4], [1,5],
+                    [10,4], [10,5], [10,6], [11,3], [11,7], [12,2], [12,8], [13,2], [13,8],
+                    [14,5], [15,3], [15,7], [16,4], [16,5], [16,6], [17,5],
+                    [20,2], [20,3], [20,4], [21,2], [21,3], [21,4], [22,1], [22,5],
+                    [24,0], [24,1], [24,5], [24,6],
+                    [34,2], [34,3], [35,2], [35,3]
+                ]
+            };
+
+            // Initialize
+            function init() {
+                const container = document.querySelector('.canvas-container');
+                const maxWidth = container.clientWidth - 20;
+                const maxHeight = container.clientHeight - 20;
+
+                gridWidth = Math.floor(maxWidth / CELL_SIZE);
+                gridHeight = Math.floor(maxHeight / CELL_SIZE);
+
+                canvas.width = gridWidth * CELL_SIZE;
+                canvas.height = gridHeight * CELL_SIZE;
+
+                // Initialize grids
+                grid = Array(gridHeight).fill(null).map(() => Array(gridWidth).fill(false));
+                nextGrid = Array(gridHeight).fill(null).map(() => Array(gridWidth).fill(false));
+                ghostCells.clear();
+
+                generation = 0;
+                population = 0;
+                updateStats();
+                render();
+            }
+
+            // Count neighbors (toroidal)
+            function countNeighbors(x, y) {
+                let count = 0;
+                for (let dy = -1; dy <= 1; dy++) {
+                    for (let dx = -1; dx <= 1; dx++) {
+                        if (dx === 0 && dy === 0) continue;
+                        const nx = (x + dx + gridWidth) % gridWidth;
+                        const ny = (y + dy + gridHeight) % gridHeight;
+                        if (grid[ny][nx]) count++;
+                    }
+                }
+                return count;
+            }
+
+            // Next generation
+            function nextGeneration() {
+                // Fade ghost cells
+                ghostCells.forEach((opacity, key) => {
+                    const newOpacity = opacity - (1 / GHOST_DURATION);
+                    if (newOpacity <= 0) {
+                        ghostCells.delete(key);
+                    } else {
+                        ghostCells.set(key, newOpacity);
+                    }
+                });
+
+                population = 0;
+                for (let y = 0; y < gridHeight; y++) {
+                    for (let x = 0; x < gridWidth; x++) {
+                        const neighbors = countNeighbors(x, y);
+                        const alive = grid[y][x];
+                        const willLive = alive ? (neighbors === 2 || neighbors === 3) : (neighbors === 3);
+                        nextGrid[y][x] = willLive;
+                        if (willLive) population++;
+
+                        // Add to ghost cells if dying
+                        if (alive && !willLive) {
+                            ghostCells.set(`${x},${y}`, 1);
+                        }
+                    }
+                }
+
+                [grid, nextGrid] = [nextGrid, grid];
+                generation++;
+                updateStats();
+            }
+
+            // Render
+            function render() {
+                ctx.fillStyle = '#3f3f3f';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                if (!logoLoaded) return;
+
+                // Draw ghost cells
+                ghostCells.forEach((opacity, key) => {
+                    const [x, y] = key.split(',').map(Number);
+                    ctx.globalAlpha = opacity * 0.4;
+                    ctx.drawImage(logoImage, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                });
+                ctx.globalAlpha = 1;
+
+                // Draw alive cells
+                for (let y = 0; y < gridHeight; y++) {
+                    for (let x = 0; x < gridWidth; x++) {
+                        if (grid[y][x]) {
+                            ctx.drawImage(logoImage, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        }
+                    }
+                }
+            }
+
+            // Update stats display
+            function updateStats() {
+                document.getElementById('generation').textContent = generation;
+                document.getElementById('population').textContent = population;
+                document.getElementById('statusLabel').textContent = running ? 'Running' : 'Paused';
+            }
+
+            // Game loop
+            function gameLoop(timestamp) {
+                if (running && timestamp - lastUpdate >= speed) {
+                    nextGeneration();
+                    lastUpdate = timestamp;
+                }
+                render();
+                requestAnimationFrame(gameLoop);
+            }
+
+            // Toggle cell
+            function toggleCell(x, y) {
+                if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
+                    grid[y][x] = !grid[y][x];
+                    population = grid.flat().filter(Boolean).length;
+                    updateStats();
+                }
+            }
+
+            // Set cell
+            function setCell(x, y, value) {
+                if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
+                    grid[y][x] = value;
+                }
+            }
+
+            // Get cell coords from event
+            function getCellFromEvent(e) {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const x = Math.floor((clientX - rect.left) / CELL_SIZE);
+                const y = Math.floor((clientY - rect.top) / CELL_SIZE);
+                return { x, y };
+            }
+
+            // Drawing state
+            let isDrawing = false;
+            let drawValue = true;
+
+            canvas.addEventListener('mousedown', (e) => {
+                const { x, y } = getCellFromEvent(e);
+                isDrawing = true;
+                drawValue = !grid[y]?.[x];
+                setCell(x, y, drawValue);
+                population = grid.flat().filter(Boolean).length;
+                updateStats();
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                const { x, y } = getCellFromEvent(e);
+                setCell(x, y, drawValue);
+                population = grid.flat().filter(Boolean).length;
+                updateStats();
+            });
+
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+            // Touch support
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const { x, y } = getCellFromEvent(e);
+                isDrawing = true;
+                drawValue = !grid[y]?.[x];
+                setCell(x, y, drawValue);
+                population = grid.flat().filter(Boolean).length;
+                updateStats();
+            });
+
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (!isDrawing) return;
+                const { x, y } = getCellFromEvent(e);
+                setCell(x, y, drawValue);
+                population = grid.flat().filter(Boolean).length;
+                updateStats();
+            });
+
+            canvas.addEventListener('touchend', () => isDrawing = false);
+
+            // Controls
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            playPauseBtn.addEventListener('click', () => {
+                running = !running;
+                playPauseBtn.textContent = running ? 'Pause' : 'Play';
+                updateStats();
+            });
+
+            document.getElementById('stepBtn').addEventListener('click', () => {
+                if (!running) {
+                    nextGeneration();
+                }
+            });
+
+            document.getElementById('clearBtn').addEventListener('click', () => {
+                grid = Array(gridHeight).fill(null).map(() => Array(gridWidth).fill(false));
+                ghostCells.clear();
+                generation = 0;
+                population = 0;
+                updateStats();
+            });
+
+            document.getElementById('randomBtn').addEventListener('click', () => {
+                for (let y = 0; y < gridHeight; y++) {
+                    for (let x = 0; x < gridWidth; x++) {
+                        grid[y][x] = Math.random() < 0.3;
+                    }
+                }
+                ghostCells.clear();
+                generation = 0;
+                population = grid.flat().filter(Boolean).length;
+                updateStats();
+            });
+
+            // Speed control
+            const speedSlider = document.getElementById('speedSlider');
+            speedSlider.addEventListener('input', (e) => {
+                speed = 520 - parseInt(e.target.value); // Invert so right = faster
+            });
+
+            // Pattern buttons
+            document.querySelectorAll('[data-pattern]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const patternName = btn.dataset.pattern;
+                    const pattern = PATTERNS[patternName];
+                    if (!pattern) return;
+
+                    // Center the pattern
+                    const offsetX = Math.floor(gridWidth / 2) - 5;
+                    const offsetY = Math.floor(gridHeight / 2) - 5;
+
+                    pattern.forEach(([px, py]) => {
+                        const x = (offsetX + px) % gridWidth;
+                        const y = (offsetY + py) % gridHeight;
+                        if (x >= 0 && y >= 0) {
+                            grid[y][x] = true;
+                        }
+                    });
+
+                    population = grid.flat().filter(Boolean).length;
+                    updateStats();
+                });
+            });
+
+            // Help modal
+            const helpModal = document.getElementById('helpModal');
+            document.getElementById('helpBtn').addEventListener('click', () => {
+                helpModal.classList.add('show');
+            });
+            document.getElementById('closeHelp').addEventListener('click', () => {
+                helpModal.classList.remove('show');
+            });
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === helpModal) {
+                    helpModal.classList.remove('show');
+                }
+            });
+
+            // Fullscreen toggle
+            let isFullscreen = false;
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+            function toggleFullscreen() {
+                isFullscreen = !isFullscreen;
+                document.body.classList.toggle('fullscreen', isFullscreen);
+                fullscreenBtn.textContent = isFullscreen ? '⛶' : '⛶';
+                fullscreenBtn.title = isFullscreen ? 'Exit Fullscreen (Esc)' : 'Fullscreen (F)';
+                // Reinitialize grid for new dimensions
+                setTimeout(init, 50);
+            }
+
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+
+                switch(e.key.toLowerCase()) {
+                    case 'f':
+                        toggleFullscreen();
+                        break;
+                    case 'escape':
+                        if (isFullscreen) toggleFullscreen();
+                        if (helpModal.classList.contains('show')) {
+                            helpModal.classList.remove('show');
+                        }
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        running = !running;
+                        playPauseBtn.textContent = running ? 'Pause' : 'Play';
+                        updateStats();
+                        break;
+                    case 'c':
+                        document.getElementById('clearBtn').click();
+                        break;
+                    case 'r':
+                        document.getElementById('randomBtn').click();
+                        break;
+                    case 's':
+                        if (!running) nextGeneration();
+                        break;
+                }
+            });
+
+            // Handle resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(init, 250);
+            });
+
+            // Start
+            init();
+            requestAnimationFrame(gameLoop);
+        </script>
+    </body>
+</html>
