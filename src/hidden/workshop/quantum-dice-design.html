@@ -1,0 +1,372 @@
+---
+layout: base.njk
+title: Quantum Dice - Game Design Deep Dive - qry.zone
+description: Building a quantum-themed roguelike that teaches probability through dice mechanics and glyph collection
+---
+
+<article class="article">
+    <header class="article-header">
+        <a href="/fun/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block;">&larr; Back to Fun</a>
+        <h1>Quantum Dice: Design Deep Dive</h1>
+        <p class="article-subtitle">Building a quantum-themed roguelike that teaches probability through dice mechanics and glyph collection</p>
+    </header>
+
+    <section>
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-xl); border: 1px solid var(--color-border);">
+            <h2 style="margin-bottom: var(--space-md);">The Core Question</h2>
+            <p style="font-size: 1.1rem; font-weight: 500; margin-bottom: var(--space-sm);">
+                "What if dice could roll anything?"
+            </p>
+            <p>
+                Quantum Dice started as a simple experiment: take the familiar six-sided die and add a seventh
+                face - the quantum face. This single addition creates a cascade of design possibilities that
+                turn a simple dice game into a roguelike deck-builder hybrid with genuine educational depth
+                around probability and expected value.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Design Philosophy: Familiar Foundation, Strange Expansion</h2>
+
+        <h3>The Seven-Sided Die</h3>
+        <p>
+            The game begins with an impossible object: a seven-sided die. Six faces show the familiar pip
+            patterns (1-6), while the seventh displays the quantum glyph. This immediately signals to players
+            that the normal rules of probability are about to be bent.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Why Seven Sides Matters:</h4>
+            <ul>
+                <li><strong>Probability intuition:</strong> Players know a d6 has ~16.7% per face. Adding one face changes everything.</li>
+                <li><strong>The quantum face probability:</strong> At game start, there's a 1/7 (~14.3%) chance to hit the quantum outcome.</li>
+                <li><strong>Rarity creates value:</strong> Because quantum rolls are less common, they can afford to be more powerful on average.</li>
+                <li><strong>Familiar anchor:</strong> The six standard faces provide predictable, learnable outcomes to ground the experience.</li>
+            </ul>
+        </div>
+
+        <h3>The Roguelike Loop</h3>
+        <p>
+            Each run follows a simple structure: roll dice to reach a target score within a limited number
+            of rolls. Hit the target, and you advance to the next level with an opportunity to add new
+            glyphs to your quantum pool. Fail, and the run ends.
+        </p>
+
+        <p>
+            This structure creates natural tension between several design goals:
+        </p>
+        <ul>
+            <li><strong>Short-term optimization:</strong> Maximizing score with current rolls</li>
+            <li><strong>Long-term pool building:</strong> Choosing glyphs that synergize across runs</li>
+            <li><strong>Risk assessment:</strong> Deciding when to rely on the quantum face's potential</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Glyph Systems: Intersecting Probability Spaces</h2>
+
+        <h3>The Glyph Schema</h3>
+        <p>
+            Every glyph in Quantum Dice follows a consistent data structure that enables flexible mechanics
+            while maintaining predictability:
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border); font-family: monospace;">
+            <pre style="margin: 0; white-space: pre-wrap;">glyph = {
+    type: "dice" | "quantum" | "roman" | "cards" | ...,
+    value: number,
+    sprite: number,
+    effect?: function  // optional modifier
+}</pre>
+        </div>
+
+        <p>
+            This schema allows for multiple value systems to coexist on the same probability distribution.
+            When the quantum face is rolled, the game samples from the player's accumulated quantum glyph pool,
+            which can contain glyphs from entirely different number systems.
+        </p>
+
+        <h3>Glyph Categories by Design Intent</h3>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="color: var(--color-accent); margin-bottom: var(--space-sm);">Standard Dice (Baseline)</h4>
+            <p style="margin-bottom: var(--space-sm);">Values: 1, 2, 3, 4, 5, 6</p>
+            <p>The anchor. Players understand these intuitively. Expected value: 3.5. These provide the reliable floor of score generation and teach the core mechanic.</p>
+        </div>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="color: var(--color-accent); margin-bottom: var(--space-sm);">Playing Cards (High Variance)</h4>
+            <p style="margin-bottom: var(--space-sm);">Values: Jack (11), Queen (13), King (13), Ace (14)</p>
+            <p>Cards offer higher values but introduce suit-based visual complexity. The Ace-high convention rewards players who recognize card game patterns. Adding cards to the quantum pool shifts expected value upward but increases variance.</p>
+        </div>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="color: var(--color-accent); margin-bottom: var(--space-sm);">Roman Numerals (Educational Scale)</h4>
+            <p style="margin-bottom: var(--space-sm);">Values: I (1), II (2), III (3), IV (4), V (5), VI (6), VII (7), VIII (8), IX (9), X (10), L (50), C (100), M (1000)</p>
+            <p>Roman numerals introduce exponential value scaling. Getting "M" in your quantum pool is a massive score spike - but it dilutes probability for lower-value numerals. This creates a genuine expected value calculation problem for players to solve intuitively.</p>
+        </div>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="color: var(--color-accent); margin-bottom: var(--space-sm);">Runes (Boon Triggers)</h4>
+            <p style="margin-bottom: var(--space-sm);">Values: 1 point each, but unlock permanent bonuses when paired</p>
+            <p>Runes like Sowilo and Fehu score minimally on their own but unlock the "Sun's Radiance" boon when both appear in a run's history. This creates a metagame layer where low-value glyphs become strategically crucial.</p>
+        </div>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="color: var(--color-accent); margin-bottom: var(--space-sm);">Photons (Entanglement)</h4>
+            <p style="margin-bottom: var(--space-sm);">Values: 2 points base, +2 bonus if partner photon is in pool</p>
+            <p>Alpha and Beta photons are "entangled" - having both in your pool grants a +2 bonus when either is rolled. This directly teaches quantum entanglement concepts through game mechanics: correlated outcomes across paired entities.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Superposition: Probability Within Probability</h2>
+
+        <h3>The Collapsing Glyph</h3>
+        <p>
+            Superposition glyphs exist in multiple states simultaneously until observed (rolled). When a
+            superposition glyph comes up, the game animates through potential outcomes before "collapsing"
+            to a single result. This isn't just visual flourish - it's a direct representation of
+            wavefunction collapse.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Superposition Glyph Examples:</h4>
+            <ul>
+                <li><strong>Dice|Card:</strong> Collapses to either a random dice face (1-6) or a random card (1-13)</li>
+                <li><strong>Dice|Rune:</strong> Collapses to either a dice face or a rune (1 pt + boon potential)</li>
+            </ul>
+            <p style="margin-top: var(--space-md);">
+                Adding a superposition glyph to your pool effectively adds multiple glyphs to your probability
+                distribution. The Dice|Card glyph has an expected value of approximately 4.75 (averaging dice's
+                3.5 and cards' 6.0), but with much higher variance than either system alone.
+            </p>
+        </div>
+
+        <h3>Educational Design Intent</h3>
+        <p>
+            Players naturally begin calculating: "Should I add this superposition glyph, or a specific
+            high-value card?" This creates organic engagement with compound probability concepts:
+        </p>
+        <ul>
+            <li>Conditional probability (what are my chances given I hit the quantum face?)</li>
+            <li>Expected value across nested distributions</li>
+            <li>Variance as a strategic consideration</li>
+            <li>The trade-off between predictability and potential</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>The Boon System: Emergent Synergies</h2>
+
+        <h3>Unlockable Permanent Bonuses</h3>
+        <p>
+            Boons reward players for collecting specific glyph combinations across a run. Unlike loot
+            selection (which is immediate), boon unlocks require rolling specific glyphs during gameplay.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-md);">Boon Unlock Conditions:</h4>
+            <div style="display: grid; gap: var(--space-md);">
+                <div>
+                    <strong style="color: var(--color-accent);">Sun's Radiance</strong>
+                    <p style="margin: var(--space-xs) 0;">Requires: Rolling both Sowilo and Fehu in same run</p>
+                    <p style="color: var(--color-text-secondary);">Effect: All dice faces score +2 points</p>
+                </div>
+                <div>
+                    <strong style="color: var(--color-accent);">Water's Flow</strong>
+                    <p style="margin: var(--space-xs) 0;">Requires: Rolling both Laguz and Ansuz in same run</p>
+                    <p style="color: var(--color-text-secondary);">Effect: +1 maximum roll per round</p>
+                </div>
+            </div>
+        </div>
+
+        <h3>Design Tension</h3>
+        <p>
+            The boon system creates a fascinating strategic tension:
+        </p>
+        <ul>
+            <li><strong>Adding runes dilutes your pool:</strong> Runes only score 1 point, so adding them to enable boons lowers your immediate expected value</li>
+            <li><strong>Both runes must be rollable:</strong> Having both in your quantum pool doesn't guarantee you'll roll both in a single run</li>
+            <li><strong>Boons persist across rounds:</strong> Once unlocked, the bonus applies for the rest of the run, potentially justifying the early investment</li>
+            <li><strong>Compound effects:</strong> Sun's Radiance makes the standard dice faces more competitive with exotic glyphs</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Progression & Scaling</h2>
+
+        <h3>Round Structure</h3>
+        <p>
+            The game uses a carefully tuned difficulty curve:
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--color-border);">
+                        <th style="text-align: left; padding: var(--space-sm);">Round</th>
+                        <th style="text-align: left; padding: var(--space-sm);">Max Rolls</th>
+                        <th style="text-align: left; padding: var(--space-sm);">Target Score</th>
+                        <th style="text-align: left; padding: var(--space-sm);">Required Avg</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: var(--space-sm);">1</td>
+                        <td style="padding: var(--space-sm);">7</td>
+                        <td style="padding: var(--space-sm);">15</td>
+                        <td style="padding: var(--space-sm);">2.14/roll</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: var(--space-sm);">2</td>
+                        <td style="padding: var(--space-sm);">10</td>
+                        <td style="padding: var(--space-sm);">22</td>
+                        <td style="padding: var(--space-sm);">2.2/roll</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: var(--space-sm);">3</td>
+                        <td style="padding: var(--space-sm);">12</td>
+                        <td style="padding: var(--space-sm);">29</td>
+                        <td style="padding: var(--space-sm);">2.42/roll</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: var(--space-sm);">4+</td>
+                        <td style="padding: var(--space-sm);">15</td>
+                        <td style="padding: var(--space-sm);">+7 per round</td>
+                        <td style="padding: var(--space-sm);">Escalating</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            Notice that early rounds require below-average dice rolls to complete (expected value of a d6 is 3.5).
+            This ensures new players can progress while learning the systems. Later rounds require players to
+            have built pools with higher expected values - the quantum expansion becomes necessary, not optional.
+        </p>
+
+        <h3>Loot Selection as Pool Building</h3>
+        <p>
+            After each successful round, players choose one of three random glyphs to add to their quantum pool.
+            This creates the core roguelike tension:
+        </p>
+        <ul>
+            <li><strong>Pool size matters:</strong> More glyphs = more diluted probability for any specific one</li>
+            <li><strong>Synergy hunting:</strong> Taking that second rune now might enable a boon later</li>
+            <li><strong>Variance management:</strong> High-value glyphs increase ceiling but also variance</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Implementation Notes</h2>
+
+        <h3>Platform Evolution</h3>
+        <p>
+            Quantum Dice was originally developed for PICO-8, a fantasy console with severe constraints
+            (128x128 pixels, 16 colors, Lua scripting). The web version preserves the core mechanics while
+            expanding the visual and audio presentation.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">State Machine Architecture:</h4>
+            <p>
+                Both versions use an explicit state machine pattern with states for: menu, play, ascend (round end evaluation),
+                loot selection, animation (superposition collapse), and game over. This clean separation makes
+                the game logic easy to reason about and extend.
+            </p>
+        </div>
+
+        <h3>The Repeat Bonus System</h3>
+        <p>
+            An interesting mechanic from the original: rolling the same value twice in a run doubles the
+            score for that roll. This creates situations where "lucky streaks" feel meaningful and adds
+            another layer of probability for players to track mentally.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border); font-family: monospace;">
+            <pre style="margin: 0; white-space: pre-wrap;">function check_for_repeat()
+  local hit_counter = 0
+  for v in all(roll_history) do
+    if (v.value == outcome_value) then
+      hit_counter += 1
+    end
+  end
+  return {hit = hit_counter > 0, amount = hit_counter}
+end</pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Educational Design Insights</h2>
+
+        <h3>Teaching Through Play</h3>
+        <p>
+            Quantum Dice succeeds as educational design because it never lectures. Players naturally develop
+            intuition about:
+        </p>
+
+        <ul>
+            <li><strong>Expected value:</strong> "Is adding this glyph actually helping my average?"</li>
+            <li><strong>Probability distribution:</strong> "What are my realistic outcomes from this pool?"</li>
+            <li><strong>Variance:</strong> "Can I afford high-variance plays right now, or do I need consistency?"</li>
+            <li><strong>Compound probability:</strong> "If I hit quantum, then what are my odds of getting a good result?"</li>
+            <li><strong>Quantum concepts:</strong> Superposition (multiple states until observed) and entanglement (correlated outcomes)</li>
+        </ul>
+
+        <h3>The "Aha" Moments</h3>
+        <p>
+            The best educational games create moments of genuine discovery. In Quantum Dice, these include:
+        </p>
+        <ul>
+            <li>Realizing that adding too many glyphs dilutes your pool</li>
+            <li>Discovering boon synergies through experimentation</li>
+            <li>Understanding why the M (1000) Roman numeral isn't always the best choice</li>
+            <li>Recognizing that superposition glyphs compound uncertainty</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Future Design Directions</h2>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Potential Expansions:</h4>
+            <ul>
+                <li><strong>Curse glyphs:</strong> Negative values that could be strategically useful with multiplication effects</li>
+                <li><strong>Glyph removal:</strong> Allow players to prune their pools, creating deck-thinning strategies</li>
+                <li><strong>Multi-die pools:</strong> Multiple dice with different quantum pools running in parallel</li>
+                <li><strong>Observer effects:</strong> Mechanics where "looking" at certain outcomes changes them</li>
+                <li><strong>Quantum tunneling:</strong> Rare chance to skip past impossible targets</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Key Takeaways</h2>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); border: 1px solid var(--color-border);">
+            <ul>
+                <li><strong>Start familiar:</strong> The d6 anchor makes the quantum expansion approachable</li>
+                <li><strong>Probability as content:</strong> Each glyph type creates a new expected value calculation</li>
+                <li><strong>Emergence over complexity:</strong> Simple systems (boon pairs, entanglement) create rich strategy</li>
+                <li><strong>Educational by stealth:</strong> Players learn probability through optimization, not instruction</li>
+                <li><strong>Constraints inspire:</strong> PICO-8's limitations forced elegant, essential design choices</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer class="article-footer">
+        <h3 style="margin-bottom: var(--space-md);">Play & Related</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-md);">
+            <a href="/fun/quantum-dice/" style="display: block; padding: var(--space-md); background: var(--color-surface); border-radius: var(--border-radius); text-decoration: none; border: 1px solid var(--color-border);">
+                <h4 style="color: var(--color-accent); margin-bottom: var(--space-xs);">Play Quantum Dice</h4>
+                <p style="font-size: 0.9rem; color: var(--color-text-secondary);">Experience the game mechanics firsthand in your browser</p>
+            </a>
+            <a href="/fun/" style="display: block; padding: var(--space-md); background: var(--color-surface); border-radius: var(--border-radius); text-decoration: none; border: 1px solid var(--color-border);">
+                <h4 style="color: var(--color-accent); margin-bottom: var(--space-xs);">More Games</h4>
+                <p style="font-size: 0.9rem; color: var(--color-text-secondary);">Explore other interactive experiments and game ports</p>
+            </a>
+        </div>
+    </footer>
+</article>

@@ -1,0 +1,351 @@
+---
+layout: base.njk
+title: Lily58 Distributed Gaming - qry.zone
+description: I built a game console into my split keyboard - distributed Pong across two microcontrollers with development metrics dashboard
+---
+
+<article class="article">
+    <header class="article-header">
+        <a href="/hidden/workshop/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block;">&larr; Back to Workshop</a>
+        <h1>I Built a Game Console Into My Split Keyboard</h1>
+        <p class="article-subtitle">Distributed Pong across two microcontrollers, development metrics dashboard, and QRY logo animations - all in a daily driver Lily58</p>
+    </header>
+
+    <section>
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-xl); border: 1px solid var(--color-border);">
+            <h2 style="margin-bottom: var(--space-md);">The Concept</h2>
+            <p style="font-size: 1.1rem; font-weight: 500; margin-bottom: var(--space-sm);">
+                "The ball literally jumps between computers mid-game"
+            </p>
+            <p>
+                A split keyboard has two halves, each with its own microcontroller and OLED display.
+                Most people use those displays to show layer information or typing statistics.
+                I built a distributed Pong game where the ball travels across both displays via I2C communication,
+                plus a development metrics dashboard that shows real-time coding stats from uroboro.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Technical Architecture</h2>
+
+        <h3>The Hardware Platform</h3>
+        <p>
+            The Lily58 is a split ergonomic keyboard with 58 keys. Each half runs on an ATmega32U4
+            microcontroller (Pro Micro compatible) with a 128x32 OLED display. The halves communicate
+            via TRRS cable using I2C protocol. This existing infrastructure becomes the foundation
+            for distributed gaming.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Hardware Specifications:</h4>
+            <ul>
+                <li><strong>Microcontrollers:</strong> Dual ATmega32U4 (Pro Micro compatible)</li>
+                <li><strong>Displays:</strong> Two 128x32 monochrome OLEDs</li>
+                <li><strong>Communication:</strong> I2C via TRRS cable between halves</li>
+                <li><strong>Input:</strong> Rotary encoders for analog paddle control</li>
+                <li><strong>Memory:</strong> ~21KB firmware, 7.6KB free for features</li>
+            </ul>
+        </div>
+
+        <h3>Distributed Game State</h3>
+        <p>
+            The game field spans 256 pixels across both displays. The left OLED renders pixels 0-127,
+            the right OLED renders 128-255 (mapped to 0-127 locally). Ball position, velocity, and
+            paddle states synchronize between controllers through a custom message protocol.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Game State Structure:</h4>
+            <pre style="background: var(--color-bg); padding: var(--space-md); border-radius: var(--border-radius); overflow-x: auto; font-size: 0.9rem;"><code>typedef struct {
+    bool pong_mode_active;
+    uint16_t ball_x;        // 0-255 across both displays
+    uint8_t ball_y;         // 0-31 (OLED height)
+    int8_t ball_vx;         // Ball velocity X
+    int8_t ball_vy;         // Ball velocity Y
+    uint8_t left_paddle_y;  // Left paddle position
+    uint8_t right_paddle_y; // Right paddle position
+    uint8_t left_score;
+    uint8_t right_score;
+} pong_state_t;</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Distributed Pong Implementation</h2>
+
+        <h3>Cross-Display Ball Physics</h3>
+        <p>
+            The ball physics run at 20 FPS with collision detection for walls and paddles.
+            When the ball crosses the center line (x=128), it seamlessly transfers from one
+            display to the other. The visual effect is a ball that appears to fly off one
+            screen and appear on the other.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Ball Transfer Protocol:</h4>
+            <pre style="background: var(--color-bg); padding: var(--space-md); border-radius: var(--border-radius); overflow-x: auto; font-size: 0.9rem;"><code>// Ball transfer message when crossing displays
+typedef struct {
+    int16_t ball_y;
+    int16_t velocity_x;
+    int16_t velocity_y;
+    uint8_t trail_length;
+    uint8_t special_effects;
+} ball_transfer_payload_t;</code></pre>
+        </div>
+
+        <h3>Paddle Control System</h3>
+        <p>
+            Each keyboard half controls its respective paddle. The left half uses WASD keys,
+            the right half uses arrow keys. Rotary encoders provide analog control for smoother
+            paddle movement. Paddle hits add spin based on where the ball contacts the paddle surface.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Physics Constants:</h4>
+            <ul>
+                <li><strong>Field Dimensions:</strong> 256x32 pixels (spanning both OLEDs)</li>
+                <li><strong>Paddle Height:</strong> 8 pixels</li>
+                <li><strong>Ball Size:</strong> 2x2 pixels</li>
+                <li><strong>Update Rate:</strong> 20 FPS (50ms physics updates)</li>
+                <li><strong>Spin Factor:</strong> Paddle velocity affects ball angle</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>I2C Communication Protocol</h2>
+
+        <h3>Message Architecture</h3>
+        <p>
+            The communication protocol handles game state synchronization, ball transfers,
+            paddle updates, and score changes. Messages include checksums for error detection
+            and sequence numbers for reliability.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Message Types:</h4>
+            <ul>
+                <li><strong>System Messages:</strong> SYNC, HEARTBEAT, ERROR</li>
+                <li><strong>Game Messages:</strong> BALL_TRANSFER, PADDLE_UPDATE, SCORE_UPDATE, STATE_SYNC</li>
+                <li><strong>Control Messages:</strong> GAME_START, GAME_PAUSE, GAME_RESET</li>
+                <li><strong>Metrics Messages:</strong> METRICS_UPDATE, METRICS_REQUEST</li>
+            </ul>
+        </div>
+
+        <h3>Protocol Reliability</h3>
+        <p>
+            Each message includes a magic byte for validation, protocol version, message type,
+            payload length, timestamp, sequence number, and checksum. This ensures reliable
+            communication even with the limited bandwidth of I2C on split keyboards.
+        </p>
+
+        <pre style="background: var(--color-surface); padding: var(--space-md); border-radius: var(--border-radius); overflow-x: auto; font-size: 0.9rem; margin-bottom: var(--space-lg);"><code>typedef struct {
+    uint8_t magic;          // Protocol validation
+    uint8_t version;        // Protocol version
+    message_type_t type;    // Message type
+    uint8_t length;         // Payload length
+    uint32_t timestamp;     // Message timestamp
+    uint8_t sequence;       // Sequence number
+    uint8_t checksum;       // Error detection
+    uint8_t payload[24];    // Actual message data
+} comm_message_t;</code></pre>
+    </section>
+
+    <section>
+        <h2>Development Metrics Dashboard</h2>
+
+        <h3>uroboro Integration</h3>
+        <p>
+            Beyond gaming, the OLED displays serve as a development command center.
+            The keyboard receives metrics from the host machine via serial communication,
+            showing real-time development statistics during coding sessions.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Available Metrics:</h4>
+            <ul>
+                <li><strong>uroboro Stats:</strong> Daily captures, current streak, productivity level</li>
+                <li><strong>Project Metrics:</strong> Commits today, lines added/removed, build status</li>
+                <li><strong>System Info:</strong> CPU/memory usage, battery level, uptime</li>
+                <li><strong>Build Status:</strong> Last build duration, test coverage, pass/fail state</li>
+            </ul>
+        </div>
+
+        <h3>Display Modes</h3>
+        <p>
+            The keyboard supports multiple display modes switchable via key combinations:
+        </p>
+        <ul>
+            <li><strong>Game Mode:</strong> Distributed Pong across both displays</li>
+            <li><strong>Metrics Mode:</strong> Development dashboard with live stats</li>
+            <li><strong>Logo Mode:</strong> QRY Labs branding for presentations</li>
+            <li><strong>Hybrid Mode:</strong> Game with minimal metrics overlay</li>
+            <li><strong>Screensaver Mode:</strong> Animated logo after idle timeout</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>QRY Logo Animation System</h2>
+
+        <h3>Branding Integration</h3>
+        <p>
+            The keyboard displays QRY Labs branding during idle periods and layer transitions.
+            The logo uses an 8x8 pixel matrix design that scales cleanly on the OLED displays,
+            with both normal and inverted variants for visual variety.
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Logo Animation States:</h4>
+            <ul>
+                <li><strong>IDLE_BUILDING:</strong> Logo builds systematically during startup</li>
+                <li><strong>ACTIVE_WATERMARK:</strong> Subtle watermark during typing</li>
+                <li><strong>BREAK_ANIMATED:</strong> Full animation during breaks</li>
+                <li><strong>BUILD_LOADING:</strong> Loading animation during builds</li>
+                <li><strong>SUCCESS_CELEBRATION:</strong> Celebration effect on successful builds</li>
+                <li><strong>ERROR_ALERT:</strong> Alert indicators on errors</li>
+            </ul>
+        </div>
+
+        <h3>Professional Presentation</h3>
+        <p>
+            The animated logo system serves practical purposes: professional branding visible
+            during video calls, conversation starter in technical discussions, and visual
+            feedback for keyboard state. The left and right displays show complementary
+            animations - normal logo on left, inverted on right.
+        </p>
+    </section>
+
+    <section>
+        <h2>QMK Firmware Integration</h2>
+
+        <h3>Layer Architecture</h3>
+        <p>
+            The firmware maintains full keyboard functionality while adding gaming capabilities.
+            Four layers provide complete workflow support:
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Keyboard Layers:</h4>
+            <ul>
+                <li><strong>Layer 0 (DVORAK):</strong> Primary typing layer with custom Dvorak layout</li>
+                <li><strong>Layer 1 (SYMBOLS):</strong> Programming symbols and F-keys</li>
+                <li><strong>Layer 2 (NAVIGATION):</strong> Arrow keys, mouse wheel, navigation</li>
+                <li><strong>Layer 3 (PONG):</strong> Gaming controls with paddle movement</li>
+            </ul>
+        </div>
+
+        <h3>Memory Optimization</h3>
+        <p>
+            The ATmega32U4 has limited resources. The firmware uses fixed-point math instead
+            of floating point, efficient data structures, and optimized rendering with dirty
+            rectangle updates. Current firmware uses 73% of available flash (21KB), leaving
+            room for additional features.
+        </p>
+    </section>
+
+    <section>
+        <h2>Technical Challenges and Solutions</h2>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Communication Synchronization</h4>
+            <p><strong>Challenge:</strong> Ensuring consistent game state between controllers with limited I2C bandwidth.</p>
+            <p><strong>Solution:</strong> Master/slave architecture where left half controls game logic and sends state updates. Checksums and sequence numbers ensure message integrity.</p>
+        </div>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Real-Time Performance</h4>
+            <p><strong>Challenge:</strong> Maintaining smooth gameplay while handling keyboard input.</p>
+            <p><strong>Solution:</strong> Interrupt-based input processing, timer-controlled physics updates, and optimized OLED rendering that doesn't block keyboard scanning.</p>
+        </div>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">OLED Display Stability</h4>
+            <p><strong>Challenge:</strong> Horizontal line artifacts and display glitches during rapid updates.</p>
+            <p><strong>Solution:</strong> Rate-limited OLED updates (500ms minimum between refreshes), proper clear/draw sequencing, and disabling pixel-level graphics on the slave side during initial debugging.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Why This Matters</h2>
+
+        <h3>Beyond the Gimmick</h3>
+        <p>
+            This project demonstrates several transferable skills: distributed systems design
+            (two controllers maintaining synchronized state), real-time embedded programming
+            (physics updates without blocking keyboard function), and protocol design
+            (reliable messaging over constrained I2C).
+        </p>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Technical Demonstrations:</h4>
+            <ul>
+                <li><strong>Distributed Systems:</strong> Cross-microcontroller state synchronization</li>
+                <li><strong>Real-Time Programming:</strong> Physics updates at consistent frame rate</li>
+                <li><strong>Protocol Design:</strong> Custom message format with error handling</li>
+                <li><strong>Embedded Constraints:</strong> Working within 32KB flash and limited RAM</li>
+                <li><strong>Hardware Integration:</strong> OLED displays, rotary encoders, I2C communication</li>
+            </ul>
+        </div>
+
+        <h3>Daily Driver Enhancement</h3>
+        <p>
+            The development metrics dashboard provides actual utility: seeing commit counts,
+            build status, and uroboro capture streaks while typing. The keyboard becomes
+            a development command center rather than just an input device.
+        </p>
+    </section>
+
+    <section>
+        <h2>Project Status and Future Development</h2>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
+            <h4 style="margin-bottom: var(--space-sm);">Current Implementation Status:</h4>
+            <ul>
+                <li><strong>Complete:</strong> Game state structures, physics engine, collision detection</li>
+                <li><strong>Complete:</strong> Communication protocol with checksums and reliability</li>
+                <li><strong>Complete:</strong> QRY logo animation system with multiple states</li>
+                <li><strong>Complete:</strong> Four-layer keyboard layout with gaming controls</li>
+                <li><strong>Testing:</strong> Hardware deployment and I2C verification</li>
+                <li><strong>Pending:</strong> Full uroboro metrics integration via serial</li>
+            </ul>
+        </div>
+
+        <h3>Potential Extensions</h3>
+        <ul>
+            <li><strong>Additional Games:</strong> Snake, Tetris, or Breakout across displays</li>
+            <li><strong>Advanced Physics:</strong> Multiple balls, power-ups, particle effects</li>
+            <li><strong>Sound Integration:</strong> Buzzer feedback for game events</li>
+            <li><strong>RGB Underglow:</strong> Visual effects synced to game state</li>
+            <li><strong>Tournament Mode:</strong> Score tracking across sessions</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Key Insights</h2>
+
+        <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); border: 1px solid var(--color-border);">
+            <ul>
+                <li><strong>Split keyboards are distributed systems:</strong> The existing I2C communication infrastructure enables sophisticated inter-controller applications</li>
+                <li><strong>Constraints drive creativity:</strong> Limited memory and processing power require elegant solutions rather than brute force</li>
+                <li><strong>Daily drivers should demonstrate capability:</strong> Using custom firmware on your actual keyboard proves you understand the technology deeply</li>
+                <li><strong>Protocol design matters:</strong> Reliable communication requires proper message framing, error detection, and sequence tracking</li>
+                <li><strong>Integration beats isolation:</strong> Connecting the keyboard to development tools (uroboro metrics) creates actual workflow value</li>
+            </ul>
+        </div>
+    </section>
+
+    <footer class="article-footer">
+        <h3 style="margin-bottom: var(--space-md);">Related Projects</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-md);">
+            <a href="/hidden/workshop/microstudio-context" style="display: block; padding: var(--space-md); background: var(--color-surface); border-radius: var(--border-radius); text-decoration: none; border: 1px solid var(--color-border);">
+                <h4 style="color: var(--color-accent); margin-bottom: var(--space-xs);">Microstudio Context</h4>
+                <p style="font-size: 0.9rem; color: var(--color-text-secondary);">Development philosophy and integrated toolchain approach</p>
+            </a>
+            <a href="/hidden/workshop/microstudio-workflow" style="display: block; padding: var(--space-md); background: var(--color-surface); border-radius: var(--border-radius); text-decoration: none; border: 1px solid var(--color-border);">
+                <h4 style="color: var(--color-accent); margin-bottom: var(--space-xs);">Microstudio Workflow</h4>
+                <p style="font-size: 0.9rem; color: var(--color-text-secondary);">Content creation and development pipeline methodology</p>
+            </a>
+        </div>
+    </footer>
+</article>

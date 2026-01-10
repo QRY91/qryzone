@@ -1,0 +1,979 @@
+---
+layout: false
+permalink: /fun/aviary/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Aviary - A bird meditation timer with badge collection"
+        />
+        <title>Aviary - Bird Meditation | qry.zone</title>
+
+        <meta name="theme-color" content="#4a90e2" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <meta name="apple-mobile-web-app-title" content="Aviary" />
+        <meta name="mobile-web-app-capable" content="yes" />
+
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+
+        <link
+            rel="icon"
+            href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐦</text></svg>"
+        />
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                color: #333;
+                overflow-x: hidden;
+            }
+
+            .back-link {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                color: rgba(255, 255, 255, 0.9);
+                text-decoration: none;
+                font-size: 0.9rem;
+                z-index: 100;
+                padding: 0.5rem 1rem;
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 20px;
+                transition: background 0.2s;
+            }
+
+            .back-link:hover {
+                background: rgba(0, 0, 0, 0.4);
+            }
+
+            .header {
+                text-align: center;
+                padding: 2rem 1rem 1rem;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+                color: white;
+                margin-bottom: 0.5rem;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
+
+            .header p {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem 1rem;
+                max-width: 800px;
+                margin: 0 auto;
+                width: 100%;
+            }
+
+            .audio-player {
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 20px;
+                padding: 2rem;
+                margin-bottom: 2rem;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .track-info {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            .track-title {
+                font-size: 1.3rem;
+                font-weight: 600;
+                color: #2c3e50;
+                margin-bottom: 0.5rem;
+            }
+
+            .track-duration {
+                color: #7f8c8d;
+                font-size: 0.9rem;
+            }
+
+            .controls {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .btn {
+                border: none;
+                border-radius: 50%;
+                width: 60px;
+                height: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 1.5rem;
+                color: white;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+
+            .btn-play {
+                background: linear-gradient(135deg, #4caf50, #45a049);
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+
+            .btn-play:hover {
+                transform: scale(1.1);
+                box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            }
+
+            .btn-secondary {
+                background: linear-gradient(135deg, #2196f3, #1976d2);
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .btn-secondary:hover {
+                transform: scale(1.1);
+                box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+            }
+
+            .volume-control {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .volume-slider {
+                flex: 1;
+                height: 4px;
+                border-radius: 2px;
+                background: #ddd;
+                outline: none;
+                -webkit-appearance: none;
+            }
+
+            .volume-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: #4caf50;
+                cursor: pointer;
+            }
+
+            .timer-section {
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 15px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                width: 100%;
+                max-width: 500px;
+                text-align: center;
+            }
+
+            .timer-display {
+                font-size: 2.5rem;
+                font-weight: 300;
+                color: #2c3e50;
+                margin-bottom: 1rem;
+                font-family: "Courier New", monospace;
+            }
+
+            .timer-controls {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .timer-btn {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                border: none;
+                padding: 0.7rem 1.5rem;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+                min-height: 44px;
+            }
+
+            .timer-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            }
+
+            .badges-section {
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .badges-title {
+                text-align: center;
+                font-size: 1.5rem;
+                color: #2c3e50;
+                margin-bottom: 1.5rem;
+            }
+
+            .badges-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .badge {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+                text-align: center;
+                background: rgba(255, 255, 255, 0.5);
+                border: 2px solid transparent;
+            }
+
+            .badge.earned {
+                background: linear-gradient(135deg, #ffd700, #ffa500);
+                border-color: #ff8c00;
+                transform: scale(1.05);
+                box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+            }
+
+            .badge-icon {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+                filter: grayscale(100%);
+                transition: filter 0.3s ease;
+            }
+
+            .badge.earned .badge-icon {
+                filter: grayscale(0%);
+            }
+
+            .badge-name {
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .badge-time {
+                font-size: 0.7rem;
+                color: #7f8c8d;
+                margin-top: 0.2rem;
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 8px;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 4px;
+                overflow: hidden;
+                margin-top: 1rem;
+            }
+
+            .progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, #4caf50, #45a049);
+                border-radius: 4px;
+                transition: width 0.3s ease;
+                width: 0%;
+            }
+
+            .total-time {
+                text-align: center;
+                margin-top: 1rem;
+                color: #7f8c8d;
+                font-size: 0.9rem;
+            }
+
+            .track-list {
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 15px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .track-item {
+                display: flex;
+                align-items: center;
+                padding: 1rem;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-bottom: 0.5rem;
+                border: 2px solid transparent;
+            }
+
+            .track-item:hover {
+                background: rgba(103, 126, 234, 0.1);
+                border-color: rgba(103, 126, 234, 0.3);
+            }
+
+            .track-item.active {
+                background: linear-gradient(
+                    135deg,
+                    rgba(103, 126, 234, 0.2),
+                    rgba(118, 75, 162, 0.2)
+                );
+                border-color: #667eea;
+            }
+
+            .track-emoji {
+                font-size: 1.5rem;
+                margin-right: 1rem;
+            }
+
+            .track-details {
+                flex: 1;
+            }
+
+            .track-name {
+                font-weight: 600;
+                color: #2c3e50;
+                margin-bottom: 0.2rem;
+            }
+
+            .track-description {
+                font-size: 0.9rem;
+                color: #7f8c8d;
+            }
+
+            @media (max-width: 768px) {
+                .header h1 {
+                    font-size: 2rem;
+                }
+
+                .main-content {
+                    padding: 1rem;
+                }
+
+                .audio-player,
+                .timer-section,
+                .badges-section,
+                .track-list {
+                    padding: 1.5rem;
+                }
+
+                .timer-display {
+                    font-size: 2rem;
+                }
+
+                .badges-grid {
+                    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+                }
+
+                .controls {
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                }
+
+                .btn {
+                    min-width: 50px;
+                    min-height: 50px;
+                }
+
+                .timer-btn {
+                    min-width: 80px;
+                    padding: 0.8rem 1.2rem;
+                }
+
+                .track-item {
+                    padding: 1.2rem;
+                    margin-bottom: 0.8rem;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .header {
+                    padding: 1rem 0.5rem;
+                }
+
+                .main-content {
+                    padding: 0.5rem;
+                }
+
+                .audio-player,
+                .timer-section,
+                .badges-section,
+                .track-list {
+                    padding: 1rem;
+                    margin-bottom: 1rem;
+                }
+
+                .controls {
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .volume-control {
+                    width: 100%;
+                    max-width: 300px;
+                }
+            }
+
+            @supports (padding: max(0px)) {
+                .header {
+                    padding-top: max(1rem, env(safe-area-inset-top));
+                }
+
+                .main-content {
+                    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+                }
+            }
+
+            .hidden {
+                display: none !important;
+            }
+
+            .floating-notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #4caf50, #45a049);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                transform: translateX(calc(100% + 30px));
+                transition: transform 0.3s ease;
+            }
+
+            .floating-notification.show {
+                transform: translateX(0);
+            }
+
+            .demo-notice {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px dashed rgba(255, 255, 255, 0.3);
+                border-radius: 10px;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                text-align: center;
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 0.9rem;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">← back</a>
+
+        <div class="header">
+            <h1>🐦 Aviary</h1>
+            <p>Find peace in the songs of nature</p>
+        </div>
+
+        <div class="main-content">
+            <div class="demo-notice">
+                🎧 Demo mode — timer and badges work, audio tracks require local bird recordings
+            </div>
+
+            <div class="track-list">
+                <div class="track-item active" data-track="morning-chorus">
+                    <div class="track-emoji">🌅</div>
+                    <div class="track-details">
+                        <div class="track-name">Morning Chorus</div>
+                        <div class="track-description">
+                            Dawn birds greeting the day
+                        </div>
+                    </div>
+                </div>
+                <div class="track-item" data-track="robin-song">
+                    <div class="track-emoji">🐦</div>
+                    <div class="track-details">
+                        <div class="track-name">Robin's Song</div>
+                        <div class="track-description">
+                            Gentle robin melodies
+                        </div>
+                    </div>
+                </div>
+                <div class="track-item" data-track="cardinal-call">
+                    <div class="track-emoji">🔴</div>
+                    <div class="track-details">
+                        <div class="track-name">Cardinal's Call</div>
+                        <div class="track-description">
+                            Bright cardinal whistles
+                        </div>
+                    </div>
+                </div>
+                <div class="track-item" data-track="backyard-symphony">
+                    <div class="track-emoji">🎵</div>
+                    <div class="track-details">
+                        <div class="track-name">Backyard Symphony</div>
+                        <div class="track-description">
+                            Multiple birds in harmony
+                        </div>
+                    </div>
+                </div>
+                <div class="track-item" data-track="peaceful-afternoon">
+                    <div class="track-emoji">☀️</div>
+                    <div class="track-details">
+                        <div class="track-name">Peaceful Afternoon</div>
+                        <div class="track-description">
+                            Quiet afternoon bird calls
+                        </div>
+                    </div>
+                </div>
+                <div class="track-item" data-track="evening-peace">
+                    <div class="track-emoji">🌙</div>
+                    <div class="track-details">
+                        <div class="track-name">Evening Peace</div>
+                        <div class="track-description">Twilight bird songs</div>
+                    </div>
+                </div>
+                <div class="track-item" data-track="nature-sanctuary">
+                    <div class="track-emoji">🌿</div>
+                    <div class="track-details">
+                        <div class="track-name">Nature Sanctuary</div>
+                        <div class="track-description">
+                            Pure backyard tranquility
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="audio-player">
+                <div class="track-info">
+                    <div class="track-title" id="currentTrackTitle">
+                        Morning Chorus
+                    </div>
+                    <div class="track-duration" id="currentTrackDuration">
+                        Select a track to begin
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-secondary" id="prevBtn">⏮</button>
+                    <button class="btn btn-play" id="playBtn">▶️</button>
+                    <button class="btn btn-secondary" id="nextBtn">⏭</button>
+                </div>
+
+                <div class="volume-control">
+                    <span>🔉</span>
+                    <input
+                        type="range"
+                        class="volume-slider"
+                        id="volumeSlider"
+                        min="0"
+                        max="100"
+                        value="70"
+                    />
+                    <span>🔊</span>
+                </div>
+            </div>
+
+            <div class="timer-section">
+                <div class="timer-display" id="timerDisplay">00:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn" data-minutes="5">5 min</button>
+                    <button class="timer-btn" data-minutes="10">10 min</button>
+                    <button class="timer-btn" data-minutes="15">15 min</button>
+                    <button class="timer-btn" data-minutes="30">30 min</button>
+                    <button class="timer-btn" id="stopTimerBtn">Stop</button>
+                </div>
+            </div>
+
+            <div class="badges-section">
+                <h3 class="badges-title">🏆 Bird Badges</h3>
+                <div class="badges-grid" id="badgesGrid">
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="total-time" id="totalTimeDisplay">
+                    Total meditation time: 0 minutes
+                </div>
+            </div>
+        </div>
+
+        <div class="floating-notification" id="notification">
+            <div id="notificationText"></div>
+        </div>
+
+        <script>
+            // App State
+            const state = {
+                currentTrack: "morning-chorus",
+                isPlaying: false,
+                volume: 0.7,
+                timer: null,
+                timerDuration: 0,
+                timerStartTime: 0,
+                totalMeditationTime: 0,
+            };
+
+            // Track metadata (audio files not included in demo)
+            const tracks = {
+                "morning-chorus": {
+                    name: "Morning Chorus",
+                    description: "Dawn birds greeting the day",
+                },
+                "robin-song": {
+                    name: "Robin's Song",
+                    description: "Gentle robin melodies",
+                },
+                "cardinal-call": {
+                    name: "Cardinal's Call",
+                    description: "Bright cardinal whistles",
+                },
+                "backyard-symphony": {
+                    name: "Backyard Symphony",
+                    description: "Multiple birds in harmony",
+                },
+                "peaceful-afternoon": {
+                    name: "Peaceful Afternoon",
+                    description: "Quiet afternoon bird calls",
+                },
+                "evening-peace": {
+                    name: "Evening Peace",
+                    description: "Twilight bird songs",
+                },
+                "nature-sanctuary": {
+                    name: "Nature Sanctuary",
+                    description: "Pure backyard tranquility",
+                },
+            };
+
+            // Bird badges configuration
+            const badges = [
+                { id: "sparrow", name: "Sparrow", icon: "🐦", requiredMinutes: 5 },
+                { id: "robin", name: "Robin", icon: "🐧", requiredMinutes: 15 },
+                { id: "cardinal", name: "Cardinal", icon: "🦅", requiredMinutes: 30 },
+                { id: "owl", name: "Owl", icon: "🦉", requiredMinutes: 60 },
+                { id: "peacock", name: "Peacock", icon: "🦚", requiredMinutes: 120 },
+                { id: "swan", name: "Swan", icon: "🦢", requiredMinutes: 300 },
+                { id: "eagle", name: "Eagle", icon: "🦆", requiredMinutes: 600 },
+                { id: "phoenix", name: "Phoenix", icon: "🌟", requiredMinutes: 1200 },
+            ];
+
+            // DOM Elements
+            const playBtn = document.getElementById("playBtn");
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+            const volumeSlider = document.getElementById("volumeSlider");
+            const timerDisplay = document.getElementById("timerDisplay");
+            const timerButtons = document.querySelectorAll(".timer-btn[data-minutes]");
+            const stopTimerBtn = document.getElementById("stopTimerBtn");
+            const currentTrackTitle = document.getElementById("currentTrackTitle");
+            const currentTrackDuration = document.getElementById("currentTrackDuration");
+            const trackItems = document.querySelectorAll(".track-item");
+            const badgesGrid = document.getElementById("badgesGrid");
+            const progressFill = document.getElementById("progressFill");
+            const totalTimeDisplay = document.getElementById("totalTimeDisplay");
+            const notification = document.getElementById("notification");
+            const notificationText = document.getElementById("notificationText");
+
+            // Initialize app
+            function init() {
+                loadSavedData();
+                setupEventListeners();
+                updateUI();
+                createBadges();
+                updateBadges();
+            }
+
+            // Load saved data from localStorage
+            function loadSavedData() {
+                const saved = localStorage.getItem("aviary-data");
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    state.totalMeditationTime = data.totalMeditationTime || 0;
+                    state.volume = data.volume || 0.7;
+                    state.currentTrack = data.currentTrack || "morning-chorus";
+                }
+            }
+
+            // Save data to localStorage
+            function saveData() {
+                const data = {
+                    totalMeditationTime: state.totalMeditationTime,
+                    volume: state.volume,
+                    currentTrack: state.currentTrack,
+                };
+                localStorage.setItem("aviary-data", JSON.stringify(data));
+            }
+
+            // Setup event listeners
+            function setupEventListeners() {
+                playBtn.addEventListener("click", togglePlayPause);
+                prevBtn.addEventListener("click", previousTrack);
+                nextBtn.addEventListener("click", nextTrack);
+                volumeSlider.addEventListener("input", setVolume);
+
+                timerButtons.forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        const minutes = parseInt(btn.dataset.minutes);
+                        startTimer(minutes);
+                    });
+                });
+
+                stopTimerBtn.addEventListener("click", stopTimer);
+
+                trackItems.forEach((item) => {
+                    item.addEventListener("click", () => {
+                        const trackId = item.dataset.track;
+                        selectTrack(trackId);
+                    });
+                });
+            }
+
+            // Toggle play/pause (visual only in demo mode)
+            function togglePlayPause() {
+                state.isPlaying = !state.isPlaying;
+                playBtn.textContent = state.isPlaying ? "⏸️" : "▶️";
+                playBtn.setAttribute("aria-label", state.isPlaying ? "Pause" : "Play");
+
+                if (state.isPlaying) {
+                    currentTrackDuration.textContent = "Demo mode - no audio";
+                }
+            }
+
+            // Select track
+            function selectTrack(trackId) {
+                if (trackId === state.currentTrack) return;
+
+                state.currentTrack = trackId;
+                state.isPlaying = false;
+                playBtn.textContent = "▶️";
+
+                // Update UI
+                trackItems.forEach((item) => {
+                    item.classList.remove("active");
+                    if (item.dataset.track === trackId) {
+                        item.classList.add("active");
+                    }
+                });
+
+                const track = tracks[trackId];
+                currentTrackTitle.textContent = track.name;
+                currentTrackDuration.textContent = "Select a track to begin";
+                saveData();
+            }
+
+            // Previous track
+            function previousTrack() {
+                const trackIds = Object.keys(tracks);
+                const currentIndex = trackIds.indexOf(state.currentTrack);
+                const prevIndex = currentIndex > 0 ? currentIndex - 1 : trackIds.length - 1;
+                selectTrack(trackIds[prevIndex]);
+            }
+
+            // Next track
+            function nextTrack() {
+                const trackIds = Object.keys(tracks);
+                const currentIndex = trackIds.indexOf(state.currentTrack);
+                const nextIndex = currentIndex < trackIds.length - 1 ? currentIndex + 1 : 0;
+                selectTrack(trackIds[nextIndex]);
+            }
+
+            // Set volume
+            function setVolume() {
+                state.volume = volumeSlider.value / 100;
+                saveData();
+            }
+
+            // Start timer
+            function startTimer(minutes) {
+                if (state.timer) {
+                    clearInterval(state.timer);
+                }
+
+                state.timerDuration = minutes * 60;
+                state.timerStartTime = Date.now();
+
+                updateTimerDisplay(state.timerDuration);
+
+                state.timer = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - state.timerStartTime) / 1000);
+                    const remaining = Math.max(0, state.timerDuration - elapsed);
+
+                    updateTimerDisplay(remaining);
+
+                    if (remaining === 0) {
+                        timerComplete();
+                    }
+                }, 1000);
+
+                // Auto "play" if not already
+                if (!state.isPlaying) {
+                    togglePlayPause();
+                }
+
+                showNotification(`Timer started: ${minutes} minutes`);
+            }
+
+            // Stop timer
+            function stopTimer() {
+                if (state.timer) {
+                    // Calculate meditation time
+                    const elapsed = Math.floor((Date.now() - state.timerStartTime) / 1000);
+                    const meditationMinutes = Math.floor(elapsed / 60);
+
+                    if (meditationMinutes > 0) {
+                        state.totalMeditationTime += meditationMinutes;
+                        saveData();
+                        updateBadges();
+                        showNotification(
+                            `Great session! You meditated for ${meditationMinutes} minute${meditationMinutes > 1 ? "s" : ""}.`
+                        );
+                    }
+
+                    clearInterval(state.timer);
+                    state.timer = null;
+                    updateTimerDisplay();
+                }
+            }
+
+            // Timer complete
+            function timerComplete() {
+                const meditationMinutes = Math.floor(state.timerDuration / 60);
+                state.totalMeditationTime += meditationMinutes;
+
+                clearInterval(state.timer);
+                state.timer = null;
+
+                updateTimerDisplay();
+                saveData();
+                updateBadges();
+
+                showNotification(
+                    `🎉 Meditation complete! You've earned ${meditationMinutes} meditation minutes.`
+                );
+
+                // Stop "playing"
+                state.isPlaying = false;
+                playBtn.textContent = "▶️";
+            }
+
+            // Update timer display
+            function updateTimerDisplay(seconds = 0) {
+                timerDisplay.textContent = formatTime(seconds);
+            }
+
+            // Create badges
+            function createBadges() {
+                badgesGrid.innerHTML = "";
+
+                badges.forEach((badge) => {
+                    const badgeElement = document.createElement("div");
+                    badgeElement.className = "badge";
+                    badgeElement.innerHTML = `
+                        <div class="badge-icon">${badge.icon}</div>
+                        <div class="badge-name">${badge.name}</div>
+                        <div class="badge-time">${badge.requiredMinutes}m</div>
+                    `;
+                    badgesGrid.appendChild(badgeElement);
+                });
+            }
+
+            // Update badges
+            function updateBadges() {
+                const badgeElements = badgesGrid.querySelectorAll(".badge");
+                let nextBadgeProgress = 0;
+
+                badges.forEach((badge, index) => {
+                    const badgeElement = badgeElements[index];
+                    const isEarned = state.totalMeditationTime >= badge.requiredMinutes;
+
+                    if (isEarned) {
+                        badgeElement.classList.add("earned");
+                    } else {
+                        badgeElement.classList.remove("earned");
+                        if (nextBadgeProgress === 0) {
+                            nextBadgeProgress = (state.totalMeditationTime / badge.requiredMinutes) * 100;
+                        }
+                    }
+                });
+
+                // Update progress bar
+                progressFill.style.width = `${Math.min(nextBadgeProgress, 100)}%`;
+
+                // Update total time display
+                totalTimeDisplay.textContent = `Total meditation time: ${state.totalMeditationTime} minutes`;
+            }
+
+            // Show notification
+            function showNotification(message) {
+                notificationText.textContent = message;
+                notification.classList.add("show");
+
+                setTimeout(() => {
+                    notification.classList.remove("show");
+                }, 3000);
+            }
+
+            // Format time in MM:SS format
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = Math.floor(seconds % 60);
+                return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+            }
+
+            // Update UI
+            function updateUI() {
+                const track = tracks[state.currentTrack];
+                currentTrackTitle.textContent = track.name;
+                volumeSlider.value = state.volume * 100;
+                totalTimeDisplay.textContent = `Total meditation time: ${state.totalMeditationTime} minutes`;
+            }
+
+            // Initialize the app when DOM is loaded
+            document.addEventListener("DOMContentLoaded", init);
+        </script>
+    </body>
+</html>

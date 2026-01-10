@@ -17,14 +17,6 @@
       "lastUpdated": "2025-01-05"
     },
     {
-      "title": "QRY Methodology",
-      "description": "Query, Refine, Yield - a problem solving framework",
-      "href": "/methodology/",
-      "tags": ["learning"],
-      "status": "evergreen",
-      "lastUpdated": "2025-01-03"
-    },
-    {
       "title": "Database-first debugging",
       "description": "When the problem isn't in the code, it's in the data",
       "href": "/notes/database-first-debugging/",
@@ -64,7 +56,7 @@
       "href": "/notes/learning-to-spite/",
       "tags": ["learning", "personal"],
       "status": "seedling",
-      "connections": ["QRY Methodology", "About"],
+      "connections": ["About"],
       "lastUpdated": "2025-01-08"
     },
     {
