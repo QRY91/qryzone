@@ -498,16 +498,6 @@ permalink: /fun/aviary/
                 transform: translateX(0);
             }
 
-            .demo-notice {
-                background: rgba(255, 255, 255, 0.1);
-                border: 1px dashed rgba(255, 255, 255, 0.3);
-                border-radius: 10px;
-                padding: 1rem;
-                margin-bottom: 1rem;
-                text-align: center;
-                color: rgba(255, 255, 255, 0.9);
-                font-size: 0.9rem;
-            }
         </style>
     </head>
     <body>
@@ -519,70 +509,54 @@ permalink: /fun/aviary/
         </div>
 
         <div class="main-content">
-            <div class="demo-notice">
-                🎧 Demo mode — timer and badges work, audio tracks require local bird recordings
-            </div>
-
             <div class="track-list">
                 <div class="track-item active" data-track="morning-chorus">
                     <div class="track-emoji">🌅</div>
                     <div class="track-details">
                         <div class="track-name">Morning Chorus</div>
-                        <div class="track-description">
-                            Dawn birds greeting the day
-                        </div>
+                        <div class="track-description">Mixed dawn birdsong</div>
                     </div>
                 </div>
                 <div class="track-item" data-track="robin-song">
                     <div class="track-emoji">🐦</div>
                     <div class="track-details">
-                        <div class="track-name">Robin's Song</div>
-                        <div class="track-description">
-                            Gentle robin melodies
-                        </div>
+                        <div class="track-name">European Robin</div>
+                        <div class="track-description">Sweet, warbling melody</div>
                     </div>
                 </div>
                 <div class="track-item" data-track="cardinal-call">
                     <div class="track-emoji">🔴</div>
                     <div class="track-details">
-                        <div class="track-name">Cardinal's Call</div>
-                        <div class="track-description">
-                            Bright cardinal whistles
-                        </div>
+                        <div class="track-name">Northern Cardinal</div>
+                        <div class="track-description">Bright whistling calls</div>
                     </div>
                 </div>
-                <div class="track-item" data-track="backyard-symphony">
+                <div class="track-item" data-track="great-tit">
+                    <div class="track-emoji">💛</div>
+                    <div class="track-details">
+                        <div class="track-name">Great Tit</div>
+                        <div class="track-description">Cheerful two-note song</div>
+                    </div>
+                </div>
+                <div class="track-item" data-track="blackbird">
+                    <div class="track-emoji">🖤</div>
+                    <div class="track-details">
+                        <div class="track-name">Common Blackbird</div>
+                        <div class="track-description">Rich, flute-like song</div>
+                    </div>
+                </div>
+                <div class="track-item" data-track="song-thrush">
                     <div class="track-emoji">🎵</div>
                     <div class="track-details">
-                        <div class="track-name">Backyard Symphony</div>
-                        <div class="track-description">
-                            Multiple birds in harmony
-                        </div>
+                        <div class="track-name">Song Thrush</div>
+                        <div class="track-description">Repeated melodic phrases</div>
                     </div>
                 </div>
-                <div class="track-item" data-track="peaceful-afternoon">
-                    <div class="track-emoji">☀️</div>
-                    <div class="track-details">
-                        <div class="track-name">Peaceful Afternoon</div>
-                        <div class="track-description">
-                            Quiet afternoon bird calls
-                        </div>
-                    </div>
-                </div>
-                <div class="track-item" data-track="evening-peace">
+                <div class="track-item" data-track="nightingale">
                     <div class="track-emoji">🌙</div>
                     <div class="track-details">
-                        <div class="track-name">Evening Peace</div>
-                        <div class="track-description">Twilight bird songs</div>
-                    </div>
-                </div>
-                <div class="track-item" data-track="nature-sanctuary">
-                    <div class="track-emoji">🌿</div>
-                    <div class="track-details">
-                        <div class="track-name">Nature Sanctuary</div>
-                        <div class="track-description">
-                            Pure backyard tranquility
-                        </div>
+                        <div class="track-name">Nightingale</div>
+                        <div class="track-description">Complex, powerful song</div>
                     </div>
                 </div>
             </div>
@@ -593,7 +567,7 @@ permalink: /fun/aviary/
                         Morning Chorus
                     </div>
                     <div class="track-duration" id="currentTrackDuration">
-                        Select a track to begin
+                        Ready to play
                     </div>
                 </div>
 
@@ -655,37 +629,56 @@ permalink: /fun/aviary/
                 timerDuration: 0,
                 timerStartTime: 0,
                 totalMeditationTime: 0,
+                audioContext: null,
+                audioSource: null,
+                audioElement: null,
+                usingSynthesis: false,
+                synthNodes: [],
             };
 
-            // Track metadata (audio files not included in demo)
+            // Free bird sound URLs from Wikimedia Commons (CC licensed)
             const tracks = {
                 "morning-chorus": {
                     name: "Morning Chorus",
-                    description: "Dawn birds greeting the day",
+                    description: "Mixed dawn birdsong",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/4/40/Birdsong_in_Tennessee_-_early_morning_-_2020-05-30.ogg",
+                    synthConfig: { baseFreq: 2000, variance: 800, tempo: 0.15 },
                 },
                 "robin-song": {
-                    name: "Robin's Song",
-                    description: "Gentle robin melodies",
+                    name: "European Robin",
+                    description: "Sweet, warbling melody",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/4/45/Erithacus_rubecula_-_song.ogg",
+                    synthConfig: { baseFreq: 2800, variance: 600, tempo: 0.12 },
                 },
                 "cardinal-call": {
-                    name: "Cardinal's Call",
-                    description: "Bright cardinal whistles",
+                    name: "Northern Cardinal",
+                    description: "Bright whistling calls",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Cardinalis_cardinalis_-_Northern_Cardinal_-_XC110317.ogg",
+                    synthConfig: { baseFreq: 3200, variance: 1000, tempo: 0.2 },
                 },
-                "backyard-symphony": {
-                    name: "Backyard Symphony",
-                    description: "Multiple birds in harmony",
+                "great-tit": {
+                    name: "Great Tit",
+                    description: "Cheerful two-note song",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Parus_major_2_-_song.ogg",
+                    synthConfig: { baseFreq: 3500, variance: 500, tempo: 0.25 },
                 },
-                "peaceful-afternoon": {
-                    name: "Peaceful Afternoon",
-                    description: "Quiet afternoon bird calls",
+                "blackbird": {
+                    name: "Common Blackbird",
+                    description: "Rich, flute-like song",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Turdus_merula_2_-_song.ogg",
+                    synthConfig: { baseFreq: 1800, variance: 700, tempo: 0.18 },
                 },
-                "evening-peace": {
-                    name: "Evening Peace",
-                    description: "Twilight bird songs",
+                "song-thrush": {
+                    name: "Song Thrush",
+                    description: "Repeated melodic phrases",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Song_Thrush_song_LOMA2.ogg",
+                    synthConfig: { baseFreq: 2600, variance: 900, tempo: 0.14 },
                 },
-                "nature-sanctuary": {
-                    name: "Nature Sanctuary",
-                    description: "Pure backyard tranquility",
+                "nightingale": {
+                    name: "Nightingale",
+                    description: "Complex, powerful song",
+                    url: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Luscinia_megarhynchos_-_song.ogg",
+                    synthConfig: { baseFreq: 2200, variance: 1000, tempo: 0.1 },
                 },
             };
 
@@ -772,23 +765,182 @@ permalink: /fun/aviary/
                 });
             }
 
-            // Toggle play/pause (visual only in demo mode)
+            // Initialize audio context
+            function initAudioContext() {
+                if (!state.audioContext) {
+                    state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (state.audioContext.state === 'suspended') {
+                    state.audioContext.resume();
+                }
+            }
+
+            // Stop all synthesis
+            function stopSynthesis() {
+                state.synthNodes.forEach(node => {
+                    try {
+                        node.stop();
+                        node.disconnect();
+                    } catch (e) {}
+                });
+                state.synthNodes = [];
+            }
+
+            // Create bird chirp synthesis (fallback when audio fails)
+            function startSynthesis() {
+                initAudioContext();
+                stopSynthesis();
+
+                const track = tracks[state.currentTrack];
+                const config = track.synthConfig;
+                const ctx = state.audioContext;
+
+                // Create multiple "birds" for a richer soundscape
+                const numBirds = 3;
+
+                function createBirdChirp(birdIndex) {
+                    if (!state.isPlaying || !state.usingSynthesis) return;
+
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    const filter = ctx.createBiquadFilter();
+
+                    // Randomize each bird's characteristics
+                    const freqOffset = (birdIndex - 1) * 300;
+                    const baseFreq = config.baseFreq + freqOffset + (Math.random() - 0.5) * config.variance;
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(baseFreq, ctx.currentTime);
+
+                    // Create chirp pattern - frequency sweep
+                    const chirpDuration = 0.1 + Math.random() * 0.15;
+                    const sweepUp = Math.random() > 0.5;
+                    const targetFreq = sweepUp ? baseFreq * 1.3 : baseFreq * 0.7;
+                    osc.frequency.linearRampToValueAtTime(targetFreq, ctx.currentTime + chirpDuration * 0.5);
+                    osc.frequency.linearRampToValueAtTime(baseFreq, ctx.currentTime + chirpDuration);
+
+                    // Filter for more natural sound
+                    filter.type = 'bandpass';
+                    filter.frequency.value = baseFreq;
+                    filter.Q.value = 5;
+
+                    // Volume envelope
+                    gain.gain.setValueAtTime(0, ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(state.volume * 0.15, ctx.currentTime + 0.02);
+                    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + chirpDuration);
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc.start();
+                    osc.stop(ctx.currentTime + chirpDuration + 0.1);
+
+                    state.synthNodes.push(osc);
+
+                    // Schedule next chirp with some randomness
+                    const nextDelay = (config.tempo + Math.random() * 0.3) * 1000;
+                    setTimeout(() => createBirdChirp(birdIndex), nextDelay);
+                }
+
+                // Start each bird with slight offset
+                for (let i = 0; i < numBirds; i++) {
+                    setTimeout(() => createBirdChirp(i), i * 200);
+                }
+
+                currentTrackDuration.textContent = "Playing (synthesized)";
+            }
+
+            // Load and play audio from URL
+            async function playAudio() {
+                const track = tracks[state.currentTrack];
+
+                // Stop any existing audio
+                stopAudio();
+
+                currentTrackDuration.textContent = "Loading...";
+
+                // Try to load the audio file
+                state.audioElement = new Audio();
+                state.audioElement.crossOrigin = "anonymous";
+                state.audioElement.volume = state.volume;
+                state.audioElement.loop = true;
+
+                // Set up event handlers
+                state.audioElement.oncanplaythrough = () => {
+                    if (state.isPlaying && !state.usingSynthesis) {
+                        state.audioElement.play();
+                        currentTrackDuration.textContent = "Playing";
+                    }
+                };
+
+                state.audioElement.onerror = () => {
+                    console.log("Audio failed to load, falling back to synthesis");
+                    state.usingSynthesis = true;
+                    startSynthesis();
+                };
+
+                state.audioElement.onended = () => {
+                    if (state.isPlaying && !state.audioElement.loop) {
+                        state.audioElement.play();
+                    }
+                };
+
+                // Try to load the audio
+                try {
+                    state.audioElement.src = track.url;
+                    state.audioElement.load();
+                    state.usingSynthesis = false;
+
+                    // Set a timeout - if not playing within 5 seconds, fall back to synthesis
+                    setTimeout(() => {
+                        if (state.isPlaying && state.audioElement.readyState < 3) {
+                            console.log("Audio loading too slow, falling back to synthesis");
+                            state.usingSynthesis = true;
+                            startSynthesis();
+                        }
+                    }, 5000);
+                } catch (e) {
+                    state.usingSynthesis = true;
+                    startSynthesis();
+                }
+            }
+
+            // Stop all audio
+            function stopAudio() {
+                if (state.audioElement) {
+                    state.audioElement.pause();
+                    state.audioElement.src = '';
+                    state.audioElement = null;
+                }
+                stopSynthesis();
+            }
+
+            // Toggle play/pause
             function togglePlayPause() {
                 state.isPlaying = !state.isPlaying;
                 playBtn.textContent = state.isPlaying ? "⏸️" : "▶️";
                 playBtn.setAttribute("aria-label", state.isPlaying ? "Pause" : "Play");
 
                 if (state.isPlaying) {
-                    currentTrackDuration.textContent = "Demo mode - no audio";
+                    playAudio();
+                } else {
+                    stopAudio();
+                    currentTrackDuration.textContent = "Paused";
                 }
             }
 
             // Select track
             function selectTrack(trackId) {
-                if (trackId === state.currentTrack) return;
+                const wasPlaying = state.isPlaying;
+
+                // Stop current audio
+                if (state.isPlaying) {
+                    stopAudio();
+                    state.isPlaying = false;
+                }
 
                 state.currentTrack = trackId;
-                state.isPlaying = false;
                 playBtn.textContent = "▶️";
 
                 // Update UI
@@ -801,8 +953,15 @@ permalink: /fun/aviary/
 
                 const track = tracks[trackId];
                 currentTrackTitle.textContent = track.name;
-                currentTrackDuration.textContent = "Select a track to begin";
+                currentTrackDuration.textContent = "Ready to play";
                 saveData();
+
+                // If was playing, start the new track
+                if (wasPlaying) {
+                    state.isPlaying = true;
+                    playBtn.textContent = "⏸️";
+                    playAudio();
+                }
             }
 
             // Previous track
@@ -824,6 +983,9 @@ permalink: /fun/aviary/
             // Set volume
             function setVolume() {
                 state.volume = volumeSlider.value / 100;
+                if (state.audioElement) {
+                    state.audioElement.volume = state.volume;
+                }
                 saveData();
             }
 
@@ -895,9 +1057,11 @@ permalink: /fun/aviary/
                     `🎉 Meditation complete! You've earned ${meditationMinutes} meditation minutes.`
                 );
 
-                // Stop "playing"
+                // Stop playing
                 state.isPlaying = false;
                 playBtn.textContent = "▶️";
+                stopAudio();
+                currentTrackDuration.textContent = "Session complete";
             }
 
             // Update timer display
@@ -966,10 +1130,24 @@ permalink: /fun/aviary/
 
             // Update UI
             function updateUI() {
+                // Validate saved track still exists
+                if (!tracks[state.currentTrack]) {
+                    state.currentTrack = "morning-chorus";
+                }
+
                 const track = tracks[state.currentTrack];
                 currentTrackTitle.textContent = track.name;
+                currentTrackDuration.textContent = "Ready to play";
                 volumeSlider.value = state.volume * 100;
                 totalTimeDisplay.textContent = `Total meditation time: ${state.totalMeditationTime} minutes`;
+
+                // Update active track in list
+                trackItems.forEach((item) => {
+                    item.classList.remove("active");
+                    if (item.dataset.track === state.currentTrack) {
+                        item.classList.add("active");
+                    }
+                });
             }
 
             // Initialize the app when DOM is loaded

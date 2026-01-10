@@ -32,9 +32,23 @@
     function init() {
         renderTags();
         renderStatusButtons();
+        renderRecentlyUpdated();
         renderContent();
         setupEventListeners();
         checkUrlParams();
+    }
+
+    function renderRecentlyUpdated() {
+        const recentContent = document.getElementById('recent-content');
+        if (!recentContent) return;
+
+        // Get items with lastUpdated, sort by date descending, take top 5
+        const recentItems = contentData
+            .filter(item => item.lastUpdated)
+            .sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated))
+            .slice(0, 5);
+
+        recentContent.innerHTML = recentItems.map(item => renderCard(item, true)).join('');
     }
 
     function checkUrlParams() {
