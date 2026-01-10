@@ -1,0 +1,1409 @@
+---
+layout: false
+permalink: /fun/quantum-dice/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Quantum Dice - A roguelike dice game with quantum mechanics. Roll dice, collect glyphs, unlock boons!" />
+        <title>Quantum Dice</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%E2%9A%84</text></svg>">
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --bg-deep: #0a0a0f;
+                --bg-surface: #12121a;
+                --bg-elevated: #1a1a25;
+                --neon-cyan: #00fff2;
+                --neon-magenta: #ff00ff;
+                --neon-blue: #4d4dff;
+                --neon-green: #00ff88;
+                --neon-gold: #ffd700;
+                --text-primary: #e0e0e0;
+                --text-secondary: #808090;
+                --glow-cyan: 0 0 20px rgba(0, 255, 242, 0.5);
+                --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.5);
+            }
+
+            body {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-deep);
+                color: var(--text-primary);
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background:
+                    radial-gradient(circle at 20% 80%, rgba(0, 255, 242, 0.03) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.03) 0%, transparent 50%);
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            .back-link {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                background: rgba(0, 255, 242, 0.1);
+                border: 1px solid var(--neon-cyan);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                color: var(--neon-cyan);
+                text-decoration: none;
+                font-size: 0.85rem;
+                z-index: 100;
+                transition: all 0.3s ease;
+            }
+
+            .back-link:hover {
+                background: rgba(0, 255, 242, 0.2);
+                box-shadow: var(--glow-cyan);
+            }
+
+            .game-header {
+                text-align: center;
+                padding: 2rem 1rem;
+                padding-top: 4rem;
+                background: linear-gradient(180deg, var(--bg-surface) 0%, transparent 100%);
+            }
+
+            .game-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: clamp(1.8rem, 6vw, 3rem);
+                font-weight: 900;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 1rem;
+            }
+
+            .stats-bar {
+                display: flex;
+                justify-content: center;
+                gap: 2rem;
+                flex-wrap: wrap;
+                font-size: 0.9rem;
+            }
+
+            .stat {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .stat-label {
+                color: var(--text-secondary);
+            }
+
+            .stat-value {
+                color: var(--neon-cyan);
+                font-weight: 500;
+            }
+
+            .stat-value.warning {
+                color: var(--neon-magenta);
+            }
+
+            .game-container {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 1rem;
+                display: grid;
+                gap: 1.5rem;
+            }
+
+            .main-area {
+                display: grid;
+                gap: 1.5rem;
+            }
+
+            @media (min-width: 768px) {
+                .main-area {
+                    grid-template-columns: 1fr 200px;
+                }
+            }
+
+            .roll-section {
+                background: var(--bg-surface);
+                border: 1px solid rgba(0, 255, 242, 0.2);
+                border-radius: 12px;
+                padding: 2rem;
+                text-align: center;
+            }
+
+            .current-roll {
+                min-height: 120px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .glyph-display {
+                width: 100px;
+                height: 100px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 3.5rem;
+                border: 2px solid var(--neon-cyan);
+                border-radius: 12px;
+                background: rgba(0, 255, 242, 0.05);
+                box-shadow: var(--glow-cyan);
+                transition: all 0.3s ease;
+            }
+
+            .glyph-display.superposition {
+                animation: quantum-shimmer 0.5s ease-in-out infinite;
+                border-color: var(--neon-magenta);
+                box-shadow: var(--glow-magenta);
+            }
+
+            .glyph-display.collapsing {
+                animation: collapse-flash 0.3s ease-out;
+            }
+
+            @keyframes quantum-shimmer {
+                0%, 100% {
+                    transform: scale(1);
+                    border-color: var(--neon-cyan);
+                }
+                50% {
+                    transform: scale(1.05);
+                    border-color: var(--neon-magenta);
+                }
+            }
+
+            @keyframes collapse-flash {
+                0% { filter: brightness(1); transform: scale(1); }
+                50% { filter: brightness(2); transform: scale(1.1); }
+                100% { filter: brightness(1); transform: scale(1); }
+            }
+
+            .roll-info {
+                margin-bottom: 1rem;
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+                min-height: 1.5em;
+            }
+
+            .roll-info .bonus {
+                color: var(--neon-green);
+            }
+
+            .roll-btn {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1.3rem;
+                font-weight: 700;
+                padding: 1rem 3rem;
+                background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+                border: none;
+                border-radius: 8px;
+                color: var(--bg-deep);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                min-height: 54px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .roll-btn:hover:not(:disabled) {
+                box-shadow: var(--glow-cyan);
+                transform: translateY(-2px);
+            }
+
+            .roll-btn:disabled {
+                background: var(--bg-elevated);
+                color: var(--text-secondary);
+                cursor: not-allowed;
+                box-shadow: none;
+            }
+
+            .roll-btn.rolling {
+                animation: pulse 0.5s ease-in-out infinite;
+            }
+
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(0.98); }
+            }
+
+            .side-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .panel {
+                background: var(--bg-surface);
+                border: 1px solid rgba(0, 255, 242, 0.2);
+                border-radius: 8px;
+                padding: 1rem;
+            }
+
+            .panel-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--neon-cyan);
+                margin-bottom: 0.75rem;
+                border-bottom: 1px solid rgba(0, 255, 242, 0.2);
+                padding-bottom: 0.5rem;
+            }
+
+            .score-display {
+                font-size: 2rem;
+                font-weight: 700;
+                color: var(--text-primary);
+                text-align: center;
+            }
+
+            .score-target {
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+                text-align: center;
+                margin-top: 0.25rem;
+            }
+
+            .boon-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .boon-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.8rem;
+                padding: 0.5rem;
+                background: rgba(0, 255, 136, 0.1);
+                border: 1px solid rgba(0, 255, 136, 0.3);
+                border-radius: 4px;
+            }
+
+            .boon-item .icon {
+                font-size: 1rem;
+            }
+
+            .boon-empty {
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+                font-style: italic;
+            }
+
+            .history-section {
+                background: var(--bg-surface);
+                border: 1px solid rgba(0, 255, 242, 0.2);
+                border-radius: 8px;
+                padding: 1rem;
+            }
+
+            .history-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--neon-cyan);
+                margin-bottom: 0.75rem;
+            }
+
+            .history-track {
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                min-height: 50px;
+            }
+
+            .history-glyph {
+                width: 44px;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                border: 1px solid rgba(0, 255, 242, 0.3);
+                border-radius: 6px;
+                background: rgba(0, 255, 242, 0.05);
+                animation: fadeIn 0.3s ease-out;
+            }
+
+            .history-glyph.rune {
+                border-color: rgba(255, 215, 0, 0.5);
+                background: rgba(255, 215, 0, 0.1);
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.8); }
+                to { opacity: 1; transform: scale(1); }
+            }
+
+            .pool-section {
+                background: var(--bg-surface);
+                border: 1px solid rgba(0, 255, 242, 0.2);
+                border-radius: 8px;
+                padding: 1rem;
+            }
+
+            .pool-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--neon-cyan);
+                margin-bottom: 0.75rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .pool-count {
+                font-family: 'JetBrains Mono', monospace;
+                color: var(--text-secondary);
+            }
+
+            .pool-grid {
+                display: flex;
+                gap: 0.4rem;
+                flex-wrap: wrap;
+            }
+
+            .pool-glyph {
+                width: 36px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                border: 1px solid rgba(0, 255, 242, 0.2);
+                border-radius: 4px;
+                background: var(--bg-elevated);
+            }
+
+            .pool-glyph.superposition {
+                border-color: rgba(255, 0, 255, 0.4);
+                background: rgba(255, 0, 255, 0.1);
+            }
+
+            .pool-glyph.entangled {
+                border-color: rgba(77, 77, 255, 0.5);
+                background: rgba(77, 77, 255, 0.1);
+            }
+
+            /* Tooltips */
+            [data-tooltip] {
+                position: relative;
+                cursor: help;
+            }
+
+            [data-tooltip]::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                bottom: calc(100% + 8px);
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--bg-elevated);
+                color: var(--text-primary);
+                padding: 0.5rem 0.75rem;
+                border-radius: 6px;
+                font-size: 0.75rem;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.2s ease, visibility 0.2s ease;
+                z-index: 200;
+                pointer-events: none;
+                border: 1px solid var(--neon-cyan);
+                box-shadow: 0 0 10px rgba(0, 255, 242, 0.2);
+                max-width: 200px;
+                white-space: normal;
+                text-align: center;
+                line-height: 1.3;
+            }
+
+            [data-tooltip]::before {
+                content: '';
+                position: absolute;
+                bottom: calc(100% + 2px);
+                left: 50%;
+                transform: translateX(-50%);
+                border: 6px solid transparent;
+                border-top-color: var(--neon-cyan);
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.2s ease, visibility 0.2s ease;
+                z-index: 200;
+            }
+
+            [data-tooltip]:hover::after,
+            [data-tooltip]:hover::before {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Modals */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+
+            .modal-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .modal {
+                background: var(--bg-surface);
+                border: 2px solid var(--neon-cyan);
+                border-radius: 12px;
+                padding: 2rem;
+                max-width: 500px;
+                width: 90%;
+                text-align: center;
+                transform: scale(0.9);
+                transition: transform 0.3s ease;
+                box-shadow: var(--glow-cyan);
+            }
+
+            .modal-overlay.show .modal {
+                transform: scale(1);
+            }
+
+            .modal-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1.5rem;
+                color: var(--neon-cyan);
+                margin-bottom: 1rem;
+            }
+
+            .modal-message {
+                color: var(--text-secondary);
+                margin-bottom: 1.5rem;
+                line-height: 1.5;
+            }
+
+            .loot-options {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin-bottom: 1.5rem;
+            }
+
+            .loot-option {
+                background: var(--bg-elevated);
+                border: 2px solid rgba(0, 255, 242, 0.3);
+                border-radius: 8px;
+                padding: 1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                min-width: 100px;
+            }
+
+            .loot-option:hover {
+                border-color: var(--neon-cyan);
+                box-shadow: var(--glow-cyan);
+                transform: translateY(-4px);
+            }
+
+            .loot-glyph {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .loot-name {
+                font-size: 0.85rem;
+                color: var(--text-primary);
+                margin-bottom: 0.25rem;
+            }
+
+            .loot-value {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+            }
+
+            .loot-tag {
+                font-size: 0.65rem;
+                padding: 2px 6px;
+                border-radius: 3px;
+                margin-top: 0.5rem;
+                display: inline-block;
+            }
+
+            .loot-tag.superposition {
+                background: rgba(255, 0, 255, 0.2);
+                color: var(--neon-magenta);
+            }
+
+            .loot-tag.entangled {
+                background: rgba(77, 77, 255, 0.2);
+                color: var(--neon-blue);
+            }
+
+            .modal-btn {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1rem;
+                padding: 0.75rem 2rem;
+                background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+                border: none;
+                border-radius: 6px;
+                color: var(--bg-deep);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .modal-btn:hover {
+                box-shadow: var(--glow-cyan);
+            }
+
+            .modal-btn.secondary {
+                background: var(--bg-elevated);
+                color: var(--text-primary);
+                border: 1px solid var(--neon-cyan);
+            }
+
+            .game-over-icon {
+                font-size: 4rem;
+                margin-bottom: 1rem;
+            }
+
+            .win-icon {
+                color: var(--neon-green);
+            }
+
+            .lose-icon {
+                color: var(--neon-magenta);
+            }
+
+            .high-score {
+                position: fixed;
+                top: 1rem;
+                right: 1rem;
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+                z-index: 100;
+            }
+
+            .high-score span {
+                color: var(--neon-gold);
+            }
+
+            .help-btn {
+                position: fixed;
+                top: 1rem;
+                right: 6rem;
+                background: rgba(0, 255, 242, 0.1);
+                border: 1px solid var(--neon-cyan);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                color: var(--neon-cyan);
+                font-size: 0.85rem;
+                cursor: pointer;
+                z-index: 100;
+                transition: all 0.3s ease;
+                font-family: inherit;
+            }
+
+            .help-btn:hover {
+                background: rgba(0, 255, 242, 0.2);
+                box-shadow: var(--glow-cyan);
+            }
+
+            .rules-modal {
+                max-width: 600px;
+                max-height: 80vh;
+                overflow-y: auto;
+                text-align: left;
+            }
+
+            .rules-modal .modal-title {
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .rules-section {
+                margin-bottom: 1.5rem;
+            }
+
+            .rules-section h3 {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.9rem;
+                color: var(--neon-cyan);
+                margin-bottom: 0.5rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .rules-section p {
+                color: var(--text-secondary);
+                font-size: 0.85rem;
+                line-height: 1.5;
+                margin-bottom: 0.5rem;
+            }
+
+            .rules-section ul {
+                color: var(--text-secondary);
+                font-size: 0.85rem;
+                line-height: 1.6;
+                padding-left: 1.5rem;
+            }
+
+            .rules-section li {
+                margin-bottom: 0.25rem;
+            }
+
+            .rules-glyph-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+            }
+
+            .rules-glyph-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: var(--bg-elevated);
+                padding: 0.4rem 0.6rem;
+                border-radius: 4px;
+                font-size: 0.8rem;
+            }
+
+            .rules-glyph-item .glyph {
+                font-size: 1.2rem;
+            }
+
+            .rules-glyph-item .info {
+                color: var(--text-secondary);
+            }
+
+            .rules-close-btn {
+                display: block;
+                margin: 1.5rem auto 0;
+            }
+
+            /* Boon unlock animation */
+            .boon-unlock {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: var(--bg-surface);
+                border: 2px solid var(--neon-green);
+                border-radius: 12px;
+                padding: 2rem;
+                text-align: center;
+                z-index: 1001;
+                animation: boonPop 0.5s ease-out;
+                box-shadow: 0 0 40px rgba(0, 255, 136, 0.5);
+            }
+
+            @keyframes boonPop {
+                0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+                50% { transform: translate(-50%, -50%) scale(1.1); }
+                100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            }
+
+            .boon-unlock-title {
+                font-family: 'Orbitron', sans-serif;
+                color: var(--neon-green);
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .boon-unlock-desc {
+                color: var(--text-secondary);
+                font-size: 0.9rem;
+            }
+
+            /* Mobile */
+            @media (max-width: 767px) {
+                .game-header {
+                    padding-top: 3.5rem;
+                }
+
+                .stats-bar {
+                    gap: 1rem;
+                }
+
+                .glyph-display {
+                    width: 80px;
+                    height: 80px;
+                    font-size: 2.5rem;
+                }
+
+                .roll-btn {
+                    width: 100%;
+                    padding: 1rem;
+                }
+
+                .side-panel {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+
+                .side-panel .panel {
+                    flex: 1;
+                    min-width: 140px;
+                }
+
+                .high-score {
+                    top: auto;
+                    bottom: 1rem;
+                    right: 1rem;
+                }
+            }
+
+            @supports (padding: max(0px)) {
+                .game-header {
+                    padding-top: max(4rem, env(safe-area-inset-top));
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">< back</a>
+
+        <button class="help-btn" id="helpBtn">? Rules</button>
+
+        <div class="high-score">Best: <span id="highScore">0</span></div>
+
+        <header class="game-header">
+            <h1 class="game-title">Quantum Dice</h1>
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Round</span>
+                    <span class="stat-value" id="roundNum">1</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Target</span>
+                    <span class="stat-value" id="targetScore">15</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Rolls</span>
+                    <span class="stat-value" id="rollsLeft">7</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="game-container">
+            <div class="main-area">
+                <div class="roll-section">
+                    <div class="current-roll">
+                        <div class="glyph-display" id="currentGlyph">?</div>
+                    </div>
+                    <div class="roll-info" id="rollInfo"></div>
+                    <button class="roll-btn" id="rollBtn">Roll</button>
+                </div>
+
+                <div class="side-panel">
+                    <div class="panel">
+                        <div class="panel-title">Score</div>
+                        <div class="score-display" id="currentScore">0</div>
+                        <div class="score-target">of <span id="targetScoreSmall">15</span></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-title">Boons</div>
+                        <div class="boon-list" id="boonList">
+                            <div class="boon-empty">None active</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <div class="history-title">Roll History</div>
+                <div class="history-track" id="historyTrack"></div>
+            </div>
+
+            <div class="pool-section">
+                <div class="pool-title">
+                    <span>Dice Pool</span>
+                    <span class="pool-count" id="poolCount">6 glyphs</span>
+                </div>
+                <div class="pool-grid" id="poolGrid"></div>
+            </div>
+        </div>
+
+        <!-- Loot Modal -->
+        <div class="modal-overlay" id="lootModal">
+            <div class="modal">
+                <div class="modal-title">Round Complete!</div>
+                <div class="modal-message">Choose a glyph to add to your dice pool:</div>
+                <div class="loot-options" id="lootOptions"></div>
+            </div>
+        </div>
+
+        <!-- Game Over Modal -->
+        <div class="modal-overlay" id="gameOverModal">
+            <div class="modal">
+                <div class="game-over-icon" id="gameOverIcon"></div>
+                <div class="modal-title" id="gameOverTitle"></div>
+                <div class="modal-message" id="gameOverMessage"></div>
+                <button class="modal-btn" id="restartBtn">New Run</button>
+            </div>
+        </div>
+
+        <!-- Rules Modal -->
+        <div class="modal-overlay" id="rulesModal">
+            <div class="modal rules-modal">
+                <div class="modal-title">How to Play</div>
+
+                <div class="rules-section">
+                    <h3>Goal</h3>
+                    <p>Roll dice to reach the target score before running out of rolls. Complete rounds to progress and grow your dice pool.</p>
+                </div>
+
+                <div class="rules-section">
+                    <h3>Rounds</h3>
+                    <ul>
+                        <li><strong>Round 1:</strong> 7 rolls to score 15</li>
+                        <li><strong>Round 2:</strong> 10 rolls to score 22</li>
+                        <li><strong>Round 3:</strong> 12 rolls to score 29</li>
+                        <li><strong>Round 4+:</strong> 15 rolls, target increases by 7 each round</li>
+                    </ul>
+                </div>
+
+                <div class="rules-section">
+                    <h3>Glyph Types</h3>
+                    <div class="rules-glyph-list">
+                        <div class="rules-glyph-item"><span class="glyph">&#9856;</span><span class="info">Dice: 1-6 pts</span></div>
+                        <div class="rules-glyph-item"><span class="glyph">&#5866;</span><span class="info">Runes: 1 pt + boons</span></div>
+                        <div class="rules-glyph-item"><span class="glyph">K&#9824;</span><span class="info">Cards: 1-13 pts</span></div>
+                        <div class="rules-glyph-item"><span class="glyph">&#945;</span><span class="info">Photons: 2 pts + entangle</span></div>
+                        <div class="rules-glyph-item"><span class="glyph">?</span><span class="info">Superposition: random</span></div>
+                    </div>
+                </div>
+
+                <div class="rules-section">
+                    <h3>Quantum Mechanics</h3>
+                    <p><strong>Superposition:</strong> These glyphs exist in multiple states. When rolled, they collapse into a random glyph from their possible outcomes.</p>
+                    <p><strong>Entanglement:</strong> Photon pairs (&#945; and &#946;) are linked. If both are in your pool, rolling one adds +2 bonus from the partner.</p>
+                </div>
+
+                <div class="rules-section">
+                    <h3>Boons</h3>
+                    <p>Collect runes to unlock permanent bonuses:</p>
+                    <ul>
+                        <li><strong>Sun's Radiance</strong> (&#5866; Sowilo + &#5792; Fehu): All dice score +2</li>
+                        <li><strong>Water's Flow</strong> (&#5850; Laguz + &#5800; Ansuz): +1 max roll per round</li>
+                    </ul>
+                </div>
+
+                <div class="rules-section">
+                    <h3>Loot</h3>
+                    <p>After completing a round, choose 1 of 3 new glyphs to add to your pool. A larger pool means more variety but less control.</p>
+                </div>
+
+                <button class="modal-btn rules-close-btn" id="rulesCloseBtn">Got it</button>
+            </div>
+        </div>
+
+        <script>
+            // Glyph definitions
+            const GLYPHS = {
+                dice: [
+                    { id: 'dice_1', type: 'dice', value: 1, display: '\u2680', name: 'One', tooltip: 'Scores 1 point' },
+                    { id: 'dice_2', type: 'dice', value: 2, display: '\u2681', name: 'Two', tooltip: 'Scores 2 points' },
+                    { id: 'dice_3', type: 'dice', value: 3, display: '\u2682', name: 'Three', tooltip: 'Scores 3 points' },
+                    { id: 'dice_4', type: 'dice', value: 4, display: '\u2683', name: 'Four', tooltip: 'Scores 4 points' },
+                    { id: 'dice_5', type: 'dice', value: 5, display: '\u2684', name: 'Five', tooltip: 'Scores 5 points' },
+                    { id: 'dice_6', type: 'dice', value: 6, display: '\u2685', name: 'Six', tooltip: 'Scores 6 points' },
+                ],
+                runes: [
+                    { id: 'sowilo', type: 'rune', value: 1, display: '\u16CA', name: 'Sowilo', tooltip: 'Sowilo (1 pt). Pair with Fehu for Sun\'s Radiance boon' },
+                    { id: 'fehu', type: 'rune', value: 1, display: '\u16A0', name: 'Fehu', tooltip: 'Fehu (1 pt). Pair with Sowilo for Sun\'s Radiance boon' },
+                    { id: 'laguz', type: 'rune', value: 1, display: '\u16DA', name: 'Laguz', tooltip: 'Laguz (1 pt). Pair with Ansuz for Water\'s Flow boon' },
+                    { id: 'ansuz', type: 'rune', value: 1, display: '\u16A8', name: 'Ansuz', tooltip: 'Ansuz (1 pt). Pair with Laguz for Water\'s Flow boon' },
+                ],
+                cards: [
+                    { id: 'card_A', type: 'card', value: 1, display: 'A\u2660', name: 'Ace', tooltip: 'Ace of Spades (1 pt)' },
+                    { id: 'card_2', type: 'card', value: 2, display: '2\u2665', name: 'Two', tooltip: 'Two of Hearts (2 pts)' },
+                    { id: 'card_3', type: 'card', value: 3, display: '3\u2666', name: 'Three', tooltip: 'Three of Diamonds (3 pts)' },
+                    { id: 'card_4', type: 'card', value: 4, display: '4\u2663', name: 'Four', tooltip: 'Four of Clubs (4 pts)' },
+                    { id: 'card_5', type: 'card', value: 5, display: '5\u2660', name: 'Five', tooltip: 'Five of Spades (5 pts)' },
+                    { id: 'card_6', type: 'card', value: 6, display: '6\u2665', name: 'Six', tooltip: 'Six of Hearts (6 pts)' },
+                    { id: 'card_7', type: 'card', value: 7, display: '7\u2666', name: 'Seven', tooltip: 'Seven of Diamonds (7 pts)' },
+                    { id: 'card_8', type: 'card', value: 8, display: '8\u2663', name: 'Eight', tooltip: 'Eight of Clubs (8 pts)' },
+                    { id: 'card_9', type: 'card', value: 9, display: '9\u2660', name: 'Nine', tooltip: 'Nine of Spades (9 pts)' },
+                    { id: 'card_10', type: 'card', value: 10, display: '10\u2665', name: 'Ten', tooltip: 'Ten of Hearts (10 pts)' },
+                    { id: 'card_J', type: 'card', value: 11, display: 'J\u2666', name: 'Jack', tooltip: 'Jack of Diamonds (11 pts)' },
+                    { id: 'card_Q', type: 'card', value: 12, display: 'Q\u2663', name: 'Queen', tooltip: 'Queen of Clubs (12 pts)' },
+                    { id: 'card_K', type: 'card', value: 13, display: 'K\u2660', name: 'King', tooltip: 'King of Spades (13 pts)' },
+                ],
+                photons: [
+                    { id: 'photon_alpha', type: 'photon', value: 2, display: '\u03B1', name: 'Photon \u03B1', partner: 'photon_beta', tooltip: 'Photon Alpha (2 pts). Entangled with Beta: +2 bonus if both in pool' },
+                    { id: 'photon_beta', type: 'photon', value: 2, display: '\u03B2', name: 'Photon \u03B2', partner: 'photon_alpha', tooltip: 'Photon Beta (2 pts). Entangled with Alpha: +2 bonus if both in pool' },
+                ],
+                superposition: [
+                    { id: 'super_dice_card', type: 'superposition', display: '?', name: 'Dice|Card', outcomes: ['dice', 'card'], tooltip: 'Superposition: Collapses into a random dice (1-6) or card (1-13)' },
+                    { id: 'super_dice_rune', type: 'superposition', display: '?', name: 'Dice|Rune', outcomes: ['dice', 'rune'], tooltip: 'Superposition: Collapses into a random dice (1-6) or rune (1 pt + boon)' },
+                ],
+            };
+
+            // Game state
+            let gameState = {
+                round: 1,
+                score: 0,
+                rollsUsed: 0,
+                pool: [...GLYPHS.dice.map(g => g.id)],
+                rollHistory: [],
+                runesInHistory: [],
+                boons: [],
+                highScore: 0,
+                bestRound: 0,
+                rolling: false,
+            };
+
+            // DOM elements
+            const roundNumEl = document.getElementById('roundNum');
+            const targetScoreEl = document.getElementById('targetScore');
+            const targetScoreSmallEl = document.getElementById('targetScoreSmall');
+            const rollsLeftEl = document.getElementById('rollsLeft');
+            const currentScoreEl = document.getElementById('currentScore');
+            const currentGlyphEl = document.getElementById('currentGlyph');
+            const rollInfoEl = document.getElementById('rollInfo');
+            const rollBtn = document.getElementById('rollBtn');
+            const historyTrackEl = document.getElementById('historyTrack');
+            const poolGridEl = document.getElementById('poolGrid');
+            const poolCountEl = document.getElementById('poolCount');
+            const boonListEl = document.getElementById('boonList');
+            const highScoreEl = document.getElementById('highScore');
+            const lootModal = document.getElementById('lootModal');
+            const lootOptionsEl = document.getElementById('lootOptions');
+            const gameOverModal = document.getElementById('gameOverModal');
+            const gameOverIcon = document.getElementById('gameOverIcon');
+            const gameOverTitle = document.getElementById('gameOverTitle');
+            const gameOverMessage = document.getElementById('gameOverMessage');
+            const restartBtn = document.getElementById('restartBtn');
+            const helpBtn = document.getElementById('helpBtn');
+            const rulesModal = document.getElementById('rulesModal');
+            const rulesCloseBtn = document.getElementById('rulesCloseBtn');
+
+            function getRoundConfig(round) {
+                if (round === 1) return { maxRolls: 7, target: 15 };
+                if (round === 2) return { maxRolls: 10, target: 22 };
+                if (round === 3) return { maxRolls: 12, target: 29 };
+                const baseRolls = 15;
+                const bonusRolls = gameState.boons.includes('waters_flow') ? 1 : 0;
+                return { maxRolls: baseRolls + bonusRolls, target: 15 + (round - 1) * 7 };
+            }
+
+            function getGlyphById(id) {
+                for (const category of Object.values(GLYPHS)) {
+                    const found = category.find(g => g.id === id);
+                    if (found) return found;
+                }
+                return null;
+            }
+
+            function getAllOutcomes(outcomeTypes) {
+                const outcomes = [];
+                for (const type of outcomeTypes) {
+                    if (GLYPHS[type]) {
+                        outcomes.push(...GLYPHS[type]);
+                    }
+                    if (type === 'card') {
+                        outcomes.push(...GLYPHS.cards);
+                    }
+                    if (type === 'rune') {
+                        outcomes.push(...GLYPHS.runes);
+                    }
+                }
+                return outcomes;
+            }
+
+            function calculateValue(glyph) {
+                let value = glyph.value || 0;
+
+                // Sun's Radiance: +2 to dice
+                if (glyph.type === 'dice' && gameState.boons.includes('suns_radiance')) {
+                    value += 2;
+                }
+
+                // Entanglement bonus
+                if (glyph.type === 'photon' && glyph.partner) {
+                    if (gameState.pool.includes(glyph.partner)) {
+                        value += 2;
+                    }
+                }
+
+                return value;
+            }
+
+            function checkBoonUnlocks(runeId) {
+                if (!gameState.runesInHistory.includes(runeId)) {
+                    gameState.runesInHistory.push(runeId);
+                }
+
+                const hasRune = (id) => gameState.runesInHistory.includes(id);
+
+                // Sun's Radiance: Sowilo + Fehu
+                if (hasRune('sowilo') && hasRune('fehu') && !gameState.boons.includes('suns_radiance')) {
+                    gameState.boons.push('suns_radiance');
+                    showBoonUnlock("Sun's Radiance", "All dice now score +2 points");
+                }
+
+                // Water's Flow: Laguz + Ansuz
+                if (hasRune('laguz') && hasRune('ansuz') && !gameState.boons.includes('waters_flow')) {
+                    gameState.boons.push('waters_flow');
+                    showBoonUnlock("Water's Flow", "+1 max roll per round");
+                }
+            }
+
+            function showBoonUnlock(name, desc) {
+                const popup = document.createElement('div');
+                popup.className = 'boon-unlock';
+                popup.innerHTML = `
+                    <div class="boon-unlock-title">${name}</div>
+                    <div class="boon-unlock-desc">${desc}</div>
+                `;
+                document.body.appendChild(popup);
+                setTimeout(() => popup.remove(), 2000);
+            }
+
+            async function rollDice() {
+                if (gameState.rolling) return;
+
+                const config = getRoundConfig(gameState.round);
+                if (gameState.rollsUsed >= config.maxRolls) return;
+
+                gameState.rolling = true;
+                rollBtn.classList.add('rolling');
+                rollBtn.disabled = true;
+
+                // Pick random glyph from pool
+                const randomIndex = Math.floor(Math.random() * gameState.pool.length);
+                const glyphId = gameState.pool[randomIndex];
+                let glyph = getGlyphById(glyphId);
+
+                // Handle superposition
+                if (glyph.type === 'superposition') {
+                    glyph = await animateSuperposition(glyph);
+                } else {
+                    currentGlyphEl.textContent = glyph.display;
+                    await sleep(300);
+                }
+
+                // Calculate value
+                const value = calculateValue(glyph);
+                let bonusText = '';
+
+                if (glyph.type === 'dice' && gameState.boons.includes('suns_radiance')) {
+                    bonusText = ' <span class="bonus">(+2 Sun)</span>';
+                }
+                if (glyph.type === 'photon' && glyph.partner && gameState.pool.includes(glyph.partner)) {
+                    bonusText = ' <span class="bonus">(+2 Entangled)</span>';
+                }
+
+                rollInfoEl.innerHTML = `${glyph.name}: ${value} pts${bonusText}`;
+
+                // Update state
+                gameState.score += value;
+                gameState.rollsUsed++;
+                gameState.rollHistory.push({ glyph, value });
+
+                // Check for rune boons
+                if (glyph.type === 'rune') {
+                    checkBoonUnlocks(glyph.id);
+                }
+
+                updateDisplay();
+
+                gameState.rolling = false;
+                rollBtn.classList.remove('rolling');
+
+                // Check win/lose conditions
+                setTimeout(() => checkRoundEnd(), 500);
+            }
+
+            async function animateSuperposition(superGlyph) {
+                currentGlyphEl.classList.add('superposition');
+
+                const outcomes = getAllOutcomes(superGlyph.outcomes);
+                const shimmerDuration = 800;
+                const startTime = Date.now();
+
+                // Shimmer animation
+                while (Date.now() - startTime < shimmerDuration) {
+                    const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+                    currentGlyphEl.textContent = randomOutcome.display;
+                    await sleep(50);
+                }
+
+                // Collapse
+                currentGlyphEl.classList.remove('superposition');
+                currentGlyphEl.classList.add('collapsing');
+
+                const finalOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+                currentGlyphEl.textContent = finalOutcome.display;
+
+                await sleep(300);
+                currentGlyphEl.classList.remove('collapsing');
+
+                return finalOutcome;
+            }
+
+            function checkRoundEnd() {
+                const config = getRoundConfig(gameState.round);
+
+                if (gameState.score >= config.target) {
+                    // Win round
+                    if (gameState.score > gameState.highScore) {
+                        gameState.highScore = gameState.score;
+                    }
+                    if (gameState.round > gameState.bestRound) {
+                        gameState.bestRound = gameState.round;
+                    }
+                    saveProgress();
+                    showLootSelection();
+                } else if (gameState.rollsUsed >= config.maxRolls) {
+                    // Lose
+                    showGameOver(false);
+                } else {
+                    rollBtn.disabled = false;
+                }
+            }
+
+            function showLootSelection() {
+                const lootPool = [
+                    ...GLYPHS.runes,
+                    ...GLYPHS.cards,
+                    ...GLYPHS.photons,
+                    ...GLYPHS.superposition,
+                ];
+
+                // Shuffle and pick 3
+                const shuffled = lootPool.sort(() => Math.random() - 0.5);
+                const options = shuffled.slice(0, 3);
+
+                lootOptionsEl.innerHTML = '';
+                options.forEach(glyph => {
+                    const option = document.createElement('div');
+                    option.className = 'loot-option';
+                    option.dataset.tooltip = glyph.tooltip || glyph.name;
+
+                    let tag = '';
+                    if (glyph.type === 'superposition') {
+                        tag = '<div class="loot-tag superposition">Superposition</div>';
+                    } else if (glyph.type === 'photon') {
+                        tag = '<div class="loot-tag entangled">Entangled</div>';
+                    }
+
+                    const displayValue = glyph.type === 'superposition' ? 'Variable' : glyph.value + ' pts';
+
+                    option.innerHTML = `
+                        <div class="loot-glyph">${glyph.display}</div>
+                        <div class="loot-name">${glyph.name}</div>
+                        <div class="loot-value">${displayValue}</div>
+                        ${tag}
+                    `;
+
+                    option.addEventListener('click', () => selectLoot(glyph));
+                    lootOptionsEl.appendChild(option);
+                });
+
+                lootModal.classList.add('show');
+            }
+
+            function selectLoot(glyph) {
+                gameState.pool.push(glyph.id);
+                lootModal.classList.remove('show');
+                nextRound();
+            }
+
+            function nextRound() {
+                gameState.round++;
+                gameState.score = 0;
+                gameState.rollsUsed = 0;
+                gameState.rollHistory = [];
+                gameState.runesInHistory = [];
+
+                currentGlyphEl.textContent = '?';
+                rollInfoEl.innerHTML = '';
+
+                updateDisplay();
+                rollBtn.disabled = false;
+            }
+
+            function showGameOver(won) {
+                if (won) {
+                    gameOverIcon.textContent = '\u2728';
+                    gameOverIcon.className = 'game-over-icon win-icon';
+                    gameOverTitle.textContent = 'Victory!';
+                    gameOverMessage.textContent = `You completed ${gameState.round} rounds with a score of ${gameState.score}!`;
+                } else {
+                    gameOverIcon.textContent = '\u26A0';
+                    gameOverIcon.className = 'game-over-icon lose-icon';
+                    gameOverTitle.textContent = 'Quantum Decoherence';
+                    const config = getRoundConfig(gameState.round);
+                    gameOverMessage.textContent = `Round ${gameState.round}: Scored ${gameState.score} of ${config.target} needed. The wave function collapsed.`;
+                }
+
+                gameOverModal.classList.add('show');
+            }
+
+            function restartGame() {
+                gameState = {
+                    round: 1,
+                    score: 0,
+                    rollsUsed: 0,
+                    pool: [...GLYPHS.dice.map(g => g.id)],
+                    rollHistory: [],
+                    runesInHistory: [],
+                    boons: [],
+                    highScore: gameState.highScore,
+                    bestRound: gameState.bestRound,
+                    rolling: false,
+                };
+
+                currentGlyphEl.textContent = '?';
+                rollInfoEl.innerHTML = '';
+
+                gameOverModal.classList.remove('show');
+                updateDisplay();
+                rollBtn.disabled = false;
+            }
+
+            function updateDisplay() {
+                const config = getRoundConfig(gameState.round);
+
+                roundNumEl.textContent = gameState.round;
+                targetScoreEl.textContent = config.target;
+                targetScoreSmallEl.textContent = config.target;
+                rollsLeftEl.textContent = config.maxRolls - gameState.rollsUsed;
+                currentScoreEl.textContent = gameState.score;
+                highScoreEl.textContent = gameState.highScore;
+
+                // Warning color for low rolls
+                if (config.maxRolls - gameState.rollsUsed <= 2) {
+                    rollsLeftEl.classList.add('warning');
+                } else {
+                    rollsLeftEl.classList.remove('warning');
+                }
+
+                // Update history track
+                historyTrackEl.innerHTML = '';
+                gameState.rollHistory.forEach(({ glyph, value }) => {
+                    const el = document.createElement('div');
+                    el.className = 'history-glyph';
+                    if (glyph.type === 'rune') el.classList.add('rune');
+                    el.textContent = glyph.display;
+                    el.dataset.tooltip = `${glyph.name}: scored ${value} pts`;
+                    historyTrackEl.appendChild(el);
+                });
+
+                // Update pool
+                poolGridEl.innerHTML = '';
+                gameState.pool.forEach(id => {
+                    const glyph = getGlyphById(id);
+                    if (glyph) {
+                        const el = document.createElement('div');
+                        el.className = 'pool-glyph';
+                        if (glyph.type === 'superposition') el.classList.add('superposition');
+                        if (glyph.type === 'photon') el.classList.add('entangled');
+                        el.textContent = glyph.display;
+                        el.dataset.tooltip = glyph.tooltip || glyph.name;
+                        poolGridEl.appendChild(el);
+                    }
+                });
+                poolCountEl.textContent = `${gameState.pool.length} glyphs`;
+
+                // Update boons
+                if (gameState.boons.length === 0) {
+                    boonListEl.innerHTML = '<div class="boon-empty">None active</div>';
+                } else {
+                    boonListEl.innerHTML = '';
+                    if (gameState.boons.includes('suns_radiance')) {
+                        boonListEl.innerHTML += `
+                            <div class="boon-item">
+                                <span class="icon">\u2600</span>
+                                <span>Sun's Radiance (+2 dice)</span>
+                            </div>
+                        `;
+                    }
+                    if (gameState.boons.includes('waters_flow')) {
+                        boonListEl.innerHTML += `
+                            <div class="boon-item">
+                                <span class="icon">\u{1F30A}</span>
+                                <span>Water's Flow (+1 roll)</span>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            function saveProgress() {
+                const saveData = {
+                    highScore: gameState.highScore,
+                    bestRound: gameState.bestRound,
+                };
+                localStorage.setItem('quantum-dice-save', JSON.stringify(saveData));
+            }
+
+            function loadProgress() {
+                const saved = localStorage.getItem('quantum-dice-save');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    gameState.highScore = data.highScore || 0;
+                    gameState.bestRound = data.bestRound || 0;
+                }
+            }
+
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            function init() {
+                loadProgress();
+                updateDisplay();
+
+                rollBtn.addEventListener('click', rollDice);
+                restartBtn.addEventListener('click', restartGame);
+                helpBtn.addEventListener('click', () => rulesModal.classList.add('show'));
+                rulesCloseBtn.addEventListener('click', () => rulesModal.classList.remove('show'));
+                rulesModal.addEventListener('click', (e) => {
+                    if (e.target === rulesModal) rulesModal.classList.remove('show');
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', init);
+        </script>
+    </body>
+</html>
