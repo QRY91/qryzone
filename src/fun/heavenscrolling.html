@@ -1,0 +1,2717 @@
+---
+layout: false
+permalink: /fun/heavenscrolling/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Heavenscrolling - An infinite social media feed simulator. Doomscrolling without consequences.">
+    <title>Heavenscrolling</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%E2%98%81%EF%B8%8F</text></svg>">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #f8f9fa;
+            --bg-card: #ffffff;
+            --bg-hover: #f1f3f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6c757d;
+            --text-muted: #adb5bd;
+            --border-light: #e9ecef;
+            --border-medium: #dee2e6;
+            --accent-blue: #4a90d9;
+            --accent-pink: #e8a4b8;
+            --accent-green: #6bbf8a;
+            --accent-orange: #f5a623;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .back-link {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 0.5rem 0.875rem;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            z-index: 100;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .back-link:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .help-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 0.5rem 0.875rem;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .help-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid var(--border-light);
+            padding: 1rem 2rem;
+            padding-top: 3.5rem;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+        }
+
+        .header-content {
+            max-width: 520px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header h1 span {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: var(--bg-hover);
+            padding: 0.4rem 0.75rem;
+            border-radius: 16px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+        }
+
+        .stat-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .stat-value.rank {
+            color: var(--accent-orange);
+        }
+
+        .mode-toggle {
+            background: var(--bg-hover);
+            color: var(--text-secondary);
+            border: none;
+            padding: 0.4rem 0.75rem;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .mode-toggle:hover:not(:disabled) {
+            background: var(--border-medium);
+            color: var(--text-primary);
+        }
+
+        .mode-toggle:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .mode-toggle.active {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .main-content {
+            margin-top: 130px;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            padding-bottom: 4rem;
+        }
+
+        .feed-container {
+            max-width: 520px;
+            width: 100%;
+        }
+
+        .post {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .post:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.625rem;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: white;
+        }
+
+        .avatar.gradient-1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .avatar.gradient-2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .avatar.gradient-3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .avatar.gradient-4 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .avatar.gradient-5 { background: linear-gradient(135deg, #fa709a, #fee140); }
+        .avatar.gradient-6 { background: linear-gradient(135deg, #a8edea, #fed6e3); color: #555; }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .display-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .verified-badge {
+            color: var(--accent-blue);
+            margin-left: 3px;
+            font-size: 0.75rem;
+        }
+
+        .username {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .post-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .post-content {
+            font-size: 0.9375rem;
+            line-height: 1.55;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0.35rem 0.5rem;
+            border-radius: 8px;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-secondary);
+        }
+
+        .action-btn.liked {
+            color: #e25555;
+        }
+
+        .action-btn.reposted {
+            color: var(--accent-green);
+        }
+
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            z-index: 2000;
+            box-shadow: var(--shadow-md);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-light);
+            border-top: 3px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 1.75rem;
+            max-width: 420px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: left;
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .modal-overlay.show .modal {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.25rem;
+            text-align: center;
+        }
+
+        .modal-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-section h3 {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .modal-section p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 0.4rem;
+        }
+
+        .rank-list {
+            display: grid;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-hover);
+            padding: 0.5rem 0.75rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .rank-item .threshold {
+            color: var(--text-muted);
+            min-width: 50px;
+            font-weight: 500;
+        }
+
+        .rank-item .name {
+            color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        .modal-close-btn {
+            display: block;
+            width: 100%;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            background: var(--text-primary);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .modal-close-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .reset-btn {
+            display: block;
+            width: 100%;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+            background: transparent;
+            border: 1px solid var(--border-medium);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .reset-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--text-muted);
+            color: var(--text-primary);
+        }
+
+        /* Rank up notification */
+        .rank-up-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            z-index: 1001;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .rank-up-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.25rem;
+        }
+
+        .rank-up-name {
+            font-size: 1.5rem;
+            color: var(--accent-orange);
+            font-weight: 700;
+        }
+
+        /* Time wasted ticker */
+        .time-wasted {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 0.5rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .time-wasted .value {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .header {
+                padding: 0.875rem 1rem;
+                padding-top: 3rem;
+            }
+
+            .stats-bar {
+                gap: 0.5rem;
+            }
+
+            .stat {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .main-content {
+                margin-top: 140px;
+                padding: 0.75rem;
+            }
+
+            .post {
+                padding: 0.875rem;
+                border-radius: 12px;
+            }
+
+            .time-wasted {
+                bottom: auto;
+                top: 0.875rem;
+                right: 4.5rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Notification toasts */
+        .toast-container {
+            position: fixed;
+            top: 4rem;
+            right: 1rem;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-width: 280px;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            box-shadow: var(--shadow-md);
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 4.7s forwards;
+            cursor: pointer;
+        }
+
+        .toast:hover {
+            background: var(--bg-hover);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(50%); }
+        }
+
+        .toast-icon {
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .toast-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .toast-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Trending sidebar */
+        .trending-sidebar {
+            position: fixed;
+            top: 140px;
+            right: 2rem;
+            width: 260px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: var(--shadow-sm);
+            z-index: 40;
+        }
+
+        .trending-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .trending-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: background 0.15s ease;
+            margin: 0 -0.5rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .trending-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .trending-category {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .trending-topic {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0.15rem 0;
+        }
+
+        .trending-posts {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Friend suggestion card */
+        .friend-suggestion {
+            position: fixed;
+            bottom: 5rem;
+            left: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1rem;
+            width: 240px;
+            box-shadow: var(--shadow-md);
+            z-index: 150;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .friend-suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .friend-suggestion-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .friend-suggestion-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .friend-suggestion-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .friend-suggestion .avatar {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        .friend-suggestion-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .friend-suggestion-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .friend-suggestion-reason {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .friend-suggestion-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .friend-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .friend-btn.accept {
+            background: var(--accent-blue);
+            border: none;
+            color: white;
+        }
+
+        .friend-btn.accept:hover {
+            opacity: 0.9;
+        }
+
+        .friend-btn.ignore {
+            background: transparent;
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+        }
+
+        .friend-btn.ignore:hover {
+            background: var(--bg-hover);
+        }
+
+        /* Wellness popup */
+        .wellness-popup {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--shadow-md);
+            z-index: 180;
+            text-align: center;
+            max-width: 320px;
+            animation: floatUp 0.4s ease;
+        }
+
+        @keyframes floatUp {
+            from { transform: translateX(-50%) translateY(30px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .wellness-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .wellness-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .wellness-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .wellness-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .wellness-btn {
+            flex: 1;
+            padding: 0.6rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .wellness-btn.dismiss {
+            background: var(--text-primary);
+            border: none;
+            color: white;
+        }
+
+        .wellness-btn.dismiss:hover {
+            opacity: 0.9;
+        }
+
+        .wellness-btn.continue {
+            background: transparent;
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+        }
+
+        .wellness-btn.continue:hover {
+            background: var(--bg-hover);
+        }
+
+        /* Stories bar */
+        .stories-bar {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            margin-bottom: 0.75rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .stories-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.35rem;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .story-ring {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6);
+        }
+
+        .story-ring.seen {
+            background: var(--border-medium);
+        }
+
+        .story-ring.live {
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .story-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: 2px solid var(--bg-card);
+        }
+
+        .story-name {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            max-width: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .story-live-badge {
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ef4444;
+            color: white;
+            font-size: 0.5rem;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+
+        .story-ring-wrapper {
+            position: relative;
+        }
+
+        /* Sponsored post */
+        .post.sponsored {
+            border: 1px solid var(--accent-blue);
+            background: linear-gradient(135deg, rgba(74, 144, 217, 0.03), rgba(232, 164, 184, 0.03));
+        }
+
+        .sponsored-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .sponsored-cta {
+            display: inline-block;
+            margin-top: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.15s;
+        }
+
+        .sponsored-cta:hover {
+            opacity: 0.9;
+        }
+
+        /* Poll post */
+        .poll-container {
+            margin-top: 0.75rem;
+        }
+
+        .poll-option {
+            position: relative;
+            background: var(--bg-hover);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 0.6rem 0.75rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color 0.15s;
+        }
+
+        .poll-option:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .poll-option.voted {
+            border-color: var(--accent-blue);
+        }
+
+        .poll-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: rgba(74, 144, 217, 0.15);
+            border-radius: 8px 0 0 8px;
+            transition: width 0.5s ease;
+        }
+
+        .poll-text {
+            position: relative;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .poll-percent {
+            font-weight: 600;
+            color: var(--accent-blue);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .poll-option.voted .poll-percent {
+            opacity: 1;
+        }
+
+        .poll-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Quote repost */
+        .quoted-post {
+            margin-top: 0.75rem;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 0.75rem;
+            background: var(--bg-hover);
+        }
+
+        .quoted-post .post-header {
+            margin-bottom: 0.35rem;
+        }
+
+        .quoted-post .avatar {
+            width: 28px;
+            height: 28px;
+            font-size: 0.65rem;
+        }
+
+        .quoted-post .display-name {
+            font-size: 0.8rem;
+        }
+
+        .quoted-post .username {
+            font-size: 0.7rem;
+        }
+
+        .quoted-post .post-content {
+            font-size: 0.8rem;
+            margin-bottom: 0;
+            color: var(--text-secondary);
+        }
+
+        /* Sensitive content warning */
+        .sensitive-overlay {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-hover);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            z-index: 5;
+            cursor: pointer;
+        }
+
+        .sensitive-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sensitive-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .sensitive-show {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        .post.has-sensitive {
+            position: relative;
+            min-height: 120px;
+        }
+
+        /* Thread indicator */
+        .thread-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.7rem;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Premium upsell modal */
+        .premium-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 1.5rem;
+            max-width: 340px;
+            width: 90%;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.2);
+            z-index: 250;
+            animation: popIn 0.3s ease;
+            text-align: center;
+        }
+
+        .premium-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 240;
+        }
+
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: linear-gradient(135deg, #f59e0b, #eab308);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .premium-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .premium-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .premium-features {
+            text-align: left;
+            margin-bottom: 1.25rem;
+        }
+
+        .premium-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.35rem 0;
+        }
+
+        .premium-feature-icon {
+            color: var(--accent-green);
+        }
+
+        .premium-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .premium-price-note {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .premium-cta {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #f59e0b, #eab308);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            font-family: inherit;
+        }
+
+        .premium-cta:hover {
+            opacity: 0.95;
+        }
+
+        .premium-dismiss {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            font-family: inherit;
+        }
+
+        .premium-dismiss:hover {
+            color: var(--text-secondary);
+        }
+
+        /* Cookie consent */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-light);
+            padding: 1rem 1.5rem;
+            z-index: 300;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            animation: slideUp 0.4s ease;
+        }
+
+        .cookie-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cookie-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+        }
+
+        .cookie-text {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .cookie-toggles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cookie-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            background: var(--bg-hover);
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+        }
+
+        .cookie-toggle input {
+            accent-color: var(--accent-blue);
+        }
+
+        .cookie-toggle.required {
+            opacity: 0.6;
+        }
+
+        .cookie-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .cookie-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+
+        .cookie-btn.accept {
+            background: var(--text-primary);
+            border: none;
+            color: white;
+        }
+
+        .cookie-btn.customize {
+            background: transparent;
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+        }
+
+        .cookie-btn.reject {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .cookie-btn.reject:hover {
+            color: var(--text-secondary);
+        }
+
+        /* Leave popup */
+        .leave-popup {
+            position: fixed;
+            top: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            box-shadow: var(--shadow-md);
+            z-index: 180;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: dropDown 0.3s ease;
+        }
+
+        @keyframes dropDown {
+            from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .leave-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .leave-text strong {
+            color: var(--text-primary);
+        }
+
+        .leave-btn {
+            padding: 0.4rem 0.75rem;
+            background: var(--accent-blue);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        /* Memories card */
+        .memories-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.08));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .memories-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            color: #8b5cf6;
+            font-weight: 600;
+        }
+
+        /* Achievements */
+        .achievement-popup {
+            position: fixed;
+            bottom: 5rem;
+            right: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            box-shadow: var(--shadow-md);
+            z-index: 160;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease;
+            max-width: 280px;
+        }
+
+        .achievement-icon {
+            font-size: 1.75rem;
+        }
+
+        .achievement-info {
+            flex: 1;
+        }
+
+        .achievement-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .achievement-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Streak banner */
+        .streak-banner {
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 60;
+        }
+
+        .streak-banner + .header {
+            top: 28px;
+        }
+
+        /* Hide sidebar on smaller screens */
+        @media (max-width: 1100px) {
+            .trending-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .toast-container {
+                top: auto;
+                bottom: 4rem;
+                right: 0.75rem;
+                left: 0.75rem;
+                max-width: none;
+            }
+
+            .friend-suggestion {
+                left: 0.75rem;
+                right: 0.75rem;
+                width: auto;
+                bottom: 4rem;
+            }
+
+            .wellness-popup {
+                left: 0.75rem;
+                right: 0.75rem;
+                transform: none;
+                max-width: none;
+            }
+
+            @keyframes floatUp {
+                from { transform: translateY(30px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="help-btn" id="helpBtn">About</button>
+
+    <div class="time-wasted">
+        Time: <span class="value" id="timeWasted">0:00</span>
+    </div>
+
+    <!-- Toast notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Trending sidebar -->
+    <aside class="trending-sidebar" id="trendingSidebar">
+        <div class="trending-title">Trending for you</div>
+        <div id="trendingList"></div>
+    </aside>
+
+    <header class="header">
+        <div class="header-content">
+            <h1><span>Heavenscrolling</span></h1>
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Posts</span>
+                    <span class="stat-value" id="postCount">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Rank</span>
+                    <span class="stat-value rank" id="userRank">Newbie</span>
+                </div>
+                <button id="mode-toggle" class="mode-toggle">Activate AI</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div id="feed-container" class="feed-container">
+            <!-- Stories bar -->
+            <div class="stories-bar" id="storiesBar"></div>
+        </div>
+    </main>
+
+    <!-- Cookie consent banner -->
+    <div class="cookie-banner" id="cookieBanner">
+        <div class="cookie-content">
+            <div class="cookie-title">We value your privacy (not really)</div>
+            <div class="cookie-text">
+                We use cookies to track everything you do, sell your data, and show you ads for things you mentioned once in a private conversation. By clicking "Accept All", you agree to let us do whatever we want.
+            </div>
+            <div class="cookie-toggles">
+                <label class="cookie-toggle required"><input type="checkbox" checked disabled> Essential (lol)</label>
+                <label class="cookie-toggle"><input type="checkbox" checked> Analytics</label>
+                <label class="cookie-toggle"><input type="checkbox" checked> Advertising</label>
+                <label class="cookie-toggle"><input type="checkbox" checked> Mind Reading</label>
+                <label class="cookie-toggle"><input type="checkbox" checked> Soul Harvesting</label>
+                <label class="cookie-toggle"><input type="checkbox" checked> Vibes</label>
+            </div>
+            <div class="cookie-actions">
+                <button class="cookie-btn accept" id="cookieAccept">Accept All</button>
+                <button class="cookie-btn customize">Manage Preferences</button>
+                <button class="cookie-btn reject" id="cookieReject">Reject (good luck finding this)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-spinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <div class="loading-text">Initializing...</div>
+    </div>
+
+    <!-- About Modal -->
+    <div class="modal-overlay" id="aboutModal">
+        <div class="modal">
+            <div class="modal-title">About</div>
+
+            <div class="modal-section">
+                <h3>What is this?</h3>
+                <p>An infinite social media feed that generates fake posts forever. Doomscrolling without the guilt, anxiety, or consequences.</p>
+                <p>No algorithms. No ads. No outrage. Just pure, meaningless content.</p>
+            </div>
+
+            <div class="modal-section">
+                <h3>How it works</h3>
+                <p>Posts are generated using Markov chains and templates. Your scroll count persists - close the tab, your shame follows.</p>
+            </div>
+
+            <div class="modal-section">
+                <h3>Ranks</h3>
+                <div class="rank-list">
+                    <div class="rank-item">
+                        <span class="threshold">0+</span>
+                        <span class="name">Newbie</span>
+                    </div>
+                    <div class="rank-item">
+                        <span class="threshold">20+</span>
+                        <span class="name">Fresh Thumb</span>
+                    </div>
+                    <div class="rank-item">
+                        <span class="threshold">100+</span>
+                        <span class="name">Doomscroller</span>
+                    </div>
+                    <div class="rank-item">
+                        <span class="threshold">250+</span>
+                        <span class="name">Chief Scroller</span>
+                    </div>
+                    <div class="rank-item">
+                        <span class="threshold">500+</span>
+                        <span class="name">Slop Lord</span>
+                    </div>
+                    <div class="rank-item">
+                        <span class="threshold">1000+</span>
+                        <span class="name">Content Void</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h3>The point</h3>
+                <p>There is no point. That's the point.</p>
+            </div>
+
+            <button class="modal-close-btn" id="aboutCloseBtn">Continue Scrolling</button>
+            <button class="reset-btn" id="resetBtn">Reset Progress</button>
+        </div>
+    </div>
+
+    <template id="post-template">
+        <div class="post">
+            <div class="post-header">
+                <div class="avatar"></div>
+                <div class="user-info">
+                    <span class="display-name"></span>
+                    <span class="verified-badge" style="display:none"></span>
+                    <div class="username"></div>
+                </div>
+                <span class="post-time"></span>
+            </div>
+            <div class="post-content"></div>
+            <div class="post-actions">
+                <button class="action-btn reply-btn">💬</button>
+                <button class="action-btn repost-btn">🔁</button>
+                <button class="action-btn like-btn">❤️</button>
+                <button class="action-btn share-btn">↗</button>
+            </div>
+        </div>
+    </template>
+
+    <script type="module">
+        // State
+        let currentMode = 'no-ai';
+        let llmPipeline = null;
+        let isLLMInitializing = false;
+        let scrollCount = 0;
+        let userRank = 'Newbie';
+        let sessionStartTime = Date.now();
+
+        // DOM Elements
+        const feedContainer = document.getElementById('feed-container');
+        const modeToggle = document.getElementById('mode-toggle');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const postTemplate = document.getElementById('post-template');
+        const postCountEl = document.getElementById('postCount');
+        const userRankEl = document.getElementById('userRank');
+        const timeWastedEl = document.getElementById('timeWasted');
+        const helpBtn = document.getElementById('helpBtn');
+        const aboutModal = document.getElementById('aboutModal');
+        const aboutCloseBtn = document.getElementById('aboutCloseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // User data pools
+        const FIRST_NAMES = ['Alex', 'Jordan', 'Sam', 'Taylor', 'Morgan', 'Casey', 'Riley', 'Quinn', 'Avery', 'Skyler', 'Jamie', 'Drew', 'Cameron', 'Sage', 'Finley', 'Blake', 'Reese', 'Charlie', 'Emery', 'Dakota', 'Harper', 'Rowan', 'Ellis', 'Hayden'];
+        const LAST_NAMES = ['Chen', 'Patel', 'Kim', 'Singh', 'Nguyen', 'Garcia', 'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Wilson', 'Moore', 'Taylor', 'Lee', 'Martinez', 'Thompson', 'White'];
+        const TIME_UNITS = ['1m', '2m', '3m', '5m', '8m', '12m', '17m', '23m', '38m', '1h', '2h', '3h', '5h', '8h', '12h', '1d', '2d'];
+
+        // Content generator
+        class ContentGenerator {
+            constructor() {
+                this.templates = [
+                    () => this.observation(),
+                    () => this.experience(),
+                    () => this.mood(),
+                    () => this.hotTake(),
+                    () => this.question(),
+                    () => this.announcement(),
+                    () => this.shortThought(),
+                ];
+            }
+
+            pick(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            generate() {
+                return this.pick(this.templates)();
+            }
+
+            observation() {
+                return this.pick([
+                    `The way ${this.pick(['sunlight', 'rain', 'people', 'traffic', 'clouds'])} ${this.pick(['moves', 'flows', 'shifts'])} today ${this.pick(['is mesmerizing', 'caught my attention', 'hits different'])}.`,
+                    `${this.pick(['People watching', 'Sitting here', 'Looking around'])} ${this.pick(['at the park', 'downtown', 'at this cafe'])} and thinking about ${this.pick(['life', 'everything', 'nothing in particular'])}.`,
+                    `That ${this.pick(['golden hour', 'morning light', 'evening vibe'])} ${this.pick(['hits different', 'is everything', 'though'])}.`,
+                    `${this.pick(['Beautiful', 'Strange', 'Interesting'])} how ${this.pick(['quickly', 'slowly', 'quietly'])} ${this.pick(['things change', 'time passes', 'seasons shift'])}.`,
+                ]);
+            }
+
+            experience() {
+                return this.pick([
+                    `Just ${this.pick(['discovered', 'found', 'tried'])} ${this.pick(['this amazing', 'the perfect', 'an incredible'])} ${this.pick(['coffee shop', 'playlist', 'book', 'recipe'])} and ${this.pick(['obsessed', 'in love', 'never going back'])}.`,
+                    `Finally ${this.pick(['finished', 'completed', 'did'])} ${this.pick(['that project', 'my workout', 'meal prep'])} I've been ${this.pick(['putting off', 'working on', 'avoiding'])}. ${this.pick(['Feels good', 'So satisfying', 'Relief'])}.`,
+                    `${this.pick(['Made', 'Attempted', 'Tried making'])} ${this.pick(['pizza', 'pasta', 'bread', 'cookies'])} from scratch. ${this.pick(['Surprisingly decent', 'Complete disaster', 'Actually worked', 'Close enough'])}.`,
+                    `${this.pick(['Cleaned', 'Organized', 'Rearranged'])} my ${this.pick(['desk', 'room', 'apartment'])} and now I feel like a new person.`,
+                ]);
+            }
+
+            mood() {
+                return this.pick([
+                    `${this.pick(['Coffee shop', 'Rainy day', 'Sunday morning', 'Late night'])} vibes ${this.pick(['today', 'right now', ''])}.`,
+                    `${this.pick(['Monday', 'Today', 'This week'])} energy: ${this.pick(['chaos', 'calm', 'questionable', 'immaculate'])}.`,
+                    `Feeling ${this.pick(['productive', 'chaotic', 'peaceful', 'motivated', 'tired but wired'])}.`,
+                    `Current status: ${this.pick(['thriving', 'surviving', 'vibing', 'barely functioning', 'in my element'])}.`,
+                ]);
+            }
+
+            hotTake() {
+                return this.pick([
+                    `Unpopular opinion: ${this.pick(['morning people', 'cold brew', 'remote work', 'reply all emails'])} ${this.pick(['are valid', 'make sense actually', 'get too much hate'])}.`,
+                    `Hot take: ${this.pick(['nobody', 'most of us', 'we all'])} ${this.pick(['knows what we are doing', 'are just figuring it out', 'are winging it'])}.`,
+                    `Controversial but ${this.pick(['sleep', 'water', 'going outside', 'doing nothing'])} is ${this.pick(['underrated', 'essential', 'a luxury'])}.`,
+                ]);
+            }
+
+            question() {
+                return this.pick([
+                    `Is it just me or ${this.pick(['is time moving faster', 'does anyone else feel this', 'are we all pretending'])}?`,
+                    `Why does ${this.pick(['coffee', 'music', 'everything'])} hit different ${this.pick(['at 2am', 'on weekends', 'when you should be working'])}?`,
+                    `${this.pick(['Does anyone', 'Am I the only one who', 'Why do we'])} ${this.pick(['overthink everything', 'forget what day it is', 'do this to ourselves'])}?`,
+                    `What's the ${this.pick(['move', 'plan', 'vibe'])} for ${this.pick(['today', 'this weekend', 'the rest of our lives'])}?`,
+                ]);
+            }
+
+            announcement() {
+                return this.pick([
+                    `Big news: ${this.pick(['I made coffee', 'I went outside', 'I did the thing', 'nothing happened'])}.`,
+                    `Update: ${this.pick(['still here', 'still confused', 'making progress', 'same as yesterday'])}.`,
+                    `Daily reminder that ${this.pick(['you got this', 'its okay to rest', 'hydrate', 'nothing matters but also everything does'])}.`,
+                ]);
+            }
+
+            shortThought() {
+                return this.pick([
+                    'Same honestly.',
+                    'This.',
+                    'Mood.',
+                    'No thoughts just vibes.',
+                    'It be like that sometimes.',
+                    'Manifesting.',
+                    'Noted.',
+                    'Valid.',
+                    'Big if true.',
+                    'Anyway.',
+                    'Moving on.',
+                    'We love to see it.',
+                    'As one does.',
+                    'Sure why not.',
+                ]);
+            }
+        }
+
+        const contentGenerator = new ContentGenerator();
+
+        // AI toggle (simplified - just switches to better content)
+        async function initializeLLM() {
+            if (isLLMInitializing || llmPipeline) return;
+
+            isLLMInitializing = true;
+            loadingSpinner.style.display = 'block';
+            modeToggle.disabled = true;
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1200));
+                llmPipeline = true;
+                currentMode = 'local-llm';
+                modeToggle.textContent = 'AI Active';
+                modeToggle.classList.add('active');
+            } finally {
+                isLLMInitializing = false;
+                loadingSpinner.style.display = 'none';
+                modeToggle.disabled = false;
+            }
+        }
+
+        // Generate user profile
+        function generateUserProfile() {
+            const firstName = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
+            const lastName = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
+            const displayName = `${firstName} ${lastName}`;
+            const username = `@${firstName.toLowerCase()}${lastName.toLowerCase()}${Math.floor(Math.random() * 99)}`;
+            const initials = firstName[0] + lastName[0];
+            const gradientNum = Math.floor(Math.random() * 6) + 1;
+            const isVerified = Math.random() < 0.12;
+            const time = TIME_UNITS[Math.floor(Math.random() * TIME_UNITS.length)];
+
+            return { displayName, username, initials, gradientNum, isVerified, time };
+        }
+
+        // Create post element
+        function createPost() {
+            const template = postTemplate.content.cloneNode(true);
+            const post = template.querySelector('.post');
+            const avatar = template.querySelector('.avatar');
+            const displayNameEl = template.querySelector('.display-name');
+            const usernameEl = template.querySelector('.username');
+            const verifiedBadge = template.querySelector('.verified-badge');
+            const postTime = template.querySelector('.post-time');
+            const content = template.querySelector('.post-content');
+            const likeBtn = template.querySelector('.like-btn');
+            const repostBtn = template.querySelector('.repost-btn');
+
+            const user = generateUserProfile();
+
+            avatar.textContent = user.initials;
+            avatar.classList.add(`gradient-${user.gradientNum}`);
+            displayNameEl.textContent = user.displayName;
+            usernameEl.textContent = user.username;
+            postTime.textContent = user.time;
+
+            if (user.isVerified) {
+                verifiedBadge.textContent = '✓';
+                verifiedBadge.style.display = 'inline';
+            }
+
+            content.textContent = contentGenerator.generate();
+
+            // Fake engagement
+            const replies = Math.floor(Math.random() * 50);
+            const reposts = Math.floor(Math.random() * 80);
+            const likes = Math.floor(Math.random() * 500);
+
+            const replyBtn = template.querySelector('.reply-btn');
+            if (replies > 0) replyBtn.textContent = `💬 ${replies}`;
+            if (reposts > 0) repostBtn.textContent = `🔁 ${reposts}`;
+            if (likes > 0) likeBtn.textContent = `❤️ ${likes}`;
+
+            // Interactions
+            likeBtn.addEventListener('click', () => {
+                if (!likeBtn.classList.contains('liked')) {
+                    likeBtn.classList.add('liked');
+                    likeBtn.textContent = '❤️';
+                }
+            });
+
+            repostBtn.addEventListener('click', () => {
+                if (!repostBtn.classList.contains('reposted')) {
+                    repostBtn.classList.add('reposted');
+                    repostBtn.textContent = '🔁';
+                }
+            });
+
+            return post;
+        }
+
+        // Rank system
+        const RANKS = [
+            { threshold: 1000, name: 'Content Void' },
+            { threshold: 500, name: 'Slop Lord' },
+            { threshold: 250, name: 'Chief Scroller' },
+            { threshold: 100, name: 'Doomscroller' },
+            { threshold: 20, name: 'Fresh Thumb' },
+            { threshold: 0, name: 'Newbie' },
+        ];
+
+        function getRank(count) {
+            return RANKS.find(r => count >= r.threshold).name;
+        }
+
+        function updateScore(newCount) {
+            scrollCount = newCount;
+            postCountEl.textContent = scrollCount;
+
+            const newRank = getRank(scrollCount);
+            if (newRank !== userRank) {
+                userRank = newRank;
+                userRankEl.textContent = userRank;
+                showRankUp(userRank);
+            }
+
+            localStorage.setItem('heavenscrolling_score', scrollCount);
+            checkWellness();
+        }
+
+        function showRankUp(rank) {
+            const popup = document.createElement('div');
+            popup.className = 'rank-up-notification';
+            popup.innerHTML = `
+                <div class="rank-up-title">Rank Up</div>
+                <div class="rank-up-name">${rank}</div>
+            `;
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 2200);
+        }
+
+        // Add posts
+        function addPosts(count = 1) {
+            for (let i = 0; i < count; i++) {
+                feedContainer.appendChild(createPost());
+                updateScore(scrollCount + 1);
+            }
+        }
+
+        // Infinite scroll
+        let scrollTimeout;
+        function handleScroll() {
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const documentHeight = document.documentElement.offsetHeight;
+            if (scrollPosition >= documentHeight - 400) {
+                // Add varied posts
+                for (let i = 0; i < 3; i++) {
+                    feedContainer.appendChild(createVariedPost());
+                    updateScore(scrollCount + 1);
+                    checkAchievements();
+                }
+            }
+        }
+
+        function throttledScroll() {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(() => {
+                    handleScroll();
+                    scrollTimeout = null;
+                }, 80);
+            }
+        }
+
+        // Time tracker
+        function updateTimeWasted() {
+            const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            timeWastedEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Reset progress
+        function resetProgress() {
+            scrollCount = 0;
+            userRank = 'Newbie';
+            postCountEl.textContent = '0';
+            userRankEl.textContent = 'Newbie';
+            localStorage.removeItem('heavenscrolling_score');
+            localStorage.removeItem('heavenscrolling_achievements');
+            unlockedAchievements = [];
+            feedContainer.innerHTML = '<div class="stories-bar" id="storiesBar"></div>';
+            populateStories();
+            for (let i = 0; i < 8; i++) {
+                feedContainer.appendChild(createVariedPost());
+            }
+            aboutModal.classList.remove('show');
+        }
+
+        // ============================================
+        // SATIRICAL SOCIAL MEDIA FEATURES
+        // ============================================
+
+        const toastContainer = document.getElementById('toastContainer');
+        const trendingList = document.getElementById('trendingList');
+
+        // Notification toasts
+        const NOTIFICATIONS = [
+            { icon: '❤️', text: '<strong>Someone you don\'t know</strong> liked your post' },
+            { icon: '🔔', text: 'You have <strong>0 new messages</strong>' },
+            { icon: '📈', text: 'Your post is performing <strong>12% better</strong> than your other posts' },
+            { icon: '👤', text: '<strong>3 people</strong> you\'ve never met viewed your profile' },
+            { icon: '🎉', text: 'Congrats! You\'ve been scrolling for <strong>a while now</strong>' },
+            { icon: '💡', text: '<strong>New feature:</strong> We moved everything around for no reason' },
+            { icon: '🔥', text: 'A post is <strong>going viral</strong> in your area' },
+            { icon: '✨', text: 'Your engagement is <strong>slightly above average</strong>' },
+            { icon: '📱', text: '<strong>Enable notifications</strong> to never miss meaningless updates' },
+            { icon: '🎯', text: 'Based on your activity, you might like <strong>more of the same</strong>' },
+            { icon: '⭐', text: 'You\'ve unlocked: <strong>Nothing</strong>' },
+            { icon: '🤝', text: '<strong>Someone</strong> accepted your existence' },
+            { icon: '📊', text: 'Weekly report: You scrolled <strong>a lot</strong>' },
+            { icon: '💬', text: '<strong>Reply received:</strong> "lol"' },
+            { icon: '🏆', text: 'You\'re in the top <strong>98%</strong> of scrollers this week' },
+        ];
+
+        function showToast() {
+            const notif = NOTIFICATIONS[Math.floor(Math.random() * NOTIFICATIONS.length)];
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span class="toast-icon">${notif.icon}</span><span class="toast-text">${notif.text}</span>`;
+            toast.addEventListener('click', () => toast.remove());
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        // Trending topics
+        const TRENDING_TOPICS = [
+            { category: 'Trending in Nowhere', topic: '#MondayVibes', posts: '12.3K posts' },
+            { category: 'Technology', topic: 'Nothing Important', posts: '8.7K posts' },
+            { category: 'Entertainment', topic: '#JustVibing', posts: '45.2K posts' },
+            { category: 'Trending', topic: 'That Thing Everyone Forgot', posts: '3.1K posts' },
+            { category: 'Sports', topic: 'Some Team Won', posts: '156K posts' },
+            { category: 'Politics', topic: '[Redacted]', posts: '892K posts' },
+            { category: 'Music', topic: '#NewMusicFriday', posts: '23.4K posts' },
+            { category: 'Lifestyle', topic: 'Touch Grass', posts: '5.6K posts' },
+            { category: 'Gaming', topic: 'Game Delayed Again', posts: '67.8K posts' },
+            { category: 'Food', topic: '#FoodPorn', posts: '34.1K posts' },
+            { category: 'Trending', topic: 'Discourse', posts: '445K posts' },
+            { category: 'Culture', topic: 'Hot Take', posts: '78.9K posts' },
+        ];
+
+        function populateTrending() {
+            const shuffled = [...TRENDING_TOPICS].sort(() => Math.random() - 0.5).slice(0, 5);
+            trendingList.innerHTML = shuffled.map(t => `
+                <div class="trending-item">
+                    <div class="trending-category">${t.category}</div>
+                    <div class="trending-topic">${t.topic}</div>
+                    <div class="trending-posts">${t.posts}</div>
+                </div>
+            `).join('');
+        }
+
+        // Friend suggestions
+        const FRIEND_REASONS = [
+            'You both exist',
+            'Followed by 0 people you know',
+            'Has similar vibes maybe',
+            'Algorithm says so',
+            'Mutual friend of a friend of a stranger',
+            'Lives on the same planet',
+            'Also uses this app',
+            'Suggested for engagement metrics',
+        ];
+
+        let friendSuggestionVisible = false;
+
+        function showFriendSuggestion() {
+            if (friendSuggestionVisible) return;
+            if (document.querySelector('.friend-suggestion')) return;
+
+            friendSuggestionVisible = true;
+            const user = generateUserProfile();
+            const reason = FRIEND_REASONS[Math.floor(Math.random() * FRIEND_REASONS.length)];
+
+            const card = document.createElement('div');
+            card.className = 'friend-suggestion';
+            card.innerHTML = `
+                <div class="friend-suggestion-header">
+                    <span class="friend-suggestion-title">Suggested for you</span>
+                    <button class="friend-suggestion-close">&times;</button>
+                </div>
+                <div class="friend-suggestion-user">
+                    <div class="avatar gradient-${user.gradientNum}">${user.initials}</div>
+                    <div class="friend-suggestion-info">
+                        <div class="friend-suggestion-name">${user.displayName}</div>
+                        <div class="friend-suggestion-reason">${reason}</div>
+                    </div>
+                </div>
+                <div class="friend-suggestion-actions">
+                    <button class="friend-btn accept">Follow</button>
+                    <button class="friend-btn ignore">Not Now</button>
+                </div>
+            `;
+
+            const closeCard = () => {
+                card.remove();
+                friendSuggestionVisible = false;
+            };
+
+            card.querySelector('.friend-suggestion-close').addEventListener('click', closeCard);
+            card.querySelector('.friend-btn.accept').addEventListener('click', () => {
+                showToast();
+                closeCard();
+            });
+            card.querySelector('.friend-btn.ignore').addEventListener('click', closeCard);
+
+            document.body.appendChild(card);
+            setTimeout(closeCard, 15000);
+        }
+
+        // Wellness popup
+        const WELLNESS_MESSAGES = [
+            { icon: '🌿', title: 'Time for a break?', text: 'You\'ve been scrolling for a bit. Maybe stretch or look at something real?' },
+            { icon: '☀️', title: 'Hey there', text: 'Just checking in. Remember that outside exists.' },
+            { icon: '💧', title: 'Hydration check', text: 'Have you had water recently? We care about you (for engagement).' },
+            { icon: '🧘', title: 'Mindful moment', text: 'Take a deep breath. Now keep scrolling.' },
+            { icon: '🌙', title: 'Getting late?', text: 'Sleep is important. But so is our daily active user count.' },
+            { icon: '🪴', title: 'Touch grass?', text: 'Studies show nature is good. But this feed is also good. Stay here.' },
+        ];
+
+        let wellnessShown = false;
+
+        function showWellnessPopup() {
+            if (wellnessShown) return;
+            wellnessShown = true;
+
+            const msg = WELLNESS_MESSAGES[Math.floor(Math.random() * WELLNESS_MESSAGES.length)];
+            const popup = document.createElement('div');
+            popup.className = 'wellness-popup';
+            popup.innerHTML = `
+                <div class="wellness-icon">${msg.icon}</div>
+                <div class="wellness-title">${msg.title}</div>
+                <div class="wellness-text">${msg.text}</div>
+                <div class="wellness-actions">
+                    <button class="wellness-btn continue">Keep Scrolling</button>
+                    <button class="wellness-btn dismiss">I'll Take a Break</button>
+                </div>
+            `;
+
+            const remove = () => popup.remove();
+
+            popup.querySelector('.wellness-btn.continue').addEventListener('click', () => {
+                remove();
+                setTimeout(() => { wellnessShown = false; }, 120000);
+            });
+            popup.querySelector('.wellness-btn.dismiss').addEventListener('click', () => {
+                remove();
+                showToast();
+            });
+
+            document.body.appendChild(popup);
+        }
+
+        // Schedule random notifications
+        function scheduleNotifications() {
+            const randomDelay = () => 8000 + Math.random() * 20000;
+            const scheduleNext = () => {
+                setTimeout(() => {
+                    showToast();
+                    scheduleNext();
+                }, randomDelay());
+            };
+            setTimeout(scheduleNext, 5000);
+        }
+
+        // Schedule friend suggestions
+        function scheduleFriendSuggestions() {
+            const randomDelay = () => 25000 + Math.random() * 40000;
+            const scheduleNext = () => {
+                setTimeout(() => {
+                    if (Math.random() < 0.6) showFriendSuggestion();
+                    scheduleNext();
+                }, randomDelay());
+            };
+            setTimeout(scheduleNext, 15000);
+        }
+
+        // Schedule wellness popup based on scroll count
+        function checkWellness() {
+            if (!wellnessShown && scrollCount > 0 && scrollCount % 50 === 0) {
+                setTimeout(showWellnessPopup, 2000);
+            }
+        }
+
+        // ============================================
+        // NEW SATIRICAL FEATURES
+        // ============================================
+
+        const storiesBar = document.getElementById('storiesBar');
+        const cookieBanner = document.getElementById('cookieBanner');
+        const cookieAccept = document.getElementById('cookieAccept');
+        const cookieReject = document.getElementById('cookieReject');
+
+        // Stories bar
+        function populateStories() {
+            const stories = [];
+            for (let i = 0; i < 12; i++) {
+                const user = generateUserProfile();
+                const isLive = i === 0 && Math.random() < 0.4;
+                const isSeen = Math.random() < 0.3;
+                stories.push({ ...user, isLive, isSeen });
+            }
+
+            storiesBar.innerHTML = stories.map(s => `
+                <div class="story" onclick="this.querySelector('.story-ring').classList.add('seen')">
+                    <div class="story-ring-wrapper">
+                        <div class="story-ring ${s.isSeen ? 'seen' : ''} ${s.isLive ? 'live' : ''}">
+                            <div class="story-avatar gradient-${s.gradientNum}">${s.initials}</div>
+                        </div>
+                        ${s.isLive ? '<span class="story-live-badge">LIVE</span>' : ''}
+                    </div>
+                    <span class="story-name">${s.displayName.split(' ')[0]}</span>
+                </div>
+            `).join('');
+        }
+
+        // Sponsored posts
+        const SPONSORED_CONTENT = [
+            { text: 'You could be doing something else right now. But here you are.', cta: 'Learn More' },
+            { text: 'Tired of scrolling? Try our new scrolling app. It\'s just more scrolling.', cta: 'Download Now' },
+            { text: 'This ad has nothing to do with you. We just needed to fill space.', cta: 'Shop Now' },
+            { text: '9 out of 10 people scrolled past this. Be the 1. Click below.', cta: 'Click Here' },
+            { text: 'We noticed you breathed recently. Check out our breathing products.', cta: 'Breathe Better' },
+            { text: 'Doctors HATE this one weird trick. It\'s just drinking water.', cta: 'Hydrate' },
+            { text: 'You deserve better. Not from us, just in general.', cta: 'Feel Better' },
+        ];
+
+        function createSponsoredPost() {
+            const ad = SPONSORED_CONTENT[Math.floor(Math.random() * SPONSORED_CONTENT.length)];
+            const post = document.createElement('div');
+            post.className = 'post sponsored';
+            post.innerHTML = `
+                <div class="sponsored-label">Sponsored</div>
+                <div class="post-content">${ad.text}</div>
+                <button class="sponsored-cta">${ad.cta}</button>
+            `;
+            post.querySelector('.sponsored-cta').addEventListener('click', () => showToast());
+            return post;
+        }
+
+        // Poll posts
+        const POLL_QUESTIONS = [
+            { question: 'Is water wet?', options: ['Yes', 'No', 'It\'s complicated'] },
+            { question: 'Pick a color:', options: ['Blue', 'Also blue', 'Different blue', 'Not blue'] },
+            { question: 'Hot take:', options: ['Agree', 'Disagree', 'I don\'t care'] },
+            { question: 'What\'s for dinner?', options: ['Food', 'More food', 'Snacks', 'Nothing'] },
+            { question: 'How are you?', options: ['Fine', '"Fine"', 'Existing', 'Yes'] },
+            { question: 'Best day of the week?', options: ['Friday', 'Saturday', 'Sunday', 'None'] },
+        ];
+
+        function createPollPost() {
+            const user = generateUserProfile();
+            const poll = POLL_QUESTIONS[Math.floor(Math.random() * POLL_QUESTIONS.length)];
+            const votes = poll.options.map(() => Math.floor(Math.random() * 5000));
+            const total = votes.reduce((a, b) => a + b, 0);
+            const percents = votes.map(v => Math.round((v / total) * 100));
+
+            const post = document.createElement('div');
+            post.className = 'post';
+            post.innerHTML = `
+                <div class="post-header">
+                    <div class="avatar gradient-${user.gradientNum}">${user.initials}</div>
+                    <div class="user-info">
+                        <span class="display-name">${user.displayName}</span>
+                        <div class="username">${user.username}</div>
+                    </div>
+                    <span class="post-time">${user.time}</span>
+                </div>
+                <div class="post-content">${poll.question}</div>
+                <div class="poll-container">
+                    ${poll.options.map((opt, i) => `
+                        <div class="poll-option" data-percent="${percents[i]}">
+                            <div class="poll-bar" style="width: 0%"></div>
+                            <div class="poll-text">
+                                <span>${opt}</span>
+                                <span class="poll-percent">${percents[i]}%</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="poll-meta">${total.toLocaleString()} votes · 23 hours left</div>
+            `;
+
+            post.querySelectorAll('.poll-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    post.querySelectorAll('.poll-option').forEach(o => {
+                        o.classList.add('voted');
+                        o.querySelector('.poll-bar').style.width = o.dataset.percent + '%';
+                    });
+                });
+            });
+
+            return post;
+        }
+
+        // Quote repost
+        const QUOTE_COMMENTS = [
+            'This.',
+            'Couldn\'t have said it better.',
+            'Louder for the people in the back.',
+            'The algorithm showed me this and I\'m not mad.',
+            'Hard agree.',
+            'Why is this so accurate?',
+            'Adding nothing but wanting engagement.',
+        ];
+
+        function createQuotePost() {
+            const user1 = generateUserProfile();
+            const user2 = generateUserProfile();
+            const comment = QUOTE_COMMENTS[Math.floor(Math.random() * QUOTE_COMMENTS.length)];
+            const originalContent = contentGenerator.generate();
+
+            const post = document.createElement('div');
+            post.className = 'post';
+            post.innerHTML = `
+                <div class="post-header">
+                    <div class="avatar gradient-${user1.gradientNum}">${user1.initials}</div>
+                    <div class="user-info">
+                        <span class="display-name">${user1.displayName}</span>
+                        <div class="username">${user1.username}</div>
+                    </div>
+                    <span class="post-time">${user1.time}</span>
+                </div>
+                <div class="post-content">${comment}</div>
+                <div class="quoted-post">
+                    <div class="post-header">
+                        <div class="avatar gradient-${user2.gradientNum}">${user2.initials}</div>
+                        <div class="user-info">
+                            <span class="display-name">${user2.displayName}</span>
+                            <div class="username">${user2.username}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${originalContent}</div>
+                </div>
+            `;
+            return post;
+        }
+
+        // Thread posts
+        function createThreadPost() {
+            const user = generateUserProfile();
+            const threadNum = Math.floor(Math.random() * 20) + 5;
+            const currentNum = Math.floor(Math.random() * (threadNum - 1)) + 1;
+
+            const post = document.createElement('div');
+            post.className = 'post';
+            post.innerHTML = `
+                <div class="post-header">
+                    <div class="avatar gradient-${user.gradientNum}">${user.initials}</div>
+                    <div class="user-info">
+                        <span class="display-name">${user.displayName}</span>
+                        <div class="username">${user.username}</div>
+                    </div>
+                    <span class="post-time">${user.time}</span>
+                </div>
+                <div class="thread-indicator">🧵 ${currentNum}/${threadNum}</div>
+                <div class="post-content">${contentGenerator.generate()}</div>
+            `;
+            return post;
+        }
+
+        // Engagement bait
+        const ENGAGEMENT_BAIT = [
+            'Only 1% of people can solve this. Type your answer below.',
+            'Tag someone who needs to see this.',
+            'Like if you agree, comment if you disagree.',
+            'Wrong answers only.',
+            'Share if you remember this.',
+            'POV: You\'re scrolling at 3am again.',
+            'Tell me your [X] without telling me your [X].',
+            'Unpopular opinion thread. I\'ll go first:',
+        ];
+
+        function createEngagementBaitPost() {
+            const user = generateUserProfile();
+            const bait = ENGAGEMENT_BAIT[Math.floor(Math.random() * ENGAGEMENT_BAIT.length)];
+
+            const post = document.createElement('div');
+            post.className = 'post';
+            post.innerHTML = `
+                <div class="post-header">
+                    <div class="avatar gradient-${user.gradientNum}">${user.initials}</div>
+                    <div class="user-info">
+                        <span class="display-name">${user.displayName}</span>
+                        ${user.isVerified ? '<span class="verified-badge">✓</span>' : ''}
+                        <div class="username">${user.username}</div>
+                    </div>
+                    <span class="post-time">${user.time}</span>
+                </div>
+                <div class="post-content">${bait}</div>
+                <div class="post-actions">
+                    <button class="action-btn">💬 ${Math.floor(Math.random() * 2000)}</button>
+                    <button class="action-btn">🔁 ${Math.floor(Math.random() * 500)}</button>
+                    <button class="action-btn">❤️ ${Math.floor(Math.random() * 10000)}</button>
+                    <button class="action-btn">↗</button>
+                </div>
+            `;
+            return post;
+        }
+
+        // Sensitive content warning
+        const SENSITIVE_REASONS = [
+            'This content may be slightly interesting',
+            'Someone expressed a mild opinion',
+            'Contains: outside',
+            'May cause feelings',
+            'Viewer discretion advised (it\'s just a cat)',
+        ];
+
+        function createSensitivePost() {
+            const user = generateUserProfile();
+            const reason = SENSITIVE_REASONS[Math.floor(Math.random() * SENSITIVE_REASONS.length)];
+
+            const post = document.createElement('div');
+            post.className = 'post has-sensitive';
+            post.innerHTML = `
+                <div class="post-header">
+                    <div class="avatar gradient-${user.gradientNum}">${user.initials}</div>
+                    <div class="user-info">
+                        <span class="display-name">${user.displayName}</span>
+                        <div class="username">${user.username}</div>
+                    </div>
+                    <span class="post-time">${user.time}</span>
+                </div>
+                <div class="post-content">${contentGenerator.generate()}</div>
+                <div class="sensitive-overlay">
+                    <div class="sensitive-icon">⚠️</div>
+                    <div class="sensitive-text">${reason}</div>
+                    <div class="sensitive-show">Show anyway</div>
+                </div>
+            `;
+
+            post.querySelector('.sensitive-overlay').addEventListener('click', function() {
+                this.remove();
+                post.classList.remove('has-sensitive');
+            });
+
+            return post;
+        }
+
+        // Memories (On This Day)
+        function createMemoryPost() {
+            const years = Math.floor(Math.random() * 5) + 1;
+            const post = document.createElement('div');
+            post.className = 'post memories-card';
+            post.innerHTML = `
+                <div class="memories-header">✨ On This Day · ${years} year${years > 1 ? 's' : ''} ago</div>
+                <div class="post-content">${contentGenerator.generate()}</div>
+                <div class="post-actions">
+                    <button class="action-btn">💬</button>
+                    <button class="action-btn">🔁</button>
+                    <button class="action-btn">❤️</button>
+                    <button class="action-btn">↗</button>
+                </div>
+            `;
+            return post;
+        }
+
+        // Create varied posts
+        function createVariedPost() {
+            const rand = Math.random();
+            if (rand < 0.08) return createSponsoredPost();
+            if (rand < 0.14) return createPollPost();
+            if (rand < 0.20) return createQuotePost();
+            if (rand < 0.26) return createThreadPost();
+            if (rand < 0.32) return createEngagementBaitPost();
+            if (rand < 0.36) return createSensitivePost();
+            if (rand < 0.38) return createMemoryPost();
+            return createPost();
+        }
+
+        // Premium upsell popup
+        let premiumShown = false;
+        function showPremiumPopup() {
+            if (premiumShown) return;
+            premiumShown = true;
+
+            const overlay = document.createElement('div');
+            overlay.className = 'premium-popup-overlay';
+
+            const popup = document.createElement('div');
+            popup.className = 'premium-popup';
+            popup.innerHTML = `
+                <div class="premium-badge">✨ PREMIUM</div>
+                <div class="premium-title">Upgrade to Premium</div>
+                <div class="premium-subtitle">Get a checkmark that means nothing</div>
+                <div class="premium-features">
+                    <div class="premium-feature"><span class="premium-feature-icon">✓</span> Blue checkmark</div>
+                    <div class="premium-feature"><span class="premium-feature-icon">✓</span> Priority in the void</div>
+                    <div class="premium-feature"><span class="premium-feature-icon">✓</span> Longer posts nobody reads</div>
+                    <div class="premium-feature"><span class="premium-feature-icon">✓</span> Edit button (break the timeline)</div>
+                    <div class="premium-feature"><span class="premium-feature-icon">✓</span> Half the ads (still too many)</div>
+                </div>
+                <div class="premium-price">$8/month</div>
+                <div class="premium-price-note">Cancel anytime (we make it hard)</div>
+                <button class="premium-cta">Subscribe Now</button>
+                <button class="premium-dismiss">No thanks, I like being invisible</button>
+            `;
+
+            const close = () => {
+                overlay.remove();
+                popup.remove();
+            };
+
+            overlay.addEventListener('click', close);
+            popup.querySelector('.premium-dismiss').addEventListener('click', close);
+            popup.querySelector('.premium-cta').addEventListener('click', () => {
+                close();
+                showToast();
+            });
+
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+        }
+
+        // Cookie banner
+        function initCookieBanner() {
+            const dismissed = localStorage.getItem('heavenscrolling_cookies');
+            if (dismissed) {
+                cookieBanner.remove();
+                return;
+            }
+
+            cookieAccept.addEventListener('click', () => {
+                localStorage.setItem('heavenscrolling_cookies', 'accepted');
+                cookieBanner.remove();
+                showToast();
+            });
+
+            cookieReject.addEventListener('click', () => {
+                localStorage.setItem('heavenscrolling_cookies', 'rejected');
+                cookieBanner.remove();
+            });
+        }
+
+        // Leave popup (scroll up detection)
+        let lastScrollY = 0;
+        let leavePopupShown = false;
+
+        function checkLeave() {
+            const currentScrollY = window.scrollY;
+            if (currentScrollY < lastScrollY - 200 && currentScrollY > 300 && !leavePopupShown) {
+                leavePopupShown = true;
+                showLeavePopup();
+            }
+            lastScrollY = currentScrollY;
+        }
+
+        function showLeavePopup() {
+            const popup = document.createElement('div');
+            popup.className = 'leave-popup';
+            popup.innerHTML = `
+                <div class="leave-text"><strong>Leaving already?</strong> You'll miss out on nothing.</div>
+                <button class="leave-btn">Keep Scrolling</button>
+            `;
+
+            popup.querySelector('.leave-btn').addEventListener('click', () => {
+                popup.remove();
+                setTimeout(() => { leavePopupShown = false; }, 30000);
+            });
+
+            document.body.appendChild(popup);
+            setTimeout(() => {
+                popup.remove();
+                setTimeout(() => { leavePopupShown = false; }, 30000);
+            }, 5000);
+        }
+
+        // Live notifications
+        function showLiveNotification() {
+            const user = generateUserProfile();
+            const notif = {
+                icon: '🔴',
+                text: `<strong>${user.displayName}</strong> is live: Doing nothing interesting`
+            };
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span class="toast-icon">${notif.icon}</span><span class="toast-text">${notif.text}</span>`;
+            toast.addEventListener('click', () => toast.remove());
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        // Achievements
+        const ACHIEVEMENTS = [
+            { icon: '🦉', name: 'Night Owl', condition: () => new Date().getHours() >= 23 || new Date().getHours() < 5 },
+            { icon: '📱', name: 'Thumb Athlete', condition: () => scrollCount >= 100 },
+            { icon: '🏃', name: 'Speed Scroller', condition: () => scrollCount >= 50 && (Date.now() - sessionStartTime) < 60000 },
+            { icon: '🧘', name: 'Zen Master', condition: () => scrollCount >= 200 },
+            { icon: '🎭', name: 'Lurker', condition: () => scrollCount >= 75 },
+            { icon: '☕', name: 'Coffee Time', condition: () => { const h = new Date().getHours(); return h >= 6 && h <= 9; } },
+        ];
+
+        let unlockedAchievements = JSON.parse(localStorage.getItem('heavenscrolling_achievements') || '[]');
+
+        function checkAchievements() {
+            ACHIEVEMENTS.forEach(ach => {
+                if (!unlockedAchievements.includes(ach.name) && ach.condition()) {
+                    unlockedAchievements.push(ach.name);
+                    localStorage.setItem('heavenscrolling_achievements', JSON.stringify(unlockedAchievements));
+                    showAchievement(ach);
+                }
+            });
+        }
+
+        function showAchievement(ach) {
+            const popup = document.createElement('div');
+            popup.className = 'achievement-popup';
+            popup.innerHTML = `
+                <div class="achievement-icon">${ach.icon}</div>
+                <div class="achievement-info">
+                    <div class="achievement-label">Achievement Unlocked</div>
+                    <div class="achievement-name">${ach.name}</div>
+                </div>
+            `;
+            document.body.appendChild(popup);
+            setTimeout(() => popup.remove(), 4000);
+        }
+
+        // Streak tracking
+        function checkStreak() {
+            const today = new Date().toDateString();
+            const lastVisit = localStorage.getItem('heavenscrolling_lastvisit');
+            let streak = parseInt(localStorage.getItem('heavenscrolling_streak') || '0');
+
+            if (lastVisit) {
+                const lastDate = new Date(lastVisit);
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+
+                if (lastDate.toDateString() === yesterday.toDateString()) {
+                    streak++;
+                } else if (lastDate.toDateString() !== today) {
+                    streak = 1;
+                }
+            } else {
+                streak = 1;
+            }
+
+            localStorage.setItem('heavenscrolling_lastvisit', today);
+            localStorage.setItem('heavenscrolling_streak', streak.toString());
+
+            if (streak > 1) {
+                showStreakBanner(streak);
+            }
+        }
+
+        function showStreakBanner(streak) {
+            const banner = document.createElement('div');
+            banner.className = 'streak-banner';
+            banner.innerHTML = `🔥 ${streak} day streak! You've scrolled ${streak} days in a row. Impressive? Concerning?`;
+            document.body.prepend(banner);
+
+            // Adjust header position
+            document.querySelector('.header').style.top = '28px';
+        }
+
+        // Override addPosts to use varied content
+        const originalAddPosts = addPosts;
+        function addPostsVaried(count = 1) {
+            for (let i = 0; i < count; i++) {
+                const storiesEl = document.getElementById('storiesBar');
+                feedContainer.insertBefore(createVariedPost(), storiesEl.nextSibling ? null : null);
+                feedContainer.appendChild(createVariedPost());
+                updateScore(scrollCount + 1);
+                checkAchievements();
+            }
+        }
+
+        // Schedule premium popup
+        function schedulePremiumPopup() {
+            setTimeout(() => {
+                if (scrollCount > 30 && !premiumShown) {
+                    showPremiumPopup();
+                }
+            }, 45000);
+        }
+
+        // Schedule live notifications
+        function scheduleLiveNotifications() {
+            setInterval(() => {
+                if (Math.random() < 0.3) showLiveNotification();
+            }, 60000);
+        }
+
+        // Events
+        modeToggle.addEventListener('click', initializeLLM);
+        window.addEventListener('scroll', () => {
+            throttledScroll();
+            checkLeave();
+        });
+        helpBtn.addEventListener('click', () => aboutModal.classList.add('show'));
+        aboutCloseBtn.addEventListener('click', () => aboutModal.classList.remove('show'));
+        resetBtn.addEventListener('click', resetProgress);
+        aboutModal.addEventListener('click', (e) => {
+            if (e.target === aboutModal) aboutModal.classList.remove('show');
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = parseInt(localStorage.getItem('heavenscrolling_score')) || 0;
+            scrollCount = saved;
+            userRank = getRank(saved);
+            postCountEl.textContent = saved;
+            userRankEl.textContent = userRank;
+
+            // Populate stories bar
+            populateStories();
+
+            // Add initial varied posts
+            for (let i = 0; i < 8; i++) {
+                feedContainer.appendChild(createVariedPost());
+                updateScore(scrollCount + 1);
+            }
+
+            setInterval(updateTimeWasted, 1000);
+
+            // Start satirical features
+            populateTrending();
+            setInterval(populateTrending, 60000);
+            scheduleNotifications();
+            scheduleFriendSuggestions();
+            schedulePremiumPopup();
+            scheduleLiveNotifications();
+            initCookieBanner();
+            checkStreak();
+            checkAchievements();
+        });
+    </script>
+</body>
+</html>
