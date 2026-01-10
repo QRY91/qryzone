@@ -73,6 +73,24 @@ permalink: /fun/mortgage-driven-engineering/
         .slogan-desc { color: var(--mde-fg-dim); font-size: 0.85rem; }
         .manifesto em { color: var(--mde-accent); font-style: normal; }
         footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--mde-border); }
+        .back-link {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: var(--mde-card-bg);
+            border: 1px solid var(--mde-fg);
+            padding: 0.5rem 1rem;
+            color: var(--mde-fg);
+            text-decoration: none;
+            font-size: 0.85rem;
+            z-index: 100;
+            transition: all 0.2s;
+        }
+        .back-link:hover {
+            background: var(--mde-fg);
+            color: var(--mde-bg);
+            text-shadow: none;
+        }
         @media (max-width: 600px) {
             .ascii-logo { font-size: 4px; }
             .slogan-text { font-size: 1rem; }
@@ -80,6 +98,7 @@ permalink: /fun/mortgage-driven-engineering/
     </style>
 </head>
 <body>
+    <a href="/fun/" class="back-link">&larr; back</a>
     <div class="terminal">
         <header>
             <pre class="ascii-logo">
