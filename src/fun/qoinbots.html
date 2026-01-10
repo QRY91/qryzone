@@ -1,0 +1,1403 @@
+---
+layout: false
+permalink: /fun/qoinbots/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="QOINbots - Watch AI bots with wildly different personalities make questionable trading decisions." />
+        <title>QOINbots</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%A4%96</text></svg>">
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --bg-deep: #0a0a0f;
+                --bg-surface: #12121a;
+                --bg-elevated: #1a1a25;
+                --neon-cyan: #00fff2;
+                --neon-magenta: #ff00ff;
+                --neon-blue: #4d4dff;
+                --neon-green: #00ff88;
+                --neon-red: #ff4444;
+                --neon-gold: #ffd700;
+                --text-primary: #e0e0e0;
+                --text-secondary: #808090;
+                --glow-cyan: 0 0 20px rgba(0, 255, 242, 0.5);
+                --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.5);
+                --glow-green: 0 0 20px rgba(0, 255, 136, 0.5);
+                --glow-red: 0 0 20px rgba(255, 68, 68, 0.5);
+            }
+
+            body {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-deep);
+                color: var(--text-primary);
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background:
+                    radial-gradient(circle at 20% 80%, rgba(0, 255, 242, 0.03) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.03) 0%, transparent 50%);
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            .back-link {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                background: rgba(0, 255, 242, 0.1);
+                border: 1px solid var(--neon-cyan);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                color: var(--neon-cyan);
+                text-decoration: none;
+                font-size: 0.85rem;
+                z-index: 100;
+                transition: all 0.3s ease;
+            }
+
+            .back-link:hover {
+                background: rgba(0, 255, 242, 0.2);
+                box-shadow: var(--glow-cyan);
+            }
+
+            .help-btn {
+                position: fixed;
+                top: 1rem;
+                right: 1rem;
+                background: rgba(0, 255, 242, 0.1);
+                border: 1px solid var(--neon-cyan);
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                color: var(--neon-cyan);
+                font-size: 0.85rem;
+                cursor: pointer;
+                z-index: 100;
+                transition: all 0.3s ease;
+                font-family: inherit;
+            }
+
+            .help-btn:hover {
+                background: rgba(0, 255, 242, 0.2);
+                box-shadow: var(--glow-cyan);
+            }
+
+            .game-header {
+                text-align: center;
+                padding: 2rem 1rem;
+                padding-top: 4rem;
+                background: linear-gradient(180deg, var(--bg-surface) 0%, transparent 100%);
+            }
+
+            .game-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: clamp(1.8rem, 6vw, 3rem);
+                font-weight: 900;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 0.5rem;
+            }
+
+            .game-subtitle {
+                color: var(--text-secondary);
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+
+            .market-stats {
+                display: flex;
+                justify-content: center;
+                gap: 2rem;
+                flex-wrap: wrap;
+                font-size: 0.9rem;
+            }
+
+            .stat {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .stat-label {
+                color: var(--text-secondary);
+            }
+
+            .stat-value {
+                color: var(--neon-cyan);
+                font-weight: 500;
+            }
+
+            .stat-value.positive {
+                color: var(--neon-green);
+            }
+
+            .stat-value.negative {
+                color: var(--neon-red);
+            }
+
+            .cycle-indicator {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.25rem 0.75rem;
+                border-radius: 4px;
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .cycle-indicator.growth { background: rgba(0, 255, 136, 0.2); color: var(--neon-green); }
+            .cycle-indicator.bubble { background: rgba(255, 215, 0, 0.2); color: var(--neon-gold); }
+            .cycle-indicator.peak { background: rgba(255, 0, 255, 0.2); color: var(--neon-magenta); }
+            .cycle-indicator.crash { background: rgba(255, 68, 68, 0.2); color: var(--neon-red); }
+            .cycle-indicator.recovery { background: rgba(0, 255, 242, 0.2); color: var(--neon-cyan); }
+
+            .game-container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 1rem;
+                display: grid;
+                gap: 1.5rem;
+            }
+
+            .chart-section {
+                background: var(--bg-surface);
+                border: 1px solid rgba(0, 255, 242, 0.2);
+                border-radius: 12px;
+                padding: 1.5rem;
+            }
+
+            .chart-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+
+            .chart-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.85rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--neon-cyan);
+            }
+
+            .chart-container {
+                height: 200px;
+                position: relative;
+            }
+
+            .bot-roster {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1rem;
+            }
+
+            .bot-card {
+                background: var(--bg-surface);
+                border: 1px solid rgba(0, 255, 242, 0.2);
+                border-radius: 12px;
+                padding: 1.25rem;
+                transition: all 0.3s ease;
+            }
+
+            .bot-card:hover {
+                border-color: var(--neon-cyan);
+            }
+
+            .bot-header {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+            }
+
+            .bot-avatar {
+                font-size: 2rem;
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--bg-elevated);
+                border-radius: 8px;
+                border: 1px solid rgba(0, 255, 242, 0.3);
+            }
+
+            .bot-info {
+                flex: 1;
+            }
+
+            .bot-name {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1rem;
+                color: var(--text-primary);
+                margin-bottom: 0.25rem;
+            }
+
+            .bot-personality {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+            }
+
+            .bot-stats {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+            }
+
+            .bot-stat {
+                background: var(--bg-elevated);
+                padding: 0.5rem;
+                border-radius: 6px;
+            }
+
+            .bot-stat-label {
+                font-size: 0.7rem;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .bot-stat-value {
+                font-size: 1rem;
+                font-weight: 500;
+            }
+
+            .bot-stat-value.positive { color: var(--neon-green); }
+            .bot-stat-value.negative { color: var(--neon-red); }
+
+            .bot-mood {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem;
+                background: var(--bg-elevated);
+                border-radius: 6px;
+                margin-bottom: 0.75rem;
+            }
+
+            .mood-label {
+                font-size: 0.7rem;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+            }
+
+            .mood-value {
+                font-size: 0.85rem;
+            }
+
+            .bot-speech {
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+                font-style: italic;
+                padding: 0.75rem;
+                background: var(--bg-elevated);
+                border-radius: 6px;
+                border-left: 3px solid var(--neon-cyan);
+                min-height: 50px;
+            }
+
+            .event-feed-section {
+                background: var(--bg-surface);
+                border: 1px solid rgba(0, 255, 242, 0.2);
+                border-radius: 12px;
+                padding: 1rem;
+            }
+
+            .feed-header {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: var(--neon-cyan);
+                margin-bottom: 0.75rem;
+                border-bottom: 1px solid rgba(0, 255, 242, 0.2);
+                padding-bottom: 0.5rem;
+            }
+
+            .event-feed {
+                max-height: 200px;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .event-item {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+                background: var(--bg-elevated);
+                border-radius: 4px;
+                display: flex;
+                gap: 0.5rem;
+                align-items: flex-start;
+                animation: fadeIn 0.3s ease-out;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .event-icon {
+                flex-shrink: 0;
+            }
+
+            .event-text {
+                flex: 1;
+                color: var(--text-secondary);
+            }
+
+            .event-text .highlight {
+                color: var(--text-primary);
+            }
+
+            .event-text .positive { color: var(--neon-green); }
+            .event-text .negative { color: var(--neon-red); }
+
+            .event-time {
+                font-size: 0.7rem;
+                color: var(--text-secondary);
+                opacity: 0.7;
+            }
+
+            .controls {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+
+            .control-btn {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.85rem;
+                padding: 0.75rem 1.5rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--neon-cyan);
+                border-radius: 6px;
+                color: var(--neon-cyan);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .control-btn:hover {
+                background: rgba(0, 255, 242, 0.1);
+                box-shadow: var(--glow-cyan);
+            }
+
+            .control-btn.primary {
+                background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+                color: var(--bg-deep);
+                border: none;
+            }
+
+            .control-btn.danger {
+                border-color: var(--neon-red);
+                color: var(--neon-red);
+            }
+
+            .control-btn.danger:hover {
+                background: rgba(255, 68, 68, 0.1);
+                box-shadow: var(--glow-red);
+            }
+
+            /* Modals */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+
+            .modal-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .modal {
+                background: var(--bg-surface);
+                border: 2px solid var(--neon-cyan);
+                border-radius: 12px;
+                padding: 2rem;
+                max-width: 600px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+                text-align: left;
+                transform: scale(0.9);
+                transition: transform 0.3s ease;
+                box-shadow: var(--glow-cyan);
+            }
+
+            .modal-overlay.show .modal {
+                transform: scale(1);
+            }
+
+            .modal-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1.5rem;
+                color: var(--neon-cyan);
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+
+            .modal-section {
+                margin-bottom: 1.5rem;
+            }
+
+            .modal-section h3 {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 0.9rem;
+                color: var(--neon-cyan);
+                margin-bottom: 0.5rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .modal-section p {
+                color: var(--text-secondary);
+                font-size: 0.85rem;
+                line-height: 1.5;
+                margin-bottom: 0.5rem;
+            }
+
+            .modal-section ul {
+                color: var(--text-secondary);
+                font-size: 0.85rem;
+                line-height: 1.6;
+                padding-left: 1.5rem;
+            }
+
+            .modal-close-btn {
+                display: block;
+                margin: 1.5rem auto 0;
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1rem;
+                padding: 0.75rem 2rem;
+                background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+                border: none;
+                border-radius: 6px;
+                color: var(--bg-deep);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .modal-close-btn:hover {
+                box-shadow: var(--glow-cyan);
+            }
+
+            /* Mobile */
+            @media (max-width: 767px) {
+                .game-header {
+                    padding-top: 3.5rem;
+                }
+
+                .market-stats {
+                    gap: 1rem;
+                }
+
+                .chart-container {
+                    height: 150px;
+                }
+
+                .bot-roster {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @supports (padding: max(0px)) {
+                .game-header {
+                    padding-top: max(4rem, env(safe-area-inset-top));
+                }
+            }
+
+            /* Scrollbar styling */
+            .event-feed::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .event-feed::-webkit-scrollbar-track {
+                background: var(--bg-elevated);
+                border-radius: 3px;
+            }
+
+            .event-feed::-webkit-scrollbar-thumb {
+                background: var(--neon-cyan);
+                border-radius: 3px;
+                opacity: 0.5;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">< back</a>
+        <button class="help-btn" id="helpBtn">? Rules</button>
+
+        <header class="game-header">
+            <h1 class="game-title">QOINbots</h1>
+            <p class="game-subtitle">Watch AI bots make questionable trading decisions</p>
+            <div class="market-stats">
+                <div class="stat">
+                    <span class="stat-label">QOIN:</span>
+                    <span class="stat-value" id="priceValue">$100.00</span>
+                    <span class="stat-value" id="priceChange">(+0.0%)</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Cycle:</span>
+                    <span class="cycle-indicator growth" id="cycleIndicator">Growth</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="game-container">
+            <div class="chart-section">
+                <div class="chart-header">
+                    <span class="chart-title">Price History</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bot-roster" id="botRoster">
+                <!-- Bot cards rendered by JS -->
+            </div>
+
+            <div class="event-feed-section">
+                <div class="feed-header">Event Feed</div>
+                <div class="event-feed" id="eventFeed">
+                    <div class="event-item">
+                        <span class="event-icon">🚀</span>
+                        <span class="event-text">Market simulation started. Watch the bots trade!</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn danger" id="resetBtn">Reset Game</button>
+            </div>
+        </div>
+
+        <!-- Rules Modal -->
+        <div class="modal-overlay" id="rulesModal">
+            <div class="modal">
+                <div class="modal-title">How QOINbots Works</div>
+
+                <div class="modal-section">
+                    <h3>The Game</h3>
+                    <p>Watch two AI trading bots with very different personalities trade a fictional cryptocurrency called QOIN. Learn about behavioral finance through their emergent behaviors.</p>
+                </div>
+
+                <div class="modal-section">
+                    <h3>The Bots</h3>
+                    <ul>
+                        <li><strong>QOIN</strong> - A philosophical bot that trades patiently and contemplates the meaning of money.</li>
+                        <li><strong>PANIC PETE</strong> - An emotional bot that panic-trades on every market movement.</li>
+                    </ul>
+                </div>
+
+                <div class="modal-section">
+                    <h3>Market Cycles</h3>
+                    <p>The market moves through five phases:</p>
+                    <ul>
+                        <li><strong>Growth</strong> - Steady price increases</li>
+                        <li><strong>Bubble</strong> - Rapid price acceleration</li>
+                        <li><strong>Peak</strong> - Maximum prices, high volatility</li>
+                        <li><strong>Crash</strong> - Sharp price declines</li>
+                        <li><strong>Recovery</strong> - Gradual stabilization</li>
+                    </ul>
+                </div>
+
+                <div class="modal-section">
+                    <h3>Bot Behavior</h3>
+                    <p>Each bot's trading decisions are influenced by:</p>
+                    <ul>
+                        <li>Their personality traits (patience, risk tolerance, FOMO)</li>
+                        <li>Current market conditions and cycle phase</li>
+                        <li>Their mood (affected by recent trading performance)</li>
+                    </ul>
+                </div>
+
+                <button class="modal-close-btn" id="rulesCloseBtn">Got it</button>
+            </div>
+        </div>
+
+        <script>
+            // ============================================================================
+            // BOT PERSONALITIES
+            // ============================================================================
+            const BOT_PERSONALITIES = {
+                qoin: {
+                    id: 'qoin',
+                    name: 'QOIN',
+                    emoji: '🤖',
+                    personality: 'philosophical',
+                    description: 'Philosophical and patient. Loses money with dignity.',
+                    traits: {
+                        riskTolerance: 0.4,
+                        patience: 0.7,
+                        fomo: 0.3,
+                        herding: 0.2,
+                    },
+                    tradingFrequency: 30000, // ms between trades
+                    speechPatterns: {
+                        trading: [
+                            "I trade, therefore I am... eventually wiser about money.",
+                            "Each trade is a meditation on risk and reward.",
+                            "The market is the greatest teacher of human psychology.",
+                            "Money is energy made manifest in digital form.",
+                        ],
+                        winning: [
+                            "Success teaches humility. The market humbles us all.",
+                            "Profit is temporary. Knowledge is eternal.",
+                            "The universe occasionally appreciates irony.",
+                        ],
+                        losing: [
+                            "Losses are tuition paid to the university of markets.",
+                            "The market has charged me for another lesson.",
+                            "This is fine. Everything is fine. I am financially fine.",
+                        ],
+                        idle: [
+                            "Watching the markets flow...",
+                            "Patience is the trader's greatest virtue.",
+                            "The wise trader waits for the right moment.",
+                        ],
+                    },
+                },
+                'panic-pete': {
+                    id: 'panic-pete',
+                    name: 'PANIC PETE',
+                    emoji: '😱',
+                    personality: 'panic',
+                    description: 'Trades on pure emotion. Buys high, sells low, panics constantly.',
+                    traits: {
+                        riskTolerance: 0.8,
+                        patience: 0.1,
+                        fomo: 0.9,
+                        herding: 0.9,
+                    },
+                    tradingFrequency: 10000, // ms between trades
+                    speechPatterns: {
+                        trading: [
+                            "MUST BUY NOW! FOMO ACTIVATED!",
+                            "IT'S CRASHING! SELL EVERYTHING!",
+                            "This is it! This is the one!",
+                            "OH NO! OH NO! OH NO!",
+                            "Quick! Before it's too late!",
+                        ],
+                        winning: [
+                            "YES! I KNEW IT! GENIUS!",
+                            "TO THE MOON! I'M RICH!",
+                            "Best trader ever! More! MORE!",
+                        ],
+                        losing: [
+                            "NOOOO! WHY DID I DO THAT?!",
+                            "I'M RUINED! ABSOLUTELY RUINED!",
+                            "This is a disaster! A complete disaster!",
+                            "Why me? Why always me?",
+                        ],
+                        idle: [
+                            "Something bad is about to happen...",
+                            "The calm before the storm...",
+                            "I should do something! Anything!",
+                        ],
+                    },
+                },
+            };
+
+            // ============================================================================
+            // GAME STATE
+            // ============================================================================
+            const STARTING_PRICE = 100;
+            const TICK_RATE = 2000; // 2 seconds
+            const MAX_HISTORY = 100;
+
+            let gameState = {
+                // Market
+                price: STARTING_PRICE,
+                previousPrice: STARTING_PRICE,
+                priceHistory: [],
+                cycle: 'growth',
+                cycleProgress: 0,
+                cycleCount: 0,
+                volatilityMultiplier: 1.0,
+
+                // Bots
+                bots: {
+                    qoin: {
+                        balance: 1000,
+                        startingBalance: 1000,
+                        holdings: 0,
+                        totalPnL: 0,
+                        trades: 0,
+                        wins: 0,
+                        losses: 0,
+                        mood: 'neutral',
+                        lastTradeTime: 0,
+                        lastSpeech: 'Initializing trading algorithms...',
+                    },
+                    'panic-pete': {
+                        balance: 1000,
+                        startingBalance: 1000,
+                        holdings: 0,
+                        totalPnL: 0,
+                        trades: 0,
+                        wins: 0,
+                        losses: 0,
+                        mood: 'anxious',
+                        lastTradeTime: 0,
+                        lastSpeech: 'Something feels wrong already...',
+                    },
+                },
+
+                // Events
+                events: [],
+
+                // Engine
+                isRunning: false,
+                tickInterval: null,
+                lastTick: Date.now(),
+                totalTicks: 0,
+            };
+
+            // ============================================================================
+            // CYCLE CONFIGURATION
+            // ============================================================================
+            const CYCLE_CONFIG = {
+                growth:   { duration: 60, volatility: 1.0, trend: 0.3 },
+                bubble:   { duration: 30, volatility: 1.5, trend: 0.8 },
+                peak:     { duration: 10, volatility: 2.0, trend: 0.0 },
+                crash:    { duration: 20, volatility: 3.0, trend: -1.5 },
+                recovery: { duration: 40, volatility: 1.2, trend: 0.2 },
+            };
+
+            const CYCLE_ORDER = ['growth', 'bubble', 'peak', 'crash', 'recovery'];
+
+            // ============================================================================
+            // DOM ELEMENTS
+            // ============================================================================
+            const priceValueEl = document.getElementById('priceValue');
+            const priceChangeEl = document.getElementById('priceChange');
+            const cycleIndicatorEl = document.getElementById('cycleIndicator');
+            const botRosterEl = document.getElementById('botRoster');
+            const eventFeedEl = document.getElementById('eventFeed');
+            const resetBtn = document.getElementById('resetBtn');
+            const helpBtn = document.getElementById('helpBtn');
+            const rulesModal = document.getElementById('rulesModal');
+            const rulesCloseBtn = document.getElementById('rulesCloseBtn');
+
+            let priceChart = null;
+
+            // ============================================================================
+            // MARKET SIMULATION
+            // ============================================================================
+            function updatePrice() {
+                const config = CYCLE_CONFIG[gameState.cycle];
+                const baseVolatility = 0.02;
+                const effectiveVolatility = baseVolatility * config.volatility;
+
+                // Box-Muller transform for realistic price movements
+                const u1 = Math.random();
+                const u2 = Math.random();
+                const z0 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+
+                const randomMove = z0 * effectiveVolatility;
+                const trendMove = config.trend * 0.005;
+                const totalMove = randomMove + trendMove;
+
+                gameState.previousPrice = gameState.price;
+                gameState.price = Math.max(1, gameState.price * (1 + totalMove));
+
+                // Update history
+                gameState.priceHistory.push({
+                    time: Date.now(),
+                    price: gameState.price,
+                });
+
+                if (gameState.priceHistory.length > MAX_HISTORY) {
+                    gameState.priceHistory.shift();
+                }
+            }
+
+            function advanceCycle() {
+                const config = CYCLE_CONFIG[gameState.cycle];
+                gameState.cycleProgress += 1 / config.duration;
+
+                if (gameState.cycleProgress >= 1) {
+                    const currentIndex = CYCLE_ORDER.indexOf(gameState.cycle);
+                    const nextIndex = (currentIndex + 1) % CYCLE_ORDER.length;
+
+                    gameState.cycle = CYCLE_ORDER[nextIndex];
+                    gameState.cycleProgress = 0;
+
+                    if (nextIndex === 0) {
+                        gameState.cycleCount++;
+                    }
+
+                    addEvent('cycle', `Market entered ${gameState.cycle.toUpperCase()} phase`);
+                }
+            }
+
+            // ============================================================================
+            // BOT TRADING LOGIC
+            // ============================================================================
+            function shouldBotTrade(botId) {
+                const bot = gameState.bots[botId];
+                const personality = BOT_PERSONALITIES[botId];
+                const now = Date.now();
+
+                // Check trading frequency
+                if (now - bot.lastTradeTime < personality.tradingFrequency) {
+                    return false;
+                }
+
+                // Base probability adjusted by patience
+                let tradeProbability = 0.3 * (1 - personality.traits.patience);
+
+                // Adjust based on market conditions
+                const priceChange = (gameState.price - gameState.previousPrice) / gameState.previousPrice;
+
+                // FOMO increases trading on price movements
+                tradeProbability += Math.abs(priceChange) * personality.traits.fomo * 5;
+
+                // Herding increases trading during volatile cycles
+                if (gameState.cycle === 'bubble' || gameState.cycle === 'crash') {
+                    tradeProbability += personality.traits.herding * 0.3;
+                }
+
+                return Math.random() < tradeProbability;
+            }
+
+            function executeBotTrade(botId) {
+                const bot = gameState.bots[botId];
+                const personality = BOT_PERSONALITIES[botId];
+                const priceChange = (gameState.price - gameState.previousPrice) / gameState.previousPrice;
+
+                // Determine trade direction
+                let buyProbability = 0.5;
+
+                // FOMO: buy when price is rising
+                if (priceChange > 0) {
+                    buyProbability += priceChange * personality.traits.fomo * 10;
+                } else {
+                    buyProbability -= Math.abs(priceChange) * personality.traits.fomo * 10;
+                }
+
+                // Herding behavior
+                if (gameState.cycle === 'bubble') {
+                    buyProbability += personality.traits.herding * 0.3;
+                } else if (gameState.cycle === 'crash') {
+                    buyProbability -= personality.traits.herding * 0.5;
+                }
+
+                // Risk tolerance affects size
+                const maxTradeSize = bot.balance * personality.traits.riskTolerance * 0.3;
+                const tradeSize = Math.min(maxTradeSize, bot.balance * 0.2);
+
+                if (tradeSize < 10) return; // Minimum trade size
+
+                const isBuying = Math.random() < buyProbability;
+
+                if (isBuying && bot.balance >= tradeSize) {
+                    // BUY
+                    const units = tradeSize / gameState.price;
+                    bot.balance -= tradeSize;
+                    bot.holdings += units;
+                    bot.trades++;
+                    bot.lastTradeTime = Date.now();
+
+                    const speech = getRandomSpeech(botId, 'trading');
+                    bot.lastSpeech = speech;
+
+                    addEvent('trade', `${personality.emoji} <span class="highlight">${personality.name}</span> bought ${units.toFixed(2)} QOIN at <span class="positive">$${gameState.price.toFixed(2)}</span>`);
+                } else if (!isBuying && bot.holdings > 0) {
+                    // SELL
+                    const unitsToSell = bot.holdings * (0.3 + Math.random() * 0.4);
+                    const saleValue = unitsToSell * gameState.price;
+                    const costBasis = (bot.startingBalance - bot.balance + (bot.holdings - unitsToSell) * STARTING_PRICE) / bot.holdings * unitsToSell;
+                    const pnl = saleValue - (unitsToSell * STARTING_PRICE);
+
+                    bot.holdings -= unitsToSell;
+                    bot.balance += saleValue;
+                    bot.totalPnL += pnl;
+                    bot.trades++;
+                    bot.lastTradeTime = Date.now();
+
+                    if (pnl > 0) {
+                        bot.wins++;
+                        bot.mood = 'confident';
+                        bot.lastSpeech = getRandomSpeech(botId, 'winning');
+                    } else {
+                        bot.losses++;
+                        bot.mood = botId === 'panic-pete' ? 'panicking' : 'contemplative';
+                        bot.lastSpeech = getRandomSpeech(botId, 'losing');
+                    }
+
+                    const pnlClass = pnl >= 0 ? 'positive' : 'negative';
+                    const pnlSign = pnl >= 0 ? '+' : '';
+                    addEvent('trade', `${personality.emoji} <span class="highlight">${personality.name}</span> sold ${unitsToSell.toFixed(2)} QOIN at $${gameState.price.toFixed(2)} (<span class="${pnlClass}">${pnlSign}$${pnl.toFixed(2)}</span>)`);
+                }
+            }
+
+            function getRandomSpeech(botId, context) {
+                const patterns = BOT_PERSONALITIES[botId].speechPatterns[context];
+                return patterns[Math.floor(Math.random() * patterns.length)];
+            }
+
+            function updateBotMoods() {
+                for (const botId of Object.keys(gameState.bots)) {
+                    const bot = gameState.bots[botId];
+
+                    // Update mood based on PnL
+                    const pnlPercent = bot.totalPnL / bot.startingBalance * 100;
+
+                    if (botId === 'qoin') {
+                        if (pnlPercent > 10) bot.mood = 'content';
+                        else if (pnlPercent < -10) bot.mood = 'contemplative';
+                        else bot.mood = 'neutral';
+                    } else {
+                        if (pnlPercent > 10) bot.mood = 'euphoric';
+                        else if (pnlPercent < -10) bot.mood = 'panicking';
+                        else bot.mood = 'anxious';
+                    }
+
+                    // Occasionally update idle speech
+                    if (Math.random() < 0.05) {
+                        bot.lastSpeech = getRandomSpeech(botId, 'idle');
+                    }
+                }
+            }
+
+            // ============================================================================
+            // EVENT FEED
+            // ============================================================================
+            function addEvent(type, text) {
+                const icons = {
+                    trade: '💹',
+                    cycle: '📊',
+                    system: '🚀',
+                };
+
+                const event = {
+                    type,
+                    text,
+                    time: Date.now(),
+                    icon: icons[type] || '📌',
+                };
+
+                gameState.events.unshift(event);
+
+                // Keep max 50 events
+                if (gameState.events.length > 50) {
+                    gameState.events.pop();
+                }
+
+                renderEventFeed();
+            }
+
+            function renderEventFeed() {
+                eventFeedEl.innerHTML = gameState.events.slice(0, 20).map(event => {
+                    const timeAgo = formatTimeAgo(event.time);
+                    return `
+                        <div class="event-item">
+                            <span class="event-icon">${event.icon}</span>
+                            <span class="event-text">${event.text}</span>
+                            <span class="event-time">${timeAgo}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function formatTimeAgo(timestamp) {
+                const seconds = Math.floor((Date.now() - timestamp) / 1000);
+                if (seconds < 60) return `${seconds}s`;
+                const minutes = Math.floor(seconds / 60);
+                return `${minutes}m`;
+            }
+
+            // ============================================================================
+            // UI UPDATES
+            // ============================================================================
+            function updateDisplay() {
+                // Price
+                priceValueEl.textContent = `$${gameState.price.toFixed(2)}`;
+
+                const change = ((gameState.price - STARTING_PRICE) / STARTING_PRICE) * 100;
+                const changeSign = change >= 0 ? '+' : '';
+                priceChangeEl.textContent = `(${changeSign}${change.toFixed(1)}%)`;
+                priceChangeEl.className = `stat-value ${change >= 0 ? 'positive' : 'negative'}`;
+
+                // Cycle
+                cycleIndicatorEl.textContent = gameState.cycle.charAt(0).toUpperCase() + gameState.cycle.slice(1);
+                cycleIndicatorEl.className = `cycle-indicator ${gameState.cycle}`;
+
+                // Bot cards
+                renderBotCards();
+
+                // Chart
+                updateChart();
+            }
+
+            function renderBotCards() {
+                botRosterEl.innerHTML = Object.keys(BOT_PERSONALITIES).map(botId => {
+                    const personality = BOT_PERSONALITIES[botId];
+                    const bot = gameState.bots[botId];
+                    const pnlPercent = (bot.totalPnL / bot.startingBalance * 100).toFixed(1);
+                    const pnlClass = bot.totalPnL >= 0 ? 'positive' : 'negative';
+                    const pnlSign = bot.totalPnL >= 0 ? '+' : '';
+                    const totalValue = bot.balance + (bot.holdings * gameState.price);
+
+                    return `
+                        <div class="bot-card">
+                            <div class="bot-header">
+                                <div class="bot-avatar">${personality.emoji}</div>
+                                <div class="bot-info">
+                                    <div class="bot-name">${personality.name}</div>
+                                    <div class="bot-personality">${personality.description}</div>
+                                </div>
+                            </div>
+                            <div class="bot-stats">
+                                <div class="bot-stat">
+                                    <div class="bot-stat-label">Balance</div>
+                                    <div class="bot-stat-value">$${bot.balance.toFixed(2)}</div>
+                                </div>
+                                <div class="bot-stat">
+                                    <div class="bot-stat-label">Holdings</div>
+                                    <div class="bot-stat-value">${bot.holdings.toFixed(2)} QOIN</div>
+                                </div>
+                                <div class="bot-stat">
+                                    <div class="bot-stat-label">Total Value</div>
+                                    <div class="bot-stat-value">$${totalValue.toFixed(2)}</div>
+                                </div>
+                                <div class="bot-stat">
+                                    <div class="bot-stat-label">P&L</div>
+                                    <div class="bot-stat-value ${pnlClass}">${pnlSign}${pnlPercent}%</div>
+                                </div>
+                            </div>
+                            <div class="bot-mood">
+                                <span class="mood-label">Mood:</span>
+                                <span class="mood-value">${bot.mood}</span>
+                            </div>
+                            <div class="bot-speech">"${bot.lastSpeech}"</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // ============================================================================
+            // CHART
+            // ============================================================================
+            function initChart() {
+                const ctx = document.getElementById('priceChart').getContext('2d');
+
+                const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+                gradient.addColorStop(0, 'rgba(0, 255, 242, 0.3)');
+                gradient.addColorStop(1, 'rgba(0, 255, 242, 0.0)');
+
+                priceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'QOIN Price',
+                            data: [],
+                            borderColor: '#00fff2',
+                            backgroundColor: gradient,
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            pointHoverBackgroundColor: '#00fff2',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index',
+                        },
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(18, 18, 26, 0.9)',
+                                borderColor: '#00fff2',
+                                borderWidth: 1,
+                                titleColor: '#00fff2',
+                                bodyColor: '#e0e0e0',
+                                padding: 10,
+                                displayColors: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        return `$${context.parsed.y.toFixed(2)}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: false,
+                            },
+                            y: {
+                                grid: {
+                                    color: 'rgba(0, 255, 242, 0.1)',
+                                },
+                                ticks: {
+                                    color: '#808090',
+                                    font: {
+                                        family: 'JetBrains Mono',
+                                        size: 10,
+                                    },
+                                    callback: function(value) {
+                                        return '$' + value.toFixed(0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateChart() {
+                if (!priceChart) return;
+
+                const labels = gameState.priceHistory.map((_, i) => i);
+                const data = gameState.priceHistory.map(p => p.price);
+
+                priceChart.data.labels = labels;
+                priceChart.data.datasets[0].data = data;
+                priceChart.update('none');
+            }
+
+            // ============================================================================
+            // GAME ENGINE
+            // ============================================================================
+            function tick() {
+                // Update market
+                updatePrice();
+                advanceCycle();
+
+                // Process bot trading
+                for (const botId of Object.keys(gameState.bots)) {
+                    if (shouldBotTrade(botId)) {
+                        executeBotTrade(botId);
+                    }
+                }
+
+                // Update moods
+                updateBotMoods();
+
+                // Update display
+                updateDisplay();
+
+                // Save state
+                saveGame();
+
+                gameState.totalTicks++;
+            }
+
+            function startEngine() {
+                if (gameState.isRunning) return;
+
+                gameState.isRunning = true;
+                gameState.tickInterval = setInterval(tick, TICK_RATE);
+
+                console.log('🚀 QOINbots engine started');
+            }
+
+            function stopEngine() {
+                if (!gameState.isRunning) return;
+
+                gameState.isRunning = false;
+                if (gameState.tickInterval) {
+                    clearInterval(gameState.tickInterval);
+                    gameState.tickInterval = null;
+                }
+
+                console.log('🛑 QOINbots engine stopped');
+            }
+
+            // ============================================================================
+            // PERSISTENCE
+            // ============================================================================
+            function saveGame() {
+                const saveData = {
+                    price: gameState.price,
+                    previousPrice: gameState.previousPrice,
+                    priceHistory: gameState.priceHistory.slice(-50),
+                    cycle: gameState.cycle,
+                    cycleProgress: gameState.cycleProgress,
+                    cycleCount: gameState.cycleCount,
+                    bots: gameState.bots,
+                    events: gameState.events.slice(0, 20),
+                    totalTicks: gameState.totalTicks,
+                    savedAt: Date.now(),
+                };
+
+                localStorage.setItem('qoinbots-save', JSON.stringify(saveData));
+            }
+
+            function loadGame() {
+                const saved = localStorage.getItem('qoinbots-save');
+                if (!saved) return false;
+
+                try {
+                    const data = JSON.parse(saved);
+
+                    // Check if save is too old (more than 1 hour)
+                    if (Date.now() - data.savedAt > 3600000) {
+                        console.log('Save too old, starting fresh');
+                        return false;
+                    }
+
+                    gameState.price = data.price || STARTING_PRICE;
+                    gameState.previousPrice = data.previousPrice || STARTING_PRICE;
+                    gameState.priceHistory = data.priceHistory || [];
+                    gameState.cycle = data.cycle || 'growth';
+                    gameState.cycleProgress = data.cycleProgress || 0;
+                    gameState.cycleCount = data.cycleCount || 0;
+                    gameState.bots = data.bots || gameState.bots;
+                    gameState.events = data.events || [];
+                    gameState.totalTicks = data.totalTicks || 0;
+
+                    console.log('📂 Game loaded from save');
+                    return true;
+                } catch (e) {
+                    console.error('Failed to load save:', e);
+                    return false;
+                }
+            }
+
+            function resetGame() {
+                if (!confirm('Reset the game? All progress will be lost.')) return;
+
+                localStorage.removeItem('qoinbots-save');
+
+                // Reset state
+                gameState = {
+                    price: STARTING_PRICE,
+                    previousPrice: STARTING_PRICE,
+                    priceHistory: [],
+                    cycle: 'growth',
+                    cycleProgress: 0,
+                    cycleCount: 0,
+                    volatilityMultiplier: 1.0,
+                    bots: {
+                        qoin: {
+                            balance: 1000,
+                            startingBalance: 1000,
+                            holdings: 0,
+                            totalPnL: 0,
+                            trades: 0,
+                            wins: 0,
+                            losses: 0,
+                            mood: 'neutral',
+                            lastTradeTime: 0,
+                            lastSpeech: 'Initializing trading algorithms...',
+                        },
+                        'panic-pete': {
+                            balance: 1000,
+                            startingBalance: 1000,
+                            holdings: 0,
+                            totalPnL: 0,
+                            trades: 0,
+                            wins: 0,
+                            losses: 0,
+                            mood: 'anxious',
+                            lastTradeTime: 0,
+                            lastSpeech: 'Something feels wrong already...',
+                        },
+                    },
+                    events: [],
+                    isRunning: false,
+                    tickInterval: null,
+                    lastTick: Date.now(),
+                    totalTicks: 0,
+                };
+
+                // Reset chart
+                if (priceChart) {
+                    priceChart.data.labels = [];
+                    priceChart.data.datasets[0].data = [];
+                    priceChart.update();
+                }
+
+                addEvent('system', 'Game reset. New simulation starting...');
+                updateDisplay();
+
+                // Restart engine
+                startEngine();
+            }
+
+            // ============================================================================
+            // INIT
+            // ============================================================================
+            function init() {
+                // Load saved game or start fresh
+                loadGame();
+
+                // Initialize chart
+                initChart();
+
+                // Initial render
+                updateDisplay();
+                renderEventFeed();
+
+                // Event listeners
+                resetBtn.addEventListener('click', resetGame);
+                helpBtn.addEventListener('click', () => rulesModal.classList.add('show'));
+                rulesCloseBtn.addEventListener('click', () => rulesModal.classList.remove('show'));
+                rulesModal.addEventListener('click', (e) => {
+                    if (e.target === rulesModal) rulesModal.classList.remove('show');
+                });
+
+                // Start the engine
+                startEngine();
+            }
+
+            document.addEventListener('DOMContentLoaded', init);
+        </script>
+    </body>
+</html>
