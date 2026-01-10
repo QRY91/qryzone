@@ -182,6 +182,20 @@
     justify-content: center;
     flex-wrap: wrap;
 }
+#reroll-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 var(--space-xs);
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+#reroll-btn:hover {
+    opacity: 1;
+    color: var(--color-accent);
+}
 </style>
 
 <div class="home-container">
@@ -213,29 +227,9 @@
 
     <!-- Featured -->
     <section class="featured-section">
-        <h2 class="section-title">Worth reading</h2>
-        <div class="featured-grid">
-            <a href="/journey/productivity-breakthrough/" class="featured-card">
-                <div class="featured-header">
-                    <span class="featured-title">Productivity breakthrough</span>
-                    <span class="status-badge status-evergreen">evergreen</span>
-                </div>
-                <span class="featured-description">How transferable skills and AI catalyzed sustained flow</span>
-            </a>
-            <a href="/hidden/thinking/homelab-permacomputing-strategy/" class="featured-card">
-                <div class="featured-header">
-                    <span class="featured-title">Homelab permacomputing</span>
-                    <span class="status-badge status-growing">growing</span>
-                </div>
-                <span class="featured-description">Building distributed infrastructure from whatever hardware you have</span>
-            </a>
-            <a href="https://www.uroboro.dev/" class="featured-card" target="_blank" rel="noopener noreferrer">
-                <div class="featured-header">
-                    <span class="featured-title">uroboro ↗</span>
-                    <span class="status-badge status-growing">growing</span>
-                </div>
-                <span class="featured-description">Context capture that makes development work visible</span>
-            </a>
+        <h2 class="section-title">Worth reading <button id="reroll-btn" title="Pick new random articles">↻</button></h2>
+        <div class="featured-grid" id="featured-grid">
+            <!-- Populated by JS -->
         </div>
     </section>
 
@@ -258,6 +252,45 @@
 </div>
 
 <script type="module" src="/assets/js/three-scene.js"></script>
+
+<script>
+// Random featured articles
+window.exploreData = [{"title":"About","description":"The non-traditional route to software development","href":"/about/","tags":["personal","career"],"status":"evergreen","lastUpdated":"2025-01-08"},{"title":"Productivity breakthrough","description":"How transferable skills and AI catalyzed sustained development flow","href":"/journey/productivity-breakthrough/","tags":["learning","ai-collaboration","personal"],"status":"evergreen","lastUpdated":"2025-01-05"},{"title":"Database-first debugging","description":"When the problem isn't in the code, it's in the data","href":"/notes/database-first-debugging/","tags":["debugging","learning"],"status":"seedling","connections":["Optimization through removal","Recursive mirror"],"lastUpdated":"2025-01-08"},{"title":"Optimization through removal","description":"The fastest code is code that doesn't run","href":"/notes/optimization-through-removal/","tags":["debugging"],"status":"seedling","connections":["Database-first debugging"],"lastUpdated":"2025-01-08"},{"title":"The sailboat test","description":"A filter for what tools deserve to exist","href":"/notes/sailboat-test/","tags":["permacomputing","local-first"],"status":"seedling","lastUpdated":"2025-01-08"},{"title":"Economic honesty","description":"This is all fucking insane but I have a mortgage","href":"/notes/economic-honesty/","tags":["personal","career"],"status":"seedling","lastUpdated":"2025-01-08"},{"title":"Learning to spite","description":"Transforming institutional dysfunction into fuel","href":"/notes/learning-to-spite/","tags":["learning","personal"],"status":"seedling","connections":["About"],"lastUpdated":"2025-01-08"},{"title":"Social media brainfarts","description":"On the commodification of our least interesting impulses","href":"/notes/social-media-brainfarts/","tags":["personal","society"],"status":"seedling","lastUpdated":"2026-01-08"},{"title":"Powers for good","description":"On complicity through silence in tech","href":"/notes/powers-for-good/","tags":["personal","career","ethics"],"status":"seedling","connections":["About"],"lastUpdated":"2026-01-08"},{"title":"Managing attention","description":"On reclaiming focus from the noise","href":"/notes/managing-attention/","tags":["personal"],"status":"seedling","lastUpdated":"2026-01-08"},{"title":"UX challenges","description":"When difficulty comes from controls, not gameplay","href":"/notes/ux-challenges/","tags":["games","design","analysis"],"status":"seedling","lastUpdated":"2026-01-08"},{"title":"Recursive mirror","description":"What happens when you ask an AI to analyze your writing voice?","href":"/notes/recursive-mirror/","tags":["ai-collaboration","personal","meta","writing"],"status":"seedling","connections":["About","Database-first debugging"],"lastUpdated":"2026-01-10"},{"title":"uroboro","description":"Context capture that makes development work visible","href":"https://www.uroboro.dev/","tags":["developer-tools","local-first"],"status":"growing","lastUpdated":"2025-01-08"},{"title":"doggowoof","description":"Local monitoring that learns your patterns","href":"https://github.com/QRY91/doggowoof","tags":["developer-tools","local-first"],"status":"seedling"},{"title":"wherewasi","description":"Context preservation across work sessions","href":"https://github.com/QRY91/wherewasi","tags":["developer-tools","local-first"],"status":"seedling"},{"title":"quantum-dice","description":"Learn quantum mechanics through dice game mechanics","href":"https://github.com/QRY91/quantum-dice","tags":["learning","games"],"status":"growing"},{"title":"Ideas","description":"Ideas are cheap. Take as many as you want.","href":"/ideas/","tags":["open-source","creative"],"status":"evergreen","lastUpdated":"2026-01-08"}];
+
+(function() {
+    const data = window.exploreData || [];
+    const grid = document.getElementById('featured-grid');
+    const rerollBtn = document.getElementById('reroll-btn');
+
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function renderFeatured() {
+        const picks = shuffle(data).slice(0, 3);
+        grid.innerHTML = picks.map(item => {
+            const isExternal = item.href.startsWith('http');
+            return `
+                <a href="${item.href}" class="featured-card"${isExternal ? ' target="_blank" rel="noopener noreferrer"' : ''}>
+                    <div class="featured-header">
+                        <span class="featured-title">${item.title}${isExternal ? ' ↗' : ''}</span>
+                        <span class="status-badge status-${item.status}">${item.status}</span>
+                    </div>
+                    <span class="featured-description">${item.description}</span>
+                </a>
+            `;
+        }).join('');
+    }
+
+    renderFeatured();
+    rerollBtn.addEventListener('click', renderFeatured);
+})();
+</script>
 
     </main>
     <footer class="footer">

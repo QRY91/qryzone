@@ -14,6 +14,7 @@
     let selectedStatus = null;
     let showRandom = false;
     let randomItem = null;
+    let searchQuery = '';
 
     // DOM elements
     const tagsContainer = document.getElementById('tags-container');
@@ -25,6 +26,7 @@
     const clearBtn = document.getElementById('clear-btn');
     const resultsCount = document.getElementById('results-count');
     const sectionTitle = document.getElementById('section-title');
+    const searchInput = document.getElementById('search-input');
 
     // Initialize
     function init() {
@@ -67,6 +69,15 @@
     function getFilteredContent() {
         let filtered = contentData;
 
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            filtered = filtered.filter(item =>
+                item.title.toLowerCase().includes(q) ||
+                item.description.toLowerCase().includes(q) ||
+                item.tags.some(tag => tag.toLowerCase().includes(q))
+            );
+        }
+
         if (selectedTags.length > 0) {
             filtered = filtered.filter(item =>
                 selectedTags.some(tag => item.tags.includes(tag))
@@ -82,7 +93,7 @@
 
     function renderContent() {
         const filtered = getFilteredContent();
-        const hasFilters = selectedTags.length > 0 || selectedStatus !== null;
+        const hasFilters = selectedTags.length > 0 || selectedStatus !== null || searchQuery !== '';
 
         // Update UI elements
         if (clearBtn) clearBtn.style.display = hasFilters ? 'inline-block' : 'none';
@@ -205,8 +216,20 @@
                 selectedStatus = null;
                 showRandom = false;
                 randomItem = null;
+                searchQuery = '';
+                if (searchInput) searchInput.value = '';
                 renderTags();
                 renderStatusButtons();
+                renderContent();
+            });
+        }
+
+        // Search input
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                searchQuery = e.target.value;
+                showRandom = false;
+                randomItem = null;
                 renderContent();
             });
         }

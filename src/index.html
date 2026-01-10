@@ -138,6 +138,20 @@ description: Notes, tools, and half-formed ideas about building software
     justify-content: center;
     flex-wrap: wrap;
 }
+#reroll-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 var(--space-xs);
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+#reroll-btn:hover {
+    opacity: 1;
+    color: var(--color-accent);
+}
 </style>
 
 <div class="home-container">
@@ -169,29 +183,9 @@ description: Notes, tools, and half-formed ideas about building software
 
     <!-- Featured -->
     <section class="featured-section">
-        <h2 class="section-title">Worth reading</h2>
-        <div class="featured-grid">
-            <a href="/journey/productivity-breakthrough/" class="featured-card">
-                <div class="featured-header">
-                    <span class="featured-title">Productivity breakthrough</span>
-                    <span class="status-badge status-evergreen">evergreen</span>
-                </div>
-                <span class="featured-description">How transferable skills and AI catalyzed sustained flow</span>
-            </a>
-            <a href="/hidden/thinking/homelab-permacomputing-strategy/" class="featured-card">
-                <div class="featured-header">
-                    <span class="featured-title">Homelab permacomputing</span>
-                    <span class="status-badge status-growing">growing</span>
-                </div>
-                <span class="featured-description">Building distributed infrastructure from whatever hardware you have</span>
-            </a>
-            <a href="https://www.uroboro.dev/" class="featured-card" target="_blank" rel="noopener noreferrer">
-                <div class="featured-header">
-                    <span class="featured-title">uroboro ↗</span>
-                    <span class="status-badge status-growing">growing</span>
-                </div>
-                <span class="featured-description">Context capture that makes development work visible</span>
-            </a>
+        <h2 class="section-title">Worth reading <button id="reroll-btn" title="Pick new random articles">↻</button></h2>
+        <div class="featured-grid" id="featured-grid">
+            <!-- Populated by JS -->
         </div>
     </section>
 
@@ -214,3 +208,42 @@ description: Notes, tools, and half-formed ideas about building software
 </div>
 
 <script type="module" src="/assets/js/three-scene.js"></script>
+
+<script>
+// Random featured articles
+window.exploreData = {{ explore.items | dump | safe }};
+
+(function() {
+    const data = window.exploreData || [];
+    const grid = document.getElementById('featured-grid');
+    const rerollBtn = document.getElementById('reroll-btn');
+
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function renderFeatured() {
+        const picks = shuffle(data).slice(0, 3);
+        grid.innerHTML = picks.map(item => {
+            const isExternal = item.href.startsWith('http');
+            return `
+                <a href="${item.href}" class="featured-card"${isExternal ? ' target="_blank" rel="noopener noreferrer"' : ''}>
+                    <div class="featured-header">
+                        <span class="featured-title">${item.title}${isExternal ? ' ↗' : ''}</span>
+                        <span class="status-badge status-${item.status}">${item.status}</span>
+                    </div>
+                    <span class="featured-description">${item.description}</span>
+                </a>
+            `;
+        }).join('');
+    }
+
+    renderFeatured();
+    rerollBtn.addEventListener('click', renderFeatured);
+})();
+</script>
