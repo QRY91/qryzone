@@ -776,7 +776,7 @@ permalink: /fun/aviary/
             };
 
             // ============================================
-            // AUDIO ENGINE
+            // AUDIO ENGINE (simplified - no Web Audio for file playback)
             // ============================================
             function initAudio() {
                 if (!state.audioContext) {
@@ -802,7 +802,6 @@ permalink: /fun/aviary/
             async function addLayer(id) {
                 if (state.activeLayers.has(id)) return;
 
-                initAudio();
                 const sound = getSound(id);
                 if (!sound) return;
 
@@ -810,37 +809,40 @@ permalink: /fun/aviary/
                     id,
                     sound,
                     volume: 0.7,
-                    gainNode: state.audioContext.createGain(),
+                    targetVolume: 0.7,
                 };
-                layer.gainNode.connect(state.masterGain);
-                layer.gainNode.gain.value = 0; // Start silent for fade-in
 
                 if (sound.url) {
-                    // Load audio file
+                    // Simple Audio element approach
                     const audio = new Audio();
                     audio.loop = true;
+                    audio.volume = 0;
                     audio.src = sound.url;
-
-                    // Create media source
-                    const source = state.audioContext.createMediaElementSource(audio);
-                    source.connect(layer.gainNode);
                     layer.audio = audio;
-                    layer.source = source;
+
+                    audio.onerror = () => {
+                        console.log("Audio failed to load:", sound.name);
+                        showNotification(`Failed to load: ${sound.name}`);
+                    };
 
                     if (state.isPlaying) {
                         try {
                             await audio.play();
-                            fadeIn(layer.gainNode, layer.volume);
+                            fadeInAudio(layer);
                         } catch (e) {
                             console.log("Audio play failed:", e);
                         }
                     }
                 } else if (sound.synth) {
-                    // Use synthesis
+                    initAudio();
                     layer.synth = sound.synth;
+                    layer.gainNode = state.audioContext.createGain();
+                    layer.gainNode.connect(state.masterGain);
+                    layer.gainNode.gain.value = 0;
+
                     if (state.isPlaying) {
                         startSynth(layer);
-                        fadeIn(layer.gainNode, layer.volume);
+                        fadeInGain(layer);
                     }
                 }
 
@@ -853,41 +855,98 @@ permalink: /fun/aviary/
                 const layer = state.activeLayers.get(id);
                 if (!layer) return;
 
-                fadeOut(layer.gainNode, () => {
-                    if (layer.audio) {
+                if (layer.audio) {
+                    fadeOutAudio(layer, () => {
                         layer.audio.pause();
                         layer.audio.src = "";
-                    }
-                    if (layer.synthInterval) {
-                        clearInterval(layer.synthInterval);
-                    }
-                    if (layer.synthNodes) {
-                        layer.synthNodes.forEach(n => {
-                            try { n.stop(); n.disconnect(); } catch(e) {}
-                        });
-                    }
-                    layer.gainNode.disconnect();
+                        state.activeLayers.delete(id);
+                        renderMixer();
+                        updateSoundCards();
+                    });
+                } else if (layer.synth) {
+                    fadeOutGain(layer, () => {
+                        if (layer.synthInterval) {
+                            clearInterval(layer.synthInterval);
+                        }
+                        if (layer.synthNodes) {
+                            layer.synthNodes.forEach(n => {
+                                try { n.stop(); n.disconnect(); } catch(e) {}
+                            });
+                        }
+                        if (layer.gainNode) {
+                            layer.gainNode.disconnect();
+                        }
+                        state.activeLayers.delete(id);
+                        renderMixer();
+                        updateSoundCards();
+                    });
+                } else {
                     state.activeLayers.delete(id);
                     renderMixer();
                     updateSoundCards();
-                });
+                }
             }
 
             function setLayerVolume(id, volume) {
                 const layer = state.activeLayers.get(id);
-                if (layer) {
-                    layer.volume = volume;
+                if (!layer) return;
+
+                layer.volume = volume;
+                layer.targetVolume = volume;
+
+                if (layer.audio) {
+                    layer.audio.volume = volume * state.masterVolume;
+                } else if (layer.gainNode) {
                     layer.gainNode.gain.setTargetAtTime(volume, state.audioContext.currentTime, 0.1);
                 }
             }
 
-            function fadeIn(gainNode, targetVolume, duration = 0.5) {
-                gainNode.gain.setValueAtTime(0, state.audioContext.currentTime);
-                gainNode.gain.linearRampToValueAtTime(targetVolume, state.audioContext.currentTime + duration);
+            // Fade functions for Audio elements
+            function fadeInAudio(layer, duration = 500) {
+                const target = layer.targetVolume * state.masterVolume;
+                const steps = 20;
+                const stepTime = duration / steps;
+                const stepSize = target / steps;
+                let current = 0;
+
+                const interval = setInterval(() => {
+                    current += stepSize;
+                    if (current >= target) {
+                        layer.audio.volume = target;
+                        clearInterval(interval);
+                    } else {
+                        layer.audio.volume = current;
+                    }
+                }, stepTime);
             }
 
-            function fadeOut(gainNode, callback, duration = 0.5) {
-                gainNode.gain.linearRampToValueAtTime(0, state.audioContext.currentTime + duration);
+            function fadeOutAudio(layer, callback, duration = 500) {
+                const start = layer.audio.volume;
+                const steps = 20;
+                const stepTime = duration / steps;
+                const stepSize = start / steps;
+                let current = start;
+
+                const interval = setInterval(() => {
+                    current -= stepSize;
+                    if (current <= 0) {
+                        layer.audio.volume = 0;
+                        clearInterval(interval);
+                        if (callback) callback();
+                    } else {
+                        layer.audio.volume = current;
+                    }
+                }, stepTime);
+            }
+
+            // Fade functions for Web Audio (synth)
+            function fadeInGain(layer, duration = 0.5) {
+                layer.gainNode.gain.setValueAtTime(0, state.audioContext.currentTime);
+                layer.gainNode.gain.linearRampToValueAtTime(layer.targetVolume, state.audioContext.currentTime + duration);
+            }
+
+            function fadeOutGain(layer, callback, duration = 0.5) {
+                layer.gainNode.gain.linearRampToValueAtTime(0, state.audioContext.currentTime + duration);
                 setTimeout(callback, duration * 1000);
             }
 
@@ -1059,20 +1118,20 @@ permalink: /fun/aviary/
             // PLAYBACK CONTROL
             // ============================================
             async function play() {
-                initAudio();
                 state.isPlaying = true;
 
                 for (const [id, layer] of state.activeLayers) {
                     if (layer.audio) {
                         try {
                             await layer.audio.play();
-                            fadeIn(layer.gainNode, layer.volume);
+                            fadeInAudio(layer);
                         } catch (e) {
                             console.log("Play failed:", e);
                         }
                     } else if (layer.synth) {
+                        initAudio();
                         startSynth(layer);
-                        fadeIn(layer.gainNode, layer.volume);
+                        fadeInGain(layer);
                     }
                 }
 
@@ -1083,21 +1142,24 @@ permalink: /fun/aviary/
                 state.isPlaying = false;
 
                 for (const [id, layer] of state.activeLayers) {
-                    fadeOut(layer.gainNode, () => {
-                        if (layer.audio) {
+                    if (layer.audio) {
+                        fadeOutAudio(layer, () => {
                             layer.audio.pause();
-                        }
-                        if (layer.synthInterval) {
-                            clearInterval(layer.synthInterval);
-                            layer.synthInterval = null;
-                        }
-                        if (layer.synthNodes) {
-                            layer.synthNodes.forEach(n => {
-                                try { n.stop(); n.disconnect(); } catch(e) {}
-                            });
-                            layer.synthNodes = [];
-                        }
-                    }, 0.3);
+                        });
+                    } else if (layer.synth) {
+                        fadeOutGain(layer, () => {
+                            if (layer.synthInterval) {
+                                clearInterval(layer.synthInterval);
+                                layer.synthInterval = null;
+                            }
+                            if (layer.synthNodes) {
+                                layer.synthNodes.forEach(n => {
+                                    try { n.stop(); n.disconnect(); } catch(e) {}
+                                });
+                                layer.synthNodes = [];
+                            }
+                        }, 0.3);
+                    }
                 }
 
                 updatePlayButton();
@@ -1406,9 +1468,19 @@ permalink: /fun/aviary/
                 document.getElementById("masterVolume").value = state.masterVolume * 100;
                 document.getElementById("masterVolume").oninput = (e) => {
                     state.masterVolume = e.target.value / 100;
+
+                    // Update synth master gain
                     if (state.masterGain) {
                         state.masterGain.gain.setTargetAtTime(state.masterVolume, state.audioContext.currentTime, 0.1);
                     }
+
+                    // Update all audio element volumes
+                    for (const [id, layer] of state.activeLayers) {
+                        if (layer.audio) {
+                            layer.audio.volume = layer.volume * state.masterVolume;
+                        }
+                    }
+
                     saveData();
                 };
 
