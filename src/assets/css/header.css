@@ -49,6 +49,71 @@
     text-decoration: none;
 }
 
+/* Search Container */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: var(--space-lg);
+}
+
+.search-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-xs);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.search-toggle:hover,
+.search-toggle:focus {
+    color: var(--color-text-primary);
+    outline: none;
+}
+
+.search-form {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    overflow: hidden;
+    transition: width 0.3s ease;
+}
+
+.search-container.expanded .search-form {
+    width: 200px;
+}
+
+.search-container.expanded .search-toggle {
+    display: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+    border-color: var(--color-text-secondary);
+}
+
+.search-input::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 0.7;
+}
+
 /* Hamburger Menu Button */
 .hamburger {
     display: none;
@@ -134,5 +199,22 @@
 
     .hamburger.open .hamburger-line:nth-child(3) {
         transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    /* Mobile search styles */
+    .search-container {
+        margin-left: 0;
+        width: 100%;
+        border-bottom: 1px solid var(--color-border);
+        padding: var(--space-sm) 0;
+    }
+
+    .search-form {
+        position: static;
+        transform: none;
+    }
+
+    .search-container.expanded .search-form {
+        width: 100%;
     }
 }

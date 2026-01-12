@@ -54,9 +54,19 @@
     function checkUrlParams() {
         const params = new URLSearchParams(window.location.search);
         const tag = params.get('tag');
+        const query = params.get('q');
+
         if (tag && allTags.includes(tag)) {
             selectedTags = [tag];
             renderTags();
+        }
+
+        if (query) {
+            searchQuery = query;
+            if (searchInput) searchInput.value = query;
+        }
+
+        if (tag || query) {
             renderContent();
         }
     }

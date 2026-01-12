@@ -3,6 +3,9 @@
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('nav-links');
     const overlay = document.getElementById('overlay');
+    const searchContainer = document.getElementById('search-container');
+    const searchToggle = document.getElementById('search-toggle');
+    const searchInput = document.getElementById('search-input');
 
     if (!hamburger || !navLinks || !overlay) return;
 
@@ -44,4 +47,35 @@
     navLinks.querySelectorAll('a').forEach(function(link) {
         link.addEventListener('click', closeMenu);
     });
+
+    // Search functionality
+    if (searchContainer && searchToggle && searchInput) {
+        function expandSearch() {
+            searchContainer.classList.add('expanded');
+            searchInput.focus();
+        }
+
+        function collapseSearch() {
+            if (!searchInput.value.trim()) {
+                searchContainer.classList.remove('expanded');
+            }
+        }
+
+        searchToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            expandSearch();
+        });
+
+        searchInput.addEventListener('blur', function() {
+            setTimeout(collapseSearch, 150);
+        });
+
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                collapseSearch();
+                searchInput.blur();
+            }
+        });
+    }
 })();
