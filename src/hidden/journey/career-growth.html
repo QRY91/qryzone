@@ -1,7 +1,7 @@
 ---
 layout: base.njk
 title: What I've Built - qry.zone
-description: Projects and work that shaped how I think about software
+description: Projects and the messy paths that got them there
 ---
 
 <article class="article">
@@ -13,7 +13,7 @@ description: Projects and work that shaped how I think about software
             What I've Built
         </h1>
         <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg);">
-            Projects that taught me things
+            Projects and the messy paths that got them there
         </p>
     </header>
 
@@ -21,14 +21,20 @@ description: Projects and work that shaped how I think about software
         <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
             Maersk logistics (solo)
         </h2>
-        <p style="margin-bottom: var(--space-lg);">
-            Months out of bootcamp, I was handling enterprise logistics for Maersk as a solo developer. Complex API integrations, German customs systems, XML parsing, airline industry algorithms. Data for 15 distinct offices. Work that should require a team of 5-10 people.
+        <p style="margin-bottom: var(--space-md);">
+            Months out of bootcamp. Solo developer. Enterprise logistics for Maersk. Complex API integrations, German customs systems, XML parsing, airline industry algorithms. Data for 15 distinct offices.
+        </p>
+        <p style="margin-bottom: var(--space-md);">
+            Should have been a team of 5-10. It was me.
+        </p>
+        <p style="margin-bottom: var(--space-md);">
+            The numbers I still remember: cleaned a database from 13.3 million records to 406,000. Analyzed an import integration spanning 1200+ lines. Proposed infrastructure consolidation saving €90/month.
+        </p>
+        <p style="margin-bottom: var(--space-md);">
+            Did on-site user research with five stakeholder roles. Found that one workflow forced 23 manual updates when users couldn't exclude items from bulk actions on 25 shipments. Nobody had asked the users before.
         </p>
         <p style="margin-bottom: var(--space-lg);">
-            The numbers that stuck with me: cleaned up a database from 13.3 million records down to 406,000. Analyzed an import integration process spanning 1200+ lines of code. Proposed infrastructure consolidation that would save €90/month.
-        </p>
-        <p style="margin-bottom: var(--space-lg);">
-            Did on-site user research with five stakeholder roles. Found that one workflow forced 23 manual updates when users couldn't exclude items from bulk actions on 25 shipments.
+            The lesson: institutions often know less about their own systems than you'd expect. Documentation pays off.
         </p>
     </section>
 
@@ -36,8 +42,11 @@ description: Projects and work that shaped how I think about software
         <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
             Panopticron
         </h2>
-        <p style="margin-bottom: var(--space-lg);">
-            Monitoring system for a 6-person agency. Real-time data sync from Vercel and GitHub, self-monitoring capabilities. Refine + Next.js + Supabase. It works. People use it.
+        <p style="margin-bottom: var(--space-md);">
+            Monitoring system for a 6-person agency. Real-time sync from Vercel and GitHub. Self-monitoring. Refine + Next.js + Supabase.
+        </p>
+        <p style="margin-bottom: var(--space-md);">
+            Built it because nobody wants to check four different tabs to see if something broke. Now it's one tab.
         </p>
         <p style="margin-bottom: var(--space-lg);">
             <a href="https://panopticron.vercel.app/" style="color: var(--color-accent);">panopticron.vercel.app</a>
@@ -48,8 +57,14 @@ description: Projects and work that shaped how I think about software
         <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
             Uroboro
         </h2>
-        <p style="margin-bottom: var(--space-lg);">
-            Knowledge work insights were getting lost. Built a tool for 10-second capture, local AI processing, zero cloud dependency. Started at 17 commands and 1558 lines of code, refined down to 3 essential CLI commands.
+        <p style="margin-bottom: var(--space-md);">
+            Knowledge work insights kept getting lost. Good ideas at 11pm. Gone by morning. Tried various note systems. None stuck.
+        </p>
+        <p style="margin-bottom: var(--space-md);">
+            So I built something for 10-second capture. Local AI processing. No cloud dependency. Started with 17 commands and 1558 lines. Refined to 3 essential CLI commands.
+        </p>
+        <p style="margin-bottom: var(--space-md);">
+            Turns out simpler is harder. But it's what I actually use.
         </p>
         <p style="margin-bottom: var(--space-lg);">
             <a href="https://www.uroboro.dev/" style="color: var(--color-accent);">uroboro.dev</a>
@@ -60,8 +75,11 @@ description: Projects and work that shaped how I think about software
         <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
             Examinator
         </h2>
-        <p style="margin-bottom: var(--space-lg);">
-            Needed to learn security concepts. ADHD-friendly, offline-first study tool. 186 flashcards, 7 summary documents, local LLM for generating practice questions.
+        <p style="margin-bottom: var(--space-md);">
+            Needed to learn security concepts. ADHD means traditional study methods don't work well for me. Boring = impossible.
+        </p>
+        <p style="margin-bottom: var(--space-md);">
+            Built an offline-first study tool. 186 flashcards, 7 summary docs, local LLM for generating practice questions. Spaced repetition with some gamification that doesn't feel insulting.
         </p>
         <p style="margin-bottom: var(--space-lg);">
             <a href="https://github.com/QRY91/examinator" style="color: var(--color-accent);">github.com/QRY91/examinator</a>
@@ -72,11 +90,14 @@ description: Projects and work that shaped how I think about software
         <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono);">
             The pattern
         </h2>
-        <p style="margin-bottom: var(--space-lg);">
-            I hit a problem. I document what's actually wrong. I build something to fix it. If it works, I keep using it. If it helps others, even better.
+        <p style="margin-bottom: var(--space-md);">
+            Hit a problem. Document what's actually wrong. Build something to fix it. If it works, keep using it. If it helps others, even better.
+        </p>
+        <p style="margin-bottom: var(--space-md);">
+            The spite helps. When institutional knowledge gets punished or lost, documenting it becomes survival strategy.
         </p>
         <p style="margin-bottom: var(--space-lg);">
-            The spite helps. When institutional knowledge gets punished or lost, documenting it becomes both survival strategy and motivation.
+            Everything I build shares DNA: SQLite coordination, CLI-first, local when possible. Not because of ideology. Because it works and I can fix it when it breaks.
         </p>
     </section>
 
@@ -86,13 +107,13 @@ description: Projects and work that shaped how I think about software
         </h3>
         <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
             <a href="/hidden/journey/career-realignment/" style="color: var(--color-accent); text-decoration: none;">
-                Career realignment →
+                Career realignment &rarr;
             </a>
             <a href="/hidden/journey/ai-development-narrative/" style="color: var(--color-accent); text-decoration: none;">
-                AI development journey →
+                AI development journey &rarr;
             </a>
             <a href="https://www.bokondo.net/" style="color: var(--color-accent); text-decoration: none;">
-                Full resume →
+                Full resume &rarr;
             </a>
         </div>
     </section>

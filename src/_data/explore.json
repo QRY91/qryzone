@@ -11,7 +11,7 @@
     {
       "title": "Productivity breakthrough",
       "description": "How transferable skills and AI catalyzed sustained development flow",
-      "href": "/journey/productivity-breakthrough/",
+      "href": "/productivity-breakthrough/",
       "tags": ["learning", "ai-collaboration", "personal"],
       "status": "evergreen",
       "lastUpdated": "2025-01-05"
@@ -19,7 +19,7 @@
     {
       "title": "Database-first debugging",
       "description": "When the problem isn't in the code, it's in the data",
-      "href": "/notes/database-first-debugging/",
+      "href": "/database-first-debugging/",
       "tags": ["debugging", "learning"],
       "status": "seedling",
       "connections": ["Optimization through removal", "Recursive mirror"],
@@ -28,7 +28,7 @@
     {
       "title": "Optimization through removal",
       "description": "The fastest code is code that doesn't run",
-      "href": "/notes/optimization-through-removal/",
+      "href": "/optimization-through-removal/",
       "tags": ["debugging"],
       "status": "seedling",
       "connections": ["Database-first debugging"],
@@ -37,7 +37,7 @@
     {
       "title": "The sailboat test",
       "description": "A filter for what tools deserve to exist",
-      "href": "/notes/sailboat-test/",
+      "href": "/sailboat-test/",
       "tags": ["permacomputing", "local-first"],
       "status": "seedling",
       "lastUpdated": "2025-01-08"
@@ -45,7 +45,7 @@
     {
       "title": "Economic honesty",
       "description": "This is all fucking insane but I have a mortgage",
-      "href": "/notes/economic-honesty/",
+      "href": "/economic-honesty/",
       "tags": ["personal", "career"],
       "status": "seedling",
       "lastUpdated": "2025-01-08"
@@ -53,7 +53,7 @@
     {
       "title": "Learning to spite",
       "description": "Transforming institutional dysfunction into fuel",
-      "href": "/notes/learning-to-spite/",
+      "href": "/learning-to-spite/",
       "tags": ["learning", "personal"],
       "status": "seedling",
       "connections": ["About"],
@@ -62,7 +62,7 @@
     {
       "title": "Social media brainfarts",
       "description": "On the commodification of our least interesting impulses",
-      "href": "/notes/social-media-brainfarts/",
+      "href": "/social-media-brainfarts/",
       "tags": ["personal", "society"],
       "status": "seedling",
       "lastUpdated": "2026-01-08"
@@ -70,7 +70,7 @@
     {
       "title": "Powers for good",
       "description": "On complicity through silence in tech",
-      "href": "/notes/powers-for-good/",
+      "href": "/powers-for-good/",
       "tags": ["personal", "career", "ethics"],
       "status": "seedling",
       "connections": ["About"],
@@ -79,7 +79,7 @@
     {
       "title": "Managing attention",
       "description": "On reclaiming focus from the noise",
-      "href": "/notes/managing-attention/",
+      "href": "/managing-attention/",
       "tags": ["personal"],
       "status": "seedling",
       "lastUpdated": "2026-01-08"
@@ -87,7 +87,7 @@
     {
       "title": "UX challenges",
       "description": "When difficulty comes from controls, not gameplay",
-      "href": "/notes/ux-challenges/",
+      "href": "/ux-challenges/",
       "tags": ["games", "design", "analysis"],
       "status": "seedling",
       "lastUpdated": "2026-01-08"
@@ -95,7 +95,7 @@
     {
       "title": "Recursive mirror",
       "description": "What happens when you ask an AI to analyze your writing voice?",
-      "href": "/notes/recursive-mirror/",
+      "href": "/recursive-mirror/",
       "tags": ["ai-collaboration", "personal", "meta", "writing"],
       "status": "seedling",
       "connections": ["About", "Database-first debugging"],
@@ -137,6 +137,100 @@
       "tags": ["open-source", "creative"],
       "status": "evergreen",
       "lastUpdated": "2026-01-08"
+    },
+    {
+      "title": "Local AI economics",
+      "description": "The math on running your own models vs paying for API calls",
+      "href": "/local-ai-economics/",
+      "tags": ["ai-collaboration", "permacomputing", "local-first"],
+      "status": "evergreen",
+      "lastUpdated": "2026-01-12"
+    },
+    {
+      "title": "Steampunk engineering",
+      "description": "I like my shit to break into component parts that can be replaced",
+      "href": "/steampunk-engineering/",
+      "tags": ["permacomputing", "developer-tools"],
+      "status": "evergreen",
+      "connections": ["The sailboat test"],
+      "lastUpdated": "2026-01-12"
+    },
+    {
+      "title": "Permacomputing microstudio",
+      "description": "Building local-first development environments with 100 Rabbits principles",
+      "href": "/permacomputing-microstudio/",
+      "tags": ["permacomputing", "local-first", "developer-tools"],
+      "status": "evergreen",
+      "connections": ["Steampunk engineering", "The sailboat test"],
+      "lastUpdated": "2026-01-12"
+    },
+    {
+      "title": "CLI-first development",
+      "description": "Why terminals beat GUIs for actual work",
+      "href": "/cli-first-development/",
+      "tags": ["developer-tools", "permacomputing"],
+      "status": "evergreen",
+      "lastUpdated": "2026-01-12"
+    },
+    {
+      "title": "CLI tooling stack",
+      "description": "The actual tools that make terminal-first development work",
+      "href": "/cli-tooling-stack/",
+      "tags": ["developer-tools"],
+      "status": "evergreen",
+      "connections": ["CLI-first development"],
+      "lastUpdated": "2026-01-12"
+    },
+    {
+      "title": "Overnight AI development",
+      "description": "Using Claude to work while you sleep",
+      "href": "/overnight-ai-development/",
+      "tags": ["ai-collaboration", "developer-tools"],
+      "status": "growing",
+      "lastUpdated": "2026-01-12"
+    },
+    {
+      "title": "Minimal steampunk POC",
+      "description": "Four weeks to find out if local-first actually works for me",
+      "href": "/minimal-steampunk-poc/",
+      "tags": ["permacomputing", "local-first"],
+      "status": "growing",
+      "connections": ["Steampunk engineering", "Permacomputing microstudio"],
+      "lastUpdated": "2026-01-12"
+    },
+    {
+      "title": "Lily58 distributed gaming",
+      "description": "I built a game console into my split keyboard",
+      "href": "/lily58-gaming/",
+      "tags": ["hardware", "games", "embedded"],
+      "status": "growing",
+      "lastUpdated": "2026-01-12"
+    },
+    {
+      "title": "Panopticron",
+      "description": "Unified monitoring for Vercel and GitHub CI that stops tab-switching",
+      "href": "/panopticron/",
+      "tags": ["developer-tools", "career"],
+      "status": "evergreen",
+      "lastUpdated": "2026-01-12"
+    },
+    {
+      "title": "Quantum Dice design",
+      "description": "Building a roguelike that teaches probability through dice mechanics",
+      "href": "/fun/quantum-dice-design/",
+      "tags": ["games", "learning", "design"],
+      "status": "evergreen",
+      "connections": ["quantum-dice"],
+      "lastUpdated": "2026-01-12"
+    },
+    {
+      "title": "NixOS on Framework",
+      "description": "Declarative system config on repairable hardware",
+      "href": "/nixos-on-framework/",
+      "tags": ["local-first", "permacomputing"],
+      "status": "growing",
+      "connections": ["Steampunk engineering", "Permacomputing microstudio"],
+      "lastUpdated": "2026-01-12"
     }
   ]
 }
