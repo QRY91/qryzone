@@ -4,6 +4,8 @@ title: The Landscape - qrazy - qry.zone
 description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same three problems.
 ---
 
+<link rel="stylesheet" href="/assets/css/prism-zenburn.css">
+
 <style>
 .breadcrumb {
     font-size: 0.85rem;
@@ -65,37 +67,6 @@ description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same thre
 }
 .framework-body {
     padding: var(--space-lg);
-}
-.code-block {
-    background: #2d2d2d;
-    border-radius: var(--border-radius);
-    padding: var(--space-md);
-    overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    margin: var(--space-md) 0;
-    line-height: 1.5;
-}
-.code-block code {
-    color: #f8f8f2;
-}
-.code-block .comment {
-    color: #75715e;
-}
-.code-block .keyword {
-    color: #f92672;
-}
-.code-block .function {
-    color: #a6e22e;
-}
-.code-block .string {
-    color: #e6db74;
-}
-.code-block .tag {
-    color: #f92672;
-}
-.code-block .attr {
-    color: #a6e22e;
 }
 .tradeoff-grid {
     display: grid;
@@ -236,19 +207,17 @@ description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same thre
             <span class="philosophy">"UI as a function of state"</span>
         </div>
         <div class="framework-body">
-            <div class="code-block">
-<code><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>;
+            <pre><code class="language-jsx">import { useState } from 'react';
 
-<span class="keyword">function</span> <span class="function">Counter</span>() {
-  <span class="keyword">const</span> [count, setCount] = useState(0);
+function Counter() {
+  const [count, setCount] = useState(0);
 
-  <span class="keyword">return</span> (
-    <span class="tag">&lt;button</span> <span class="attr">onClick</span>={() => setCount(c => c + 1)}<span class="tag">&gt;</span>
+  return (
+    &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;
       Clicked {count} times
-    <span class="tag">&lt;/button&gt;</span>
+    &lt;/button&gt;
   );
-}</code>
-            </div>
+}</code></pre>
 
             <p>
                 <strong>How it works:</strong> <code>useState</code> returns a value and a setter. Calling the setter schedules a re-render. React re-runs the entire function, builds a virtual DOM tree, diffs it against the previous tree, and patches the real DOM.
@@ -271,19 +240,17 @@ description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same thre
             <span class="philosophy">"Progressive framework"</span>
         </div>
         <div class="framework-body">
-            <div class="code-block">
-<code><span class="tag">&lt;script setup&gt;</span>
-<span class="keyword">import</span> { ref } <span class="keyword">from</span> <span class="string">'vue'</span>;
+            <pre><code class="language-html">&lt;script setup&gt;
+import { ref } from 'vue';
 
-<span class="keyword">const</span> count = ref(0);
-<span class="tag">&lt;/script&gt;</span>
+const count = ref(0);
+&lt;/script&gt;
 
-<span class="tag">&lt;template&gt;</span>
-  <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"count++"</span><span class="tag">&gt;</span>
+&lt;template&gt;
+  &lt;button @click="count++"&gt;
     Clicked {{ count }} times
-  <span class="tag">&lt;/button&gt;</span>
-<span class="tag">&lt;/template&gt;</span></code>
-            </div>
+  &lt;/button&gt;
+&lt;/template&gt;</code></pre>
 
             <p>
                 <strong>How it works:</strong> <code>ref()</code> wraps a value in a Proxy. The template compiler tracks which parts of the template depend on which refs. When a ref changes, Vue re-renders only the affected parts via virtual DOM diffing.
@@ -306,15 +273,13 @@ description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same thre
             <span class="philosophy">"Compiler does the work"</span>
         </div>
         <div class="framework-body">
-            <div class="code-block">
-<code><span class="tag">&lt;script&gt;</span>
-  <span class="keyword">let</span> count = 0;
-<span class="tag">&lt;/script&gt;</span>
+            <pre><code class="language-html">&lt;script&gt;
+  let count = 0;
+&lt;/script&gt;
 
-<span class="tag">&lt;button</span> <span class="attr">on:click</span>=<span class="string">"{() => count++}"</span><span class="tag">&gt;</span>
+&lt;button on:click="{() =&gt; count++}"&gt;
   Clicked {count} times
-<span class="tag">&lt;/button&gt;</span></code>
-            </div>
+&lt;/button&gt;</code></pre>
 
             <p>
                 <strong>How it works:</strong> The Svelte compiler analyzes your code at build time. It knows exactly which DOM nodes depend on <code>count</code>. The output is vanilla JS that directly updates those specific text nodes. No runtime framework, no virtual DOM.
@@ -337,19 +302,17 @@ description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same thre
             <span class="philosophy">"True fine-grained reactivity"</span>
         </div>
         <div class="framework-body">
-            <div class="code-block">
-<code><span class="keyword">import</span> { createSignal } <span class="keyword">from</span> <span class="string">'solid-js'</span>;
+            <pre><code class="language-jsx">import { createSignal } from 'solid-js';
 
-<span class="keyword">function</span> <span class="function">Counter</span>() {
-  <span class="keyword">const</span> [count, setCount] = createSignal(0);
+function Counter() {
+  const [count, setCount] = createSignal(0);
 
-  <span class="keyword">return</span> (
-    <span class="tag">&lt;button</span> <span class="attr">onClick</span>={() => setCount(c => c + 1)}<span class="tag">&gt;</span>
+  return (
+    &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;
       Clicked {count()} times
-    <span class="tag">&lt;/button&gt;</span>
+    &lt;/button&gt;
   );
-}</code>
-            </div>
+}</code></pre>
 
             <p>
                 <strong>How it works:</strong> Signals are reactive primitives. When you read <code>count()</code> inside JSX, Solid tracks that dependency. When you call <code>setCount()</code>, only the exact text node that reads <code>count()</code> updates. No re-render, no diffing.
@@ -372,13 +335,11 @@ description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same thre
             <span class="philosophy">"jQuery for the modern web"</span>
         </div>
         <div class="framework-body">
-            <div class="code-block">
-<code><span class="tag">&lt;div</span> <span class="attr">x-data</span>=<span class="string">"{ count: 0 }"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"count++"</span><span class="tag">&gt;</span>
-    Clicked <span class="tag">&lt;span</span> <span class="attr">x-text</span>=<span class="string">"count"</span><span class="tag">&gt;&lt;/span&gt;</span> times
-  <span class="tag">&lt;/button&gt;</span>
-<span class="tag">&lt;/div&gt;</span></code>
-            </div>
+            <pre><code class="language-html">&lt;div x-data="{ count: 0 }"&gt;
+  &lt;button @click="count++"&gt;
+    Clicked &lt;span x-text="count"&gt;&lt;/span&gt; times
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
 
             <p>
                 <strong>How it works:</strong> Alpine scans the DOM at runtime for <code>x-*</code> attributes. It wraps the data in a Proxy and re-evaluates bindings when state changes. Very similar to qrazy—we basically built a mini-Alpine.
@@ -401,17 +362,15 @@ description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same thre
             <span class="philosophy">"Hypermedia as the engine"</span>
         </div>
         <div class="framework-body">
-            <div class="code-block">
-<code><span class="comment">&lt;!-- Client --&gt;</span>
-<span class="tag">&lt;button</span> <span class="attr">hx-post</span>=<span class="string">"/increment"</span>
-        <span class="attr">hx-swap</span>=<span class="string">"innerHTML"</span><span class="tag">&gt;</span>
+            <pre><code class="language-html">&lt;!-- Client --&gt;
+&lt;button hx-post="/increment"
+        hx-swap="innerHTML"&gt;
   Clicked 0 times
-<span class="tag">&lt;/button&gt;</span>
+&lt;/button&gt;
 
-<span class="comment"># Server (returns HTML, not JSON)</span>
+# Server (returns HTML, not JSON)
 POST /increment
-<span class="keyword">return</span> <span class="string">"Clicked 1 times"</span></code>
-            </div>
+return "Clicked 1 times"</code></pre>
 
             <p>
                 <strong>How it works:</strong> htmx intercepts user actions and makes HTTP requests. The server responds with HTML, not JSON. htmx swaps that HTML into the page. The server IS the state—no client-side state management needed.
@@ -434,13 +393,11 @@ POST /increment
             <span class="philosophy">"Learn by building"</span>
         </div>
         <div class="framework-body">
-            <div class="code-block">
-<code><span class="tag">&lt;div</span> <span class="attr">q-data</span>=<span class="string">"{ count: 0 }"</span><span class="tag">&gt;</span>
-  <span class="tag">&lt;button</span> <span class="attr">q-click</span>=<span class="string">"count++"</span><span class="tag">&gt;</span>
-    Clicked <span class="tag">&lt;span</span> <span class="attr">q-text</span>=<span class="string">"count"</span><span class="tag">&gt;&lt;/span&gt;</span> times
-  <span class="tag">&lt;/button&gt;</span>
-<span class="tag">&lt;/div&gt;</span></code>
-            </div>
+            <pre><code class="language-html">&lt;div q-data="{ count: 0 }"&gt;
+  &lt;button q-click="count++"&gt;
+    Clicked &lt;span q-text="count"&gt;&lt;/span&gt; times
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
 
             <p>
                 <strong>How it works:</strong> Almost identical to Alpine. Proxy-based reactivity, runtime attribute parsing, stored updater functions. 250 lines of code you can read in an afternoon.
@@ -478,3 +435,8 @@ POST /increment
         <a href="/qrazy/playground/">Next: Playground →</a>
     </nav>
 </article>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>

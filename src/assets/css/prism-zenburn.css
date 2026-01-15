@@ -1,0 +1,136 @@
+/**
+ * Prism.js Zenburn theme
+ * Based on the Zenburn color scheme
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: #dcdccc;
+    background: none;
+    font-family: var(--font-mono), Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 0.85rem;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    tab-size: 2;
+    hyphens: none;
+    border: none;
+    padding: 0;
+}
+
+/* Remove border from code inside pre blocks */
+pre[class*="language-"] code,
+pre code[class*="language-"] {
+    border: none;
+    padding: 0;
+    background: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: var(--space-md, 1rem);
+    margin: var(--space-md, 1rem) 0;
+    overflow: auto;
+    border-radius: var(--border-radius, 2px);
+    background: #2d2d2d;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: 0.1em 0.3em;
+    border-radius: var(--border-radius, 2px);
+    background: #2d2d2d;
+}
+
+/* Tokens */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #7f9f7f;
+}
+
+.token.punctuation {
+    color: #dcdccc;
+}
+
+.token.namespace {
+    opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #cc9393;
+}
+
+.token.boolean,
+.token.number {
+    color: #8cd0d3;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #cc9393;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+    color: #f0efd0;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+    color: #93e0e3;
+}
+
+.token.keyword {
+    color: #f0dfaf;
+}
+
+.token.regex,
+.token.important {
+    color: #dfaf8f;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+/* Line highlighting */
+pre[class*="language-"] .highlight-line {
+    background: rgba(240, 223, 175, 0.1);
+    display: block;
+}
+
+/* Selection */
+code[class*="language-"]::selection,
+code[class*="language-"] *::selection,
+pre[class*="language-"]::selection,
+pre[class*="language-"] *::selection {
+    background: #4f4f4f;
+}

@@ -4,6 +4,8 @@ title: Reconciliation - qrazy - qry.zone
 description: The hard problem. What happens when you delete item #2 from a list?
 ---
 
+<link rel="stylesheet" href="/assets/css/prism-zenburn.css">
+
 <style>
 .breadcrumb {
     font-size: 0.85rem;
@@ -15,35 +17,6 @@ description: The hard problem. What happens when you delete item #2 from a list?
 }
 .breadcrumb a:hover {
     color: var(--color-accent);
-}
-.code-block {
-    background: #2d2d2d;
-    border-radius: var(--border-radius);
-    padding: var(--space-md);
-    overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    margin: var(--space-md) 0;
-    line-height: 1.5;
-}
-.code-block code {
-    color: #f8f8f2;
-}
-.code-block .comment {
-    color: #75715e;
-}
-.code-block .keyword {
-    color: #f92672;
-}
-.code-block .function {
-    color: #a6e22e;
-}
-.code-block .string {
-    color: #e6db74;
-}
-.code-block .highlight {
-    background: rgba(166, 226, 46, 0.2);
-    display: inline;
 }
 .approach-card {
     background: var(--color-surface);
@@ -92,24 +65,6 @@ description: The hard problem. What happens when you delete item #2 from a list?
     margin-top: 0;
     color: var(--color-accent);
     font-size: 0.9rem;
-}
-.algorithm-box {
-    background: #2d2d2d;
-    border-radius: var(--border-radius);
-    padding: var(--space-lg);
-    margin: var(--space-lg) 0;
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    line-height: 1.8;
-}
-.algorithm-box .step {
-    color: #a6e22e;
-}
-.algorithm-box .condition {
-    color: #f92672;
-}
-.algorithm-box .action {
-    color: #f8f8f2;
 }
 .nav-footer {
     display: flex;
@@ -166,15 +121,13 @@ description: The hard problem. What happens when you delete item #2 from a list?
         <p>
             You have a list of 5 items rendered in the DOM:
         </p>
-        <div class="code-block">
-<code>&lt;ul&gt;
+        <pre><code class="language-html">&lt;ul&gt;
   &lt;li&gt;Apple&lt;/li&gt;
-  &lt;li&gt;Banana&lt;/li&gt;   <span class="comment">&lt;!-- user deletes this one --&gt;</span>
+  &lt;li&gt;Banana&lt;/li&gt;   &lt;!-- user deletes this one --&gt;
   &lt;li&gt;Cherry&lt;/li&gt;
   &lt;li&gt;Date&lt;/li&gt;
   &lt;li&gt;Elderberry&lt;/li&gt;
-&lt;/ul&gt;</code>
-        </div>
+&lt;/ul&gt;</code></pre>
         <p>
             The user deletes Banana. Now what? You have two options, and only one is acceptable.
         </p>
@@ -225,18 +178,16 @@ description: The hard problem. What happens when you delete item #2 from a list?
             The solution: give each item a stable <strong>key</strong>.
         </p>
 
-        <div class="code-block">
-<code><span class="comment">// Without keys (identity by index)</span>
-[<span class="string">'Apple'</span>, <span class="string">'Banana'</span>, <span class="string">'Cherry'</span>]  <span class="comment">// DOM: [li#0, li#1, li#2]</span>
-[<span class="string">'Apple'</span>, <span class="string">'Cherry'</span>]            <span class="comment">// DOM: [li#0, li#1] ← which is which?</span>
+        <pre><code class="language-javascript">// Without keys (identity by index)
+['Apple', 'Banana', 'Cherry']  // DOM: [li#0, li#1, li#2]
+['Apple', 'Cherry']            // DOM: [li#0, li#1] ← which is which?
 
-<span class="comment">// With keys (identity by key)</span>
-[{id:1, <span class="string">'Apple'</span>}, {id:2, <span class="string">'Banana'</span>}, {id:3, <span class="string">'Cherry'</span>}]
-<span class="comment">// DOM: [li@key=1, li@key=2, li@key=3]</span>
+// With keys (identity by key)
+[{id:1, 'Apple'}, {id:2, 'Banana'}, {id:3, 'Cherry'}]
+// DOM: [li@key=1, li@key=2, li@key=3]
 
-[{id:1, <span class="string">'Apple'</span>}, {id:3, <span class="string">'Cherry'</span>}]
-<span class="comment">// DOM: [li@key=1, li@key=3] ← key=2 was removed</span></code>
-        </div>
+[{id:1, 'Apple'}, {id:3, 'Cherry'}]
+// DOM: [li@key=1, li@key=3] ← key=2 was removed</code></pre>
 
         <p>
             This is why React, Vue, and every framework yells at you when you forget the <code>key</code> prop on list items.
@@ -249,14 +200,12 @@ description: The hard problem. What happens when you delete item #2 from a list?
             Here's how you write a list in qrazy:
         </p>
 
-        <div class="code-block">
-<code>&lt;ul&gt;
-  &lt;li <span class="highlight">q-for=<span class="string">"(item, index) in items"</span></span> <span class="highlight">q-key=<span class="string">"item.id"</span></span>&gt;
-    &lt;span q-text=<span class="string">"item.text"</span>&gt;&lt;/span&gt;
-    &lt;button q-click=<span class="string">"items.splice(index, 1)"</span>&gt;Delete&lt;/button&gt;
+        <pre><code class="language-html">&lt;ul&gt;
+  &lt;li q-for="(item, index) in items" q-key="item.id"&gt;
+    &lt;span q-text="item.text"&gt;&lt;/span&gt;
+    &lt;button q-click="items.splice(index, 1)"&gt;Delete&lt;/button&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</code>
-        </div>
+&lt;/ul&gt;</code></pre>
 
         <p>
             The element with <code>q-for</code> becomes a <strong>template</strong>. qrazy hides it, then clones it for each item in the array.
@@ -269,34 +218,32 @@ description: The hard problem. What happens when you delete item #2 from a list?
             Here's qrazy's reconciliation algorithm in pseudocode:
         </p>
 
-        <div class="algorithm-box">
-<span class="step">function</span> renderList(array):
+        <pre><code class="language-python">function renderList(array):
     newKeys = Set()
 
-    <span class="step">for each</span> (item, index) <span class="step">in</span> array:
-        key = <span class="condition">q-key expression</span> or index
+    for each (item, index) in array:
+        key = q-key expression or index
         newKeys.add(key)
 
-        <span class="condition">if</span> instances.has(key):
-            <span class="action">// Update existing DOM node in place</span>
+        if instances.has(key):
+            # Update existing DOM node in place
             instance = instances.get(key)
             instance.state[itemVar] = item
             instance.state[indexVar] = index
-            <span class="action">runUpdaters(instance.el)</span>
-        <span class="condition">else</span>:
-            <span class="action">// Clone template, bind, insert</span>
+            runUpdaters(instance.el)
+        else:
+            # Clone template, bind, insert
             clone = template.cloneNode(true)
             scopedState = { ...parentState, [itemVar]: item }
             bindElement(clone, scopedState)
-            <span class="action">insertBefore(template, clone)</span>
+            insertBefore(template, clone)
             instances.set(key, { el: clone, state: scopedState })
 
-    <span class="step">for each</span> (key, instance) <span class="step">in</span> instances:
-        <span class="condition">if not</span> newKeys.has(key):
-            <span class="action">// Remove from DOM</span>
+    for each (key, instance) in instances:
+        if not newKeys.has(key):
+            # Remove from DOM
             instance.el.remove()
-            instances.delete(key)
-        </div>
+            instances.delete(key)</code></pre>
 
         <p>
             The magic is the <code>instances</code> Map. It maps keys to their DOM elements. When an item is deleted, we check which keys are missing and remove those specific DOM nodes.
@@ -309,19 +256,17 @@ description: The hard problem. What happens when you delete item #2 from a list?
             Each list item needs its own DOM subtree. We create these by cloning the template:
         </p>
 
-        <div class="code-block">
-<code><span class="comment">// The original element becomes a hidden template</span>
-template.style.display = <span class="string">'none'</span>;
-template.removeAttribute(<span class="string">'q-for'</span>);  <span class="comment">// prevent re-processing</span>
+        <pre><code class="language-javascript">// The original element becomes a hidden template
+template.style.display = 'none';
+template.removeAttribute('q-for');  // prevent re-processing
 
-<span class="comment">// For each item, create a clone</span>
-<span class="keyword">const</span> clone = template.cloneNode(<span class="keyword">true</span>);  <span class="comment">// deep clone</span>
-clone.style.display = <span class="string">''</span>;
+// For each item, create a clone
+const clone = template.cloneNode(true);  // deep clone
+clone.style.display = '';
 
-<span class="comment">// Bind with scoped state (includes item + index)</span>
-<span class="keyword">const</span> scopedState = { ...parentState, item, index };
-bindElement(clone, scopedState);</code>
-        </div>
+// Bind with scoped state (includes item + index)
+const scopedState = { ...parentState, item, index };
+bindElement(clone, scopedState);</code></pre>
 
         <p>
             The scoped state is key. Each clone gets its own <code>item</code> and <code>index</code> variables, separate from other items.
@@ -334,15 +279,13 @@ bindElement(clone, scopedState);</code>
             When you call <code>items.push({...})</code>, qrazy needs to know. We intercept the array methods:
         </p>
 
-        <div class="code-block">
-<code><span class="keyword">if</span> ([<span class="string">'push'</span>, <span class="string">'pop'</span>, <span class="string">'splice'</span>, <span class="string">'shift'</span>, <span class="string">'unshift'</span>].includes(prop)) {
-  <span class="keyword">return</span> (...args) => {
-    <span class="keyword">const</span> result = Array.prototype[prop].apply(target, args);
-    <span class="highlight">onUpdate(<span class="string">'length'</span>);</span>  <span class="comment">// ← triggers re-render</span>
-    <span class="keyword">return</span> result;
+        <pre><code class="language-javascript">if (['push', 'pop', 'splice', 'shift', 'unshift'].includes(prop)) {
+  return (...args) => {
+    const result = Array.prototype[prop].apply(target, args);
+    onUpdate('length');  // ← triggers re-render
+    return result;
   };
-}</code>
-        </div>
+}</code></pre>
 
         <p>
             This is why <code>items.splice(index, 1)</code> works in <code>q-click</code>. The splice runs, the interception fires, the list re-renders.
@@ -426,3 +369,7 @@ bindElement(clone, scopedState);</code>
 </article>
 
 <script src="/assets/js/qrazy.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>

@@ -4,6 +4,8 @@ title: qrazy - qry.zone
 description: Building a micro-framework to cure framework fatigue
 ---
 
+<link rel="stylesheet" href="/assets/css/prism-zenburn.css">
+
 <style>
 .problem-card {
     background: var(--color-surface);
@@ -21,18 +23,6 @@ description: Building a micro-framework to cure framework fatigue
     font-size: 0.8rem;
     color: var(--color-text-secondary);
     margin-bottom: var(--space-xs);
-}
-.code-sample {
-    background: #2d2d2d;
-    border-radius: var(--border-radius);
-    padding: var(--space-md);
-    overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    margin: var(--space-md) 0;
-}
-.code-sample code {
-    color: #f8f8f2;
 }
 .nav-grid {
     display: grid;
@@ -100,13 +90,11 @@ description: Building a micro-framework to cure framework fatigue
             Here's what it looks like:
         </p>
 
-        <div class="code-sample">
-<code><span style="color:#e6db74">&lt;div</span> <span style="color:#a6e22e">q-data</span>=<span style="color:#e6db74">"{ count: 0 }"</span><span style="color:#e6db74">&gt;</span>
-  <span style="color:#e6db74">&lt;button</span> <span style="color:#a6e22e">q-click</span>=<span style="color:#e6db74">"count++"</span><span style="color:#e6db74">&gt;</span>
-    Clicked <span style="color:#e6db74">&lt;span</span> <span style="color:#a6e22e">q-text</span>=<span style="color:#e6db74">"count"</span><span style="color:#e6db74">&gt;&lt;/span&gt;</span> times
-  <span style="color:#e6db74">&lt;/button&gt;</span>
-<span style="color:#e6db74">&lt;/div&gt;</span></code>
-        </div>
+        <pre><code class="language-html">&lt;div q-data="{ count: 0 }"&gt;
+  &lt;button q-click="count++"&gt;
+    Clicked &lt;span q-text="count"&gt;&lt;/span&gt; times
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
 
         <p>
             That's it. No npm install. No webpack. No JSX. Just HTML with special attributes that make things reactive.
@@ -231,3 +219,7 @@ description: Building a micro-framework to cure framework fatigue
         </p>
     </section>
 </article>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>

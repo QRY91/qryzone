@@ -4,6 +4,8 @@ title: Binding - qrazy - qry.zone
 description: How do you connect JavaScript state to the DOM? Walking the tree, parsing attributes, and evaluating expressions.
 ---
 
+<link rel="stylesheet" href="/assets/css/prism-zenburn.css">
+
 <style>
 .breadcrumb {
     font-size: 0.85rem;
@@ -15,35 +17,6 @@ description: How do you connect JavaScript state to the DOM? Walking the tree, p
 }
 .breadcrumb a:hover {
     color: var(--color-accent);
-}
-.code-block {
-    background: #2d2d2d;
-    border-radius: var(--border-radius);
-    padding: var(--space-md);
-    overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    margin: var(--space-md) 0;
-    line-height: 1.5;
-}
-.code-block code {
-    color: #f8f8f2;
-}
-.code-block .comment {
-    color: #75715e;
-}
-.code-block .keyword {
-    color: #f92672;
-}
-.code-block .function {
-    color: #a6e22e;
-}
-.code-block .string {
-    color: #e6db74;
-}
-.code-block .highlight {
-    background: rgba(166, 226, 46, 0.2);
-    display: inline;
 }
 .philosophy-grid {
     display: grid;
@@ -205,20 +178,18 @@ description: How do you connect JavaScript state to the DOM? Walking the tree, p
             You could use <code>querySelectorAll('*')</code> to get all descendants, but <code>TreeWalker</code> is more efficient and gives you control over the traversal.
         </p>
 
-        <div class="code-block">
-<code><span class="keyword">const</span> walker = document.createTreeWalker(
-  root,                        <span class="comment">// starting element</span>
-  NodeFilter.SHOW_ELEMENT      <span class="comment">// only visit elements (not text nodes)</span>
+        <pre><code class="language-javascript">const walker = document.createTreeWalker(
+  root,                        // starting element
+  NodeFilter.SHOW_ELEMENT      // only visit elements (not text nodes)
 );
 
-<span class="keyword">while</span> (walker.nextNode()) {
-  <span class="keyword">const</span> node = walker.currentNode;
-  <span class="comment">// Check for q-* attributes</span>
-  <span class="keyword">if</span> (node.hasAttribute(<span class="string">'q-text'</span>)) {
+while (walker.nextNode()) {
+  const node = walker.currentNode;
+  // Check for q-* attributes
+  if (node.hasAttribute('q-text')) {
     bindText(node, state);
   }
-}</code>
-        </div>
+}</code></pre>
 
         <p>
             qrazy uses this to walk each <code>q-data</code> scope, collecting all bindable elements. We also skip nested <code>q-data</code> scopes—they get their own state.
@@ -231,19 +202,17 @@ description: How do you connect JavaScript state to the DOM? Walking the tree, p
             When you write <code>q-text="count + 1"</code>, qrazy needs to evaluate that expression in the context of the state object. The trick: <code>new Function()</code>.
         </p>
 
-        <div class="code-block">
-<code><span class="keyword">function</span> <span class="function">evaluate</span>(expr, state) {
-  <span class="keyword">const</span> keys = Object.keys(state);   <span class="comment">// ['count', 'name', ...]</span>
-  <span class="keyword">const</span> vals = Object.values(state); <span class="comment">// [0, 'Alice', ...]</span>
+        <pre><code class="language-javascript">function evaluate(expr, state) {
+  const keys = Object.keys(state);   // ['count', 'name', ...]
+  const vals = Object.values(state); // [0, 'Alice', ...]
 
-  <span class="comment">// Build: new Function('count', 'name', 'return count + 1')</span>
-  <span class="keyword">return new</span> Function(...keys, <span class="string">`return ${expr}`</span>)(...vals);
+  // Build: new Function('count', 'name', 'return count + 1')
+  return new Function(...keys, `return ${expr}`)(...vals);
 }
 
-<span class="comment">// Example:</span>
-evaluate(<span class="string">'count + 1'</span>, { count: 5 });  <span class="comment">// → 6</span>
-evaluate(<span class="string">'name.toUpperCase()'</span>, { name: <span class="string">'alice'</span> });  <span class="comment">// → 'ALICE'</span></code>
-        </div>
+// Example:
+evaluate('count + 1', { count: 5 });  // → 6
+evaluate('name.toUpperCase()', { name: 'alice' });  // → 'ALICE'</code></pre>
 
         <p>
             This is how Alpine does it too. You're essentially creating a tiny function whose parameters are the state keys, then calling it with the state values.
@@ -260,14 +229,12 @@ evaluate(<span class="string">'name.toUpperCase()'</span>, { name: <span class="
             What if you have nested <code>q-data</code> scopes?
         </p>
 
-        <div class="code-block">
-<code><span class="string">&lt;div q-data="{ theme: 'dark' }"&gt;</span>
-  <span class="string">&lt;div q-data="{ count: 0 }"&gt;</span>
-    <span class="comment">&lt;!-- Can this access theme? --&gt;</span>
-    <span class="string">&lt;span q-text="theme"&gt;&lt;/span&gt;</span>
-  <span class="string">&lt;/div&gt;</span>
-<span class="string">&lt;/div&gt;</span></code>
-        </div>
+        <pre><code class="language-html">&lt;div q-data="{ theme: 'dark' }"&gt;
+  &lt;div q-data="{ count: 0 }"&gt;
+    &lt;!-- Can this access theme? --&gt;
+    &lt;span q-text="theme"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
 
         <p>
             In qrazy's current design: <strong>no</strong>. Each <code>q-data</code> scope is independent. The inner div only sees <code>count</code>, not <code>theme</code>.
@@ -283,37 +250,33 @@ evaluate(<span class="string">'name.toUpperCase()'</span>, { name: <span class="
             When state changes, we need to update the DOM. But we don't want to re-walk the entire tree every time. Solution: store updater functions on the elements themselves.
         </p>
 
-        <div class="code-block">
-<code><span class="keyword">if</span> (el.hasAttribute(<span class="string">'q-text'</span>)) {
-  <span class="keyword">const</span> expr = el.getAttribute(<span class="string">'q-text'</span>);
+        <pre><code class="language-javascript">if (el.hasAttribute('q-text')) {
+  const expr = el.getAttribute('q-text');
 
-  <span class="comment">// Create an updater function</span>
-  <span class="keyword">const</span> update = () => {
+  // Create an updater function
+  const update = () => {
     el.textContent = evaluate(expr, state);
   };
 
-  <span class="comment">// Run it once (initial render)</span>
+  // Run it once (initial render)
   update();
 
-  <span class="comment">// Store it for later</span>
-  <span class="highlight">el._qUpdaters = el._qUpdaters || [];</span>
-  <span class="highlight">el._qUpdaters.push(update);</span>
-}</code>
-        </div>
+  // Store it for later
+  el._qUpdaters = el._qUpdaters || [];
+  el._qUpdaters.push(update);
+}</code></pre>
 
         <p>
             Now when state changes, we just loop through elements and call their stored updaters:
         </p>
 
-        <div class="code-block">
-<code><span class="keyword">const</span> state = reactive(data, () => {
-  <span class="keyword">for</span> (<span class="keyword">const</span> el <span class="keyword">of</span> elements) {
-    <span class="keyword">if</span> (el._qUpdaters) {
+        <pre><code class="language-javascript">const state = reactive(data, () => {
+  for (const el of elements) {
+    if (el._qUpdaters) {
       el._qUpdaters.forEach(fn => fn());
     }
   }
-});</code>
-        </div>
+});</code></pre>
 
         <p>
             This is "coarse-grained" reactivity—any change triggers all updaters. Fine-grained systems (like Solid) track dependencies per-expression so they only run affected updaters.
@@ -370,3 +333,6 @@ evaluate(<span class="string">'name.toUpperCase()'</span>, { name: <span class="
 </article>
 
 <script src="/assets/js/qrazy.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>

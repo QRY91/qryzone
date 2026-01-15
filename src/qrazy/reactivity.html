@@ -4,6 +4,8 @@ title: Reactivity - qrazy - qry.zone
 description: How do you know when state changes? The Proxy API and the history of reactive programming.
 ---
 
+<link rel="stylesheet" href="/assets/css/prism-zenburn.css">
+
 <style>
 .breadcrumb {
     font-size: 0.85rem;
@@ -15,35 +17,6 @@ description: How do you know when state changes? The Proxy API and the history o
 }
 .breadcrumb a:hover {
     color: var(--color-accent);
-}
-.code-block {
-    background: #2d2d2d;
-    border-radius: var(--border-radius);
-    padding: var(--space-md);
-    overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    margin: var(--space-md) 0;
-    line-height: 1.5;
-}
-.code-block code {
-    color: #f8f8f2;
-}
-.code-block .comment {
-    color: #75715e;
-}
-.code-block .keyword {
-    color: #f92672;
-}
-.code-block .function {
-    color: #a6e22e;
-}
-.code-block .string {
-    color: #e6db74;
-}
-.code-block .highlight {
-    background: rgba(166, 226, 46, 0.2);
-    display: inline;
 }
 .history-item {
     border-left: 2px solid var(--color-border);
@@ -134,23 +107,21 @@ description: How do you know when state changes? The Proxy API and the history o
             <p>
                 Run a "digest cycle" on every user action. Compare every watched value to its previous value. If different, update the DOM. Repeat until nothing changes.
             </p>
-            <div class="code-block">
-<code><span class="comment">// Pseudo-code for dirty checking</span>
-<span class="keyword">function</span> <span class="function">digest</span>() {
-  <span class="keyword">let</span> dirty = <span class="keyword">true</span>;
-  <span class="keyword">while</span> (dirty) {
-    dirty = <span class="keyword">false</span>;
-    <span class="keyword">for</span> (<span class="keyword">const</span> watcher <span class="keyword">of</span> watchers) {
-      <span class="keyword">const</span> newVal = watcher.get();
-      <span class="keyword">if</span> (newVal !== watcher.last) {
+            <pre><code class="language-javascript">// Pseudo-code for dirty checking
+function digest() {
+  let dirty = true;
+  while (dirty) {
+    dirty = false;
+    for (const watcher of watchers) {
+      const newVal = watcher.get();
+      if (newVal !== watcher.last) {
         watcher.callback(newVal);
         watcher.last = newVal;
-        dirty = <span class="keyword">true</span>;  <span class="comment">// something changed, go again</span>
+        dirty = true;  // something changed, go again
       }
     }
   }
-}</code>
-            </div>
+}</code></pre>
             <p>
                 <strong>The problem:</strong> O(n) on every digest. With 2000 bindings, you're comparing 2000 values. Multiple times. On every click.
             </p>
@@ -162,14 +133,12 @@ description: How do you know when state changes? The Proxy API and the history o
             <p>
                 Native browser API to watch object changes. Would have been perfect. Chrome implemented it. Then everyone abandoned it in favor of Proxies.
             </p>
-            <div class="code-block">
-<code><span class="comment">// RIP Object.observe (2014-2015)</span>
-Object.observe(obj, <span class="keyword">function</span>(changes) {
-  changes.forEach(<span class="keyword">function</span>(change) {
+            <pre><code class="language-javascript">// RIP Object.observe (2014-2015)
+Object.observe(obj, function(changes) {
+  changes.forEach(function(change) {
     console.log(change.name, change.oldValue, change.object[change.name]);
   });
-});</code>
-            </div>
+});</code></pre>
             <p>
                 <strong>Status:</strong> Removed from browsers. Don't use.
             </p>
@@ -181,21 +150,19 @@ Object.observe(obj, <span class="keyword">function</span>(changes) {
             <p>
                 Redefine each property with a getter/setter. The setter fires your callback.
             </p>
-            <div class="code-block">
-<code><span class="keyword">function</span> <span class="function">defineReactive</span>(obj, key, val) {
+            <pre><code class="language-javascript">function defineReactive(obj, key, val) {
   Object.defineProperty(obj, key, {
-    <span class="function">get</span>() {
-      <span class="keyword">return</span> val;
+    get() {
+      return val;
     },
-    <span class="function">set</span>(newVal) {
-      <span class="keyword">if</span> (newVal !== val) {
+    set(newVal) {
+      if (newVal !== val) {
         val = newVal;
-        <span class="highlight">notify();</span>  <span class="comment">// ← trigger update</span>
+        notify();  // ← trigger update
       }
     }
   });
-}</code>
-            </div>
+}</code></pre>
             <p>
                 <strong>The problem:</strong> Can't detect new properties. <code>obj.newProp = 'x'</code> doesn't trigger anything because the getter/setter was never defined for <code>newProp</code>. Vue 2 needed <code>Vue.set()</code> as a workaround.
             </p>
@@ -207,18 +174,16 @@ Object.observe(obj, <span class="keyword">function</span>(changes) {
             <p>
                 Wrap the entire object in a trap. Intercept <em>all</em> property access—get, set, delete, even <code>in</code> checks.
             </p>
-            <div class="code-block">
-<code><span class="keyword">const</span> state = <span class="keyword">new</span> Proxy(data, {
-  <span class="function">set</span>(target, prop, value) {
+            <pre><code class="language-javascript">const state = new Proxy(data, {
+  set(target, prop, value) {
     target[prop] = value;
-    <span class="highlight">onUpdate(prop);</span>  <span class="comment">// ← THE MAGIC</span>
-    <span class="keyword">return true</span>;
+    onUpdate(prop);  // ← THE MAGIC
+    return true;
   },
-  <span class="function">get</span>(target, prop) {
-    <span class="keyword">return</span> target[prop];
+  get(target, prop) {
+    return target[prop];
   }
-});</code>
-            </div>
+});</code></pre>
             <p>
                 <strong>The win:</strong> Works with new properties. Works with deletions. Works with arrays. No special methods needed.
             </p>
@@ -231,20 +196,18 @@ Object.observe(obj, <span class="keyword">function</span>(changes) {
             Here's the actual code from qrazy.js:
         </p>
 
-        <div class="code-block">
-<code><span class="keyword">function</span> <span class="function">reactive</span>(data, onUpdate) {
-  <span class="keyword">return new</span> Proxy(data, {
-    <span class="function">set</span>(target, prop, value) {
+        <pre><code class="language-javascript">function reactive(data, onUpdate) {
+  return new Proxy(data, {
+    set(target, prop, value) {
       target[prop] = value;
       onUpdate(prop);
-      <span class="keyword">return true</span>;
+      return true;
     },
-    <span class="function">get</span>(target, prop) {
-      <span class="keyword">return</span> target[prop];
+    get(target, prop) {
+      return target[prop];
     }
   });
-}</code>
-        </div>
+}</code></pre>
 
         <p>
             That's it. 11 lines. When you write <code>state.count = 5</code>, the Proxy's <code>set</code> trap fires, which calls <code>onUpdate('count')</code>, which triggers all the DOM bindings that care about <code>count</code>.
@@ -260,26 +223,24 @@ Object.observe(obj, <span class="keyword">function</span>(changes) {
             qrazy's solution: intercept the method calls.
         </p>
 
-        <div class="code-block">
-<code><span class="keyword">function</span> <span class="function">deepReactive</span>(data, onUpdate) {
-  <span class="keyword">if</span> (Array.isArray(data)) {
-    <span class="keyword">return new</span> Proxy(data, {
-      <span class="function">get</span>(target, prop) {
-        <span class="comment">// Intercept mutating methods</span>
-        <span class="keyword">if</span> ([<span class="string">'push'</span>, <span class="string">'pop'</span>, <span class="string">'splice'</span>, ...].includes(prop)) {
-          <span class="keyword">return</span> (...args) => {
-            <span class="keyword">const</span> result = Array.prototype[prop].apply(target, args);
-            <span class="highlight">onUpdate(<span class="string">'length'</span>);</span>  <span class="comment">// ← notify on mutation</span>
-            <span class="keyword">return</span> result;
+        <pre><code class="language-javascript">function deepReactive(data, onUpdate) {
+  if (Array.isArray(data)) {
+    return new Proxy(data, {
+      get(target, prop) {
+        // Intercept mutating methods
+        if (['push', 'pop', 'splice', ...].includes(prop)) {
+          return (...args) => {
+            const result = Array.prototype[prop].apply(target, args);
+            onUpdate('length');  // ← notify on mutation
+            return result;
           };
         }
-        <span class="keyword">return</span> target[prop];
+        return target[prop];
       }
     });
   }
-  <span class="keyword">return</span> reactive(data, onUpdate);
-}</code>
-        </div>
+  return reactive(data, onUpdate);
+}</code></pre>
 
         <p>
             When you call <code>todos.push({...})</code>, you're actually calling our wrapper function, which calls the real <code>push</code>, then triggers an update.
@@ -296,15 +257,13 @@ Object.observe(obj, <span class="keyword">function</span>(changes) {
             There's another approach gaining popularity: <strong>signals</strong> (used by Solid, Preact Signals, Angular 16+).
         </p>
 
-        <div class="code-block">
-<code><span class="comment">// Proxy-based (Vue, qrazy)</span>
-<span class="keyword">const</span> state = reactive({ count: 0 });
-state.count++;  <span class="comment">// triggers update</span>
+        <pre><code class="language-javascript">// Proxy-based (Vue, qrazy)
+const state = reactive({ count: 0 });
+state.count++;  // triggers update
 
-<span class="comment">// Signal-based (Solid)</span>
-<span class="keyword">const</span> [count, setCount] = createSignal(0);
-setCount(count() + 1);  <span class="comment">// triggers update</span></code>
-        </div>
+// Signal-based (Solid)
+const [count, setCount] = createSignal(0);
+setCount(count() + 1);  // triggers update</code></pre>
 
         <p>
             <strong>The difference:</strong>
@@ -368,3 +327,5 @@ setCount(count() + 1);  <span class="comment">// triggers update</span></code>
 </article>
 
 <script src="/assets/js/qrazy.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>

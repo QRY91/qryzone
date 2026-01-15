@@ -4,6 +4,8 @@ title: Playground - qrazy - qry.zone
 description: Live editor for qrazy. Write code, see it run, watch the Proxy traps fire.
 ---
 
+<link rel="stylesheet" href="/assets/css/prism-zenburn.css">
+
 <style>
 .breadcrumb {
     font-size: 0.85rem;
@@ -194,7 +196,7 @@ description: Live editor for qrazy. Write code, see it run, watch the Proxy trap
         <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: var(--space-md);">
             This is the entire framework. Everything that makes the playground work is in these 250 lines.
         </p>
-        <pre class="source-block" id="sourceCode">Loading...</pre>
+        <pre class="source-block"><code class="language-javascript" id="sourceCode">Loading...</code></pre>
     </section>
 
     <nav class="nav-footer">
@@ -322,11 +324,17 @@ setTimeout(runCode, 100);
 fetch('/assets/js/qrazy.js')
     .then(res => res.text())
     .then(source => {
-        document.getElementById('sourceCode').textContent = source;
+        const el = document.getElementById('sourceCode');
+        el.textContent = source;
+        if (window.Prism) {
+            Prism.highlightElement(el);
+        }
     })
     .catch(() => {
         document.getElementById('sourceCode').textContent = '// Failed to load source';
     });
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
 <script src="/assets/js/qrazy.js"></script>

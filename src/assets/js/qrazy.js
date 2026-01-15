@@ -22,30 +22,37 @@ function reactive(data, onUpdate) {
   });
 }
 
-// Deep reactive - makes nested arrays/objects reactive too
-function deepReactive(data, onUpdate) {
-  if (Array.isArray(data)) {
-    // Wrap array methods that mutate
-    const arrProxy = new Proxy(data, {
-      set(target, prop, value) {
-        target[prop] = value;
-        onUpdate(prop);
-        return true;
-      },
-      get(target, prop) {
-        // Intercept mutating methods
-        if (['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'].includes(prop)) {
-          return (...args) => {
-            const result = Array.prototype[prop].apply(target, args);
-            onUpdate('length');
-            return result;
-          };
-        }
-        return target[prop];
+// Make an array reactive with method interception
+function reactiveArray(arr, onUpdate) {
+  return new Proxy(arr, {
+    set(target, prop, value) {
+      target[prop] = value;
+      onUpdate(prop);
+      return true;
+    },
+    get(target, prop) {
+      // Intercept mutating methods
+      if (['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'].includes(prop)) {
+        return (...args) => {
+          const result = Array.prototype[prop].apply(target, args);
+          onUpdate('length');
+          return result;
+        };
       }
-    });
-    return arrProxy;
+      return target[prop];
+    }
+  });
+}
+
+// Deep reactive - makes nested arrays reactive too
+function deepReactive(data, onUpdate) {
+  // First, wrap any array properties
+  for (const key in data) {
+    if (Array.isArray(data[key])) {
+      data[key] = reactiveArray(data[key], onUpdate);
+    }
   }
+  // Then wrap the object itself
   return reactive(data, onUpdate);
 }
 
@@ -238,11 +245,9 @@ function setupForLoop(el, state, allElements, onUpdate) {
             return true;
           },
           get(target, prop) {
-            // Always get fresh array item value
-            if (prop === itemVar) {
-              const arr = state[arrayVar];
-              const idx = instances.get(key)?.index ?? index;
-              return arr[idx];
+            // For parent state properties, get fresh value
+            if (prop !== itemVar && prop !== indexVar && prop in state) {
+              return state[prop];
             }
             return target[prop];
           }
@@ -298,14 +303,6 @@ function initScope(root) {
     return;
   }
 
-  // Make arrays deeply reactive
-  for (const key in data) {
-    if (Array.isArray(data[key])) {
-      const arr = data[key];
-      data[key] = arr; // Will be proxied below
-    }
-  }
-
   // Collect elements and q-for loops
   const elements = [root];
   const forLoops = [];
@@ -322,18 +319,25 @@ function initScope(root) {
     }
   }
 
-  // Create reactive state
+  // Create reactive state with re-entrancy guard
   const forUpdaters = [];
+  let isUpdating = false;
   const state = deepReactive(data, (prop) => {
-    // Update regular elements
-    for (const el of elements) {
-      if (el._qUpdaters) {
-        for (const fn of el._qUpdaters) fn();
+    if (isUpdating) return; // Prevent infinite loops
+    isUpdating = true;
+    try {
+      // Update regular elements
+      for (const el of elements) {
+        if (el._qUpdaters) {
+          for (const fn of el._qUpdaters) fn();
+        }
       }
-    }
-    // Update q-for loops
-    for (const updater of forUpdaters) {
-      updater();
+      // Update q-for loops
+      for (const updater of forUpdaters) {
+        updater();
+      }
+    } finally {
+      isUpdating = false;
     }
   });
 
