@@ -238,52 +238,6 @@
       "href": "/qrazy/",
       "tags": ["learning", "developer-tools"],
       "status": "seedling",
-      "connections": ["qrazy/reactivity", "qrazy/binding", "qrazy/reconciliation"],
-      "lastUpdated": "2026-01-15"
-    },
-    {
-      "title": "qrazy/reactivity",
-      "description": "How do you know when state changes? Proxy API deep dive",
-      "href": "/qrazy/reactivity/",
-      "tags": ["learning", "developer-tools"],
-      "status": "seedling",
-      "connections": ["qrazy", "qrazy/binding"],
-      "lastUpdated": "2026-01-15"
-    },
-    {
-      "title": "qrazy/binding",
-      "description": "Connecting JavaScript state to the DOM",
-      "href": "/qrazy/binding/",
-      "tags": ["learning", "developer-tools"],
-      "status": "seedling",
-      "connections": ["qrazy", "qrazy/reactivity", "qrazy/reconciliation"],
-      "lastUpdated": "2026-01-15"
-    },
-    {
-      "title": "qrazy/reconciliation",
-      "description": "The hard problem: list rendering and DOM diffing",
-      "href": "/qrazy/reconciliation/",
-      "tags": ["learning", "developer-tools"],
-      "status": "seedling",
-      "connections": ["qrazy", "qrazy/binding"],
-      "lastUpdated": "2026-01-15"
-    },
-    {
-      "title": "qrazy/landscape",
-      "description": "How React, Vue, Svelte, and friends solve the same problems",
-      "href": "/qrazy/landscape/",
-      "tags": ["learning", "developer-tools"],
-      "status": "seedling",
-      "connections": ["qrazy"],
-      "lastUpdated": "2026-01-15"
-    },
-    {
-      "title": "qrazy/playground",
-      "description": "Live editor for qrazy with interactive examples",
-      "href": "/qrazy/playground/",
-      "tags": ["learning", "developer-tools", "games"],
-      "status": "seedling",
-      "connections": ["qrazy"],
       "lastUpdated": "2026-01-15"
     }
   ]
