@@ -1,0 +1,332 @@
+---
+layout: base.njk
+title: Playground - qrazy - qry.zone
+description: Live editor for qrazy. Write code, see it run, watch the Proxy traps fire.
+---
+
+<style>
+.breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+}
+.breadcrumb a {
+    color: var(--color-text-secondary);
+}
+.breadcrumb a:hover {
+    color: var(--color-accent);
+}
+.playground-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+}
+@media (max-width: 800px) {
+    .playground-container {
+        grid-template-columns: 1fr;
+    }
+}
+.editor-pane,
+.preview-pane {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+.pane-header {
+    padding: var(--space-sm) var(--space-md);
+    background: #2d2d2d;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    color: var(--color-text-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.editor-textarea {
+    width: 100%;
+    min-height: 300px;
+    padding: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    background: #2d2d2d;
+    color: #f8f8f2;
+    border: none;
+    resize: vertical;
+}
+.editor-textarea:focus {
+    outline: none;
+}
+.preview-frame {
+    min-height: 300px;
+    padding: var(--space-md);
+    background: var(--color-surface);
+}
+.example-tabs {
+    display: flex;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+}
+.example-tab {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: all 0.2s;
+}
+.example-tab:hover {
+    border-color: var(--color-accent);
+    color: var(--color-text-primary);
+}
+.example-tab.active {
+    background: var(--color-accent);
+    color: #2d2d2d;
+    border-color: var(--color-accent);
+}
+.run-button {
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-accent);
+    color: #2d2d2d;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+}
+.run-button:hover {
+    filter: brightness(1.1);
+}
+.source-section {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+}
+.source-section h3 {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-md);
+}
+.source-block {
+    background: #2d2d2d;
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    max-height: 400px;
+    overflow: auto;
+    color: #f8f8f2;
+}
+.nav-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-xxl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+}
+.nav-footer a {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+.nav-footer a:hover {
+    color: var(--color-accent);
+}
+</style>
+
+<article class="article">
+    <div class="breadcrumb">
+        <a href="/qrazy/">qrazy</a> / playground
+    </div>
+
+    <header class="article-header">
+        <h1>Playground</h1>
+        <p class="article-subtitle">Live editor. Write qrazy code, see it run.</p>
+    </header>
+
+    <section>
+        <p>
+            Edit the HTML on the left. Click "Run" to see it render on the right. The preview uses the actual qrazy.js framework.
+        </p>
+
+        <div class="example-tabs" id="exampleTabs">
+            <button class="example-tab active" data-example="counter">Counter</button>
+            <button class="example-tab" data-example="form">Form Binding</button>
+            <button class="example-tab" data-example="todo">Todo List</button>
+            <button class="example-tab" data-example="conditional">Conditional</button>
+        </div>
+
+        <div class="playground-container">
+            <div class="editor-pane">
+                <div class="pane-header">
+                    <span>HTML</span>
+                    <button class="run-button" id="runButton">Run ▶</button>
+                </div>
+                <textarea class="editor-textarea" id="codeEditor" spellcheck="false"></textarea>
+            </div>
+            <div class="preview-pane">
+                <div class="pane-header">
+                    <span>Preview</span>
+                </div>
+                <div class="preview-frame" id="previewFrame"></div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Try these</h2>
+        <ul>
+            <li>Change the initial count value in the counter example</li>
+            <li>Add a "Reset" button that sets count back to 0</li>
+            <li>In the todo example, add a "Clear All" button</li>
+            <li>Combine <code>q-show</code> with expressions like <code>count > 10</code></li>
+        </ul>
+    </section>
+
+    <section class="source-section">
+        <h3>qrazy.js source (250 lines)</h3>
+        <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: var(--space-md);">
+            This is the entire framework. Everything that makes the playground work is in these 250 lines.
+        </p>
+        <pre class="source-block" id="sourceCode">Loading...</pre>
+    </section>
+
+    <nav class="nav-footer">
+        <a href="/qrazy/landscape/">← The Landscape</a>
+        <a href="/qrazy/">Back to overview</a>
+    </nav>
+</article>
+
+<script>
+// Example templates
+const examples = {
+    counter: `<div q-data="{ count: 0 }">
+  <h3>Counter</h3>
+  <p style="font-size: 2rem; font-family: monospace;">
+    <span q-text="count"></span>
+  </p>
+  <button q-click="count--" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">-</button>
+  <button q-click="count++" style="padding: 0.5rem 1rem;">+</button>
+  <p q-show="count > 5" style="color: #f0ad4e;">Counting high!</p>
+  <p q-show="count < 0" style="color: #dc3545;">Gone negative!</p>
+</div>`,
+
+    form: `<div q-data="{ name: '', email: '' }">
+  <h3>Form Binding</h3>
+  <p>
+    <input type="text" q-model="name" placeholder="Your name"
+           style="padding: 0.5rem; width: 100%; box-sizing: border-box; margin-bottom: 0.5rem;">
+  </p>
+  <p>
+    <input type="email" q-model="email" placeholder="Your email"
+           style="padding: 0.5rem; width: 100%; box-sizing: border-box;">
+  </p>
+  <p style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 4px;">
+    Hello, <strong q-text="name || 'stranger'"></strong>!
+    <span q-show="email"> We'll contact you at <span q-text="email"></span>.</span>
+  </p>
+</div>`,
+
+    todo: `<div q-data="{ items: [{id:1,text:'Learn qrazy'}], newItem: '', nextId: 2 }">
+  <h3>Todo List</h3>
+  <form q-submit="if(newItem.trim()){items.push({id:nextId,text:newItem});nextId++;newItem='';}">
+    <input type="text" q-model="newItem" placeholder="Add item..."
+           style="padding: 0.5rem; width: 70%; margin-right: 0.5rem;">
+    <button type="submit" style="padding: 0.5rem 1rem;">Add</button>
+  </form>
+  <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+    <li q-for="(item, i) in items" q-key="item.id"
+        style="padding: 0.5rem; background: rgba(255,255,255,0.05); margin-bottom: 0.25rem; display: flex; justify-content: space-between; align-items: center;">
+      <span q-text="item.text"></span>
+      <button q-click="items.splice(i, 1)" style="padding: 0.25rem 0.5rem; background: #dc3545; color: white; border: none; cursor: pointer;">×</button>
+    </li>
+  </ul>
+  <p style="font-size: 0.85rem; color: #888;" q-text="items.length + ' item(s)'"></p>
+</div>`,
+
+    conditional: `<div q-data="{ show: true, theme: 'light' }">
+  <h3>Conditional Rendering</h3>
+  <p>
+    <button q-click="show = !show" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">
+      Toggle (<span q-text="show ? 'visible' : 'hidden'"></span>)
+    </button>
+    <button q-click="theme = theme === 'light' ? 'dark' : 'light'" style="padding: 0.5rem 1rem;">
+      Theme: <span q-text="theme"></span>
+    </button>
+  </p>
+  <div q-show="show" style="margin-top: 1rem; padding: 1rem; border-radius: 4px;"
+       q-bind:style="'background:' + (theme === 'dark' ? '#2d2d2d' : '#f0f0f0') + ';color:' + (theme === 'dark' ? '#f8f8f2' : '#333')">
+    <p>This content is conditionally visible.</p>
+    <p>The theme affects the background color.</p>
+  </div>
+</div>`
+};
+
+// State
+let currentExample = 'counter';
+const editor = document.getElementById('codeEditor');
+const preview = document.getElementById('previewFrame');
+const tabs = document.querySelectorAll('.example-tab');
+const runButton = document.getElementById('runButton');
+
+// Load initial example
+editor.value = examples[currentExample];
+
+// Tab switching
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentExample = tab.dataset.example;
+        editor.value = examples[currentExample];
+        runCode();
+    });
+});
+
+// Run code
+function runCode() {
+    const code = editor.value;
+    preview.innerHTML = code;
+
+    // Re-initialize qrazy on the preview content
+    if (window.qrazy) {
+        // Find all q-data elements in preview and init them
+        preview.querySelectorAll('[q-data]').forEach(el => {
+            // Clear any previous state
+            delete el._qState;
+        });
+        window.qrazy.init();
+    }
+}
+
+runButton.addEventListener('click', runCode);
+
+// Also run on Cmd/Ctrl+Enter
+editor.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        runCode();
+    }
+});
+
+// Initial run
+setTimeout(runCode, 100);
+
+// Load and display qrazy source
+fetch('/assets/js/qrazy.js')
+    .then(res => res.text())
+    .then(source => {
+        document.getElementById('sourceCode').textContent = source;
+    })
+    .catch(() => {
+        document.getElementById('sourceCode').textContent = '// Failed to load source';
+    });
+</script>
+
+<script src="/assets/js/qrazy.js"></script>

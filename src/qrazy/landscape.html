@@ -1,0 +1,480 @@
+---
+layout: base.njk
+title: The Landscape - qrazy - qry.zone
+description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same three problems.
+---
+
+<style>
+.breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+}
+.breadcrumb a {
+    color: var(--color-text-secondary);
+}
+.breadcrumb a:hover {
+    color: var(--color-accent);
+}
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-lg) 0;
+    font-size: 0.85rem;
+}
+.comparison-table th,
+.comparison-table td {
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+.comparison-table th {
+    color: var(--color-accent);
+    font-weight: 600;
+    background: var(--color-surface);
+}
+.comparison-table tr:hover {
+    background: rgba(240, 223, 175, 0.05);
+}
+.comparison-table code {
+    font-size: 0.8rem;
+}
+.framework-section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    margin: var(--space-xl) 0;
+    overflow: hidden;
+}
+.framework-header {
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.framework-header h3 {
+    margin: 0;
+    color: var(--color-accent);
+}
+.framework-header .philosophy {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+.framework-body {
+    padding: var(--space-lg);
+}
+.code-block {
+    background: #2d2d2d;
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    margin: var(--space-md) 0;
+    line-height: 1.5;
+}
+.code-block code {
+    color: #f8f8f2;
+}
+.code-block .comment {
+    color: #75715e;
+}
+.code-block .keyword {
+    color: #f92672;
+}
+.code-block .function {
+    color: #a6e22e;
+}
+.code-block .string {
+    color: #e6db74;
+}
+.code-block .tag {
+    color: #f92672;
+}
+.code-block .attr {
+    color: #a6e22e;
+}
+.tradeoff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+@media (max-width: 600px) {
+    .tradeoff-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.tradeoff-grid .pro,
+.tradeoff-grid .con {
+    padding: var(--space-sm);
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+}
+.tradeoff-grid .pro {
+    background: rgba(40, 167, 69, 0.1);
+    border-left: 2px solid #28a745;
+}
+.tradeoff-grid .con {
+    background: rgba(220, 53, 69, 0.1);
+    border-left: 2px solid #dc3545;
+}
+.meta-lesson {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-lg);
+    margin: var(--space-xl) 0;
+}
+.meta-lesson h3 {
+    margin-top: 0;
+    color: var(--color-accent);
+}
+.nav-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-xxl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+}
+.nav-footer a {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+.nav-footer a:hover {
+    color: var(--color-accent);
+}
+</style>
+
+<article class="article">
+    <div class="breadcrumb">
+        <a href="/qrazy/">qrazy</a> / landscape
+    </div>
+
+    <header class="article-header">
+        <h1>The Landscape</h1>
+        <p class="article-subtitle">How the big frameworks solve the same problems</p>
+    </header>
+
+    <section>
+        <p>
+            Every UI framework solves three problems: <a href="/qrazy/reactivity/">reactivity</a>, <a href="/qrazy/binding/">binding</a>, and <a href="/qrazy/reconciliation/">reconciliation</a>. They just solve them differently.
+        </p>
+        <p>
+            Understanding these differences IS understanding modern web dev.
+        </p>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Framework</th>
+                    <th>Reactivity</th>
+                    <th>Binding</th>
+                    <th>Reconciliation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>React</strong></td>
+                    <td><code>useState</code> + scheduler</td>
+                    <td>JSX compilation</td>
+                    <td>Fiber + Virtual DOM</td>
+                </tr>
+                <tr>
+                    <td><strong>Vue 3</strong></td>
+                    <td>Proxy-based <code>ref</code>/<code>reactive</code></td>
+                    <td>Template compiler</td>
+                    <td>Virtual DOM diff</td>
+                </tr>
+                <tr>
+                    <td><strong>Svelte</strong></td>
+                    <td>Compile-time analysis</td>
+                    <td>Compile-time</td>
+                    <td>Surgical DOM ops</td>
+                </tr>
+                <tr>
+                    <td><strong>Solid</strong></td>
+                    <td>Fine-grained signals</td>
+                    <td>JSX + reactivity</td>
+                    <td>No VDOM, direct updates</td>
+                </tr>
+                <tr>
+                    <td><strong>Alpine</strong></td>
+                    <td>Proxy (like qrazy)</td>
+                    <td>Runtime attributes</td>
+                    <td>Simple re-render</td>
+                </tr>
+                <tr>
+                    <td><strong>htmx</strong></td>
+                    <td>Server is the state</td>
+                    <td>HTML responses</td>
+                    <td>Replace HTML chunks</td>
+                </tr>
+                <tr>
+                    <td><strong>qrazy</strong></td>
+                    <td>Proxy</td>
+                    <td>Runtime attributes</td>
+                    <td>Keyed Map</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>The same counter, six ways</h2>
+        <p>
+            Let's implement a simple counter in each framework. Same functionality, different philosophies.
+        </p>
+    </section>
+
+    <div class="framework-section">
+        <div class="framework-header">
+            <h3>React</h3>
+            <span class="philosophy">"UI as a function of state"</span>
+        </div>
+        <div class="framework-body">
+            <div class="code-block">
+<code><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">function</span> <span class="function">Counter</span>() {
+  <span class="keyword">const</span> [count, setCount] = useState(0);
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;button</span> <span class="attr">onClick</span>={() => setCount(c => c + 1)}<span class="tag">&gt;</span>
+      Clicked {count} times
+    <span class="tag">&lt;/button&gt;</span>
+  );
+}</code>
+            </div>
+
+            <p>
+                <strong>How it works:</strong> <code>useState</code> returns a value and a setter. Calling the setter schedules a re-render. React re-runs the entire function, builds a virtual DOM tree, diffs it against the previous tree, and patches the real DOM.
+            </p>
+
+            <div class="tradeoff-grid">
+                <div class="pro">
+                    <strong>Pros:</strong> Predictable mental model. Pure functions. Great devtools. Huge ecosystem.
+                </div>
+                <div class="con">
+                    <strong>Cons:</strong> Re-renders entire component on any state change. Virtual DOM overhead. Requires build step.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="framework-section">
+        <div class="framework-header">
+            <h3>Vue 3</h3>
+            <span class="philosophy">"Progressive framework"</span>
+        </div>
+        <div class="framework-body">
+            <div class="code-block">
+<code><span class="tag">&lt;script setup&gt;</span>
+<span class="keyword">import</span> { ref } <span class="keyword">from</span> <span class="string">'vue'</span>;
+
+<span class="keyword">const</span> count = ref(0);
+<span class="tag">&lt;/script&gt;</span>
+
+<span class="tag">&lt;template&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"count++"</span><span class="tag">&gt;</span>
+    Clicked {{ count }} times
+  <span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/template&gt;</span></code>
+            </div>
+
+            <p>
+                <strong>How it works:</strong> <code>ref()</code> wraps a value in a Proxy. The template compiler tracks which parts of the template depend on which refs. When a ref changes, Vue re-renders only the affected parts via virtual DOM diffing.
+            </p>
+
+            <div class="tradeoff-grid">
+                <div class="pro">
+                    <strong>Pros:</strong> Fine-grained Proxy reactivity. Clean template syntax. Good TypeScript support. Can be used without build step.
+                </div>
+                <div class="con">
+                    <strong>Cons:</strong> Need <code>.value</code> to access refs in JS. Two APIs (Options vs Composition). Virtual DOM still has overhead.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="framework-section">
+        <div class="framework-header">
+            <h3>Svelte</h3>
+            <span class="philosophy">"Compiler does the work"</span>
+        </div>
+        <div class="framework-body">
+            <div class="code-block">
+<code><span class="tag">&lt;script&gt;</span>
+  <span class="keyword">let</span> count = 0;
+<span class="tag">&lt;/script&gt;</span>
+
+<span class="tag">&lt;button</span> <span class="attr">on:click</span>=<span class="string">"{() => count++}"</span><span class="tag">&gt;</span>
+  Clicked {count} times
+<span class="tag">&lt;/button&gt;</span></code>
+            </div>
+
+            <p>
+                <strong>How it works:</strong> The Svelte compiler analyzes your code at build time. It knows exactly which DOM nodes depend on <code>count</code>. The output is vanilla JS that directly updates those specific text nodes. No runtime framework, no virtual DOM.
+            </p>
+
+            <div class="tradeoff-grid">
+                <div class="pro">
+                    <strong>Pros:</strong> Smallest bundle size. Fastest runtime. Cleanest syntax. No virtual DOM overhead.
+                </div>
+                <div class="con">
+                    <strong>Cons:</strong> Requires build step. Compiler errors can be confusing. Smaller ecosystem than React/Vue.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="framework-section">
+        <div class="framework-header">
+            <h3>Solid</h3>
+            <span class="philosophy">"True fine-grained reactivity"</span>
+        </div>
+        <div class="framework-body">
+            <div class="code-block">
+<code><span class="keyword">import</span> { createSignal } <span class="keyword">from</span> <span class="string">'solid-js'</span>;
+
+<span class="keyword">function</span> <span class="function">Counter</span>() {
+  <span class="keyword">const</span> [count, setCount] = createSignal(0);
+
+  <span class="keyword">return</span> (
+    <span class="tag">&lt;button</span> <span class="attr">onClick</span>={() => setCount(c => c + 1)}<span class="tag">&gt;</span>
+      Clicked {count()} times
+    <span class="tag">&lt;/button&gt;</span>
+  );
+}</code>
+            </div>
+
+            <p>
+                <strong>How it works:</strong> Signals are reactive primitives. When you read <code>count()</code> inside JSX, Solid tracks that dependency. When you call <code>setCount()</code>, only the exact text node that reads <code>count()</code> updates. No re-render, no diffing.
+            </p>
+
+            <div class="tradeoff-grid">
+                <div class="pro">
+                    <strong>Pros:</strong> React-like syntax with Svelte-like performance. True fine-grained updates. Components run once, not on every update.
+                </div>
+                <div class="con">
+                    <strong>Cons:</strong> Must call signals as functions <code>count()</code>. Mental model shift from React. Smaller ecosystem.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="framework-section">
+        <div class="framework-header">
+            <h3>Alpine</h3>
+            <span class="philosophy">"jQuery for the modern web"</span>
+        </div>
+        <div class="framework-body">
+            <div class="code-block">
+<code><span class="tag">&lt;div</span> <span class="attr">x-data</span>=<span class="string">"{ count: 0 }"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">@click</span>=<span class="string">"count++"</span><span class="tag">&gt;</span>
+    Clicked <span class="tag">&lt;span</span> <span class="attr">x-text</span>=<span class="string">"count"</span><span class="tag">&gt;&lt;/span&gt;</span> times
+  <span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/div&gt;</span></code>
+            </div>
+
+            <p>
+                <strong>How it works:</strong> Alpine scans the DOM at runtime for <code>x-*</code> attributes. It wraps the data in a Proxy and re-evaluates bindings when state changes. Very similar to qrazy—we basically built a mini-Alpine.
+            </p>
+
+            <div class="tradeoff-grid">
+                <div class="pro">
+                    <strong>Pros:</strong> No build step. Sprinkle on existing HTML. Locality of behavior. Great for server-rendered apps.
+                </div>
+                <div class="con">
+                    <strong>Cons:</strong> Runtime parsing overhead. All data in HTML attributes. Not ideal for complex SPAs.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="framework-section">
+        <div class="framework-header">
+            <h3>htmx</h3>
+            <span class="philosophy">"Hypermedia as the engine"</span>
+        </div>
+        <div class="framework-body">
+            <div class="code-block">
+<code><span class="comment">&lt;!-- Client --&gt;</span>
+<span class="tag">&lt;button</span> <span class="attr">hx-post</span>=<span class="string">"/increment"</span>
+        <span class="attr">hx-swap</span>=<span class="string">"innerHTML"</span><span class="tag">&gt;</span>
+  Clicked 0 times
+<span class="tag">&lt;/button&gt;</span>
+
+<span class="comment"># Server (returns HTML, not JSON)</span>
+POST /increment
+<span class="keyword">return</span> <span class="string">"Clicked 1 times"</span></code>
+            </div>
+
+            <p>
+                <strong>How it works:</strong> htmx intercepts user actions and makes HTTP requests. The server responds with HTML, not JSON. htmx swaps that HTML into the page. The server IS the state—no client-side state management needed.
+            </p>
+
+            <div class="tradeoff-grid">
+                <div class="pro">
+                    <strong>Pros:</strong> No client-side state. Server renders everything. Works with any backend. Simple mental model.
+                </div>
+                <div class="con">
+                    <strong>Cons:</strong> Network latency on every interaction. Server does more work. Not ideal for offline/realtime apps.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="framework-section">
+        <div class="framework-header">
+            <h3>qrazy</h3>
+            <span class="philosophy">"Learn by building"</span>
+        </div>
+        <div class="framework-body">
+            <div class="code-block">
+<code><span class="tag">&lt;div</span> <span class="attr">q-data</span>=<span class="string">"{ count: 0 }"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">q-click</span>=<span class="string">"count++"</span><span class="tag">&gt;</span>
+    Clicked <span class="tag">&lt;span</span> <span class="attr">q-text</span>=<span class="string">"count"</span><span class="tag">&gt;&lt;/span&gt;</span> times
+  <span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/div&gt;</span></code>
+            </div>
+
+            <p>
+                <strong>How it works:</strong> Almost identical to Alpine. Proxy-based reactivity, runtime attribute parsing, stored updater functions. 250 lines of code you can read in an afternoon.
+            </p>
+
+            <div class="tradeoff-grid">
+                <div class="pro">
+                    <strong>Pros:</strong> You understand every line. No magic. Great for learning. Actually works.
+                </div>
+                <div class="con">
+                    <strong>Cons:</strong> Not production-ready. No component system. No SSR. Limited features.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="meta-lesson">
+        <h3>The meta-lesson</h3>
+        <p>
+            Each framework makes tradeoffs:
+        </p>
+        <ul>
+            <li><strong>Build step vs runtime:</strong> Svelte analyzes at build time for speed. Alpine/htmx work with zero tooling.</li>
+            <li><strong>Virtual DOM vs direct updates:</strong> React/Vue use VDOM for predictability. Solid/Svelte update DOM directly for performance.</li>
+            <li><strong>Client state vs server state:</strong> React/Vue manage state in the browser. htmx keeps it on the server.</li>
+            <li><strong>Bundle size vs features:</strong> Alpine is 15KB. React is 45KB+. You're paying for the feature set.</li>
+        </ul>
+        <p>
+            There's no "best" framework. There's only the best framework <em>for your situation</em>. Understanding the tradeoffs lets you make informed choices.
+        </p>
+    </div>
+
+    <nav class="nav-footer">
+        <a href="/qrazy/reconciliation/">← Reconciliation</a>
+        <a href="/qrazy/playground/">Next: Playground →</a>
+    </nav>
+</article>

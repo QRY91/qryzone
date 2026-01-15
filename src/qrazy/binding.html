@@ -1,0 +1,372 @@
+---
+layout: base.njk
+title: Binding - qrazy - qry.zone
+description: How do you connect JavaScript state to the DOM? Walking the tree, parsing attributes, and evaluating expressions.
+---
+
+<style>
+.breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+}
+.breadcrumb a {
+    color: var(--color-text-secondary);
+}
+.breadcrumb a:hover {
+    color: var(--color-accent);
+}
+.code-block {
+    background: #2d2d2d;
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    margin: var(--space-md) 0;
+    line-height: 1.5;
+}
+.code-block code {
+    color: #f8f8f2;
+}
+.code-block .comment {
+    color: #75715e;
+}
+.code-block .keyword {
+    color: #f92672;
+}
+.code-block .function {
+    color: #a6e22e;
+}
+.code-block .string {
+    color: #e6db74;
+}
+.code-block .highlight {
+    background: rgba(166, 226, 46, 0.2);
+    display: inline;
+}
+.philosophy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+}
+@media (max-width: 600px) {
+    .philosophy-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.philosophy-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+}
+.philosophy-card h4 {
+    margin: 0 0 var(--space-sm) 0;
+    color: var(--color-accent);
+}
+.philosophy-card .frameworks {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+}
+.callout {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-md);
+    margin: var(--space-lg) 0;
+    font-size: 0.95rem;
+}
+.callout.warning {
+    border-left-color: #f0ad4e;
+}
+.demo-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+}
+.demo-container h4 {
+    margin-top: 0;
+    color: var(--color-accent);
+    font-size: 0.9rem;
+}
+.step-list {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+}
+.step-list li {
+    counter-increment: step;
+    padding-left: var(--space-xl);
+    position: relative;
+    margin-bottom: var(--space-md);
+}
+.step-list li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 1.5rem;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+}
+.nav-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-xxl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+}
+.nav-footer a {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+.nav-footer a:hover {
+    color: var(--color-accent);
+}
+</style>
+
+<article class="article">
+    <div class="breadcrumb">
+        <a href="/qrazy/">qrazy</a> / binding
+    </div>
+
+    <header class="article-header">
+        <h1>Binding</h1>
+        <p class="article-subtitle">How do you connect state to the DOM?</p>
+    </header>
+
+    <section>
+        <h2>The problem</h2>
+        <p>
+            HTML doesn't know about your JavaScript objects. When you write <code>&lt;span&gt;{{ count }}&lt;/span&gt;</code>, the browser just sees the literal text "{{ count }}".
+        </p>
+        <p>
+            Something has to find that placeholder, figure out what <code>count</code> refers to, and replace it with the actual value. That something is the binding system.
+        </p>
+    </section>
+
+    <section>
+        <h2>Two philosophies</h2>
+
+        <div class="philosophy-grid">
+            <div class="philosophy-card">
+                <h4>Compile-time</h4>
+                <p>Transform the template before it runs. Turn <code>&lt;span&gt;{count}&lt;/span&gt;</code> into <code>createElement('span', count)</code> during the build step.</p>
+                <div class="frameworks">React JSX, Svelte, Vue SFC</div>
+            </div>
+            <div class="philosophy-card">
+                <h4>Runtime</h4>
+                <p>Parse the DOM at load time. Find special attributes, wire them up to state on the fly. No build step needed.</p>
+                <div class="frameworks">Alpine, htmx, qrazy</div>
+            </div>
+        </div>
+
+        <p>
+            Compile-time is faster (less work at runtime). Runtime is simpler (no tooling required). qrazy uses runtime binding because we're optimizing for understanding, not performance.
+        </p>
+    </section>
+
+    <section>
+        <h2>qrazy's approach</h2>
+        <p>
+            Four steps:
+        </p>
+
+        <ol class="step-list">
+            <li>
+                <strong>Find scopes:</strong> <code>querySelectorAll('[q-data]')</code> returns every element that defines reactive state.
+            </li>
+            <li>
+                <strong>Parse state:</strong> Take the attribute value <code>"{ count: 0 }"</code> and turn it into an actual object using <code>new Function()</code>.
+            </li>
+            <li>
+                <strong>Walk the tree:</strong> Use <code>TreeWalker</code> to visit every descendant element, looking for <code>q-text</code>, <code>q-click</code>, etc.
+            </li>
+            <li>
+                <strong>Bind:</strong> For each directive found, create an updater function and store it on the element.
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>The TreeWalker API</h2>
+        <p>
+            You could use <code>querySelectorAll('*')</code> to get all descendants, but <code>TreeWalker</code> is more efficient and gives you control over the traversal.
+        </p>
+
+        <div class="code-block">
+<code><span class="keyword">const</span> walker = document.createTreeWalker(
+  root,                        <span class="comment">// starting element</span>
+  NodeFilter.SHOW_ELEMENT      <span class="comment">// only visit elements (not text nodes)</span>
+);
+
+<span class="keyword">while</span> (walker.nextNode()) {
+  <span class="keyword">const</span> node = walker.currentNode;
+  <span class="comment">// Check for q-* attributes</span>
+  <span class="keyword">if</span> (node.hasAttribute(<span class="string">'q-text'</span>)) {
+    bindText(node, state);
+  }
+}</code>
+        </div>
+
+        <p>
+            qrazy uses this to walk each <code>q-data</code> scope, collecting all bindable elements. We also skip nested <code>q-data</code> scopes—they get their own state.
+        </p>
+    </section>
+
+    <section>
+        <h2>Expression evaluation</h2>
+        <p>
+            When you write <code>q-text="count + 1"</code>, qrazy needs to evaluate that expression in the context of the state object. The trick: <code>new Function()</code>.
+        </p>
+
+        <div class="code-block">
+<code><span class="keyword">function</span> <span class="function">evaluate</span>(expr, state) {
+  <span class="keyword">const</span> keys = Object.keys(state);   <span class="comment">// ['count', 'name', ...]</span>
+  <span class="keyword">const</span> vals = Object.values(state); <span class="comment">// [0, 'Alice', ...]</span>
+
+  <span class="comment">// Build: new Function('count', 'name', 'return count + 1')</span>
+  <span class="keyword">return new</span> Function(...keys, <span class="string">`return ${expr}`</span>)(...vals);
+}
+
+<span class="comment">// Example:</span>
+evaluate(<span class="string">'count + 1'</span>, { count: 5 });  <span class="comment">// → 6</span>
+evaluate(<span class="string">'name.toUpperCase()'</span>, { name: <span class="string">'alice'</span> });  <span class="comment">// → 'ALICE'</span></code>
+        </div>
+
+        <p>
+            This is how Alpine does it too. You're essentially creating a tiny function whose parameters are the state keys, then calling it with the state values.
+        </p>
+
+        <div class="callout warning">
+            <strong>Security note:</strong> This uses <code>eval</code>-like behavior. It's safe here because the expressions come from your own HTML—same-origin code. Never evaluate user-provided strings this way.
+        </div>
+    </section>
+
+    <section>
+        <h2>The scope chain</h2>
+        <p>
+            What if you have nested <code>q-data</code> scopes?
+        </p>
+
+        <div class="code-block">
+<code><span class="string">&lt;div q-data="{ theme: 'dark' }"&gt;</span>
+  <span class="string">&lt;div q-data="{ count: 0 }"&gt;</span>
+    <span class="comment">&lt;!-- Can this access theme? --&gt;</span>
+    <span class="string">&lt;span q-text="theme"&gt;&lt;/span&gt;</span>
+  <span class="string">&lt;/div&gt;</span>
+<span class="string">&lt;/div&gt;</span></code>
+        </div>
+
+        <p>
+            In qrazy's current design: <strong>no</strong>. Each <code>q-data</code> scope is independent. The inner div only sees <code>count</code>, not <code>theme</code>.
+        </p>
+        <p>
+            This is a simplification. Alpine supports scope inheritance. Vue has provide/inject. For qrazy, we kept it simple—one scope, one state object.
+        </p>
+    </section>
+
+    <section>
+        <h2>Storing updaters</h2>
+        <p>
+            When state changes, we need to update the DOM. But we don't want to re-walk the entire tree every time. Solution: store updater functions on the elements themselves.
+        </p>
+
+        <div class="code-block">
+<code><span class="keyword">if</span> (el.hasAttribute(<span class="string">'q-text'</span>)) {
+  <span class="keyword">const</span> expr = el.getAttribute(<span class="string">'q-text'</span>);
+
+  <span class="comment">// Create an updater function</span>
+  <span class="keyword">const</span> update = () => {
+    el.textContent = evaluate(expr, state);
+  };
+
+  <span class="comment">// Run it once (initial render)</span>
+  update();
+
+  <span class="comment">// Store it for later</span>
+  <span class="highlight">el._qUpdaters = el._qUpdaters || [];</span>
+  <span class="highlight">el._qUpdaters.push(update);</span>
+}</code>
+        </div>
+
+        <p>
+            Now when state changes, we just loop through elements and call their stored updaters:
+        </p>
+
+        <div class="code-block">
+<code><span class="keyword">const</span> state = reactive(data, () => {
+  <span class="keyword">for</span> (<span class="keyword">const</span> el <span class="keyword">of</span> elements) {
+    <span class="keyword">if</span> (el._qUpdaters) {
+      el._qUpdaters.forEach(fn => fn());
+    }
+  }
+});</code>
+        </div>
+
+        <p>
+            This is "coarse-grained" reactivity—any change triggers all updaters. Fine-grained systems (like Solid) track dependencies per-expression so they only run affected updaters.
+        </p>
+    </section>
+
+    <section>
+        <h2>Interactive demo</h2>
+        <p>
+            Watch the binding system connect state to DOM:
+        </p>
+
+        <div class="demo-container">
+            <h4>Try it: Live binding</h4>
+            <div q-data="{ message: 'Hello', uppercase: false }">
+                <p>
+                    <input type="text" q-model="message" placeholder="Type something..." style="padding: 0.5rem; width: 100%; box-sizing: border-box; background: #2d2d2d; border: 1px solid var(--color-border); color: var(--color-text-primary); border-radius: var(--border-radius);">
+                </p>
+                <p>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" q-click="uppercase = !uppercase">
+                        Uppercase
+                    </label>
+                </p>
+                <p style="font-size: 1.5rem; font-family: var(--font-mono);">
+                    <span q-show="!uppercase" q-text="message"></span>
+                    <span q-show="uppercase" q-text="message.toUpperCase()"></span>
+                </p>
+            </div>
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">
+            The input uses <code>q-model</code> for two-way binding. The output uses <code>q-text</code> with an expression. The checkbox uses <code>q-click</code> to toggle state.
+        </p>
+    </section>
+
+    <section>
+        <h2>First principles</h2>
+        <p>
+            What <em>is</em> a binding? It's a contract: "when this state changes, update that DOM node." The binding system is just a registry of these contracts.
+        </p>
+        <p>
+            Some frameworks make bindings implicit (React's re-render). Others make them explicit (qrazy's attributes). Either way, you're mapping state → DOM.
+        </p>
+        <p>
+            The key insight: the DOM and your state are two representations of the same truth. Binding keeps them synchronized.
+        </p>
+    </section>
+
+    <nav class="nav-footer">
+        <a href="/qrazy/reactivity/">← Reactivity</a>
+        <a href="/qrazy/reconciliation/">Next: Reconciliation →</a>
+    </nav>
+</article>
+
+<script src="/assets/js/qrazy.js"></script>

@@ -1,0 +1,370 @@
+---
+layout: base.njk
+title: Reactivity - qrazy - qry.zone
+description: How do you know when state changes? The Proxy API and the history of reactive programming.
+---
+
+<style>
+.breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+}
+.breadcrumb a {
+    color: var(--color-text-secondary);
+}
+.breadcrumb a:hover {
+    color: var(--color-accent);
+}
+.code-block {
+    background: #2d2d2d;
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    margin: var(--space-md) 0;
+    line-height: 1.5;
+}
+.code-block code {
+    color: #f8f8f2;
+}
+.code-block .comment {
+    color: #75715e;
+}
+.code-block .keyword {
+    color: #f92672;
+}
+.code-block .function {
+    color: #a6e22e;
+}
+.code-block .string {
+    color: #e6db74;
+}
+.code-block .highlight {
+    background: rgba(166, 226, 46, 0.2);
+    display: inline;
+}
+.history-item {
+    border-left: 2px solid var(--color-border);
+    padding-left: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+.history-item.dead {
+    border-left-color: #dc3545;
+    opacity: 0.7;
+}
+.history-item h4 {
+    margin: 0 0 var(--space-xs) 0;
+    color: var(--color-accent);
+}
+.history-item .era {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+}
+.callout {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-md);
+    margin: var(--space-lg) 0;
+    font-size: 0.95rem;
+}
+.demo-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+}
+.demo-container h4 {
+    margin-top: 0;
+    color: var(--color-accent);
+    font-size: 0.9rem;
+}
+.nav-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-xxl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+}
+.nav-footer a {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+.nav-footer a:hover {
+    color: var(--color-accent);
+}
+</style>
+
+<article class="article">
+    <div class="breadcrumb">
+        <a href="/qrazy/">qrazy</a> / reactivity
+    </div>
+
+    <header class="article-header">
+        <h1>Reactivity</h1>
+        <p class="article-subtitle">How do you know when state changes?</p>
+    </header>
+
+    <section>
+        <h2>The problem</h2>
+        <p>
+            You have a variable: <code>let count = 0</code>. Someone writes <code>count = 5</code>. How does your UI know to update?
+        </p>
+        <p>
+            In the old days (jQuery), you'd manually call <code>$('#counter').text(count)</code> every time you changed it. Tedious. Error-prone. The whole point of a framework is to automate this.
+        </p>
+        <p>
+            The question is: <em>how</em> do you detect that <code>count</code> changed?
+        </p>
+    </section>
+
+    <section>
+        <h2>The history</h2>
+        <p>
+            Four approaches have been tried. Only one survived.
+        </p>
+
+        <div class="history-item">
+            <span class="era">~2010 — Angular 1</span>
+            <h4>Dirty Checking</h4>
+            <p>
+                Run a "digest cycle" on every user action. Compare every watched value to its previous value. If different, update the DOM. Repeat until nothing changes.
+            </p>
+            <div class="code-block">
+<code><span class="comment">// Pseudo-code for dirty checking</span>
+<span class="keyword">function</span> <span class="function">digest</span>() {
+  <span class="keyword">let</span> dirty = <span class="keyword">true</span>;
+  <span class="keyword">while</span> (dirty) {
+    dirty = <span class="keyword">false</span>;
+    <span class="keyword">for</span> (<span class="keyword">const</span> watcher <span class="keyword">of</span> watchers) {
+      <span class="keyword">const</span> newVal = watcher.get();
+      <span class="keyword">if</span> (newVal !== watcher.last) {
+        watcher.callback(newVal);
+        watcher.last = newVal;
+        dirty = <span class="keyword">true</span>;  <span class="comment">// something changed, go again</span>
+      }
+    }
+  }
+}</code>
+            </div>
+            <p>
+                <strong>The problem:</strong> O(n) on every digest. With 2000 bindings, you're comparing 2000 values. Multiple times. On every click.
+            </p>
+        </div>
+
+        <div class="history-item dead">
+            <span class="era">~2014 — Dead API</span>
+            <h4>Object.observe</h4>
+            <p>
+                Native browser API to watch object changes. Would have been perfect. Chrome implemented it. Then everyone abandoned it in favor of Proxies.
+            </p>
+            <div class="code-block">
+<code><span class="comment">// RIP Object.observe (2014-2015)</span>
+Object.observe(obj, <span class="keyword">function</span>(changes) {
+  changes.forEach(<span class="keyword">function</span>(change) {
+    console.log(change.name, change.oldValue, change.object[change.name]);
+  });
+});</code>
+            </div>
+            <p>
+                <strong>Status:</strong> Removed from browsers. Don't use.
+            </p>
+        </div>
+
+        <div class="history-item">
+            <span class="era">~2014 — Vue 2</span>
+            <h4>Object.defineProperty</h4>
+            <p>
+                Redefine each property with a getter/setter. The setter fires your callback.
+            </p>
+            <div class="code-block">
+<code><span class="keyword">function</span> <span class="function">defineReactive</span>(obj, key, val) {
+  Object.defineProperty(obj, key, {
+    <span class="function">get</span>() {
+      <span class="keyword">return</span> val;
+    },
+    <span class="function">set</span>(newVal) {
+      <span class="keyword">if</span> (newVal !== val) {
+        val = newVal;
+        <span class="highlight">notify();</span>  <span class="comment">// ← trigger update</span>
+      }
+    }
+  });
+}</code>
+            </div>
+            <p>
+                <strong>The problem:</strong> Can't detect new properties. <code>obj.newProp = 'x'</code> doesn't trigger anything because the getter/setter was never defined for <code>newProp</code>. Vue 2 needed <code>Vue.set()</code> as a workaround.
+            </p>
+        </div>
+
+        <div class="history-item">
+            <span class="era">~2016 — Modern</span>
+            <h4>Proxy</h4>
+            <p>
+                Wrap the entire object in a trap. Intercept <em>all</em> property access—get, set, delete, even <code>in</code> checks.
+            </p>
+            <div class="code-block">
+<code><span class="keyword">const</span> state = <span class="keyword">new</span> Proxy(data, {
+  <span class="function">set</span>(target, prop, value) {
+    target[prop] = value;
+    <span class="highlight">onUpdate(prop);</span>  <span class="comment">// ← THE MAGIC</span>
+    <span class="keyword">return true</span>;
+  },
+  <span class="function">get</span>(target, prop) {
+    <span class="keyword">return</span> target[prop];
+  }
+});</code>
+            </div>
+            <p>
+                <strong>The win:</strong> Works with new properties. Works with deletions. Works with arrays. No special methods needed.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <h2>qrazy's implementation</h2>
+        <p>
+            Here's the actual code from qrazy.js:
+        </p>
+
+        <div class="code-block">
+<code><span class="keyword">function</span> <span class="function">reactive</span>(data, onUpdate) {
+  <span class="keyword">return new</span> Proxy(data, {
+    <span class="function">set</span>(target, prop, value) {
+      target[prop] = value;
+      onUpdate(prop);
+      <span class="keyword">return true</span>;
+    },
+    <span class="function">get</span>(target, prop) {
+      <span class="keyword">return</span> target[prop];
+    }
+  });
+}</code>
+        </div>
+
+        <p>
+            That's it. 11 lines. When you write <code>state.count = 5</code>, the Proxy's <code>set</code> trap fires, which calls <code>onUpdate('count')</code>, which triggers all the DOM bindings that care about <code>count</code>.
+        </p>
+    </section>
+
+    <section>
+        <h2>The array problem</h2>
+        <p>
+            Arrays are tricky. <code>arr[0] = 'x'</code> triggers the Proxy's <code>set</code> trap. But <code>arr.push('x')</code> doesn't—it calls a method, not a setter.
+        </p>
+        <p>
+            qrazy's solution: intercept the method calls.
+        </p>
+
+        <div class="code-block">
+<code><span class="keyword">function</span> <span class="function">deepReactive</span>(data, onUpdate) {
+  <span class="keyword">if</span> (Array.isArray(data)) {
+    <span class="keyword">return new</span> Proxy(data, {
+      <span class="function">get</span>(target, prop) {
+        <span class="comment">// Intercept mutating methods</span>
+        <span class="keyword">if</span> ([<span class="string">'push'</span>, <span class="string">'pop'</span>, <span class="string">'splice'</span>, ...].includes(prop)) {
+          <span class="keyword">return</span> (...args) => {
+            <span class="keyword">const</span> result = Array.prototype[prop].apply(target, args);
+            <span class="highlight">onUpdate(<span class="string">'length'</span>);</span>  <span class="comment">// ← notify on mutation</span>
+            <span class="keyword">return</span> result;
+          };
+        }
+        <span class="keyword">return</span> target[prop];
+      }
+    });
+  }
+  <span class="keyword">return</span> reactive(data, onUpdate);
+}</code>
+        </div>
+
+        <p>
+            When you call <code>todos.push({...})</code>, you're actually calling our wrapper function, which calls the real <code>push</code>, then triggers an update.
+        </p>
+
+        <div class="callout">
+            <strong>Why is this hard?</strong> Arrays have 7 mutating methods: <code>push</code>, <code>pop</code>, <code>shift</code>, <code>unshift</code>, <code>splice</code>, <code>sort</code>, <code>reverse</code>. Each one needs interception. Vue 2 famously couldn't handle <code>arr[index] = value</code> because of defineProperty limitations.
+        </div>
+    </section>
+
+    <section>
+        <h2>Signals vs Proxies</h2>
+        <p>
+            There's another approach gaining popularity: <strong>signals</strong> (used by Solid, Preact Signals, Angular 16+).
+        </p>
+
+        <div class="code-block">
+<code><span class="comment">// Proxy-based (Vue, qrazy)</span>
+<span class="keyword">const</span> state = reactive({ count: 0 });
+state.count++;  <span class="comment">// triggers update</span>
+
+<span class="comment">// Signal-based (Solid)</span>
+<span class="keyword">const</span> [count, setCount] = createSignal(0);
+setCount(count() + 1);  <span class="comment">// triggers update</span></code>
+        </div>
+
+        <p>
+            <strong>The difference:</strong>
+        </p>
+        <ul>
+            <li><strong>Proxies</strong> are coarse-grained. Any property change triggers a check of all bindings.</li>
+            <li><strong>Signals</strong> are fine-grained. Each signal knows exactly which DOM nodes depend on it.</li>
+        </ul>
+        <p>
+            Signals are theoretically faster (no unnecessary checks), but Proxies feel more natural (just use normal objects). qrazy uses Proxies because they're simpler to understand—and for learning, simplicity wins.
+        </p>
+    </section>
+
+    <section>
+        <h2>Interactive demo</h2>
+        <p>
+            See the Proxy trap fire in real time:
+        </p>
+
+        <div class="demo-container">
+            <h4>Try it: Proxy trap logger</h4>
+            <div q-data="{ count: 0, log: [] }">
+                <p>
+                    <button q-click="count++; log = [...log, 'set count → ' + count].slice(-5)">
+                        Increment (count: <span q-text="count"></span>)
+                    </button>
+                </p>
+                <div style="font-family: var(--font-mono); font-size: 0.85rem; background: #2d2d2d; padding: var(--space-md); border-radius: var(--border-radius); min-height: 100px;">
+                    <div q-for="entry in log">
+                        <div style="color: #a6e22e;" q-text="entry"></div>
+                    </div>
+                    <div q-show="log.length === 0" style="color: #75715e;">Click the button to see Proxy traps fire...</div>
+                </div>
+            </div>
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">
+            This demo runs on qrazy itself. View source to see the q-data, q-click, and q-for directives.
+        </p>
+    </section>
+
+    <section>
+        <h2>First principles</h2>
+        <p>
+            What <em>is</em> state? It's a value that changes over time and affects what the user sees. The fundamental question of reactivity is: how do you observe change?
+        </p>
+        <p>
+            Dirty checking says: poll and compare. Slow, but simple.<br>
+            defineProperty says: intercept at the property level. Better, but incomplete.<br>
+            Proxy says: intercept at the object level. Complete, and the right abstraction.
+        </p>
+        <p>
+            The Proxy API is JavaScript finally giving us the primitive we needed. Everything before it was a workaround.
+        </p>
+    </section>
+
+    <nav class="nav-footer">
+        <a href="/qrazy/">← Back to overview</a>
+        <a href="/qrazy/binding/">Next: Binding →</a>
+    </nav>
+</article>
+
+<script src="/assets/js/qrazy.js"></script>

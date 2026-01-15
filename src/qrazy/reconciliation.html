@@ -1,0 +1,428 @@
+---
+layout: base.njk
+title: Reconciliation - qrazy - qry.zone
+description: The hard problem. What happens when you delete item #2 from a list?
+---
+
+<style>
+.breadcrumb {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+}
+.breadcrumb a {
+    color: var(--color-text-secondary);
+}
+.breadcrumb a:hover {
+    color: var(--color-accent);
+}
+.code-block {
+    background: #2d2d2d;
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    margin: var(--space-md) 0;
+    line-height: 1.5;
+}
+.code-block code {
+    color: #f8f8f2;
+}
+.code-block .comment {
+    color: #75715e;
+}
+.code-block .keyword {
+    color: #f92672;
+}
+.code-block .function {
+    color: #a6e22e;
+}
+.code-block .string {
+    color: #e6db74;
+}
+.code-block .highlight {
+    background: rgba(166, 226, 46, 0.2);
+    display: inline;
+}
+.approach-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin: var(--space-md) 0;
+}
+.approach-card h4 {
+    margin: 0 0 var(--space-sm) 0;
+    color: var(--color-accent);
+}
+.approach-card.bad {
+    border-left: 3px solid #dc3545;
+}
+.approach-card.good {
+    border-left: 3px solid #28a745;
+}
+.approach-card .verdict {
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    margin-bottom: var(--space-sm);
+}
+.approach-card.bad .verdict {
+    color: #dc3545;
+}
+.approach-card.good .verdict {
+    color: #28a745;
+}
+.callout {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-md);
+    margin: var(--space-lg) 0;
+    font-size: 0.95rem;
+}
+.demo-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+}
+.demo-container h4 {
+    margin-top: 0;
+    color: var(--color-accent);
+    font-size: 0.9rem;
+}
+.algorithm-box {
+    background: #2d2d2d;
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+.algorithm-box .step {
+    color: #a6e22e;
+}
+.algorithm-box .condition {
+    color: #f92672;
+}
+.algorithm-box .action {
+    color: #f8f8f2;
+}
+.nav-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-xxl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+}
+.nav-footer a {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+.nav-footer a:hover {
+    color: var(--color-accent);
+}
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #2d2d2d;
+    border-radius: var(--border-radius);
+    margin-bottom: 0.5rem;
+}
+.todo-item .text {
+    flex: 1;
+}
+.todo-item .delete {
+    padding: 0.25rem 0.5rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+.todo-item .delete:hover {
+    background: #a71d2a;
+}
+</style>
+
+<article class="article">
+    <div class="breadcrumb">
+        <a href="/qrazy/">qrazy</a> / reconciliation
+    </div>
+
+    <header class="article-header">
+        <h1>Reconciliation</h1>
+        <p class="article-subtitle">The hard problem: what happens when you delete item #2?</p>
+    </header>
+
+    <section>
+        <h2>The problem</h2>
+        <p>
+            You have a list of 5 items rendered in the DOM:
+        </p>
+        <div class="code-block">
+<code>&lt;ul&gt;
+  &lt;li&gt;Apple&lt;/li&gt;
+  &lt;li&gt;Banana&lt;/li&gt;   <span class="comment">&lt;!-- user deletes this one --&gt;</span>
+  &lt;li&gt;Cherry&lt;/li&gt;
+  &lt;li&gt;Date&lt;/li&gt;
+  &lt;li&gt;Elderberry&lt;/li&gt;
+&lt;/ul&gt;</code>
+        </div>
+        <p>
+            The user deletes Banana. Now what? You have two options, and only one is acceptable.
+        </p>
+    </section>
+
+    <section>
+        <h2>Two approaches</h2>
+
+        <div class="approach-card bad">
+            <div class="verdict">❌ NAIVE</div>
+            <h4>Destroy and rebuild</h4>
+            <p>
+                Delete the entire <code>&lt;ul&gt;</code>. Loop through the new array. Create fresh <code>&lt;li&gt;</code> elements for each item.
+            </p>
+            <p>
+                <strong>Problems:</strong>
+            </p>
+            <ul>
+                <li>Slow (creating DOM nodes is expensive)</li>
+                <li>Loses focus (if user was typing in an input)</li>
+                <li>Loses scroll position</li>
+                <li>Resets animations/transitions</li>
+                <li>Triggers unnecessary layout/paint</li>
+            </ul>
+        </div>
+
+        <div class="approach-card good">
+            <div class="verdict">✓ SMART</div>
+            <h4>Surgical update</h4>
+            <p>
+                Figure out that only the second <code>&lt;li&gt;</code> needs to be removed. Call <code>removeChild()</code> on just that element. Leave everything else alone.
+            </p>
+            <p>
+                <strong>Challenge:</strong> How do you know which DOM node corresponds to which data item?
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <h2>The key insight</h2>
+        <p>
+            <strong>Identity matters.</strong>
+        </p>
+        <p>
+            When your array changes, you need to answer: "Which DOM node IS the Banana node?" If you rendered by index, and Banana was at index 1, after deletion Cherry is now at index 1. Is the DOM node at position 1 the "Cherry node" or the "former Banana node"?
+        </p>
+        <p>
+            The solution: give each item a stable <strong>key</strong>.
+        </p>
+
+        <div class="code-block">
+<code><span class="comment">// Without keys (identity by index)</span>
+[<span class="string">'Apple'</span>, <span class="string">'Banana'</span>, <span class="string">'Cherry'</span>]  <span class="comment">// DOM: [li#0, li#1, li#2]</span>
+[<span class="string">'Apple'</span>, <span class="string">'Cherry'</span>]            <span class="comment">// DOM: [li#0, li#1] ← which is which?</span>
+
+<span class="comment">// With keys (identity by key)</span>
+[{id:1, <span class="string">'Apple'</span>}, {id:2, <span class="string">'Banana'</span>}, {id:3, <span class="string">'Cherry'</span>}]
+<span class="comment">// DOM: [li@key=1, li@key=2, li@key=3]</span>
+
+[{id:1, <span class="string">'Apple'</span>}, {id:3, <span class="string">'Cherry'</span>}]
+<span class="comment">// DOM: [li@key=1, li@key=3] ← key=2 was removed</span></code>
+        </div>
+
+        <p>
+            This is why React, Vue, and every framework yells at you when you forget the <code>key</code> prop on list items.
+        </p>
+    </section>
+
+    <section>
+        <h2>qrazy's q-for</h2>
+        <p>
+            Here's how you write a list in qrazy:
+        </p>
+
+        <div class="code-block">
+<code>&lt;ul&gt;
+  &lt;li <span class="highlight">q-for=<span class="string">"(item, index) in items"</span></span> <span class="highlight">q-key=<span class="string">"item.id"</span></span>&gt;
+    &lt;span q-text=<span class="string">"item.text"</span>&gt;&lt;/span&gt;
+    &lt;button q-click=<span class="string">"items.splice(index, 1)"</span>&gt;Delete&lt;/button&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code>
+        </div>
+
+        <p>
+            The element with <code>q-for</code> becomes a <strong>template</strong>. qrazy hides it, then clones it for each item in the array.
+        </p>
+    </section>
+
+    <section>
+        <h2>The algorithm</h2>
+        <p>
+            Here's qrazy's reconciliation algorithm in pseudocode:
+        </p>
+
+        <div class="algorithm-box">
+<span class="step">function</span> renderList(array):
+    newKeys = Set()
+
+    <span class="step">for each</span> (item, index) <span class="step">in</span> array:
+        key = <span class="condition">q-key expression</span> or index
+        newKeys.add(key)
+
+        <span class="condition">if</span> instances.has(key):
+            <span class="action">// Update existing DOM node in place</span>
+            instance = instances.get(key)
+            instance.state[itemVar] = item
+            instance.state[indexVar] = index
+            <span class="action">runUpdaters(instance.el)</span>
+        <span class="condition">else</span>:
+            <span class="action">// Clone template, bind, insert</span>
+            clone = template.cloneNode(true)
+            scopedState = { ...parentState, [itemVar]: item }
+            bindElement(clone, scopedState)
+            <span class="action">insertBefore(template, clone)</span>
+            instances.set(key, { el: clone, state: scopedState })
+
+    <span class="step">for each</span> (key, instance) <span class="step">in</span> instances:
+        <span class="condition">if not</span> newKeys.has(key):
+            <span class="action">// Remove from DOM</span>
+            instance.el.remove()
+            instances.delete(key)
+        </div>
+
+        <p>
+            The magic is the <code>instances</code> Map. It maps keys to their DOM elements. When an item is deleted, we check which keys are missing and remove those specific DOM nodes.
+        </p>
+    </section>
+
+    <section>
+        <h2>Template cloning</h2>
+        <p>
+            Each list item needs its own DOM subtree. We create these by cloning the template:
+        </p>
+
+        <div class="code-block">
+<code><span class="comment">// The original element becomes a hidden template</span>
+template.style.display = <span class="string">'none'</span>;
+template.removeAttribute(<span class="string">'q-for'</span>);  <span class="comment">// prevent re-processing</span>
+
+<span class="comment">// For each item, create a clone</span>
+<span class="keyword">const</span> clone = template.cloneNode(<span class="keyword">true</span>);  <span class="comment">// deep clone</span>
+clone.style.display = <span class="string">''</span>;
+
+<span class="comment">// Bind with scoped state (includes item + index)</span>
+<span class="keyword">const</span> scopedState = { ...parentState, item, index };
+bindElement(clone, scopedState);</code>
+        </div>
+
+        <p>
+            The scoped state is key. Each clone gets its own <code>item</code> and <code>index</code> variables, separate from other items.
+        </p>
+    </section>
+
+    <section>
+        <h2>Array method interception</h2>
+        <p>
+            When you call <code>items.push({...})</code>, qrazy needs to know. We intercept the array methods:
+        </p>
+
+        <div class="code-block">
+<code><span class="keyword">if</span> ([<span class="string">'push'</span>, <span class="string">'pop'</span>, <span class="string">'splice'</span>, <span class="string">'shift'</span>, <span class="string">'unshift'</span>].includes(prop)) {
+  <span class="keyword">return</span> (...args) => {
+    <span class="keyword">const</span> result = Array.prototype[prop].apply(target, args);
+    <span class="highlight">onUpdate(<span class="string">'length'</span>);</span>  <span class="comment">// ← triggers re-render</span>
+    <span class="keyword">return</span> result;
+  };
+}</code>
+        </div>
+
+        <p>
+            This is why <code>items.splice(index, 1)</code> works in <code>q-click</code>. The splice runs, the interception fires, the list re-renders.
+        </p>
+    </section>
+
+    <section>
+        <h2>What we don't do</h2>
+        <p>
+            qrazy's reconciliation is simple. Here's what the big frameworks do that we skip:
+        </p>
+
+        <div class="callout">
+            <p><strong>React's Fiber architecture:</strong> Breaks reconciliation into interruptible chunks. Can pause mid-update to handle user input, then resume. Essential for smooth 60fps on large trees.</p>
+        </div>
+
+        <div class="callout">
+            <p><strong>Svelte's compile-time analysis:</strong> Knows at build time exactly which DOM nodes depend on which variables. Generates surgical update code, no runtime diffing needed.</p>
+        </div>
+
+        <div class="callout">
+            <p><strong>Virtual DOM diffing:</strong> React/Vue build an in-memory tree, diff it against the previous tree, then apply minimal patches. qrazy skips the virtual DOM entirely—we track real DOM nodes directly.</p>
+        </div>
+
+        <p>
+            These optimizations matter at scale. For learning, our simpler approach is easier to understand.
+        </p>
+    </section>
+
+    <section>
+        <h2>Interactive demo</h2>
+        <p>
+            Add and remove items. Watch the DOM update surgically:
+        </p>
+
+        <div class="demo-container">
+            <h4>Try it: List reconciliation</h4>
+            <div q-data="{ items: [{id:1,text:'Learn Proxies'},{id:2,text:'Build a framework'},{id:3,text:'Understand reconciliation'}], newText: '', nextId: 4 }">
+                <form q-submit="if(newText.trim()){items.push({id:nextId,text:newText.trim()});nextId++;newText='';}" style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+                    <input type="text" q-model="newText" placeholder="Add an item..." style="flex:1;padding:0.5rem;background:#2d2d2d;border:1px solid var(--color-border);color:var(--color-text-primary);border-radius:var(--border-radius);">
+                    <button type="submit" style="padding:0.5rem 1rem;background:var(--color-accent);color:#2d2d2d;border:none;border-radius:var(--border-radius);cursor:pointer;">Add</button>
+                </form>
+
+                <div class="todo-item" q-for="(item, index) in items" q-key="item.id">
+                    <span class="text" q-text="item.text"></span>
+                    <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--color-text-secondary);">key=<span q-text="item.id"></span></span>
+                    <button class="delete" q-click="items.splice(index, 1)">Delete</button>
+                </div>
+
+                <p q-show="items.length === 0" style="color:var(--color-text-secondary);text-align:center;padding:1rem;">No items. Add one above.</p>
+
+                <p style="font-size:0.85rem;color:var(--color-text-secondary);margin-top:1rem;">
+                    Items: <span q-text="items.length"></span> |
+                    Next ID: <span q-text="nextId"></span>
+                </p>
+            </div>
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">
+            Open DevTools → Elements. Add an item, watch a single <code>&lt;div&gt;</code> appear. Delete one, watch only that node disappear. The other nodes don't get touched.
+        </p>
+    </section>
+
+    <section>
+        <h2>First principles</h2>
+        <p>
+            Reconciliation is where "programming" becomes "computer science." You're solving a graph problem: given an old tree and a new tree, what's the minimum set of operations to transform one into the other?
+        </p>
+        <p>
+            The general tree diff problem is O(n³). Frameworks cheat by adding constraints: same-level comparison only, keyed identity. This reduces it to O(n).
+        </p>
+        <p>
+            The key insight: <strong>identity isn't position</strong>. Items move, get deleted, get added. The DOM node for "Banana" should stay the same node even if Banana moves from index 1 to index 3. Keys make this possible.
+        </p>
+    </section>
+
+    <nav class="nav-footer">
+        <a href="/qrazy/binding/">← Binding</a>
+        <a href="/qrazy/landscape/">Next: The Landscape →</a>
+    </nav>
+</article>
+
+<script src="/assets/js/qrazy.js"></script>

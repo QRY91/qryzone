@@ -1,0 +1,233 @@
+---
+layout: base.njk
+title: qrazy - qry.zone
+description: Building a micro-framework to cure framework fatigue
+---
+
+<style>
+.problem-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+.problem-card h3 {
+    margin-top: 0;
+    color: var(--color-accent);
+}
+.problem-card .number {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
+}
+.code-sample {
+    background: #2d2d2d;
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    margin: var(--space-md) 0;
+}
+.code-sample code {
+    color: #f8f8f2;
+}
+.nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+}
+.nav-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s;
+}
+.nav-card:hover {
+    border-color: var(--color-accent);
+}
+.nav-card h4 {
+    margin: 0 0 var(--space-sm) 0;
+    color: var(--color-accent);
+}
+.nav-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+.directive-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-md) 0;
+    font-size: 0.9rem;
+}
+.directive-table th,
+.directive-table td {
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+}
+.directive-table th {
+    color: var(--color-text-secondary);
+    font-weight: normal;
+}
+.directive-table code {
+    color: var(--color-accent);
+}
+</style>
+
+<article class="article">
+    <header class="article-header">
+        <span class="status-badge status-seedling">seedling</span>
+        <h1>qrazy</h1>
+        <p class="article-subtitle">Building a micro-framework to cure framework fatigue</p>
+    </header>
+
+    <section>
+        <p>
+            The best cure for "framework fatigue" is realizing that frameworks aren't magic—they're just JavaScript code written by people who got tired of copy-pasting the same logic.
+        </p>
+        <p>
+            So I built one. 250 lines. No build step. Called it <strong>qrazy</strong> because you'd have to be to roll your own in 2026.
+        </p>
+        <p>
+            Here's what it looks like:
+        </p>
+
+        <div class="code-sample">
+<code><span style="color:#e6db74">&lt;div</span> <span style="color:#a6e22e">q-data</span>=<span style="color:#e6db74">"{ count: 0 }"</span><span style="color:#e6db74">&gt;</span>
+  <span style="color:#e6db74">&lt;button</span> <span style="color:#a6e22e">q-click</span>=<span style="color:#e6db74">"count++"</span><span style="color:#e6db74">&gt;</span>
+    Clicked <span style="color:#e6db74">&lt;span</span> <span style="color:#a6e22e">q-text</span>=<span style="color:#e6db74">"count"</span><span style="color:#e6db74">&gt;&lt;/span&gt;</span> times
+  <span style="color:#e6db74">&lt;/button&gt;</span>
+<span style="color:#e6db74">&lt;/div&gt;</span></code>
+        </div>
+
+        <p>
+            That's it. No npm install. No webpack. No JSX. Just HTML with special attributes that make things reactive.
+        </p>
+    </section>
+
+    <section>
+        <h2>The three problems</h2>
+        <p>
+            Every UI framework—React, Vue, Svelte, Alpine, htmx—solves the same three problems. They just solve them differently.
+        </p>
+
+        <div class="problem-card">
+            <div class="number">Problem 01</div>
+            <h3>Reactivity</h3>
+            <p>How do you know when state changes? When someone sets <code>count = 5</code>, how does the framework notice?</p>
+            <p style="margin-bottom:0"><strong>qrazy answer:</strong> Proxy API. Wrap objects in a trap that fires on every property change.</p>
+        </div>
+
+        <div class="problem-card">
+            <div class="number">Problem 02</div>
+            <h3>Binding</h3>
+            <p>How do you connect state to the DOM? HTML doesn't know about your JavaScript objects.</p>
+            <p style="margin-bottom:0"><strong>qrazy answer:</strong> Custom attributes. Walk the DOM, find <code>q-text</code>, <code>q-click</code>, etc., wire them up.</p>
+        </div>
+
+        <div class="problem-card">
+            <div class="number">Problem 03</div>
+            <h3>Reconciliation</h3>
+            <p>What happens when you delete item #2 from a list? Do you rebuild the whole thing or surgically remove one element?</p>
+            <p style="margin-bottom:0"><strong>qrazy answer:</strong> Keyed templates. Track which DOM nodes belong to which data items.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>What we built</h2>
+        <p>
+            qrazy supports these directives:
+        </p>
+
+        <table class="directive-table">
+            <tr>
+                <th>Directive</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td><code>q-data</code></td>
+                <td>Define a reactive scope with initial state</td>
+            </tr>
+            <tr>
+                <td><code>q-text</code></td>
+                <td>Bind element's textContent to an expression</td>
+            </tr>
+            <tr>
+                <td><code>q-show</code></td>
+                <td>Toggle visibility based on a boolean expression</td>
+            </tr>
+            <tr>
+                <td><code>q-bind:attr</code></td>
+                <td>Bind any HTML attribute to an expression</td>
+            </tr>
+            <tr>
+                <td><code>q-model</code></td>
+                <td>Two-way binding for input elements</td>
+            </tr>
+            <tr>
+                <td><code>q-click</code></td>
+                <td>Execute a statement on click</td>
+            </tr>
+            <tr>
+                <td><code>q-submit</code></td>
+                <td>Handle form submission</td>
+            </tr>
+            <tr>
+                <td><code>q-for</code></td>
+                <td>Render a list from an array</td>
+            </tr>
+        </table>
+
+        <p>
+            That's enough to build real UIs. Counters, forms, todo lists, dynamic tables.
+        </p>
+    </section>
+
+    <section>
+        <h2>Go deeper</h2>
+        <p>
+            Each problem has its own deep dive. Start from first principles, understand why things work the way they do.
+        </p>
+
+        <div class="nav-grid">
+            <a href="/qrazy/reactivity/" class="nav-card">
+                <h4>Reactivity</h4>
+                <p>The Proxy API, dirty checking, signals vs proxies, and why arrays are weird.</p>
+            </a>
+            <a href="/qrazy/binding/" class="nav-card">
+                <h4>Binding</h4>
+                <p>DOM walking, the TreeWalker API, expression evaluation, and the scope chain.</p>
+            </a>
+            <a href="/qrazy/reconciliation/" class="nav-card">
+                <h4>Reconciliation</h4>
+                <p>The hard problem. Template cloning, keyed updates, and why React exists.</p>
+            </a>
+            <a href="/qrazy/landscape/" class="nav-card">
+                <h4>The Landscape</h4>
+                <p>How React, Vue, Svelte, Solid, Alpine, and htmx solve these same problems.</p>
+            </a>
+            <a href="/qrazy/playground/" class="nav-card">
+                <h4>Playground</h4>
+                <p>Live editor. Write qrazy code, see it run, watch the Proxy traps fire.</p>
+            </a>
+        </div>
+    </section>
+
+    <section>
+        <h2>The meta-lesson</h2>
+        <p>
+            Once you build a crappy version of React, you understand exactly <em>why</em> React does what it does. The "arbitrary" complexity of modern web dev stops looking arbitrary—it starts looking like standardized solutions to the problems you just struggled with.
+        </p>
+        <p>
+            Framework fatigue isn't about there being too many frameworks. It's about not understanding what they do for you. Fix that, and the fatigue goes away.
+        </p>
+    </section>
+</article>
