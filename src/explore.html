@@ -5,13 +5,7 @@ description: Browse all notes, ideas, and projects
 ---
 
 <style>
-.explore-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 var(--space-md);
-    line-height: 1.7;
-}
-.explore-container h1 {
+.page-container h1 {
     font-size: 1.5rem;
     margin-bottom: var(--space-md);
     color: var(--color-accent);
@@ -195,10 +189,6 @@ description: Browse all notes, ideas, and projects
     text-decoration: none;
 }
 .status-badge {
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 3px;
-    border: 1px solid;
     white-space: nowrap;
 }
 .legend {
@@ -216,7 +206,7 @@ description: Browse all notes, ideas, and projects
 }
 </style>
 
-<div class="explore-container">
+<div class="page-container">
     <h1>Explore</h1>
     <p class="explore-intro">
         <span id="item-count">24</span> notes, ideas, and projects. Filter by topic or
@@ -272,9 +262,9 @@ description: Browse all notes, ideas, and projects
     <!-- Legend -->
     <section class="legend">
         <div class="legend-items">
-            <span><span class="status-badge" style="background:#2d3a2d;color:#81c784;border-color:#4a5f4a">seedling</span> rough idea</span>
-            <span><span class="status-badge" style="background:#3a3a2d;color:#f0dfaf;border-color:#5f5f4a">growing</span> in progress</span>
-            <span><span class="status-badge" style="background:#2d3a3a;color:#7fc7c7;border-color:#4a5f5f">evergreen</span> stable</span>
+            <span><span class="status-badge status-seedling">seedling</span> rough idea</span>
+            <span><span class="status-badge status-growing">growing</span> in progress</span>
+            <span><span class="status-badge status-evergreen">evergreen</span> stable</span>
         </div>
     </section>
 </div>
