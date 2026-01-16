@@ -27,9 +27,10 @@ permalink: /fun/qubiq/
                 --text-primary: #e0e0e0;
                 --text-secondary: #7a7a8a;
                 --border: #2a2a3a;
+                --corrupt: #bf616a;
+                --corrupt-glow: rgba(191, 97, 106, 0.4);
             }
 
-            /* Scrolling title */
             .title-container {
                 overflow: hidden;
                 position: relative;
@@ -52,13 +53,71 @@ permalink: /fun/qubiq/
                 100% { transform: translateX(-50%); }
             }
 
-            .game-header {
-                padding-top: 4rem;
+            .game-header { padding-top: 4rem; }
+            .stats-bar { flex-wrap: wrap; gap: 1rem; }
+
+            /* Points display - the star of the show */
+            .points-row {
+                text-align: center;
+                margin: 0.5rem 0;
             }
 
-            .stats-bar {
-                flex-wrap: wrap;
-                gap: 1rem;
+            .points-display {
+                display: inline-flex;
+                align-items: baseline;
+                gap: 0.5rem;
+            }
+
+            .points-value {
+                font-size: clamp(2rem, 8vw, 3rem);
+                font-weight: 500;
+                color: var(--accent);
+                text-shadow: 0 0 20px var(--accent-glow);
+                transition: transform 0.1s ease-out, text-shadow 0.15s ease-out, color 0.15s ease-out;
+                display: inline-block;
+            }
+
+            .points-value.pulse {
+                transform: scale(1.08);
+                text-shadow: 0 0 30px var(--accent), 0 0 50px var(--accent-glow);
+            }
+
+            .points-value.big-gain {
+                color: #ebcb8b;
+                text-shadow: 0 0 30px rgba(235, 203, 139, 0.6), 0 0 60px rgba(235, 203, 139, 0.3);
+            }
+
+            .points-value.huge-gain {
+                color: #a3be8c;
+                text-shadow: 0 0 35px rgba(163, 190, 140, 0.7), 0 0 70px rgba(163, 190, 140, 0.4);
+                transform: scale(1.12);
+            }
+
+            .points-delta {
+                font-size: 1rem;
+                font-weight: 500;
+                color: #a3be8c;
+                opacity: 0;
+                transform: translateY(0);
+                transition: opacity 0.15s ease-out, transform 0.3s ease-out;
+            }
+
+            .points-delta.show {
+                opacity: 1;
+                animation: delta-pop 0.6s ease-out forwards;
+            }
+
+            @keyframes delta-pop {
+                0% { opacity: 0; transform: translateY(5px) scale(0.8); }
+                20% { opacity: 1; transform: translateY(-2px) scale(1.1); }
+                100% { opacity: 0; transform: translateY(-15px) scale(0.9); }
+            }
+
+            /* Per-second rate indicator */
+            .points-rate {
+                font-size: 0.7rem;
+                color: var(--text-secondary);
+                margin-top: 0.25rem;
             }
 
             #gameCanvas {
@@ -68,10 +127,57 @@ permalink: /fun/qubiq/
                 background: var(--bg-surface);
             }
 
+            /* Heat bar (clicks/sec + combo multiplier) */
+            .heat-section {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                max-width: 600px;
+                margin: 0.5rem auto;
+                padding: 0 1rem;
+            }
+
+            .heat-bar {
+                flex: 1;
+                height: 6px;
+                background: var(--bg-elevated);
+                border-radius: 3px;
+                overflow: hidden;
+                border: 1px solid var(--border);
+            }
+
+            .heat-fill {
+                height: 100%;
+                width: 0%;
+                border-radius: 3px;
+                background: linear-gradient(90deg, var(--accent), #ebcb8b, #bf616a);
+                background-size: 200% 100%;
+                transition: width 0.15s ease-out;
+            }
+
+            .heat-multiplier {
+                font-size: 0.9rem;
+                font-weight: 500;
+                min-width: 3.5rem;
+                text-align: right;
+                color: var(--accent);
+                transition: color 0.2s, text-shadow 0.2s;
+            }
+
+            .heat-multiplier.hot {
+                color: #ebcb8b;
+                text-shadow: 0 0 10px rgba(235, 203, 139, 0.5);
+            }
+
+            .heat-multiplier.fire {
+                color: #bf616a;
+                text-shadow: 0 0 10px rgba(191, 97, 106, 0.5);
+            }
+
             /* Upgrade shop */
             .shop {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
                 gap: 0.5rem;
                 max-width: 600px;
                 margin: 0 auto;
@@ -82,40 +188,25 @@ permalink: /fun/qubiq/
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: 0.75rem 0.5rem;
+                padding: 0.6rem 0.4rem;
                 text-align: center;
                 position: relative;
             }
 
-            .upgrade-btn .icon {
-                font-size: 1.25rem;
-                margin-bottom: 0.25rem;
-            }
-
-            .upgrade-btn .name {
-                font-size: 0.75rem;
-                margin-bottom: 0.25rem;
-            }
-
-            .upgrade-btn .cost {
-                font-size: 0.65rem;
-                color: var(--text-secondary);
-            }
-
+            .upgrade-btn .icon { font-size: 1.1rem; margin-bottom: 0.2rem; }
+            .upgrade-btn .name { font-size: 0.7rem; margin-bottom: 0.2rem; }
+            .upgrade-btn .cost { font-size: 0.6rem; color: var(--text-secondary); }
             .upgrade-btn .level {
                 position: absolute;
-                top: 4px;
-                right: 8px;
-                font-size: 0.6rem;
+                top: 3px;
+                right: 6px;
+                font-size: 0.55rem;
                 color: var(--accent);
             }
 
-            .upgrade-btn:disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
+            .upgrade-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-            /* Prestige bar */
+            /* Prestige section */
             .prestige-section {
                 max-width: 600px;
                 margin: 1rem auto;
@@ -144,14 +235,18 @@ permalink: /fun/qubiq/
                 border-color: var(--accent);
             }
 
-            .prestige-btn:disabled {
-                opacity: 0.5;
-                background: var(--bg-elevated);
+            .prestige-btn:disabled { opacity: 0.5; background: var(--bg-elevated); }
+
+            .prestige-info {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.7rem;
+                color: var(--text-secondary);
+                margin-top: 0.5rem;
             }
 
             .modal-overlay { background: rgba(0, 0, 0, 0.85); }
 
-            /* Canvas click feedback */
             .click-feedback {
                 position: fixed;
                 pointer-events: none;
@@ -162,9 +257,19 @@ permalink: /fun/qubiq/
                 z-index: 50;
             }
 
+            .click-feedback.chain {
+                color: #ebcb8b;
+                font-size: 1.2rem;
+            }
+
             @keyframes float-up {
                 0% { opacity: 1; transform: translateY(0) scale(1); }
                 100% { opacity: 0; transform: translateY(-30px) scale(0.8); }
+            }
+
+            /* Corruption cleared feedback */
+            .corrupt-cleared {
+                color: var(--corrupt);
             }
 
             body.fullscreen #gameCanvas { border: none; }
@@ -183,12 +288,8 @@ permalink: /fun/qubiq/
             </div>
             <div class="stats-bar">
                 <div class="stat">
-                    <span class="stat-label">Points:</span>
-                    <span class="stat-value" id="points">0</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-label">Clicks:</span>
-                    <span class="stat-value" id="clicks">0</span>
+                    <span class="stat-label">Grid:</span>
+                    <span class="stat-value" id="clicks">0/0</span>
                 </div>
                 <div class="stat">
                     <span class="stat-label">Prestige:</span>
@@ -197,34 +298,54 @@ permalink: /fun/qubiq/
             </div>
         </header>
 
+        <div class="points-row">
+            <div class="points-display">
+                <span class="points-value" id="points">0</span>
+                <span class="points-delta" id="pointsDelta"></span>
+            </div>
+        </div>
+
         <div class="canvas-container">
             <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <div class="heat-section">
+            <div class="heat-bar">
+                <div class="heat-fill" id="heatFill"></div>
+            </div>
+            <div class="heat-multiplier" id="heatMultiplier">x1.0</div>
         </div>
 
         <div class="shop">
             <button class="upgrade-btn" id="upgradeAuto" data-upgrade="auto">
                 <span class="level" id="levelAuto">0</span>
                 <span class="icon">&#x26A1;</span>
-                <span class="name">Auto-Grower</span>
-                <span class="cost" id="costAuto">10 pts</span>
+                <span class="name">Auto</span>
+                <span class="cost" id="costAuto">10</span>
             </button>
             <button class="upgrade-btn" id="upgradeBoost" data-upgrade="boost">
                 <span class="level" id="levelBoost">0</span>
                 <span class="icon">&#x1F446;</span>
-                <span class="name">Click Boost</span>
-                <span class="cost" id="costBoost">25 pts</span>
+                <span class="name">Boost</span>
+                <span class="cost" id="costBoost">25</span>
             </button>
             <button class="upgrade-btn" id="upgradePoints" data-upgrade="points">
                 <span class="level" id="levelPoints">0</span>
                 <span class="icon">&#x2728;</span>
-                <span class="name">Amplifier</span>
-                <span class="cost" id="costPoints">50 pts</span>
+                <span class="name">Amplify</span>
+                <span class="cost" id="costPoints">50</span>
             </button>
-            <button class="upgrade-btn" id="upgradeFusion" data-upgrade="fusion">
-                <span class="level" id="levelFusion">0</span>
+            <button class="upgrade-btn" id="upgradePurify" data-upgrade="purify">
+                <span class="level" id="levelPurify">0</span>
+                <span class="icon">&#x2727;</span>
+                <span class="name">Purify</span>
+                <span class="cost" id="costPurify">75</span>
+            </button>
+            <button class="upgrade-btn" id="upgradeCombo" data-upgrade="combo">
+                <span class="level" id="levelCombo">0</span>
                 <span class="icon">&#x1F525;</span>
-                <span class="name">Catalyst</span>
-                <span class="cost" id="costFusion">100 pts</span>
+                <span class="name">Combo</span>
+                <span class="cost" id="costCombo">100</span>
             </button>
         </div>
 
@@ -235,31 +356,31 @@ permalink: /fun/qubiq/
             <button class="prestige-btn" id="prestigeBtn" disabled>
                 Prestige &rarr; <span id="nextPrestige">1.5x</span>
             </button>
+            <div class="prestige-info">
+                <span>Grid: <span id="currentGrid">64</span>px</span>
+                <span>Next: <span id="nextGrid">128</span>px</span>
+            </div>
         </div>
 
         <!-- Help Modal -->
         <div class="modal-overlay" id="helpModal">
             <div class="modal">
                 <h2>QUBIQ</h2>
-                <p>A recursive fractal growth game where logos combine into larger versions.</p>
-                <p><strong>How to play:</strong></p>
+                <p>Build a fractal grid by placing 8x8 tiles. Every 2x2 group fuses into a larger logo.</p>
+                <p><strong>Mechanics:</strong></p>
                 <ul>
-                    <li>Click to place 8x8 logo tiles</li>
-                    <li>Every 2x2 group of tiles fuses into one larger logo</li>
-                    <li>Fill the entire grid to prestige</li>
+                    <li><strong>Combo</strong> &ndash; Rapid clicks build a multiplier (decays over time)</li>
+                    <li><strong>Fusion chains</strong> &ndash; Completing multiple fusions at once gives bonus points</li>
+                    <li><strong>Corruption</strong> &ndash; Red glitched cells block progress; click to purify</li>
+                    <li><strong>Prestige</strong> &ndash; Fill the grid to prestige; grid grows each time</li>
                 </ul>
                 <p><strong>Upgrades:</strong></p>
                 <ul>
-                    <li><strong>Auto-Grower</strong> &ndash; Automatically places tiles</li>
-                    <li><strong>Click Boost</strong> &ndash; Manual clicks speed up auto</li>
-                    <li><strong>Amplifier</strong> &ndash; Multiplies points earned</li>
-                    <li><strong>Catalyst</strong> &ndash; Faster fusion animations</li>
-                </ul>
-                <p><strong>Keyboard:</strong></p>
-                <ul>
-                    <li><strong>Space</strong> &ndash; Click to grow</li>
-                    <li><strong>F</strong> &ndash; Toggle fullscreen</li>
-                    <li><strong>Esc</strong> &ndash; Exit fullscreen</li>
+                    <li><strong>Auto</strong> &ndash; Auto-clicks per second</li>
+                    <li><strong>Boost</strong> &ndash; Manual clicks speed up auto</li>
+                    <li><strong>Amplify</strong> &ndash; Points multiplier</li>
+                    <li><strong>Purify</strong> &ndash; Auto-clear corruption</li>
+                    <li><strong>Combo</strong> &ndash; Slower combo decay</li>
                 </ul>
                 <button class="modal-close" id="closeHelp">Got it</button>
             </div>
@@ -268,21 +389,36 @@ permalink: /fun/qubiq/
         <script>
             // ============== Configuration ==============
             const BASE_SIZE = 8;
-            const TARGET_LEVEL = 4;  // 2^4 = 16 tiles per side, 128px grid, 256 clicks to fill
-            const SAVE_KEY = 'qubiq_save_v3';
+            const STARTING_LEVEL = 3;  // 64 clicks to start
+            const MAX_LEVEL = 6;       // Cap at 4096 clicks
+            const SAVE_KEY = 'qubiq_save_v4';
+            const COMBO_DECAY_RATE = 0.5;  // Per second base decay
+            const COMBO_WINDOW = 600;      // ms to maintain combo
+            const CORRUPTION_INTERVAL = 8000;  // ms between corruption spawns
+            const CORRUPTION_MAX = 5;      // Max simultaneous corrupted cells
 
             // ============== Game State ==============
             let state = {
-                clicks: 0,           // Total 8x8 placements
+                clicks: 0,
                 points: 0,
                 totalPoints: 0,
+                targetLevel: STARTING_LEVEL,
                 prestigeLevel: 0,
                 prestigeMultiplier: 1,
+                combo: 0,
+                corruption: [],  // Array of corrupted cell indices
                 upgrades: {
                     auto: 0,
                     boost: 0,
                     points: 0,
-                    fusion: 0
+                    purify: 0,
+                    combo: 0
+                },
+                // Permanent unlocks (persist through prestige)
+                permanent: {
+                    comboRetain: 0,    // % of combo kept on prestige
+                    startingPoints: 0, // Points to start with
+                    corruptResist: 0   // % chance to resist corruption
                 }
             };
 
@@ -290,37 +426,179 @@ permalink: /fun/qubiq/
                 auto: level => Math.floor(10 * Math.pow(1.5, level)),
                 boost: level => Math.floor(25 * Math.pow(1.6, level)),
                 points: level => Math.floor(50 * Math.pow(1.7, level)),
-                fusion: level => Math.floor(100 * Math.pow(1.8, level))
+                purify: level => Math.floor(75 * Math.pow(1.8, level)),
+                combo: level => Math.floor(100 * Math.pow(1.9, level))
             };
 
-            // Derived values
-            const GRID_SIZE = BASE_SIZE * Math.pow(2, TARGET_LEVEL);  // 128px
-            const MAX_CLICKS = Math.pow(4, TARGET_LEVEL);  // 256 clicks to fill
+            // ============== Derived Values ==============
+            function getGridSize() {
+                return BASE_SIZE * Math.pow(2, state.targetLevel);
+            }
 
-            // Animation state
+            function getMaxClicks() {
+                return Math.pow(4, state.targetLevel);
+            }
+
+            // ============== Runtime State ==============
             let autoClickAccumulator = 0;
             let clickBoostTimer = 0;
             let lastTime = 0;
             let lastClickTime = 0;
+            let lastCorruptionTime = 0;
+            let purifyAccumulator = 0;
+            let fusionAnimations = [];  // {level, x, y, startTime}
 
-            // Canvas setup
+            // Heat tracking (clicks per second)
+            let clickTimestamps = [];  // Ring buffer of recent click times
+            let currentHeat = 0;       // Smoothed clicks/sec
+            const HEAT_WINDOW = 2000;  // ms to track clicks
+            const HEAT_MAX = 15;       // clicks/sec for full bar
+
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
 
-            // Load logo images
-            const logoImages = {};
-            [8, 16, 32, 128].forEach(size => {
-                const img = new Image();
-                img.src = `/assets/images/q_blk_${size}.png`;
-                logoImages[size] = img;
-            });
+            // Heat bar elements
+            const heatFill = document.getElementById('heatFill');
+            const heatMultiplier = document.getElementById('heatMultiplier');
 
-            function getLogoImage(size) {
-                // Map to available sizes: 8, 16, 32, 128
-                if (size <= 8) return logoImages[8];
-                if (size <= 16) return logoImages[16];
-                if (size <= 32) return logoImages[32];
-                return logoImages[128];
+            // Points display elements
+            const pointsValue = document.getElementById('points');
+            const pointsDelta = document.getElementById('pointsDelta');
+            let displayedPoints = 0;  // For smooth number rolling
+            let pointsAnimTimeout = null;
+            let deltaAnimTimeout = null;
+
+            // Offscreen canvas for tinting
+            const tintCanvas = document.createElement('canvas');
+            const tintCtx = tintCanvas.getContext('2d');
+            tintCanvas.width = 128;
+            tintCanvas.height = 128;
+
+            // Logo pattern as binary (1 = filled, 0 = empty)
+            const LOGO_PATTERN = [
+                0b11111111,
+                0b10000001,
+                0b10111101,
+                0b10111101,
+                0b10111111,
+                0b10111001,
+                0b10001001,
+                0b11111111
+            ];
+
+            // Pre-render logo to offscreen canvas at base size
+            const logoCanvas = document.createElement('canvas');
+            logoCanvas.width = 8;
+            logoCanvas.height = 8;
+            const logoCtx = logoCanvas.getContext('2d');
+
+            function renderLogoPattern(color = '#ffffff') {
+                logoCtx.clearRect(0, 0, 8, 8);
+                logoCtx.fillStyle = color;
+                for (let y = 0; y < 8; y++) {
+                    for (let x = 0; x < 8; x++) {
+                        if (LOGO_PATTERN[y] & (1 << (7 - x))) {
+                            logoCtx.fillRect(x, y, 1, 1);
+                        }
+                    }
+                }
+            }
+
+            // Initialize with white
+            renderLogoPattern('#ffffff');
+
+            // Colors
+            const COLORS = {
+                accent: '#88c0d0',
+                accentBright: '#a3d4e0',
+                fusion: '#ebcb8b',
+                fusionBright: '#f5dfa3',
+                corrupt: '#bf616a',
+                corruptBright: '#d08770',
+                combo: '#a3be8c',
+                white: '#ffffff'
+            };
+
+            // Color utilities
+            function hexToRgb(hex) {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : { r: 255, g: 255, b: 255 };
+            }
+
+            function rgbToHex(r, g, b) {
+                return '#' + [r, g, b].map(x => {
+                    const hex = Math.round(x).toString(16);
+                    return hex.length === 1 ? '0' + hex : hex;
+                }).join('');
+            }
+
+            function lerpColor(color1, color2, t) {
+                const c1 = hexToRgb(color1);
+                const c2 = hexToRgb(color2);
+                return rgbToHex(
+                    c1.r + (c2.r - c1.r) * t,
+                    c1.g + (c2.g - c1.g) * t,
+                    c1.b + (c2.b - c1.b) * t
+                );
+            }
+
+            // Draw logo from pattern with color and effects
+            function drawTintedLogo(x, y, size, color, alpha = 1, glow = 0) {
+                ctx.save();
+                ctx.globalAlpha = alpha;
+
+                // Glow effect
+                if (glow > 0) {
+                    ctx.shadowColor = color;
+                    ctx.shadowBlur = glow;
+                }
+
+                // Draw pattern directly at requested size
+                const pixelSize = size / 8;
+                ctx.fillStyle = color;
+
+                for (let py = 0; py < 8; py++) {
+                    for (let px = 0; px < 8; px++) {
+                        if (LOGO_PATTERN[py] & (1 << (7 - px))) {
+                            ctx.fillRect(
+                                x + px * pixelSize,
+                                y + py * pixelSize,
+                                pixelSize,
+                                pixelSize
+                            );
+                        }
+                    }
+                }
+
+                ctx.restore();
+            }
+
+            // Draw logo with per-pixel effects (for special animations)
+            function drawLogoPixels(x, y, size, getPixelColor, getPixelAlpha = null) {
+                const pixelSize = size / 8;
+
+                for (let py = 0; py < 8; py++) {
+                    for (let px = 0; px < 8; px++) {
+                        if (LOGO_PATTERN[py] & (1 << (7 - px))) {
+                            ctx.save();
+                            ctx.fillStyle = getPixelColor(px, py);
+                            if (getPixelAlpha) {
+                                ctx.globalAlpha = getPixelAlpha(px, py);
+                            }
+                            ctx.fillRect(
+                                x + px * pixelSize,
+                                y + py * pixelSize,
+                                pixelSize,
+                                pixelSize
+                            );
+                            ctx.restore();
+                        }
+                    }
+                }
             }
 
             function resizeCanvas() {
@@ -328,6 +606,9 @@ permalink: /fun/qubiq/
                 const maxSize = Math.min(container.clientWidth - 40, container.clientHeight - 40, 512);
                 canvas.width = maxSize;
                 canvas.height = maxSize;
+                // Crisp pixel scaling (no bilinear interpolation)
+                ctx.imageSmoothingEnabled = false;
+                tintCtx.imageSmoothingEnabled = false;
             }
 
             function initGame() {
@@ -335,6 +616,7 @@ permalink: /fun/qubiq/
                 loadGame();
                 setupScrollingTitle();
                 updateUI();
+                lastCorruptionTime = performance.now();
                 requestAnimationFrame(gameLoop);
             }
 
@@ -344,57 +626,234 @@ permalink: /fun/qubiq/
                 title.textContent = baseText + baseText;
             }
 
+            // ============== Cell Index Helpers ==============
+            function getNextCellIndex() {
+                // Find the next empty cell, skipping corrupted ones
+                let index = state.clicks;
+                while (state.corruption.includes(index) && index < getMaxClicks()) {
+                    index++;
+                }
+                return index;
+            }
+
+            function getCellPosition(index, level) {
+                // Convert linear index to x,y position at given level
+                if (level === 0) {
+                    return { x: 0, y: 0 };
+                }
+
+                const cellsPerSide = Math.pow(2, level);
+                const cellSize = BASE_SIZE;
+
+                // Convert index to position in the grid
+                let x = 0, y = 0;
+                let remaining = index;
+
+                for (let l = level; l > 0; l--) {
+                    const quadrantSize = Math.pow(4, l - 1);
+                    const quadrant = Math.floor(remaining / quadrantSize);
+                    remaining = remaining % quadrantSize;
+
+                    const halfSize = BASE_SIZE * Math.pow(2, l - 1);
+                    if (quadrant === 1) x += halfSize;
+                    else if (quadrant === 2) y += halfSize;
+                    else if (quadrant === 3) { x += halfSize; y += halfSize; }
+                }
+
+                return { x, y };
+            }
+
+            // ============== Corruption ==============
+            function spawnCorruption() {
+                if (state.corruption.length >= CORRUPTION_MAX) return;
+                if (state.clicks >= getMaxClicks()) return;
+
+                // Resist chance from permanent upgrades
+                if (Math.random() < state.permanent.corruptResist * 0.1) return;
+
+                // Pick a random unfilled, uncorrupted cell
+                const maxClicks = getMaxClicks();
+                const available = [];
+                for (let i = state.clicks; i < maxClicks; i++) {
+                    if (!state.corruption.includes(i)) {
+                        available.push(i);
+                    }
+                }
+
+                if (available.length > 0) {
+                    const index = available[Math.floor(Math.random() * available.length)];
+                    state.corruption.push(index);
+                }
+            }
+
+            function clearCorruption(index) {
+                const idx = state.corruption.indexOf(index);
+                if (idx !== -1) {
+                    state.corruption.splice(idx, 1);
+                    showClickFeedback('Purified!', true);
+                }
+            }
+
+            function autoPurify() {
+                if (state.upgrades.purify > 0 && state.corruption.length > 0) {
+                    // Clear one corruption
+                    state.corruption.shift();
+                }
+            }
+
+            function cleanStaleCorruption() {
+                // Remove corruption cells that are now behind the fill line
+                state.corruption = state.corruption.filter(idx => idx >= state.clicks);
+            }
+
+            // ============== Heat & Combo System ==============
+            function updateHeat(dt) {
+                const now = performance.now();
+
+                // Clean old timestamps
+                clickTimestamps = clickTimestamps.filter(t => now - t < HEAT_WINDOW);
+
+                // Calculate clicks per second
+                const clicksInWindow = clickTimestamps.length;
+                const targetHeat = (clicksInWindow / HEAT_WINDOW) * 1000;
+
+                // Smooth the heat value
+                currentHeat += (targetHeat - currentHeat) * Math.min(1, dt * 5);
+
+                // Update heat bar UI
+                const heatPercent = Math.min(100, (currentHeat / HEAT_MAX) * 100);
+                heatFill.style.width = heatPercent + '%';
+
+                // Combo decay scales with combo level (higher = faster decay)
+                if (state.combo > 0) {
+                    const baseDecay = COMBO_DECAY_RATE / (1 + state.upgrades.combo * 0.3);
+                    // Decay accelerates as combo grows: +10% per combo level
+                    const scaledDecay = baseDecay * (1 + state.combo * 0.05);
+                    state.combo = Math.max(0, state.combo - scaledDecay * dt);
+                }
+
+                // Update combo multiplier display
+                const mult = getComboMultiplier();
+                heatMultiplier.textContent = 'x' + mult.toFixed(1);
+
+                const comboVal = Math.floor(state.combo);
+                heatMultiplier.classList.toggle('hot', comboVal >= 5 && comboVal < 15);
+                heatMultiplier.classList.toggle('fire', comboVal >= 15);
+            }
+
+            function recordClick() {
+                clickTimestamps.push(performance.now());
+            }
+
+            function getComboMultiplier() {
+                return 1 + Math.floor(state.combo) * 0.1;
+            }
+
             // ============== Quadtree Rendering ==============
-            // Given total clicks, recursively render the fractal structure
+            function getLogoColor() {
+                // Color shifts based on combo - now continuous since combo is uncapped
+                const comboVal = Math.floor(state.combo);
+                if (comboVal >= 15) return COLORS.fusionBright;
+                if (comboVal >= 8) return COLORS.fusion;
+                if (comboVal >= 3) return lerpColor(COLORS.accent, COLORS.fusion, (comboVal - 3) / 5);
+                return COLORS.accent;
+            }
 
             function renderQuadrant(x, y, level, clicksAvailable) {
                 const quadrantSize = BASE_SIZE * Math.pow(2, level);
                 const clicksNeeded = Math.pow(4, level);
+                const baseColor = getLogoColor();
 
                 if (level === 0) {
-                    // Base case: single 8x8 cell
                     if (clicksAvailable >= 1) {
-                        const img = getLogoImage(BASE_SIZE);
-                        if (img && img.complete) {
-                            // Pop-in animation for recently placed
-                            const isRecent = (state.clicks === Math.floor(clicksAvailable)) &&
-                                             (performance.now() - lastClickTime < 200);
-                            if (isRecent) {
-                                const progress = (performance.now() - lastClickTime) / 200;
-                                ctx.globalAlpha = progress;
-                                const scale = 0.5 + progress * 0.5;
-                                const drawSize = BASE_SIZE * scale;
-                                const offset = (BASE_SIZE - drawSize) / 2;
-                                ctx.drawImage(img, x + offset, y + offset, drawSize, drawSize);
-                                ctx.globalAlpha = 1;
-                            } else {
-                                ctx.drawImage(img, x, y, BASE_SIZE, BASE_SIZE);
-                            }
+                        const isRecent = (performance.now() - lastClickTime < 200);
+                        if (isRecent && clicksAvailable === 1) {
+                            const progress = (performance.now() - lastClickTime) / 200;
+                            const scale = 0.5 + progress * 0.5;
+                            const drawSize = BASE_SIZE * scale;
+                            const offset = (BASE_SIZE - drawSize) / 2;
+                            // Pop in with bright color and glow
+                            drawTintedLogo(x + offset, y + offset, drawSize, COLORS.white, progress, 15 * (1 - progress));
+                        } else {
+                            drawTintedLogo(x, y, BASE_SIZE, baseColor);
                         }
                     }
                     return;
                 }
 
                 if (clicksAvailable >= clicksNeeded) {
-                    // Fully complete - draw fused logo
-                    const img = getLogoImage(quadrantSize);
-                    if (img && img.complete) {
-                        ctx.drawImage(img, x, y, quadrantSize, quadrantSize);
+                    // Check for fusion animation
+                    const fusionAnim = fusionAnimations.find(f =>
+                        f.level === level && f.x === x && f.y === y
+                    );
+
+                    if (fusionAnim) {
+                        const elapsed = performance.now() - fusionAnim.startTime;
+                        const duration = 300;
+                        const progress = Math.min(1, elapsed / duration);
+
+                        if (progress < 1) {
+                            // Draw converging children with color shift
+                            const childSize = BASE_SIZE * Math.pow(2, level - 1);
+                            const centerX = x + quadrantSize / 2;
+                            const centerY = y + quadrantSize / 2;
+
+                            const positions = [
+                                [x, y], [x + childSize, y],
+                                [x, y + childSize], [x + childSize, y + childSize]
+                            ];
+
+                            // Lerp color from accent to fusion gold
+                            const fuseColor = lerpColor(baseColor, COLORS.fusion, progress);
+
+                            for (const [px, py] of positions) {
+                                const dx = centerX - childSize / 2 - px;
+                                const dy = centerY - childSize / 2 - py;
+                                const drawSize = childSize * (1 - progress * 0.3);
+                                drawTintedLogo(
+                                    px + dx * progress + (childSize - drawSize) / 2,
+                                    py + dy * progress + (childSize - drawSize) / 2,
+                                    drawSize,
+                                    fuseColor,
+                                    1 - progress * 0.5,
+                                    10 * progress
+                                );
+                            }
+
+                            // Draw emerging fused logo
+                            if (progress > 0.5) {
+                                const emergeFactor = (progress - 0.5) * 2;
+                                const scale = 0.5 + emergeFactor * 0.5;
+                                const drawSize = quadrantSize * scale;
+                                drawTintedLogo(
+                                    x + (quadrantSize - drawSize) / 2,
+                                    y + (quadrantSize - drawSize) / 2,
+                                    drawSize,
+                                    COLORS.fusionBright,
+                                    emergeFactor,
+                                    25 * emergeFactor
+                                );
+                            }
+                            return;
+                        } else {
+                            fusionAnimations = fusionAnimations.filter(f => f !== fusionAnim);
+                        }
                     }
+
+                    // Draw fused logo - slight glow for larger sizes
+                    const glow = level >= 2 ? 5 : 0;
+                    drawTintedLogo(x, y, quadrantSize, baseColor, 1, glow);
                     return;
                 }
 
-                // Partially filled - recurse into 4 children
+                // Partially filled - recurse
                 const childLevel = level - 1;
                 const childSize = BASE_SIZE * Math.pow(2, childLevel);
                 const childClicksNeeded = Math.pow(4, childLevel);
 
-                // Child positions: TL, TR, BL, BR
                 const positions = [
-                    [x, y],
-                    [x + childSize, y],
-                    [x, y + childSize],
-                    [x + childSize, y + childSize]
+                    [x, y], [x + childSize, y],
+                    [x, y + childSize], [x + childSize, y + childSize]
                 ];
 
                 let remainingClicks = clicksAvailable;
@@ -407,40 +866,205 @@ permalink: /fun/qubiq/
                 }
             }
 
+            function renderCorruption() {
+                const gridSize = getGridSize();
+                const scale = (canvas.width * 0.85) / gridSize;
+                const offsetX = (canvas.width - gridSize * scale) / 2;
+                const offsetY = (canvas.height - gridSize * scale) / 2;
+
+                ctx.save();
+                ctx.translate(offsetX, offsetY);
+                ctx.scale(scale, scale);
+
+                const time = performance.now();
+
+                for (const index of state.corruption) {
+                    const pos = getCellPosition(index, state.targetLevel);
+
+                    // Per-corruption seed for consistent randomness
+                    const seed = index * 7919;
+
+                    // Animated glitch parameters
+                    const glitchPhase = Math.sin(time / 100 + index * 1.7);
+                    const glitchPhase2 = Math.sin(time / 67 + index * 2.3);
+
+                    // Jitter the whole logo slightly
+                    const jitterX = glitchPhase2 * 1.5;
+                    const jitterY = Math.sin(time / 83 + index) * 1;
+
+                    // Glow layer behind
+                    ctx.shadowColor = COLORS.corrupt;
+                    ctx.shadowBlur = 8 + glitchPhase * 4;
+
+                    // Per-pixel glitch rendering
+                    drawLogoPixels(
+                        pos.x + jitterX,
+                        pos.y + jitterY,
+                        BASE_SIZE,
+                        (px, py) => {
+                            // Each pixel gets unique glitch timing
+                            const pixelSeed = seed + px * 13 + py * 47;
+                            const pixelPhase = Math.sin(time / (80 + (pixelSeed % 40)) + pixelSeed * 0.1);
+                            const pixelPhase2 = Math.sin(time / (120 + (pixelSeed % 60)) + pixelSeed * 0.07);
+
+                            // Color shift per pixel - cycles through corrupt palette
+                            const colorShift = (pixelPhase + 1) / 2;
+                            const r = 191 + Math.floor(colorShift * 40);  // 191-231 (corrupt red range)
+                            const g = 97 - Math.floor(pixelPhase2 * 30);  // 67-97 (dim green when glitching)
+                            const b = 106 + Math.floor(colorShift * 30);  // 106-136
+
+                            // Occasional bright white/cyan pixel flash
+                            if (Math.sin(time / 30 + pixelSeed) > 0.92) {
+                                return pixelPhase > 0 ? '#ffffff' : '#00ffff';
+                            }
+
+                            return rgbToHex(
+                                Math.min(255, Math.max(0, r)),
+                                Math.min(255, Math.max(0, g)),
+                                Math.min(255, Math.max(0, b))
+                            );
+                        },
+                        (px, py) => {
+                            // Per-pixel alpha flicker
+                            const pixelSeed = seed + px * 13 + py * 47;
+                            const flicker = Math.sin(time / (50 + (pixelSeed % 30)) + pixelSeed);
+
+                            // Some pixels randomly drop out
+                            if (Math.sin(time / 20 + pixelSeed * 0.5) > 0.85) {
+                                return 0.2;
+                            }
+
+                            return 0.5 + flicker * 0.35;
+                        }
+                    );
+
+                    ctx.shadowBlur = 0;
+
+                    // Scanline overlay
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                    const scanOffset = Math.floor(time / 50) % 2;
+                    for (let i = scanOffset; i < BASE_SIZE; i += 2) {
+                        ctx.fillRect(pos.x + jitterX, pos.y + jitterY + i, BASE_SIZE, 1);
+                    }
+
+                    // Chromatic aberration - per-pixel offset layers
+                    ctx.globalCompositeOperation = 'lighter';
+                    drawLogoPixels(
+                        pos.x + jitterX - 0.8,
+                        pos.y + jitterY,
+                        BASE_SIZE,
+                        () => '#ff0000',
+                        (px, py) => {
+                            const pixelSeed = seed + px * 13 + py * 47;
+                            return 0.15 + Math.sin(time / 100 + pixelSeed) * 0.1;
+                        }
+                    );
+                    drawLogoPixels(
+                        pos.x + jitterX + 0.8,
+                        pos.y + jitterY,
+                        BASE_SIZE,
+                        () => '#00ffff',
+                        (px, py) => {
+                            const pixelSeed = seed + px * 13 + py * 47;
+                            return 0.15 + Math.cos(time / 100 + pixelSeed) * 0.1;
+                        }
+                    );
+                    ctx.globalCompositeOperation = 'source-over';
+                }
+
+                ctx.restore();
+            }
+
             // ============== Click Handling ==============
-            function handleClick() {
-                if (state.clicks >= MAX_CLICKS) return;  // Grid is full
+            function handleClick(canvasX, canvasY) {
+                const gridSize = getGridSize();
+                const scale = (canvas.width * 0.85) / gridSize;
+                const offsetX = (canvas.width - gridSize * scale) / 2;
+                const offsetY = (canvas.height - gridSize * scale) / 2;
+
+                // Convert click to grid coordinates
+                const gx = (canvasX - offsetX) / scale;
+                const gy = (canvasY - offsetY) / scale;
+
+                // Check if clicking on corruption
+                for (const index of state.corruption) {
+                    const pos = getCellPosition(index, state.targetLevel);
+                    if (gx >= pos.x && gx < pos.x + BASE_SIZE &&
+                        gy >= pos.y && gy < pos.y + BASE_SIZE) {
+                        clearCorruption(index);
+                        return;
+                    }
+                }
+
+                // Normal click - place tile
+                if (state.clicks >= getMaxClicks()) return;
+
+                // Track for heat bar
+                recordClick();
+
+                // Update combo (no cap - decay scales with level instead)
+                const now = performance.now();
+                if (now - lastClickTime < COMBO_WINDOW) {
+                    state.combo += 1;
+                }
+                lastClickTime = now;
 
                 state.clicks++;
-                lastClickTime = performance.now();
 
-                // Award points
-                const pointsEarned = getPointsPerAction();
+                // Clean any corruption that's now behind the fill line
+                cleanStaleCorruption();
+
+                // Award points with combo
+                const basePoints = getPointsPerAction();
+                const comboMult = getComboMultiplier();
+                let pointsEarned = Math.floor(basePoints * comboMult);
+
+                // Fusion chain bonus
+                const fusions = countNewFusions(state.clicks);
+                if (fusions > 0) {
+                    const chainBonus = fusions * fusions * basePoints;
+                    pointsEarned += chainBonus;
+
+                    // Trigger fusion animations
+                    triggerFusionAnimations(state.clicks, fusions);
+                }
+
                 state.points += pointsEarned;
                 state.totalPoints += pointsEarned;
 
-                // Bonus points for completing fusions
-                const fusionBonus = countNewFusions(state.clicks);
-                if (fusionBonus > 0) {
-                    const bonus = fusionBonus * getPointsPerAction() * 2;
-                    state.points += bonus;
-                    state.totalPoints += bonus;
-                    showClickFeedback('+' + formatNumber(pointsEarned + bonus));
-                } else {
-                    showClickFeedback('+' + formatNumber(pointsEarned));
-                }
+                // Animate points display
+                animatePoints(pointsEarned);
 
-                // Click boost effect
                 clickBoostTimer = 3;
-
                 updateUI();
             }
 
-            // Count how many fusions just completed with this click
+            function triggerFusionAnimations(clicks, fusionCount) {
+                // Find which quadrants just completed
+                let divisor = 4;
+                for (let f = 0; f < fusionCount; f++) {
+                    const level = f + 1;
+                    const quadrantClicks = Math.pow(4, level);
+
+                    // Which quadrant index completed?
+                    const quadrantIndex = Math.floor((clicks - 1) / quadrantClicks);
+                    const pos = getCellPosition(quadrantIndex * quadrantClicks, state.targetLevel);
+
+                    fusionAnimations.push({
+                        level: level,
+                        x: pos.x,
+                        y: pos.y,
+                        startTime: performance.now()
+                    });
+
+                    divisor *= 4;
+                }
+            }
+
             function countNewFusions(clicks) {
                 let fusions = 0;
                 let divisor = 4;
-                while (clicks % divisor === 0 && divisor <= MAX_CLICKS) {
+                while (clicks % divisor === 0 && divisor <= getMaxClicks()) {
                     fusions++;
                     divisor *= 4;
                 }
@@ -461,9 +1085,13 @@ permalink: /fun/qubiq/
                 return base * boost;
             }
 
+            function getPurifyInterval() {
+                if (state.upgrades.purify === 0) return Infinity;
+                return 5000 / state.upgrades.purify;  // ms between auto-purifies
+            }
+
             function canAffordUpgrade(type) {
-                const cost = UPGRADE_COSTS[type](state.upgrades[type]);
-                return state.points >= cost;
+                return state.points >= UPGRADE_COSTS[type](state.upgrades[type]);
             }
 
             function purchaseUpgrade(type) {
@@ -478,7 +1106,7 @@ permalink: /fun/qubiq/
 
             // ============== Prestige ==============
             function getPrestigeProgress() {
-                return state.clicks / MAX_CLICKS;
+                return state.clicks / getMaxClicks();
             }
 
             function getNextPrestigeMultiplier() {
@@ -486,7 +1114,7 @@ permalink: /fun/qubiq/
             }
 
             function canPrestige() {
-                return state.clicks >= MAX_CLICKS;
+                return state.clicks >= getMaxClicks();
             }
 
             function doPrestige() {
@@ -494,11 +1122,19 @@ permalink: /fun/qubiq/
 
                 state.prestigeLevel++;
                 state.prestigeMultiplier = 1 + state.prestigeLevel * 0.5;
-                state.clicks = 0;
-                state.points = 0;
-                state.totalPoints = 0;
-                state.upgrades = { auto: 0, boost: 0, points: 0, fusion: 0 };
 
+                // Grid grows each prestige (cap at MAX_LEVEL)
+                state.targetLevel = Math.min(MAX_LEVEL, STARTING_LEVEL + state.prestigeLevel);
+
+                // Reset progress
+                state.clicks = 0;
+                state.points = state.permanent.startingPoints * 10;
+                state.totalPoints = 0;
+                state.corruption = [];
+                state.combo = state.combo * state.permanent.comboRetain * 0.1;
+                state.upgrades = { auto: 0, boost: 0, points: 0, purify: 0, combo: 0 };
+
+                fusionAnimations = [];
                 updateUI();
                 saveGame();
             }
@@ -508,7 +1144,7 @@ permalink: /fun/qubiq/
                 ctx.fillStyle = '#12121a';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                if (state.clicks === 0) {
+                if (state.clicks === 0 && state.corruption.length === 0) {
                     ctx.fillStyle = '#7a7a8a';
                     ctx.font = '14px "JetBrains Mono", monospace';
                     ctx.textAlign = 'center';
@@ -516,24 +1152,28 @@ permalink: /fun/qubiq/
                     return;
                 }
 
-                // Scale to fit canvas
+                const gridSize = getGridSize();
                 const targetSize = canvas.width * 0.85;
-                const scale = targetSize / GRID_SIZE;
+                const scale = targetSize / gridSize;
 
-                const offsetX = (canvas.width - GRID_SIZE * scale) / 2;
-                const offsetY = (canvas.height - GRID_SIZE * scale) / 2;
+                const offsetX = (canvas.width - gridSize * scale) / 2;
+                const offsetY = (canvas.height - gridSize * scale) / 2;
 
                 ctx.save();
                 ctx.translate(offsetX, offsetY);
                 ctx.scale(scale, scale);
 
-                // Render the fractal quadtree
-                renderQuadrant(0, 0, TARGET_LEVEL, state.clicks);
+                renderQuadrant(0, 0, state.targetLevel, state.clicks);
 
                 ctx.restore();
+
+                // Render corruption on top
+                if (state.corruption.length > 0) {
+                    renderCorruption();
+                }
             }
 
-            // ============== UI Updates ==============
+            // ============== UI ==============
             function formatNumber(n) {
                 if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
                 if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
@@ -542,31 +1182,85 @@ permalink: /fun/qubiq/
             }
 
             function updateUI() {
-                document.getElementById('points').textContent = formatNumber(state.points);
-                document.getElementById('clicks').textContent = state.clicks + '/' + MAX_CLICKS;
+                // Points updated separately via animatePoints()
+                document.getElementById('clicks').textContent = state.clicks + '/' + getMaxClicks();
                 document.getElementById('prestigeMultiplier').textContent = state.prestigeMultiplier.toFixed(1) + 'x';
 
-                // Upgrade buttons
-                ['auto', 'boost', 'points', 'fusion'].forEach(type => {
+                ['auto', 'boost', 'points', 'purify', 'combo'].forEach(type => {
                     const cost = UPGRADE_COSTS[type](state.upgrades[type]);
-                    document.getElementById('cost' + type.charAt(0).toUpperCase() + type.slice(1)).textContent = formatNumber(cost) + ' pts';
-                    document.getElementById('level' + type.charAt(0).toUpperCase() + type.slice(1)).textContent = state.upgrades[type];
-                    document.getElementById('upgrade' + type.charAt(0).toUpperCase() + type.slice(1)).disabled = !canAffordUpgrade(type);
+                    const capType = type.charAt(0).toUpperCase() + type.slice(1);
+                    document.getElementById('cost' + capType).textContent = formatNumber(cost);
+                    document.getElementById('level' + capType).textContent = state.upgrades[type];
+                    document.getElementById('upgrade' + capType).disabled = !canAffordUpgrade(type);
                 });
 
-                // Prestige bar
                 const progress = getPrestigeProgress();
                 document.getElementById('prestigeFill').style.width = (progress * 100) + '%';
                 document.getElementById('nextPrestige').textContent = getNextPrestigeMultiplier().toFixed(1) + 'x';
                 document.getElementById('prestigeBtn').disabled = !canPrestige();
+
+                document.getElementById('currentGrid').textContent = getGridSize();
+                const nextLevel = Math.min(MAX_LEVEL, state.targetLevel + 1);
+                document.getElementById('nextGrid').textContent = BASE_SIZE * Math.pow(2, nextLevel);
             }
 
-            function showClickFeedback(text) {
+            // Animated points display with juice
+            function animatePoints(gained) {
+                // Show delta popup
+                if (gained > 0) {
+                    clearTimeout(deltaAnimTimeout);
+                    pointsDelta.textContent = '+' + formatNumber(gained);
+                    pointsDelta.classList.remove('show');
+                    void pointsDelta.offsetWidth;  // Force reflow
+                    pointsDelta.classList.add('show');
+                    deltaAnimTimeout = setTimeout(() => {
+                        pointsDelta.classList.remove('show');
+                    }, 600);
+                }
+
+                // Determine gain magnitude for visual effect
+                const basePoints = getPointsPerAction();
+                const ratio = gained / Math.max(1, basePoints);
+
+                // Apply pulse class
+                clearTimeout(pointsAnimTimeout);
+                pointsValue.classList.remove('pulse', 'big-gain', 'huge-gain');
+
+                if (ratio >= 10) {
+                    pointsValue.classList.add('huge-gain');
+                } else if (ratio >= 3) {
+                    pointsValue.classList.add('big-gain');
+                }
+                pointsValue.classList.add('pulse');
+
+                pointsAnimTimeout = setTimeout(() => {
+                    pointsValue.classList.remove('pulse', 'big-gain', 'huge-gain');
+                }, 150);
+            }
+
+            // Smooth number rolling for points display
+            function updatePointsDisplay(dt) {
+                if (displayedPoints !== state.points) {
+                    const diff = state.points - displayedPoints;
+                    // Roll speed based on difference size
+                    const step = Math.max(1, Math.abs(diff) * dt * 8);
+                    if (Math.abs(diff) <= step) {
+                        displayedPoints = state.points;
+                    } else {
+                        displayedPoints += Math.sign(diff) * step;
+                    }
+                    pointsValue.textContent = formatNumber(Math.floor(displayedPoints));
+                }
+            }
+
+            function showClickFeedback(text, isCorrupt = false, isChain = false) {
                 const rect = canvas.getBoundingClientRect();
                 const feedback = document.createElement('div');
                 feedback.className = 'click-feedback';
+                if (isCorrupt) feedback.classList.add('corrupt-cleared');
+                if (isChain) feedback.classList.add('chain');
                 feedback.textContent = text;
-                feedback.style.left = (rect.left + rect.width / 2 - 20) + 'px';
+                feedback.style.left = (rect.left + rect.width / 2 - 30) + 'px';
                 feedback.style.top = (rect.top + rect.height / 2) + 'px';
                 document.body.appendChild(feedback);
                 setTimeout(() => feedback.remove(), 800);
@@ -577,18 +1271,38 @@ permalink: /fun/qubiq/
                 const dt = lastTime ? (timestamp - lastTime) / 1000 : 0;
                 lastTime = timestamp;
 
+                // Heat & combo
+                updateHeat(dt);
+
+                // Points display rolling
+                updatePointsDisplay(dt);
+
                 // Auto-click
-                if (state.upgrades.auto > 0 && state.clicks < MAX_CLICKS) {
+                if (state.upgrades.auto > 0 && state.clicks < getMaxClicks()) {
                     autoClickAccumulator += getAutoClicksPerSecond() * dt;
-                    while (autoClickAccumulator >= 1 && state.clicks < MAX_CLICKS) {
-                        handleClick();
+                    while (autoClickAccumulator >= 1 && state.clicks < getMaxClicks()) {
+                        handleClick(canvas.width / 2, canvas.height / 2);
                         autoClickAccumulator--;
                     }
                 }
 
-                // Click boost timer
-                if (clickBoostTimer > 0) {
-                    clickBoostTimer -= dt;
+                // Click boost decay
+                if (clickBoostTimer > 0) clickBoostTimer -= dt;
+
+                // Corruption spawning
+                if (timestamp - lastCorruptionTime > CORRUPTION_INTERVAL) {
+                    spawnCorruption();
+                    lastCorruptionTime = timestamp;
+                }
+
+                // Auto-purify
+                const purifyInterval = getPurifyInterval();
+                if (purifyInterval < Infinity) {
+                    purifyAccumulator += dt * 1000;
+                    if (purifyAccumulator >= purifyInterval) {
+                        autoPurify();
+                        purifyAccumulator = 0;
+                    }
                 }
 
                 render();
@@ -597,8 +1311,7 @@ permalink: /fun/qubiq/
 
             // ============== Save/Load ==============
             function saveGame() {
-                const saveData = { state, version: 3 };
-                localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+                localStorage.setItem(SAVE_KEY, JSON.stringify({ state, version: 4 }));
             }
 
             function loadGame() {
@@ -606,22 +1319,31 @@ permalink: /fun/qubiq/
                     const saved = localStorage.getItem(SAVE_KEY);
                     if (saved) {
                         const data = JSON.parse(saved);
-                        if (data.version === 3) {
+                        if (data.version === 4) {
                             state = { ...state, ...data.state };
                         }
                     }
                 } catch (e) {
                     console.warn('Failed to load save:', e);
                 }
+                // Sync displayed points with loaded state
+                displayedPoints = state.points;
+                pointsValue.textContent = formatNumber(displayedPoints);
             }
 
             setInterval(saveGame, 10000);
 
-            // ============== Event Listeners ==============
-            canvas.addEventListener('click', handleClick);
+            // ============== Events ==============
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                handleClick(e.clientX - rect.left, e.clientY - rect.top);
+            });
+
             canvas.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                handleClick();
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                handleClick(touch.clientX - rect.left, touch.clientY - rect.top);
             });
 
             document.querySelectorAll('.upgrade-btn').forEach(btn => {
@@ -638,35 +1360,28 @@ permalink: /fun/qubiq/
             });
 
             let isFullscreen = false;
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-            function toggleFullscreen() {
+            document.getElementById('fullscreenBtn').addEventListener('click', () => {
                 isFullscreen = !isFullscreen;
                 document.body.classList.toggle('fullscreen', isFullscreen);
                 setTimeout(resizeCanvas, 50);
-            }
-            fullscreenBtn.addEventListener('click', toggleFullscreen);
+            });
 
             document.addEventListener('keydown', (e) => {
                 if (e.target.tagName === 'INPUT') return;
-                switch (e.key.toLowerCase()) {
-                    case ' ':
-                        e.preventDefault();
-                        handleClick();
-                        break;
-                    case 'f':
-                        toggleFullscreen();
-                        break;
-                    case 'escape':
-                        if (isFullscreen) toggleFullscreen();
-                        if (helpModal.classList.contains('show')) helpModal.classList.remove('show');
-                        break;
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    handleClick(canvas.width / 2, canvas.height / 2);
+                } else if (e.key.toLowerCase() === 'f') {
+                    document.getElementById('fullscreenBtn').click();
+                } else if (e.key === 'Escape') {
+                    if (isFullscreen) document.getElementById('fullscreenBtn').click();
+                    helpModal.classList.remove('show');
                 }
             });
 
-            let resizeTimeout;
             window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(resizeCanvas, 250);
+                clearTimeout(window._resizeTimeout);
+                window._resizeTimeout = setTimeout(resizeCanvas, 250);
             });
 
             window.addEventListener('beforeunload', saveGame);

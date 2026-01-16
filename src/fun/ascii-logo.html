@@ -1,0 +1,599 @@
+---
+layout: false
+permalink: /fun/ascii-logo/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="ASCII logo animations - terminal-style visual effects" />
+        <title>ASCII Logo</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/assets/css/fun-pages.css">
+
+        <style>
+            :root {
+                --bg-deep: #0d0d0d;
+                --bg-surface: #1a1a1a;
+                --bg-elevated: #252525;
+                --accent: #00ff88;
+                --accent-rgb: 0, 255, 136;
+                --accent-dim: rgba(0, 255, 136, 0.3);
+                --accent-glow: rgba(0, 255, 136, 0.15);
+                --text-primary: #e0e0e0;
+                --text-secondary: #6a6a6a;
+                --border: #333;
+            }
+
+            .game-header { padding-top: 4rem; }
+
+            .terminal {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                padding: 1rem;
+                margin: 1rem auto;
+                max-width: 600px;
+                min-height: 300px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .terminal-header {
+                display: flex;
+                gap: 6px;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .terminal-dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+            }
+            .terminal-dot.red { background: #ff5f56; }
+            .terminal-dot.yellow { background: #ffbd2e; }
+            .terminal-dot.green { background: #27c93f; }
+
+            .ascii-display {
+                white-space: pre;
+                line-height: 1.2;
+                font-size: clamp(8px, 2.5vw, 14px);
+                color: var(--accent);
+                text-shadow: 0 0 10px var(--accent-glow);
+                text-align: center;
+            }
+
+            .controls {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+                max-width: 600px;
+                margin: 1rem auto;
+                padding: 0 1rem;
+            }
+
+            .controls button {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .controls button.active {
+                background: var(--accent-dim);
+                border-color: var(--accent);
+            }
+
+            .effect-info {
+                text-align: center;
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+                margin-top: 0.5rem;
+            }
+
+            .slider-row {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+                margin: 0.5rem auto;
+                max-width: 400px;
+            }
+
+            .slider-row label {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+                min-width: 60px;
+            }
+
+            .slider-row input[type="range"] {
+                flex: 1;
+                accent-color: var(--accent);
+            }
+
+            .char-palette {
+                display: flex;
+                justify-content: center;
+                gap: 0.25rem;
+                margin: 0.5rem auto;
+                flex-wrap: wrap;
+                max-width: 500px;
+            }
+
+            .char-btn {
+                width: 2rem;
+                height: 2rem;
+                padding: 0;
+                font-size: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .char-btn.active {
+                background: var(--accent-dim);
+                border-color: var(--accent);
+            }
+
+            body.fullscreen .terminal {
+                max-width: none;
+                height: calc(100vh - 100px);
+                margin: 0;
+                border: none;
+                border-radius: 0;
+            }
+
+            body.fullscreen .ascii-display {
+                font-size: clamp(10px, 3vw, 18px);
+            }
+
+            /* Scanline effect */
+            .terminal.scanlines::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, 0.1) 0px,
+                    rgba(0, 0, 0, 0.1) 1px,
+                    transparent 1px,
+                    transparent 2px
+                );
+                pointer-events: none;
+            }
+
+            /* CRT curve effect */
+            .terminal.crt {
+                border-radius: 20px;
+                box-shadow:
+                    inset 0 0 60px rgba(0, 255, 136, 0.05),
+                    0 0 20px rgba(0, 255, 136, 0.1);
+            }
+
+            .color-row {
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+                margin: 0.5rem auto;
+            }
+
+            .color-btn {
+                width: 1.5rem;
+                height: 1.5rem;
+                border-radius: 50%;
+                padding: 0;
+                border: 2px solid transparent;
+            }
+
+            .color-btn.active {
+                border-color: white;
+            }
+
+            .color-btn.green { background: #00ff88; }
+            .color-btn.amber { background: #ffb000; }
+            .color-btn.blue { background: #00bfff; }
+            .color-btn.pink { background: #ff69b4; }
+            .color-btn.white { background: #ffffff; }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">&larr; back</a>
+        <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">&solb;</button>
+        <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+        <header class="game-header">
+            <h1 class="game-title">ASCII Logo</h1>
+            <p class="game-subtitle">terminal-style animations</p>
+        </header>
+
+        <div class="terminal scanlines" id="terminal">
+            <div class="terminal-header">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+            </div>
+            <div class="ascii-display" id="display"></div>
+        </div>
+
+        <div class="controls">
+            <button id="effectRipple" class="active">Ripple</button>
+            <button id="effectWave">Wave</button>
+            <button id="effectBubble">Bubble</button>
+            <button id="effectMatrix">Matrix</button>
+            <button id="effectGlitch">Glitch</button>
+            <button id="effectSpin">Spin</button>
+            <button id="effectBreath">Breath</button>
+        </div>
+
+        <div class="effect-info" id="effectInfo">Click the terminal to create ripples</div>
+
+        <div class="slider-row">
+            <label>Speed</label>
+            <input type="range" id="speedSlider" min="0.2" max="3" step="0.1" value="1">
+        </div>
+
+        <div class="slider-row">
+            <label>Scale</label>
+            <input type="range" id="scaleSlider" min="1" max="5" step="1" value="2">
+        </div>
+
+        <div class="char-palette">
+            <button class="char-btn active" data-charset="blocks">&#x2588;</button>
+            <button class="char-btn" data-charset="dots">&#x25CF;</button>
+            <button class="char-btn" data-charset="hash">#</button>
+            <button class="char-btn" data-charset="at">@</button>
+            <button class="char-btn" data-charset="stars">*</button>
+            <button class="char-btn" data-charset="slashes">/</button>
+        </div>
+
+        <div class="color-row">
+            <button class="color-btn green active" data-color="#00ff88"></button>
+            <button class="color-btn amber" data-color="#ffb000"></button>
+            <button class="color-btn blue" data-color="#00bfff"></button>
+            <button class="color-btn pink" data-color="#ff69b4"></button>
+            <button class="color-btn white" data-color="#ffffff"></button>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal-overlay" id="helpModal">
+            <div class="modal">
+                <h2>ASCII Logo</h2>
+                <p>Watch the qry.zone logo come alive with terminal-style ASCII effects.</p>
+                <p><strong>Effects:</strong></p>
+                <ul>
+                    <li><strong>Ripple</strong> &ndash; Click to create spreading ripples</li>
+                    <li><strong>Wave</strong> &ndash; Continuous sine wave distortion</li>
+                    <li><strong>Bubble</strong> &ndash; Bubbling/boiling effect</li>
+                    <li><strong>Matrix</strong> &ndash; Falling character rain</li>
+                    <li><strong>Glitch</strong> &ndash; Random corruption artifacts</li>
+                    <li><strong>Spin</strong> &ndash; 3D rotation illusion</li>
+                    <li><strong>Breath</strong> &ndash; Gentle pulsing glow</li>
+                </ul>
+                <p><strong>Controls:</strong></p>
+                <ul>
+                    <li><strong>Speed</strong> &ndash; Animation speed multiplier</li>
+                    <li><strong>Scale</strong> &ndash; Logo size (1-5x)</li>
+                    <li><strong>Characters</strong> &ndash; Choose fill character style</li>
+                    <li><strong>Colors</strong> &ndash; Terminal color theme</li>
+                </ul>
+                <button class="modal-close" id="closeHelp">Got it</button>
+            </div>
+        </div>
+
+        <script>
+            // 8x8 logo pattern (1 = filled, 0 = empty)
+            const LOGO_PATTERN = [
+                [1,1,1,1,1,1,1,1],
+                [1,0,0,0,0,0,0,1],
+                [1,0,1,1,1,1,0,1],
+                [1,0,1,1,1,1,0,1],
+                [1,0,1,1,1,1,1,1],
+                [1,0,1,1,1,0,0,1],
+                [1,0,0,0,1,0,0,1],
+                [1,1,1,1,1,1,1,1]
+            ];
+
+            // Character sets for different styles
+            const CHARSETS = {
+                blocks: { filled: '\u2588', empty: ' ', gradient: [' ', '\u2591', '\u2592', '\u2593', '\u2588'] },
+                dots: { filled: '\u25CF', empty: ' ', gradient: [' ', '\u00B7', '\u2022', '\u25CF', '\u25CF'] },
+                hash: { filled: '#', empty: ' ', gradient: [' ', '.', ':', '#', '#'] },
+                at: { filled: '@', empty: ' ', gradient: [' ', '.', 'o', 'O', '@'] },
+                stars: { filled: '*', empty: ' ', gradient: [' ', '.', '+', '*', '*'] },
+                slashes: { filled: '/', empty: ' ', gradient: [' ', '.', '/', '/', '/'] }
+            };
+
+            // State
+            let currentEffect = 'ripple';
+            let currentCharset = 'blocks';
+            let currentColor = '#00ff88';
+            let speed = 1;
+            let scale = 2;
+            let ripples = [];  // {x, y, time, strength}
+            let lastTime = 0;
+
+            const display = document.getElementById('display');
+            const terminal = document.getElementById('terminal');
+
+            // Scale the logo pattern
+            function getScaledPattern() {
+                const scaled = [];
+                for (let y = 0; y < 8 * scale; y++) {
+                    const row = [];
+                    for (let x = 0; x < 8 * scale; x++) {
+                        const srcY = Math.floor(y / scale);
+                        const srcX = Math.floor(x / scale);
+                        row.push(LOGO_PATTERN[srcY][srcX]);
+                    }
+                    scaled.push(row);
+                }
+                return scaled;
+            }
+
+            // Get character based on intensity (0-1)
+            function getChar(intensity, isFilled) {
+                if (!isFilled) return CHARSETS[currentCharset].empty;
+                const gradient = CHARSETS[currentCharset].gradient;
+                const idx = Math.floor(intensity * (gradient.length - 1));
+                return gradient[Math.max(0, Math.min(gradient.length - 1, idx))];
+            }
+
+            // Effects
+            const effects = {
+                ripple(x, y, time, pattern) {
+                    let intensity = pattern[y][x];
+
+                    for (const ripple of ripples) {
+                        const dx = x - ripple.x;
+                        const dy = y - ripple.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        const ripplePos = (time - ripple.time) * 15 * speed;
+                        const rippleWidth = 3;
+
+                        if (Math.abs(dist - ripplePos) < rippleWidth) {
+                            const wave = Math.cos((dist - ripplePos) * Math.PI / rippleWidth);
+                            intensity = Math.min(1, intensity + wave * ripple.strength * 0.5);
+                        }
+                    }
+
+                    // Fade old ripples
+                    ripples = ripples.filter(r => time - r.time < 3);
+
+                    return intensity;
+                },
+
+                wave(x, y, time, pattern) {
+                    const wave = Math.sin(x * 0.3 + time * 2 * speed) * 0.3;
+                    const wave2 = Math.sin(y * 0.4 - time * 1.5 * speed) * 0.2;
+                    return Math.max(0, Math.min(1, pattern[y][x] + wave + wave2));
+                },
+
+                bubble(x, y, time, pattern) {
+                    const bubble1 = Math.sin(x * 0.5 + y * 0.3 + time * 3 * speed);
+                    const bubble2 = Math.sin(x * 0.3 - y * 0.5 + time * 2.5 * speed);
+                    const bubble = (bubble1 + bubble2) * 0.25;
+
+                    // Random pop effect
+                    const pop = Math.sin(time * 10 * speed + x * 7 + y * 13) > 0.95 ? 0.5 : 0;
+
+                    return Math.max(0, Math.min(1, pattern[y][x] + bubble + pop));
+                },
+
+                matrix(x, y, time, pattern) {
+                    // Falling columns
+                    const colSpeed = (x * 0.7 + 3) * speed;
+                    const fall = (time * colSpeed + x * 2.3) % (pattern.length + 5);
+                    const dist = Math.abs(y - fall);
+
+                    if (dist < 3) {
+                        const trail = 1 - dist / 3;
+                        return Math.max(pattern[y][x], trail);
+                    }
+
+                    return pattern[y][x] * 0.3;
+                },
+
+                glitch(x, y, time, pattern) {
+                    let intensity = pattern[y][x];
+
+                    // Random horizontal shifts
+                    const glitchTime = Math.floor(time * 10 * speed);
+                    const rowGlitch = Math.sin(glitchTime + y * 17) > 0.9;
+
+                    if (rowGlitch) {
+                        const shift = Math.floor(Math.sin(glitchTime * 3 + y) * 3);
+                        const shiftedX = (x + shift + pattern[0].length) % pattern[0].length;
+                        intensity = pattern[y][shiftedX];
+                    }
+
+                    // Random noise
+                    if (Math.sin(time * 50 * speed + x * 13 + y * 7) > 0.97) {
+                        intensity = Math.random();
+                    }
+
+                    // Block corruption
+                    if (Math.sin(time * 5 * speed + y * 3) > 0.95) {
+                        intensity = Math.sin(x + time * 20) > 0 ? 1 : 0;
+                    }
+
+                    return intensity;
+                },
+
+                spin(x, y, time, pattern) {
+                    const centerX = pattern[0].length / 2;
+                    const centerY = pattern.length / 2;
+
+                    // Rotate coordinates
+                    const angle = time * 0.5 * speed;
+                    const dx = x - centerX;
+                    const dy = y - centerY;
+
+                    // Apply perspective (fake 3D)
+                    const perspective = Math.cos(angle) * 0.3 + 0.7;
+                    const rotX = Math.floor(dx * Math.cos(angle) / perspective + centerX);
+                    const squeeze = Math.abs(Math.sin(angle));
+                    const rotY = Math.floor((dy - centerY) * (1 - squeeze * 0.5) + centerY);
+
+                    if (rotX >= 0 && rotX < pattern[0].length && rotY >= 0 && rotY < pattern.length) {
+                        return pattern[rotY][rotX] * (0.5 + perspective * 0.5);
+                    }
+                    return 0;
+                },
+
+                breath(x, y, time, pattern) {
+                    const breath = Math.sin(time * speed) * 0.3 + 0.7;
+                    const centerX = pattern[0].length / 2;
+                    const centerY = pattern.length / 2;
+                    const dist = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+                    const maxDist = Math.sqrt(centerX ** 2 + centerY ** 2);
+                    const pulse = Math.sin(time * 2 * speed - dist * 0.3) * 0.2;
+
+                    return pattern[y][x] * (breath + pulse);
+                }
+            };
+
+            function render(time) {
+                const dt = (time - lastTime) / 1000;
+                lastTime = time;
+
+                const pattern = getScaledPattern();
+                const height = pattern.length;
+                const width = pattern[0].length;
+
+                let output = '';
+
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        const baseVal = pattern[y][x];
+                        const intensity = effects[currentEffect](x, y, time / 1000, pattern);
+                        const char = getChar(intensity, baseVal || intensity > 0.5);
+                        // Double-width for proper aspect ratio (monospace is ~2:1 h:w)
+                        output += char + char;
+                    }
+                    output += '\n';
+                }
+
+                display.textContent = output;
+                requestAnimationFrame(render);
+            }
+
+            function setEffect(effect) {
+                currentEffect = effect;
+                document.querySelectorAll('.controls button').forEach(btn => {
+                    btn.classList.toggle('active', btn.id === 'effect' + effect.charAt(0).toUpperCase() + effect.slice(1));
+                });
+
+                const info = {
+                    ripple: 'Click the terminal to create ripples',
+                    wave: 'Continuous sine wave distortion',
+                    bubble: 'Bubbling and boiling effect',
+                    matrix: 'Falling character rain',
+                    glitch: 'Random digital corruption',
+                    spin: '3D rotation illusion',
+                    breath: 'Gentle pulsing glow'
+                };
+                document.getElementById('effectInfo').textContent = info[effect];
+            }
+
+            function setCharset(charset) {
+                currentCharset = charset;
+                document.querySelectorAll('.char-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.charset === charset);
+                });
+            }
+
+            function setColor(color) {
+                currentColor = color;
+                display.style.color = color;
+                display.style.textShadow = `0 0 10px ${color}40`;
+                document.documentElement.style.setProperty('--accent', color);
+                document.querySelectorAll('.color-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.color === color);
+                });
+            }
+
+            // Event listeners
+            document.querySelectorAll('.controls button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const effect = btn.id.replace('effect', '').toLowerCase();
+                    setEffect(effect);
+                });
+            });
+
+            document.querySelectorAll('.char-btn').forEach(btn => {
+                btn.addEventListener('click', () => setCharset(btn.dataset.charset));
+            });
+
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.addEventListener('click', () => setColor(btn.dataset.color));
+            });
+
+            document.getElementById('speedSlider').addEventListener('input', (e) => {
+                speed = parseFloat(e.target.value);
+            });
+
+            document.getElementById('scaleSlider').addEventListener('input', (e) => {
+                scale = parseInt(e.target.value);
+            });
+
+            terminal.addEventListener('click', (e) => {
+                if (currentEffect !== 'ripple') return;
+
+                const rect = display.getBoundingClientRect();
+                // Account for double-width characters
+                const charWidth = rect.width / (8 * scale * 2);
+                const charHeight = rect.height / (8 * scale);
+
+                const x = Math.floor((e.clientX - rect.left) / charWidth / 2);
+                const y = Math.floor((e.clientY - rect.top) / charHeight);
+
+                ripples.push({
+                    x: Math.max(0, Math.min(8 * scale - 1, x)),
+                    y: Math.max(0, Math.min(8 * scale - 1, y)),
+                    time: lastTime / 1000,
+                    strength: 1
+                });
+            });
+
+            // Help modal
+            const helpModal = document.getElementById('helpModal');
+            document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+            document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === helpModal) helpModal.classList.remove('show');
+            });
+
+            // Fullscreen
+            let isFullscreen = false;
+            document.getElementById('fullscreenBtn').addEventListener('click', () => {
+                isFullscreen = !isFullscreen;
+                document.body.classList.toggle('fullscreen', isFullscreen);
+            });
+
+            // Keyboard
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (isFullscreen) document.getElementById('fullscreenBtn').click();
+                    helpModal.classList.remove('show');
+                } else if (e.key === 'f') {
+                    document.getElementById('fullscreenBtn').click();
+                } else if (e.key >= '1' && e.key <= '7') {
+                    const effects = ['ripple', 'wave', 'bubble', 'matrix', 'glitch', 'spin', 'breath'];
+                    setEffect(effects[parseInt(e.key) - 1]);
+                }
+            });
+
+            // Start
+            requestAnimationFrame(render);
+        </script>
+    </body>
+</html>

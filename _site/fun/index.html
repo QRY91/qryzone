@@ -77,6 +77,21 @@
     color: var(--color-text-secondary);
     font-size: 1rem;
 }
+.ascii-hero {
+    font-family: var(--font-mono);
+    white-space: pre;
+    line-height: 1.15;
+    font-size: clamp(6px, 1.8vw, 10px);
+    color: var(--color-accent);
+    text-shadow: 0 0 10px rgba(136, 192, 208, 0.3);
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    transition: text-shadow 0.3s;
+}
+.ascii-hero:hover {
+    text-shadow: 0 0 15px rgba(136, 192, 208, 0.5);
+}
 .fun-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -127,6 +142,7 @@
 
 <div class="page-container page-container--wide">
     <header class="fun-header">
+        <div class="ascii-hero" id="asciiHero" title="Click to change effect"></div>
         <h1>Fun</h1>
         <p>Side projects and jokes. Not everything has to be serious.</p>
     </header>
@@ -202,6 +218,14 @@
                 Recursive fractal clicker. Spawn logos that combine into larger versions, infinitely scaling.
             </p>
             <span class="fun-tag">game</span>
+        </a>
+
+        <a href="/fun/ascii-logo/" class="fun-card">
+            <div class="fun-card-title">ASCII Logo</div>
+            <p class="fun-card-desc">
+                Terminal-style logo animations. Ripples, waves, glitches, and more with pure ASCII art.
+            </p>
+            <span class="fun-tag">sim</span>
         </a>
 
         <a href="/fun/heavenscrolling/" class="fun-card">
@@ -311,6 +335,124 @@
 
     <a href="/" class="back-link">← back to qry.zone</a>
 </div>
+
+<script>
+(function() {
+    const LOGO = [
+        [1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,1],
+        [1,0,1,1,1,1,0,1],
+        [1,0,1,1,1,1,0,1],
+        [1,0,1,1,1,1,1,1],
+        [1,0,1,1,1,0,0,1],
+        [1,0,0,0,1,0,0,1],
+        [1,1,1,1,1,1,1,1]
+    ];
+
+    const CHARS = [' ', '░', '▒', '▓', '█'];
+    const scale = 3;
+    const display = document.getElementById('asciiHero');
+    let effect = Math.floor(Math.random() * 7);
+    let lastTime = 0;
+
+    function getScaled() {
+        const s = [];
+        for (let y = 0; y < 8 * scale; y++) {
+            const row = [];
+            for (let x = 0; x < 8 * scale; x++) {
+                row.push(LOGO[Math.floor(y / scale)][Math.floor(x / scale)]);
+            }
+            s.push(row);
+        }
+        return s;
+    }
+
+    const pattern = getScaled();
+    const h = pattern.length, w = pattern[0].length;
+
+    const fx = [
+        // wave
+        (x, y, t) => {
+            const wave = Math.sin(x * 0.3 + t * 2) * 0.3 + Math.sin(y * 0.4 - t * 1.5) * 0.2;
+            return Math.max(0, Math.min(1, pattern[y][x] + wave));
+        },
+        // bubble
+        (x, y, t) => {
+            const b = (Math.sin(x * 0.5 + y * 0.3 + t * 3) + Math.sin(x * 0.3 - y * 0.5 + t * 2.5)) * 0.25;
+            const pop = Math.sin(t * 10 + x * 7 + y * 13) > 0.95 ? 0.5 : 0;
+            return Math.max(0, Math.min(1, pattern[y][x] + b + pop));
+        },
+        // matrix
+        (x, y, t) => {
+            const fall = (t * (x * 0.7 + 3) + x * 2.3) % (h + 5);
+            const dist = Math.abs(y - fall);
+            if (dist < 3) return Math.max(pattern[y][x], 1 - dist / 3);
+            return pattern[y][x] * 0.3;
+        },
+        // glitch
+        (x, y, t) => {
+            let v = pattern[y][x];
+            const gt = Math.floor(t * 10);
+            if (Math.sin(gt + y * 17) > 0.9) {
+                const shift = Math.floor(Math.sin(gt * 3 + y) * 3);
+                v = pattern[y][(x + shift + w) % w];
+            }
+            if (Math.sin(t * 50 + x * 13 + y * 7) > 0.97) v = Math.random();
+            return v;
+        },
+        // spin
+        (x, y, t) => {
+            const cx = w / 2, cy = h / 2;
+            const angle = t * 0.5;
+            const dx = x - cx, dy = y - cy;
+            const p = Math.cos(angle) * 0.3 + 0.7;
+            const rx = Math.floor(dx * Math.cos(angle) / p + cx);
+            const sq = Math.abs(Math.sin(angle));
+            const ry = Math.floor((dy - cy) * (1 - sq * 0.5) + cy);
+            if (rx >= 0 && rx < w && ry >= 0 && ry < h) return pattern[ry][rx] * (0.5 + p * 0.5);
+            return 0;
+        },
+        // breath
+        (x, y, t) => {
+            const breath = Math.sin(t) * 0.3 + 0.7;
+            const cx = w / 2, cy = h / 2;
+            const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+            const pulse = Math.sin(t * 2 - dist * 0.3) * 0.2;
+            return pattern[y][x] * (breath + pulse);
+        },
+        // ripple (static center ripple)
+        (x, y, t) => {
+            const cx = w / 2, cy = h / 2;
+            const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+            const ripple = Math.sin(dist * 0.8 - t * 4) * 0.3;
+            return Math.max(0, Math.min(1, pattern[y][x] + ripple * pattern[y][x]));
+        }
+    ];
+
+    function render(time) {
+        const t = time / 1000;
+        lastTime = time;
+        let out = '';
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                const v = fx[effect](x, y, t);
+                const idx = Math.floor(v * (CHARS.length - 1));
+                const c = CHARS[Math.max(0, Math.min(CHARS.length - 1, idx))];
+                out += c + c;
+            }
+            out += '\n';
+        }
+        display.textContent = out;
+        requestAnimationFrame(render);
+    }
+
+    display.addEventListener('click', () => {
+        effect = (effect + 1) % fx.length;
+    });
+
+    requestAnimationFrame(render);
+})();
+</script>
 
     </main>
     <footer class="footer">
