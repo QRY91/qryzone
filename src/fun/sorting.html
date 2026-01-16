@@ -13,24 +13,17 @@ permalink: /fun/sorting/
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/assets/css/fun-pages.css">
 
         <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
             :root {
                 --bg-deep: #0a0a12;
                 --bg-surface: #10101a;
                 --bg-elevated: #181824;
                 --accent: #9d4edd;
+                --accent-rgb: 157, 78, 221;
                 --accent-dim: rgba(157, 78, 221, 0.3);
                 --accent-glow: rgba(157, 78, 221, 0.15);
-                --text-primary: #e0e0e0;
-                --text-secondary: #7a7a8a;
-                --border: #2a2a3a;
                 --bar-default: #4a4a6a;
                 --bar-compare: #ff6b6b;
                 --bar-swap: #ffd93d;
@@ -40,94 +33,23 @@ permalink: /fun/sorting/
                 --success: #4edd9d;
             }
 
-            body {
-                font-family: 'JetBrains Mono', monospace;
-                background: var(--bg-deep);
-                color: var(--text-primary);
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .back-link {
-                position: fixed;
-                top: 1rem;
-                left: 1rem;
-                background: var(--bg-elevated);
-                border: 1px solid var(--border);
-                padding: 0.5rem 1rem;
-                border-radius: 4px;
-                color: var(--accent);
-                text-decoration: none;
-                font-size: 0.85rem;
-                z-index: 100;
-                transition: all 0.2s ease;
-            }
-
-            .back-link:hover {
-                border-color: var(--accent);
-                box-shadow: 0 0 10px var(--accent-glow);
-            }
-
             .top-btn {
-                position: fixed;
-                top: 1rem;
-                background: var(--bg-elevated);
-                border: 1px solid var(--border);
-                width: 2.5rem;
-                height: 2.5rem;
-                border-radius: 4px;
-                color: var(--accent);
-                font-size: 1rem;
-                cursor: pointer;
-                z-index: 100;
-                transition: all 0.2s ease;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 line-height: 1;
             }
 
-            .top-btn:hover {
-                border-color: var(--accent);
-                box-shadow: 0 0 10px var(--accent-glow);
-            }
-
-            .help-btn { right: 1rem; }
             .code-btn { right: 4rem; }
             .results-btn { right: 7rem; }
 
-            .game-header {
-                text-align: center;
-                padding: 2rem 1rem 1rem;
-                padding-top: 4rem;
-            }
-
-            .game-title {
-                font-size: clamp(1.5rem, 5vw, 2rem);
-                font-weight: 500;
-                color: var(--accent);
-                margin-bottom: 0.5rem;
-                text-shadow: 0 0 20px var(--accent-glow);
-            }
-
             .stats-bar {
-                display: flex;
-                justify-content: center;
                 gap: 1.5rem;
-                flex-wrap: wrap;
                 font-size: 0.8rem;
-                margin-bottom: 1rem;
             }
 
-            .stat {
-                display: flex;
-                align-items: center;
-                gap: 0.4rem;
-            }
-
-            .stat-label { color: var(--text-secondary); }
-            .stat-value { color: var(--accent); font-size: 0.75rem; }
+            .stat { gap: 0.4rem; }
+            .stat-value { font-size: 0.75rem; }
 
             .main-content {
                 flex: 1;
@@ -186,9 +108,7 @@ permalink: /fun/sorting/
                 transition: transform 0.3s ease;
             }
 
-            .results-panel.open {
-                transform: translateX(0);
-            }
+            .results-panel.open { transform: translateX(0); }
 
             .results-panel-header {
                 display: flex;
@@ -219,9 +139,7 @@ permalink: /fun/sorting/
                 font-size: 0.7rem;
             }
 
-            .result-item:last-child {
-                margin-bottom: 0;
-            }
+            .result-item:last-child { margin-bottom: 0; }
 
             .result-algo {
                 color: var(--accent);
@@ -236,9 +154,7 @@ permalink: /fun/sorting/
                 color: var(--text-secondary);
             }
 
-            .result-stats span {
-                color: var(--text-primary);
-            }
+            .result-stats span { color: var(--text-primary); }
 
             .results-empty {
                 color: var(--text-secondary);
@@ -264,9 +180,7 @@ permalink: /fun/sorting/
                 transition: transform 0.3s ease;
             }
 
-            .code-panel.open {
-                transform: translateX(0);
-            }
+            .code-panel.open { transform: translateX(0); }
 
             .code-panel-header {
                 display: flex;
@@ -313,9 +227,7 @@ permalink: /fun/sorting/
                 tab-size: 2;
             }
 
-            .code-editor textarea::placeholder {
-                color: var(--text-secondary);
-            }
+            .code-editor textarea::placeholder { color: var(--text-secondary); }
 
             .code-status {
                 padding: 0.5rem 1rem;
@@ -327,34 +239,7 @@ permalink: /fun/sorting/
             .code-status.error { color: var(--error); }
             .code-status.success { color: var(--success); }
 
-            .controls {
-                padding: 1rem;
-                display: flex;
-                flex-direction: column;
-                gap: 0.75rem;
-                max-width: 900px;
-                margin: 0 auto;
-            }
-
-            .control-row {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 0.5rem;
-                flex-wrap: wrap;
-            }
-
-            button {
-                font-family: 'JetBrains Mono', monospace;
-                background: var(--bg-elevated);
-                border: 1px solid var(--accent-dim);
-                color: var(--text-primary);
-                padding: 0.5rem 1rem;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 0.85rem;
-                transition: all 0.2s ease;
-            }
+            .controls { max-width: 900px; }
 
             button:hover:not(:disabled) {
                 border-color: var(--accent);
@@ -366,79 +251,16 @@ permalink: /fun/sorting/
                 cursor: not-allowed;
             }
 
-            button.primary {
-                background: var(--accent-glow);
-                border-color: var(--accent);
-                color: var(--accent);
-            }
-
-            button.active {
-                background: var(--accent);
-                color: var(--bg-deep);
-                border-color: var(--accent);
-            }
-
-            .slider-control {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-            }
-
-            .slider-control input[type="range"] {
-                width: 100px;
-                accent-color: var(--accent);
-            }
-
-            .slider-label {
-                font-size: 0.75rem;
-                color: var(--text-secondary);
-                min-width: 50px;
-            }
-
-            .slider-value {
-                font-size: 0.75rem;
-                color: var(--accent);
-                min-width: 35px;
-            }
+            .slider-control input[type="range"] { width: 100px; }
+            .slider-label { min-width: 50px; }
+            .slider-value { min-width: 35px; }
 
             .section-label {
                 font-size: 0.75rem;
                 color: var(--text-secondary);
             }
 
-            /* Modal */
-            .modal-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.85);
-                display: none;
-                justify-content: center;
-                align-items: center;
-                z-index: 200;
-                padding: 1rem;
-            }
-
-            .modal-overlay.show { display: flex; }
-
-            .modal {
-                background: var(--bg-surface);
-                border: 1px solid var(--border);
-                border-radius: 8px;
-                max-width: 600px;
-                width: 100%;
-                max-height: 80vh;
-                overflow-y: auto;
-                padding: 1.5rem;
-            }
-
-            .modal h2 {
-                color: var(--accent);
-                margin-bottom: 1rem;
-                font-size: 1.25rem;
-            }
+            .modal { max-width: 600px; }
 
             .modal h3 {
                 color: var(--accent);
@@ -446,21 +268,12 @@ permalink: /fun/sorting/
                 font-size: 1rem;
             }
 
-            .modal p, .modal ul {
-                color: var(--text-secondary);
-                line-height: 1.6;
-                margin-bottom: 0.75rem;
-                font-size: 0.9rem;
-            }
-
-            .modal ul { margin-left: 1.5rem; }
             .modal code {
                 background: var(--bg-elevated);
                 padding: 0.1rem 0.3rem;
                 border-radius: 3px;
                 color: var(--accent);
             }
-            .modal-close { margin-top: 1rem; width: 100%; }
 
             .legend {
                 display: flex;
@@ -504,8 +317,6 @@ permalink: /fun/sorting/
             }
 
             @media (max-width: 480px) {
-                .control-row { gap: 0.4rem; }
-                button { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
                 .slider-control input[type="range"] { width: 70px; }
                 .bars-container { height: 300px; }
             }

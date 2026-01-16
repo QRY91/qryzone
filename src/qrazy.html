@@ -111,21 +111,21 @@ description: Building a micro-framework to cure framework fatigue
             <div class="number">Problem 01</div>
             <h3>Reactivity</h3>
             <p>How do you know when state changes? When someone sets <code>count = 5</code>, how does the framework notice?</p>
-            <p style="margin-bottom:0"><strong>qrazy answer:</strong> Proxy API. Wrap objects in a trap that fires on every property change.</p>
+            <p class="mb-0"><strong>qrazy answer:</strong> Proxy API. Wrap objects in a trap that fires on every property change.</p>
         </div>
 
         <div class="problem-card">
             <div class="number">Problem 02</div>
             <h3>Binding</h3>
             <p>How do you connect state to the DOM? HTML doesn't know about your JavaScript objects.</p>
-            <p style="margin-bottom:0"><strong>qrazy answer:</strong> Custom attributes. Walk the DOM, find <code>q-text</code>, <code>q-click</code>, etc., wire them up.</p>
+            <p class="mb-0"><strong>qrazy answer:</strong> Custom attributes. Walk the DOM, find <code>q-text</code>, <code>q-click</code>, etc., wire them up.</p>
         </div>
 
         <div class="problem-card">
             <div class="number">Problem 03</div>
             <h3>Reconciliation</h3>
             <p>What happens when you delete item #2 from a list? Do you rebuild the whole thing or surgically remove one element?</p>
-            <p style="margin-bottom:0"><strong>qrazy answer:</strong> Keyed templates. Track which DOM nodes belong to which data items.</p>
+            <p class="mb-0"><strong>qrazy answer:</strong> Keyed templates. Track which DOM nodes belong to which data items.</p>
         </div>
     </section>
 

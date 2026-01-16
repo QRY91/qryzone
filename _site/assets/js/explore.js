@@ -146,12 +146,6 @@
 
     function renderCard(item, compact = false) {
         const isExternal = item.href.startsWith('http');
-        const statusColors = {
-            seedling: { bg: '#2d3a2d', text: '#81c784', border: '#4a5f4a' },
-            growing: { bg: '#3a3a2d', text: '#f0dfaf', border: '#5f5f4a' },
-            evergreen: { bg: '#2d3a3a', text: '#7fc7c7', border: '#4a5f5f' }
-        };
-        const color = statusColors[item.status];
 
         let connectionsHtml = '';
         if (!compact && item.connections && item.connections.length > 0) {
@@ -180,9 +174,7 @@
                     <a href="${item.href}"${isExternal ? ' target="_blank" rel="noopener noreferrer"' : ''} class="card-title">
                         ${item.title}${isExternal ? ' ↗' : ''}
                     </a>
-                    <span class="status-badge" style="background:${color.bg};color:${color.text};border-color:${color.border}">
-                        ${item.status}
-                    </span>
+                    <span class="status-badge status-${item.status}">${item.status}</span>
                 </div>
                 ${compact ? '' : `<p class="card-description">${item.description}</p>`}
                 ${tagsHtml}
