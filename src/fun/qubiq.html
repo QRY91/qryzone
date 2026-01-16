@@ -1,0 +1,677 @@
+---
+layout: false
+permalink: /fun/qubiq/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="QUBIQ - A recursive fractal growth clicker game" />
+        <title>QUBIQ</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/assets/css/fun-pages.css">
+
+        <style>
+            :root {
+                --bg-deep: #0a0a0f;
+                --bg-surface: #12121a;
+                --bg-elevated: #1a1a24;
+                --accent: #88c0d0;
+                --accent-rgb: 136, 192, 208;
+                --accent-dim: rgba(136, 192, 208, 0.3);
+                --accent-glow: rgba(136, 192, 208, 0.15);
+                --text-primary: #e0e0e0;
+                --text-secondary: #7a7a8a;
+                --border: #2a2a3a;
+            }
+
+            /* Scrolling title */
+            .title-container {
+                overflow: hidden;
+                position: relative;
+                height: 2.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .scrolling-title {
+                display: inline-block;
+                white-space: nowrap;
+                font-size: clamp(1.5rem, 5vw, 2rem);
+                font-weight: 500;
+                color: var(--accent);
+                text-shadow: 0 0 20px var(--accent-glow);
+                animation: scroll-title 10s linear infinite;
+            }
+
+            @keyframes scroll-title {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+
+            .game-header {
+                padding-top: 4rem;
+            }
+
+            .stats-bar {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            #gameCanvas {
+                cursor: pointer;
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                background: var(--bg-surface);
+            }
+
+            /* Upgrade shop */
+            .shop {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 0.5rem;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 0 1rem;
+            }
+
+            .upgrade-btn {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 0.75rem 0.5rem;
+                text-align: center;
+                position: relative;
+            }
+
+            .upgrade-btn .icon {
+                font-size: 1.25rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .upgrade-btn .name {
+                font-size: 0.75rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .upgrade-btn .cost {
+                font-size: 0.65rem;
+                color: var(--text-secondary);
+            }
+
+            .upgrade-btn .level {
+                position: absolute;
+                top: 4px;
+                right: 8px;
+                font-size: 0.6rem;
+                color: var(--accent);
+            }
+
+            .upgrade-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            /* Prestige bar */
+            .prestige-section {
+                max-width: 600px;
+                margin: 1rem auto;
+                padding: 0 1rem;
+            }
+
+            .prestige-bar {
+                background: var(--bg-elevated);
+                height: 8px;
+                border-radius: 4px;
+                overflow: hidden;
+                margin-bottom: 0.5rem;
+                border: 1px solid var(--border);
+            }
+
+            .prestige-fill {
+                height: 100%;
+                background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+                width: 0%;
+                transition: width 0.3s ease;
+            }
+
+            .prestige-btn {
+                width: 100%;
+                background: linear-gradient(180deg, var(--accent-glow), transparent);
+                border-color: var(--accent);
+            }
+
+            .prestige-btn:disabled {
+                opacity: 0.5;
+                background: var(--bg-elevated);
+            }
+
+            .modal-overlay { background: rgba(0, 0, 0, 0.85); }
+
+            /* Canvas click feedback */
+            .click-feedback {
+                position: fixed;
+                pointer-events: none;
+                font-size: 1rem;
+                color: var(--accent);
+                font-weight: 500;
+                animation: float-up 0.8s ease-out forwards;
+                z-index: 50;
+            }
+
+            @keyframes float-up {
+                0% { opacity: 1; transform: translateY(0) scale(1); }
+                100% { opacity: 0; transform: translateY(-30px) scale(0.8); }
+            }
+
+            body.fullscreen #gameCanvas { border: none; }
+            body.fullscreen .shop,
+            body.fullscreen .prestige-section { display: none; }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">&larr; back</a>
+        <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">&solb;</button>
+        <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+        <header class="game-header">
+            <div class="title-container">
+                <h1 class="scrolling-title" id="scrollingTitle"></h1>
+            </div>
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-label">Points:</span>
+                    <span class="stat-value" id="points">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Clicks:</span>
+                    <span class="stat-value" id="clicks">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Prestige:</span>
+                    <span class="stat-value" id="prestigeMultiplier">1.0x</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="canvas-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <div class="shop">
+            <button class="upgrade-btn" id="upgradeAuto" data-upgrade="auto">
+                <span class="level" id="levelAuto">0</span>
+                <span class="icon">&#x26A1;</span>
+                <span class="name">Auto-Grower</span>
+                <span class="cost" id="costAuto">10 pts</span>
+            </button>
+            <button class="upgrade-btn" id="upgradeBoost" data-upgrade="boost">
+                <span class="level" id="levelBoost">0</span>
+                <span class="icon">&#x1F446;</span>
+                <span class="name">Click Boost</span>
+                <span class="cost" id="costBoost">25 pts</span>
+            </button>
+            <button class="upgrade-btn" id="upgradePoints" data-upgrade="points">
+                <span class="level" id="levelPoints">0</span>
+                <span class="icon">&#x2728;</span>
+                <span class="name">Amplifier</span>
+                <span class="cost" id="costPoints">50 pts</span>
+            </button>
+            <button class="upgrade-btn" id="upgradeFusion" data-upgrade="fusion">
+                <span class="level" id="levelFusion">0</span>
+                <span class="icon">&#x1F525;</span>
+                <span class="name">Catalyst</span>
+                <span class="cost" id="costFusion">100 pts</span>
+            </button>
+        </div>
+
+        <div class="prestige-section">
+            <div class="prestige-bar">
+                <div class="prestige-fill" id="prestigeFill"></div>
+            </div>
+            <button class="prestige-btn" id="prestigeBtn" disabled>
+                Prestige &rarr; <span id="nextPrestige">1.5x</span>
+            </button>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal-overlay" id="helpModal">
+            <div class="modal">
+                <h2>QUBIQ</h2>
+                <p>A recursive fractal growth game where logos combine into larger versions.</p>
+                <p><strong>How to play:</strong></p>
+                <ul>
+                    <li>Click to place 8x8 logo tiles</li>
+                    <li>Every 2x2 group of tiles fuses into one larger logo</li>
+                    <li>Fill the entire grid to prestige</li>
+                </ul>
+                <p><strong>Upgrades:</strong></p>
+                <ul>
+                    <li><strong>Auto-Grower</strong> &ndash; Automatically places tiles</li>
+                    <li><strong>Click Boost</strong> &ndash; Manual clicks speed up auto</li>
+                    <li><strong>Amplifier</strong> &ndash; Multiplies points earned</li>
+                    <li><strong>Catalyst</strong> &ndash; Faster fusion animations</li>
+                </ul>
+                <p><strong>Keyboard:</strong></p>
+                <ul>
+                    <li><strong>Space</strong> &ndash; Click to grow</li>
+                    <li><strong>F</strong> &ndash; Toggle fullscreen</li>
+                    <li><strong>Esc</strong> &ndash; Exit fullscreen</li>
+                </ul>
+                <button class="modal-close" id="closeHelp">Got it</button>
+            </div>
+        </div>
+
+        <script>
+            // ============== Configuration ==============
+            const BASE_SIZE = 8;
+            const TARGET_LEVEL = 4;  // 2^4 = 16 tiles per side, 128px grid, 256 clicks to fill
+            const SAVE_KEY = 'qubiq_save_v3';
+
+            // ============== Game State ==============
+            let state = {
+                clicks: 0,           // Total 8x8 placements
+                points: 0,
+                totalPoints: 0,
+                prestigeLevel: 0,
+                prestigeMultiplier: 1,
+                upgrades: {
+                    auto: 0,
+                    boost: 0,
+                    points: 0,
+                    fusion: 0
+                }
+            };
+
+            const UPGRADE_COSTS = {
+                auto: level => Math.floor(10 * Math.pow(1.5, level)),
+                boost: level => Math.floor(25 * Math.pow(1.6, level)),
+                points: level => Math.floor(50 * Math.pow(1.7, level)),
+                fusion: level => Math.floor(100 * Math.pow(1.8, level))
+            };
+
+            // Derived values
+            const GRID_SIZE = BASE_SIZE * Math.pow(2, TARGET_LEVEL);  // 128px
+            const MAX_CLICKS = Math.pow(4, TARGET_LEVEL);  // 256 clicks to fill
+
+            // Animation state
+            let autoClickAccumulator = 0;
+            let clickBoostTimer = 0;
+            let lastTime = 0;
+            let lastClickTime = 0;
+
+            // Canvas setup
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Load logo images
+            const logoImages = {};
+            [8, 16, 32, 128].forEach(size => {
+                const img = new Image();
+                img.src = `/assets/images/q_blk_${size}.png`;
+                logoImages[size] = img;
+            });
+
+            function getLogoImage(size) {
+                // Map to available sizes: 8, 16, 32, 128
+                if (size <= 8) return logoImages[8];
+                if (size <= 16) return logoImages[16];
+                if (size <= 32) return logoImages[32];
+                return logoImages[128];
+            }
+
+            function resizeCanvas() {
+                const container = document.querySelector('.canvas-container');
+                const maxSize = Math.min(container.clientWidth - 40, container.clientHeight - 40, 512);
+                canvas.width = maxSize;
+                canvas.height = maxSize;
+            }
+
+            function initGame() {
+                resizeCanvas();
+                loadGame();
+                setupScrollingTitle();
+                updateUI();
+                requestAnimationFrame(gameLoop);
+            }
+
+            function setupScrollingTitle() {
+                const title = document.getElementById('scrollingTitle');
+                const baseText = 'QUBIQUBIQUBIQUBIQ';
+                title.textContent = baseText + baseText;
+            }
+
+            // ============== Quadtree Rendering ==============
+            // Given total clicks, recursively render the fractal structure
+
+            function renderQuadrant(x, y, level, clicksAvailable) {
+                const quadrantSize = BASE_SIZE * Math.pow(2, level);
+                const clicksNeeded = Math.pow(4, level);
+
+                if (level === 0) {
+                    // Base case: single 8x8 cell
+                    if (clicksAvailable >= 1) {
+                        const img = getLogoImage(BASE_SIZE);
+                        if (img && img.complete) {
+                            // Pop-in animation for recently placed
+                            const isRecent = (state.clicks === Math.floor(clicksAvailable)) &&
+                                             (performance.now() - lastClickTime < 200);
+                            if (isRecent) {
+                                const progress = (performance.now() - lastClickTime) / 200;
+                                ctx.globalAlpha = progress;
+                                const scale = 0.5 + progress * 0.5;
+                                const drawSize = BASE_SIZE * scale;
+                                const offset = (BASE_SIZE - drawSize) / 2;
+                                ctx.drawImage(img, x + offset, y + offset, drawSize, drawSize);
+                                ctx.globalAlpha = 1;
+                            } else {
+                                ctx.drawImage(img, x, y, BASE_SIZE, BASE_SIZE);
+                            }
+                        }
+                    }
+                    return;
+                }
+
+                if (clicksAvailable >= clicksNeeded) {
+                    // Fully complete - draw fused logo
+                    const img = getLogoImage(quadrantSize);
+                    if (img && img.complete) {
+                        ctx.drawImage(img, x, y, quadrantSize, quadrantSize);
+                    }
+                    return;
+                }
+
+                // Partially filled - recurse into 4 children
+                const childLevel = level - 1;
+                const childSize = BASE_SIZE * Math.pow(2, childLevel);
+                const childClicksNeeded = Math.pow(4, childLevel);
+
+                // Child positions: TL, TR, BL, BR
+                const positions = [
+                    [x, y],
+                    [x + childSize, y],
+                    [x, y + childSize],
+                    [x + childSize, y + childSize]
+                ];
+
+                let remainingClicks = clicksAvailable;
+                for (let i = 0; i < 4; i++) {
+                    const childClicks = Math.min(childClicksNeeded, Math.max(0, remainingClicks));
+                    if (childClicks > 0) {
+                        renderQuadrant(positions[i][0], positions[i][1], childLevel, childClicks);
+                    }
+                    remainingClicks -= childClicksNeeded;
+                }
+            }
+
+            // ============== Click Handling ==============
+            function handleClick() {
+                if (state.clicks >= MAX_CLICKS) return;  // Grid is full
+
+                state.clicks++;
+                lastClickTime = performance.now();
+
+                // Award points
+                const pointsEarned = getPointsPerAction();
+                state.points += pointsEarned;
+                state.totalPoints += pointsEarned;
+
+                // Bonus points for completing fusions
+                const fusionBonus = countNewFusions(state.clicks);
+                if (fusionBonus > 0) {
+                    const bonus = fusionBonus * getPointsPerAction() * 2;
+                    state.points += bonus;
+                    state.totalPoints += bonus;
+                    showClickFeedback('+' + formatNumber(pointsEarned + bonus));
+                } else {
+                    showClickFeedback('+' + formatNumber(pointsEarned));
+                }
+
+                // Click boost effect
+                clickBoostTimer = 3;
+
+                updateUI();
+            }
+
+            // Count how many fusions just completed with this click
+            function countNewFusions(clicks) {
+                let fusions = 0;
+                let divisor = 4;
+                while (clicks % divisor === 0 && divisor <= MAX_CLICKS) {
+                    fusions++;
+                    divisor *= 4;
+                }
+                return fusions;
+            }
+
+            // ============== Points & Upgrades ==============
+            function getPointsPerAction() {
+                const base = 1;
+                const amplifier = 1 + state.upgrades.points * 0.5;
+                return Math.floor(base * amplifier * state.prestigeMultiplier);
+            }
+
+            function getAutoClicksPerSecond() {
+                if (state.upgrades.auto === 0) return 0;
+                const base = 0.5 * state.upgrades.auto;
+                const boost = clickBoostTimer > 0 ? (1 + state.upgrades.boost * 0.3) : 1;
+                return base * boost;
+            }
+
+            function canAffordUpgrade(type) {
+                const cost = UPGRADE_COSTS[type](state.upgrades[type]);
+                return state.points >= cost;
+            }
+
+            function purchaseUpgrade(type) {
+                const cost = UPGRADE_COSTS[type](state.upgrades[type]);
+                if (state.points >= cost) {
+                    state.points -= cost;
+                    state.upgrades[type]++;
+                    updateUI();
+                    saveGame();
+                }
+            }
+
+            // ============== Prestige ==============
+            function getPrestigeProgress() {
+                return state.clicks / MAX_CLICKS;
+            }
+
+            function getNextPrestigeMultiplier() {
+                return 1 + (state.prestigeLevel + 1) * 0.5;
+            }
+
+            function canPrestige() {
+                return state.clicks >= MAX_CLICKS;
+            }
+
+            function doPrestige() {
+                if (!canPrestige()) return;
+
+                state.prestigeLevel++;
+                state.prestigeMultiplier = 1 + state.prestigeLevel * 0.5;
+                state.clicks = 0;
+                state.points = 0;
+                state.totalPoints = 0;
+                state.upgrades = { auto: 0, boost: 0, points: 0, fusion: 0 };
+
+                updateUI();
+                saveGame();
+            }
+
+            // ============== Rendering ==============
+            function render() {
+                ctx.fillStyle = '#12121a';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                if (state.clicks === 0) {
+                    ctx.fillStyle = '#7a7a8a';
+                    ctx.font = '14px "JetBrains Mono", monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Click to start', canvas.width / 2, canvas.height / 2);
+                    return;
+                }
+
+                // Scale to fit canvas
+                const targetSize = canvas.width * 0.85;
+                const scale = targetSize / GRID_SIZE;
+
+                const offsetX = (canvas.width - GRID_SIZE * scale) / 2;
+                const offsetY = (canvas.height - GRID_SIZE * scale) / 2;
+
+                ctx.save();
+                ctx.translate(offsetX, offsetY);
+                ctx.scale(scale, scale);
+
+                // Render the fractal quadtree
+                renderQuadrant(0, 0, TARGET_LEVEL, state.clicks);
+
+                ctx.restore();
+            }
+
+            // ============== UI Updates ==============
+            function formatNumber(n) {
+                if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
+                if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+                if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+                return Math.floor(n).toString();
+            }
+
+            function updateUI() {
+                document.getElementById('points').textContent = formatNumber(state.points);
+                document.getElementById('clicks').textContent = state.clicks + '/' + MAX_CLICKS;
+                document.getElementById('prestigeMultiplier').textContent = state.prestigeMultiplier.toFixed(1) + 'x';
+
+                // Upgrade buttons
+                ['auto', 'boost', 'points', 'fusion'].forEach(type => {
+                    const cost = UPGRADE_COSTS[type](state.upgrades[type]);
+                    document.getElementById('cost' + type.charAt(0).toUpperCase() + type.slice(1)).textContent = formatNumber(cost) + ' pts';
+                    document.getElementById('level' + type.charAt(0).toUpperCase() + type.slice(1)).textContent = state.upgrades[type];
+                    document.getElementById('upgrade' + type.charAt(0).toUpperCase() + type.slice(1)).disabled = !canAffordUpgrade(type);
+                });
+
+                // Prestige bar
+                const progress = getPrestigeProgress();
+                document.getElementById('prestigeFill').style.width = (progress * 100) + '%';
+                document.getElementById('nextPrestige').textContent = getNextPrestigeMultiplier().toFixed(1) + 'x';
+                document.getElementById('prestigeBtn').disabled = !canPrestige();
+            }
+
+            function showClickFeedback(text) {
+                const rect = canvas.getBoundingClientRect();
+                const feedback = document.createElement('div');
+                feedback.className = 'click-feedback';
+                feedback.textContent = text;
+                feedback.style.left = (rect.left + rect.width / 2 - 20) + 'px';
+                feedback.style.top = (rect.top + rect.height / 2) + 'px';
+                document.body.appendChild(feedback);
+                setTimeout(() => feedback.remove(), 800);
+            }
+
+            // ============== Game Loop ==============
+            function gameLoop(timestamp) {
+                const dt = lastTime ? (timestamp - lastTime) / 1000 : 0;
+                lastTime = timestamp;
+
+                // Auto-click
+                if (state.upgrades.auto > 0 && state.clicks < MAX_CLICKS) {
+                    autoClickAccumulator += getAutoClicksPerSecond() * dt;
+                    while (autoClickAccumulator >= 1 && state.clicks < MAX_CLICKS) {
+                        handleClick();
+                        autoClickAccumulator--;
+                    }
+                }
+
+                // Click boost timer
+                if (clickBoostTimer > 0) {
+                    clickBoostTimer -= dt;
+                }
+
+                render();
+                requestAnimationFrame(gameLoop);
+            }
+
+            // ============== Save/Load ==============
+            function saveGame() {
+                const saveData = { state, version: 3 };
+                localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+            }
+
+            function loadGame() {
+                try {
+                    const saved = localStorage.getItem(SAVE_KEY);
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        if (data.version === 3) {
+                            state = { ...state, ...data.state };
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Failed to load save:', e);
+                }
+            }
+
+            setInterval(saveGame, 10000);
+
+            // ============== Event Listeners ==============
+            canvas.addEventListener('click', handleClick);
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                handleClick();
+            });
+
+            document.querySelectorAll('.upgrade-btn').forEach(btn => {
+                btn.addEventListener('click', () => purchaseUpgrade(btn.dataset.upgrade));
+            });
+
+            document.getElementById('prestigeBtn').addEventListener('click', doPrestige);
+
+            const helpModal = document.getElementById('helpModal');
+            document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+            document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === helpModal) helpModal.classList.remove('show');
+            });
+
+            let isFullscreen = false;
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            function toggleFullscreen() {
+                isFullscreen = !isFullscreen;
+                document.body.classList.toggle('fullscreen', isFullscreen);
+                setTimeout(resizeCanvas, 50);
+            }
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+                switch (e.key.toLowerCase()) {
+                    case ' ':
+                        e.preventDefault();
+                        handleClick();
+                        break;
+                    case 'f':
+                        toggleFullscreen();
+                        break;
+                    case 'escape':
+                        if (isFullscreen) toggleFullscreen();
+                        if (helpModal.classList.contains('show')) helpModal.classList.remove('show');
+                        break;
+                }
+            });
+
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(resizeCanvas, 250);
+            });
+
+            window.addEventListener('beforeunload', saveGame);
+
+            initGame();
+        </script>
+    </body>
+</html>
