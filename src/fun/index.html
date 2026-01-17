@@ -24,7 +24,8 @@ description: Side projects and jokes. Not everything has to be serious.
     font-size: 1rem;
 }
 .ascii-hero {
-    font-family: var(--font-mono);
+    /* Use system monospace for block characters - Atkinson doesn't render them consistently */
+    font-family: "Menlo", "Consolas", "DejaVu Sans Mono", monospace;
     white-space: pre;
     line-height: 1.15;
     font-size: clamp(6px, 1.8vw, 10px);
@@ -84,11 +85,11 @@ description: Side projects and jokes. Not everything has to be serious.
     text-decoration: none;
     font-size: 0.9rem;
 }
-.search-container {
+.fun-search-container {
     max-width: 400px;
     margin: 0 auto 2rem;
 }
-.search-input {
+.fun-search-input {
     width: 100%;
     padding: 0.75rem 1rem;
     font-family: var(--font-mono);
@@ -100,10 +101,10 @@ description: Side projects and jokes. Not everything has to be serious.
     outline: none;
     transition: border-color 0.2s;
 }
-.search-input:focus {
+.fun-search-input:focus {
     border-color: var(--color-accent);
 }
-.search-input::placeholder {
+.fun-search-input::placeholder {
     color: var(--color-text-secondary);
 }
 .fun-card.hidden {
@@ -127,8 +128,8 @@ description: Side projects and jokes. Not everything has to be serious.
         <p>Side projects and jokes. Not everything has to be serious.</p>
     </header>
 
-    <div class="search-container">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search projects..." autocomplete="off">
+    <div class="fun-search-container">
+        <input type="text" class="fun-search-input" id="searchInput" placeholder="Search projects..." autocomplete="off">
     </div>
 
     <div class="fun-grid" id="funGrid">

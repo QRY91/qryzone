@@ -7,7 +7,7 @@
     <meta name="description" content="Side projects and jokes. Not everything has to be serious.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Atkinson+Hyperlegible+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/globals.css">
     <link rel="stylesheet" href="/assets/css/header.css">
     
@@ -110,7 +110,8 @@
     font-size: 1rem;
 }
 .ascii-hero {
-    font-family: var(--font-mono);
+    /* Use system monospace for block characters - Atkinson doesn't render them consistently */
+    font-family: "Menlo", "Consolas", "DejaVu Sans Mono", monospace;
     white-space: pre;
     line-height: 1.15;
     font-size: clamp(6px, 1.8vw, 10px);
@@ -170,11 +171,11 @@
     text-decoration: none;
     font-size: 0.9rem;
 }
-.search-container {
+.fun-search-container {
     max-width: 400px;
     margin: 0 auto 2rem;
 }
-.search-input {
+.fun-search-input {
     width: 100%;
     padding: 0.75rem 1rem;
     font-family: var(--font-mono);
@@ -186,10 +187,10 @@
     outline: none;
     transition: border-color 0.2s;
 }
-.search-input:focus {
+.fun-search-input:focus {
     border-color: var(--color-accent);
 }
-.search-input::placeholder {
+.fun-search-input::placeholder {
     color: var(--color-text-secondary);
 }
 .fun-card.hidden {
@@ -213,8 +214,8 @@
         <p>Side projects and jokes. Not everything has to be serious.</p>
     </header>
 
-    <div class="search-container">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search projects..." autocomplete="off">
+    <div class="fun-search-container">
+        <input type="text" class="fun-search-input" id="searchInput" placeholder="Search projects..." autocomplete="off">
     </div>
 
     <div class="fun-grid" id="funGrid">

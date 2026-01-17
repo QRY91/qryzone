@@ -257,6 +257,15 @@
       "status": "seedling",
       "connections": ["CLI-first development", "CLI tooling stack"],
       "lastUpdated": "2026-01-17"
+    },
+    {
+      "title": "Atkinson Hyperlegible",
+      "description": "Why I switched to this accessibility-focused font for everything",
+      "href": "/atkinson-hyperlegible/",
+      "tags": ["design", "developer-tools", "accessibility"],
+      "status": "seedling",
+      "connections": ["Zenburn", "CLI tooling stack"],
+      "lastUpdated": "2026-01-17"
     }
   ]
 }

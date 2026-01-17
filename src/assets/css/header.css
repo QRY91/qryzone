@@ -63,9 +63,11 @@
     cursor: pointer;
     padding: var(--space-xs);
     color: var(--color-text-secondary);
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    vertical-align: middle;
+    height: 20px;
     transition: color 0.2s ease;
 }
 
