@@ -248,6 +248,15 @@
       "status": "seedling",
       "connections": ["Ideas"],
       "lastUpdated": "2026-01-17"
+    },
+    {
+      "title": "Zenburn",
+      "description": "Why low contrast themes outperform flashy alternatives for sustained work",
+      "href": "/zenburn-theme/",
+      "tags": ["design", "developer-tools"],
+      "status": "seedling",
+      "connections": ["CLI-first development", "CLI tooling stack"],
+      "lastUpdated": "2026-01-17"
     }
   ]
 }
