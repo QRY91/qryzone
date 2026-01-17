@@ -1,7 +1,24 @@
 // Explore page filtering
 (function() {
-    // Data will be embedded in the page
-    const contentData = window.exploreData || [];
+    // Validate and normalize content items with defensive defaults
+    function validateContent(item) {
+        if (!item || typeof item !== 'object') {
+            return null;
+        }
+        return {
+            title: item.title || 'Untitled',
+            description: item.description || '',
+            href: item.href || '#',
+            tags: Array.isArray(item.tags) ? item.tags : [],
+            status: item.status || 'seedling',
+            connections: Array.isArray(item.connections) ? item.connections : [],
+            lastUpdated: item.lastUpdated || null
+        };
+    }
+
+    // Data will be embedded in the page, validated before use
+    const rawData = window.exploreData || [];
+    const contentData = rawData.map(validateContent).filter(Boolean);
 
     // Build lookup map for connections
     const titleToHref = new Map(contentData.map(item => [item.title, item.href]));
@@ -90,28 +107,35 @@
         });
     }
 
+    // Pure filter functions (single responsibility)
+    function filterBySearch(items, query) {
+        if (!query) return items;
+        const q = query.toLowerCase();
+        return items.filter(item =>
+            item.title.toLowerCase().includes(q) ||
+            item.description.toLowerCase().includes(q) ||
+            item.tags.some(tag => tag.toLowerCase().includes(q))
+        );
+    }
+
+    function filterByTags(items, tags) {
+        if (!tags || tags.length === 0) return items;
+        return items.filter(item =>
+            tags.some(tag => item.tags.includes(tag))
+        );
+    }
+
+    function filterByStatus(items, status) {
+        if (!status) return items;
+        return items.filter(item => item.status === status);
+    }
+
+    // Compose filters
     function getFilteredContent() {
         let filtered = contentData;
-
-        if (searchQuery) {
-            const q = searchQuery.toLowerCase();
-            filtered = filtered.filter(item =>
-                item.title.toLowerCase().includes(q) ||
-                item.description.toLowerCase().includes(q) ||
-                item.tags.some(tag => tag.toLowerCase().includes(q))
-            );
-        }
-
-        if (selectedTags.length > 0) {
-            filtered = filtered.filter(item =>
-                selectedTags.some(tag => item.tags.includes(tag))
-            );
-        }
-
-        if (selectedStatus) {
-            filtered = filtered.filter(item => item.status === selectedStatus);
-        }
-
+        filtered = filterBySearch(filtered, searchQuery);
+        filtered = filterByTags(filtered, selectedTags);
+        filtered = filterByStatus(filtered, selectedStatus);
         return filtered;
     }
 

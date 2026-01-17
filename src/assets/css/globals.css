@@ -1,4 +1,37 @@
-/* src/app/globals.css */
+/* src/app/globals.css
+ *
+ * Available CSS Variables:
+ *
+ * Colors:
+ *   --color-background    Main background color (#3f3f3f)
+ *   --color-surface       Surface/card background (same as background)
+ *   --color-text-primary  Primary text color (#b0b0a0)
+ *   --color-text-secondary Muted text color (#8c8c8c)
+ *   --color-accent        Accent/link color (#f0dfaf)
+ *   --color-accent-hover  Accent hover state (#dcdccc)
+ *   --color-border        Border color (#4a4a4a)
+ *
+ * Typography:
+ *   --font-sans           System sans-serif stack
+ *   --font-mono           Monospace font stack
+ *   --font-display        Display font (defaults to sans)
+ *
+ * Spacing:
+ *   --space-xs            0.25rem
+ *   --space-sm            0.5rem
+ *   --space-md            1rem
+ *   --space-lg            1.5rem
+ *   --space-xl            2rem
+ *   --space-xxl           3rem
+ *
+ * Other:
+ *   --border-radius       Default border radius (2px)
+ *
+ * Status Badge Colors (defined at bottom):
+ *   .status-seedling      Green tones
+ *   .status-growing       Yellow tones
+ *   .status-evergreen     Teal tones
+ */
 :root {
     --color-background: #3f3f3f;
     --color-surface: #3f3f3f; /* Make surface same as background for starkness */

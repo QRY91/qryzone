@@ -23,8 +23,8 @@ function reactive(data, onUpdate) {
 }
 
 // Make an array reactive with method interception
-function reactiveArray(arr, onUpdate) {
-  return new Proxy(arr, {
+function reactiveArray(items, onUpdate) {
+  return new Proxy(items, {
     set(target, prop, value) {
       target[prop] = value;
       onUpdate(prop);
@@ -57,106 +57,112 @@ function deepReactive(data, onUpdate) {
 }
 
 // Evaluate an expression in the context of a state object
-function evaluate(expr, state) {
+function evaluate(expression, state) {
+  if (typeof expression !== 'string' || !expression.trim()) {
+    return undefined;
+  }
   const keys = Object.keys(state);
-  const vals = Object.values(state);
+  const values = Object.values(state);
   try {
-    return new Function(...keys, `return ${expr}`)(...vals);
-  } catch (e) {
-    console.error(`qrazy: Error evaluating "${expr}"`, e);
+    return new Function(...keys, `return (${expression})`)(...values);
+  } catch (error) {
+    console.warn(`qrazy: Failed to evaluate "${expression}"`, error);
     return undefined;
   }
 }
 
 // Execute a statement (like count++) in the context of state
-function execute(stmt, state) {
+function execute(statement, state) {
+  if (typeof statement !== 'string' || !statement.trim()) {
+    return;
+  }
   const keys = Object.keys(state);
-  const vals = keys.map(k => state[k]);
+  const values = keys.map(key => state[key]);
   try {
-    const fn = new Function(...keys, `
-      ${stmt};
+    const callback = new Function(...keys, `
+      ${statement};
       return { ${keys.join(', ')} };
     `);
-    const result = fn(...vals);
-    for (const k of keys) {
-      if (result[k] !== state[k]) {
-        state[k] = result[k];
+    const result = callback(...values);
+    for (const key of keys) {
+      if (result[key] !== state[key]) {
+        state[key] = result[key];
       }
     }
-  } catch (e) {
-    console.error(`qrazy: Error executing "${stmt}"`, e);
+  } catch (error) {
+    console.warn(`qrazy: Failed to execute "${statement}"`, error);
   }
 }
 
 // Process a single element's directives (excluding q-for, handled separately)
-function bindElement(el, state, skipFor = false) {
+function bindElement(element, state, skipFor = false) {
   // q-for is handled by initScope, skip here
-  if (!skipFor && el.hasAttribute('q-for')) return;
+  if (!skipFor && element.hasAttribute('q-for')) return;
 
   // q-text: set textContent from expression
-  if (el.hasAttribute('q-text')) {
-    const expr = el.getAttribute('q-text');
-    const update = () => { el.textContent = evaluate(expr, state); };
-    update();
-    el._qUpdaters = el._qUpdaters || [];
-    el._qUpdaters.push(update);
+  if (element.hasAttribute('q-text')) {
+    const expr = element.getAttribute('q-text');
+    const updateFn = () => { element.textContent = evaluate(expr, state); };
+    updateFn();
+    element._qUpdaters = element._qUpdaters || [];
+    element._qUpdaters.push(updateFn);
   }
 
   // q-show: toggle display based on expression
-  if (el.hasAttribute('q-show')) {
-    const expr = el.getAttribute('q-show');
-    const update = () => {
-      el.style.display = evaluate(expr, state) ? '' : 'none';
+  if (element.hasAttribute('q-show')) {
+    const expr = element.getAttribute('q-show');
+    const updateFn = () => {
+      element.style.display = evaluate(expr, state) ? '' : 'none';
     };
-    update();
-    el._qUpdaters = el._qUpdaters || [];
-    el._qUpdaters.push(update);
+    updateFn();
+    element._qUpdaters = element._qUpdaters || [];
+    element._qUpdaters.push(updateFn);
   }
 
   // q-bind:attr: bind any attribute
-  for (const attr of [...el.attributes]) {
+  for (const attr of [...element.attributes]) {
     if (attr.name.startsWith('q-bind:')) {
       const targetAttr = attr.name.slice(7);
       const expr = attr.value;
-      const update = () => {
+      const updateFn = () => {
         const val = evaluate(expr, state);
         if (val === false || val === null || val === undefined) {
-          el.removeAttribute(targetAttr);
+          element.removeAttribute(targetAttr);
         } else {
-          el.setAttribute(targetAttr, val);
+          element.setAttribute(targetAttr, val);
         }
       };
-      update();
-      el._qUpdaters = el._qUpdaters || [];
-      el._qUpdaters.push(update);
+      updateFn();
+      element._qUpdaters = element._qUpdaters || [];
+      element._qUpdaters.push(updateFn);
     }
   }
 
   // q-model: two-way binding for inputs
-  if (el.hasAttribute('q-model')) {
-    const prop = el.getAttribute('q-model');
-    const update = () => { el.value = state[prop] ?? ''; };
-    update();
-    el._qUpdaters = el._qUpdaters || [];
-    el._qUpdaters.push(update);
-    el.addEventListener('input', () => {
-      state[prop] = el.type === 'number' ? Number(el.value) : el.value;
+  if (element.hasAttribute('q-model')) {
+    const prop = element.getAttribute('q-model');
+    const updateFn = () => { element.value = state[prop] ?? ''; };
+    updateFn();
+    element._qUpdaters = element._qUpdaters || [];
+    element._qUpdaters.push(updateFn);
+    element.addEventListener('input', () => {
+      state[prop] = element.type === 'number' ? Number(element.value) : element.value;
     });
   }
 
   // q-click: click event handler
-  if (el.hasAttribute('q-click')) {
-    const stmt = el.getAttribute('q-click');
-    el.addEventListener('click', (e) => {
+  if (element.hasAttribute('q-click')) {
+    const stmt = element.getAttribute('q-click');
+    element.addEventListener('click', (e) => {
       // Prevent if inside a form to avoid double-handling
       execute(stmt, state);
     });
   }
 
   // q-submit: form submit handler
-  if (el.hasAttribute('q-submit')) {
-    const stmt = el.getAttribute('q-submit');
-    el.addEventListener('submit', (e) => {
+  if (element.hasAttribute('q-submit')) {
+    const stmt = element.getAttribute('q-submit');
+    element.addEventListener('submit', (e) => {
       e.preventDefault();
       execute(stmt, state);
     });
@@ -321,15 +327,15 @@ function initScope(root) {
 
   // Create reactive state with re-entrancy guard
   const forUpdaters = [];
-  let isUpdating = false;
+  let isPreventingReentrantUpdates = false;
   const state = deepReactive(data, (prop) => {
-    if (isUpdating) return; // Prevent infinite loops
-    isUpdating = true;
+    if (isPreventingReentrantUpdates) return; // Prevent infinite loops
+    isPreventingReentrantUpdates = true;
     try {
       // Update regular elements
-      for (const el of elements) {
-        if (el._qUpdaters) {
-          for (const fn of el._qUpdaters) fn();
+      for (const element of elements) {
+        if (element._qUpdaters) {
+          for (const updateFn of element._qUpdaters) updateFn();
         }
       }
       // Update q-for loops
@@ -337,7 +343,7 @@ function initScope(root) {
         updater();
       }
     } finally {
-      isUpdating = false;
+      isPreventingReentrantUpdates = false;
     }
   });
 
@@ -348,8 +354,8 @@ function initScope(root) {
   }
 
   // Bind regular elements
-  for (const el of elements) {
-    bindElement(el, state);
+  for (const element of elements) {
+    bindElement(element, state);
   }
 
   root._qState = state;
