@@ -11,6 +11,37 @@
     <link rel="stylesheet" href="/assets/css/globals.css">
     <link rel="stylesheet" href="/assets/css/header.css">
     
+    <script>
+        // Load custom theme from localStorage (runs early to prevent flash)
+        (function() {
+            try {
+                var theme = localStorage.getItem('qryzone-custom-theme');
+                if (theme) {
+                    var t = JSON.parse(theme);
+                    var root = document.documentElement;
+                    var map = {
+                        bgDeep: '--color-background',
+                        bgSurface: '--color-surface',
+                        bgElevated: '--color-surface',
+                        accent: '--color-accent',
+                        textPrimary: '--color-text-primary',
+                        textSecondary: '--color-text-secondary',
+                        border: '--color-border'
+                    };
+                    for (var key in map) {
+                        if (t[key]) root.style.setProperty(map[key], t[key]);
+                    }
+                    if (t.borderRadius !== undefined) {
+                        root.style.setProperty('--border-radius', t.borderRadius + 'px');
+                    }
+                    if (t.fontFamily) {
+                        document.documentElement.style.setProperty('--font-mono', t.fontFamily);
+                        document.documentElement.style.setProperty('--font-sans', t.fontFamily);
+                    }
+                }
+            } catch (e) {}
+        })();
+    </script>
     <script type="importmap">
     {
         "imports": {

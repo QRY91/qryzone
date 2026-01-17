@@ -1,0 +1,1235 @@
+---
+layout: false
+permalink: /fun/not-your-style/
+---
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Learn CSS theming by restyling this page in real-time" />
+        <title>Not Your Style</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+        <style>
+            :root {
+                --bg-deep: #1a1a1a;
+                --bg-surface: #242424;
+                --bg-elevated: #2e2e2e;
+                --accent: #f0dfaf;
+                --accent-dim: rgba(240, 223, 175, 0.3);
+                --text-primary: #dcdccc;
+                --text-secondary: #8c8c8c;
+                --border: #3f3f3f;
+                --radius: 4px;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'JetBrains Mono', monospace;
+                background: var(--bg-deep);
+                color: var(--text-primary);
+                min-height: 100vh;
+                line-height: 1.6;
+            }
+
+            .back-link {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                padding: 0.5rem 1rem;
+                border-radius: var(--radius);
+                color: var(--accent);
+                text-decoration: none;
+                font-size: 0.85rem;
+                z-index: 100;
+            }
+
+            .top-btn {
+                position: fixed;
+                top: 1rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                width: 2.5rem;
+                height: 2.5rem;
+                border-radius: var(--radius);
+                color: var(--accent);
+                font-size: 1rem;
+                cursor: pointer;
+                z-index: 100;
+            }
+
+            .help-btn { right: 1rem; }
+
+            .container {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 5rem 1rem 2rem;
+            }
+
+            h1 {
+                color: var(--accent);
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .intro {
+                color: var(--text-secondary);
+                margin-bottom: 2rem;
+                font-size: 0.95rem;
+            }
+
+            .panel {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .panel-title {
+                color: var(--accent);
+                font-size: 1rem;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .panel-title::before {
+                content: '';
+                width: 8px;
+                height: 8px;
+                background: var(--accent);
+                border-radius: 50%;
+            }
+
+            /* Color controls */
+            .color-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .color-control {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .color-control label {
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+            }
+
+            .color-control code {
+                color: var(--accent);
+                font-size: 0.75rem;
+            }
+
+            .color-input-row {
+                display: flex;
+                gap: 0.5rem;
+                align-items: center;
+            }
+
+            input[type="color"] {
+                width: 50px;
+                height: 36px;
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                background: var(--bg-elevated);
+                cursor: pointer;
+                padding: 2px;
+            }
+
+            input[type="text"].hex-input {
+                flex: 1;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                color: var(--text-primary);
+                padding: 0.5rem;
+                font-family: inherit;
+                font-size: 0.85rem;
+            }
+
+            /* Presets */
+            .presets {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .preset-btn {
+                font-family: inherit;
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                background: var(--bg-elevated);
+                color: var(--text-primary);
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .preset-btn:hover {
+                border-color: var(--accent);
+                color: var(--accent);
+            }
+
+            .preset-btn.active {
+                background: var(--accent);
+                color: var(--bg-deep);
+                border-color: var(--accent);
+            }
+
+            /* Action buttons */
+            .actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+
+            .action-btn {
+                font-family: inherit;
+                font-size: 0.85rem;
+                padding: 0.6rem 1.2rem;
+                border: 1px solid var(--accent);
+                border-radius: var(--radius);
+                background: transparent;
+                color: var(--accent);
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .action-btn:hover {
+                background: var(--accent-dim);
+            }
+
+            .action-btn.primary {
+                background: var(--accent);
+                color: var(--bg-deep);
+            }
+
+            .action-btn.primary:hover {
+                opacity: 0.9;
+            }
+
+            /* AI section */
+            .ai-row {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+
+            .ai-input {
+                flex: 1;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                color: var(--text-primary);
+                padding: 0.6rem 1rem;
+                font-family: inherit;
+                font-size: 0.85rem;
+            }
+
+            .ai-input::placeholder {
+                color: var(--text-secondary);
+                opacity: 0.6;
+            }
+
+            .ai-input:focus {
+                outline: none;
+                border-color: var(--accent);
+            }
+
+            /* Explanation cards */
+            .explanation {
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+                margin-top: 1rem;
+                padding: 1rem;
+                background: var(--bg-elevated);
+                border-radius: var(--radius);
+                border-left: 3px solid var(--accent);
+            }
+
+            .explanation strong {
+                color: var(--text-primary);
+            }
+
+            /* Sample content to show theme */
+            .sample-content {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+
+            .sample-card {
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 1rem;
+            }
+
+            .sample-card h3 {
+                color: var(--accent);
+                font-size: 0.95rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .sample-card p {
+                color: var(--text-secondary);
+                font-size: 0.85rem;
+            }
+
+            .sample-card a {
+                color: var(--accent);
+            }
+
+            .sample-button {
+                margin-top: 0.75rem;
+                font-family: inherit;
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+                border: 1px solid var(--accent);
+                border-radius: var(--radius);
+                background: transparent;
+                color: var(--accent);
+                cursor: pointer;
+            }
+
+            /* Code output */
+            .code-output {
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 1rem;
+                font-size: 0.8rem;
+                overflow-x: auto;
+                white-space: pre;
+                color: var(--text-secondary);
+            }
+
+            .code-output .prop {
+                color: var(--accent);
+            }
+
+            /* Help modal */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.85);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 200;
+                padding: 1rem;
+            }
+
+            .modal-overlay.show { display: flex; }
+
+            .modal {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                max-width: 500px;
+                width: 100%;
+                max-height: 80vh;
+                overflow-y: auto;
+                padding: 1.5rem;
+            }
+
+            .modal h2 {
+                color: var(--accent);
+                margin-bottom: 1rem;
+            }
+
+            .modal p, .modal ul {
+                color: var(--text-secondary);
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .modal ul { margin-left: 1.5rem; }
+
+            .modal-close {
+                margin-top: 1rem;
+                width: 100%;
+                font-family: inherit;
+                font-size: 0.85rem;
+                padding: 0.6rem;
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                background: var(--bg-elevated);
+                color: var(--text-primary);
+                cursor: pointer;
+            }
+
+            /* Font controls */
+            .font-select {
+                width: 100%;
+                padding: 0.5rem;
+                font-family: inherit;
+                font-size: 0.85rem;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                color: var(--text-primary);
+                cursor: pointer;
+            }
+
+            .font-control label {
+                display: block;
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+                margin-bottom: 0.5rem;
+            }
+
+            .slider-label {
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+            }
+
+            .slider-control {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .slider-control input[type="range"] {
+                flex: 1;
+                accent-color: var(--accent);
+            }
+
+            .slider-value {
+                font-size: 0.8rem;
+                color: var(--accent);
+                min-width: 35px;
+            }
+
+            /* Responsive */
+            @media (max-width: 600px) {
+                .color-grid {
+                    grid-template-columns: 1fr;
+                }
+                .ai-row {
+                    flex-direction: column;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/fun/" class="back-link">← back</a>
+        <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+        <div class="container">
+            <h1>Not Your Style?</h1>
+            <p class="intro">Don't like my Zenburn obsession? Fair enough. Restyle this page in real-time, then hit "Apply to Site" to use your theme across all of qry.zone. It's saved in your browser - my feelings won't be hurt.</p>
+
+            <!-- Presets -->
+            <div class="panel">
+                <div class="panel-title">Presets</div>
+                <div class="presets">
+                    <button class="preset-btn active" data-preset="zenburn">Zenburn</button>
+                    <button class="preset-btn" data-preset="solarized-dark">Solarized Dark</button>
+                    <button class="preset-btn" data-preset="solarized-light">Solarized Light</button>
+                    <button class="preset-btn" data-preset="monokai">Monokai</button>
+                    <button class="preset-btn" data-preset="nord">Nord</button>
+                    <button class="preset-btn" data-preset="dracula">Dracula</button>
+                    <button class="preset-btn" data-preset="high-contrast">High Contrast</button>
+                    <button class="preset-btn" data-preset="paper">Paper</button>
+                    <button class="preset-btn" data-preset="hacker-news">Hacker News</button>
+                </div>
+                <div class="presets" id="generatedPresets" style="margin-top: 0.5rem;"></div>
+                <div class="actions">
+                    <button class="action-btn" id="randomizeBtn">Randomize</button>
+                    <button class="action-btn" id="resetBtn">Reset</button>
+                    <button class="action-btn primary" id="applyToSiteBtn">Apply to Site</button>
+                    <button class="action-btn" id="clearSiteThemeBtn" style="display: none;">Clear Custom Theme</button>
+                </div>
+                <div id="appliedStatus" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;"></div>
+            </div>
+
+            <!-- Color controls -->
+            <div class="panel">
+                <div class="panel-title">Colors</div>
+                <div class="color-grid">
+                    <div class="color-control">
+                        <label>Background <code>--bg-deep</code></label>
+                        <div class="color-input-row">
+                            <input type="color" id="bgDeep" value="#1a1a1a">
+                            <input type="text" class="hex-input" id="bgDeepHex" value="#1a1a1a">
+                        </div>
+                    </div>
+                    <div class="color-control">
+                        <label>Surface <code>--bg-surface</code></label>
+                        <div class="color-input-row">
+                            <input type="color" id="bgSurface" value="#242424">
+                            <input type="text" class="hex-input" id="bgSurfaceHex" value="#242424">
+                        </div>
+                    </div>
+                    <div class="color-control">
+                        <label>Elevated <code>--bg-elevated</code></label>
+                        <div class="color-input-row">
+                            <input type="color" id="bgElevated" value="#2e2e2e">
+                            <input type="text" class="hex-input" id="bgElevatedHex" value="#2e2e2e">
+                        </div>
+                    </div>
+                    <div class="color-control">
+                        <label>Accent <code>--accent</code></label>
+                        <div class="color-input-row">
+                            <input type="color" id="accent" value="#f0dfaf">
+                            <input type="text" class="hex-input" id="accentHex" value="#f0dfaf">
+                        </div>
+                    </div>
+                    <div class="color-control">
+                        <label>Primary Text <code>--text-primary</code></label>
+                        <div class="color-input-row">
+                            <input type="color" id="textPrimary" value="#dcdccc">
+                            <input type="text" class="hex-input" id="textPrimaryHex" value="#dcdccc">
+                        </div>
+                    </div>
+                    <div class="color-control">
+                        <label>Secondary Text <code>--text-secondary</code></label>
+                        <div class="color-input-row">
+                            <input type="color" id="textSecondary" value="#8c8c8c">
+                            <input type="text" class="hex-input" id="textSecondaryHex" value="#8c8c8c">
+                        </div>
+                    </div>
+                    <div class="color-control">
+                        <label>Border <code>--border</code></label>
+                        <div class="color-input-row">
+                            <input type="color" id="border" value="#3f3f3f">
+                            <input type="text" class="hex-input" id="borderHex" value="#3f3f3f">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="explanation">
+                    <strong>How it works:</strong> CSS variables (custom properties) let you define reusable values.
+                    Change <code>--accent</code> once, and every element using it updates.
+                    This is the foundation of theming systems.
+                </div>
+            </div>
+
+            <!-- Font Selection -->
+            <div class="panel">
+                <div class="panel-title">Typography</div>
+                <div class="font-controls">
+                    <div class="font-control">
+                        <label>Font Family</label>
+                        <select id="fontSelect" class="font-select">
+                            <option value="'JetBrains Mono', monospace">JetBrains Mono (default)</option>
+                            <option value="'Inter', sans-serif">Inter</option>
+                            <option value="'IBM Plex Mono', monospace">IBM Plex Mono</option>
+                            <option value="'Source Code Pro', monospace">Source Code Pro</option>
+                            <option value="'Fira Code', monospace">Fira Code</option>
+                            <option value="system-ui, sans-serif">System UI</option>
+                            <option value="Georgia, serif">Georgia (serif)</option>
+                        </select>
+                    </div>
+                    <div class="slider-control" style="margin-top: 0.75rem;">
+                        <span class="slider-label" style="min-width: 80px;">Border Radius:</span>
+                        <input type="range" id="radiusSlider" min="0" max="16" value="4">
+                        <span class="slider-value" id="radiusValue">4px</span>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <strong>Tip:</strong> Monospace fonts give a technical feel, sans-serif feels modern, serif feels classic.
+                    Border radius controls how rounded corners are (0 = sharp, 16 = very rounded).
+                </div>
+            </div>
+
+            <!-- AI Theme Generator -->
+            <div class="panel">
+                <div class="panel-title">AI Theme Generator</div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                    Describe a vibe and generate a color palette. Runs locally in your browser via WebLLM.
+                </p>
+                <div id="webgpuWarning" style="font-size: 0.8rem; color: #e57373; margin-bottom: 0.5rem;"></div>
+                <div class="ai-row">
+                    <input type="text" class="ai-input" id="aiPrompt" placeholder="forest at dusk, 90s cyberpunk, calm ocean...">
+                    <button class="action-btn primary" id="generateBtn">Generate</button>
+                </div>
+                <div class="ai-row" style="margin-top: 0.5rem;">
+                    <select id="modelSelect" class="font-select" style="flex: 1;">
+                        <option value="Qwen2.5-0.5B-Instruct-q4f16_1-MLC">Qwen 0.5B (fastest, ~300MB)</option>
+                        <option value="Qwen2.5-1.5B-Instruct-q4f16_1-MLC">Qwen 1.5B (better, ~900MB)</option>
+                        <option value="SmolLM2-360M-Instruct-q4f16_1-MLC">SmolLM 360M (tiny, ~200MB)</option>
+                    </select>
+                    <button class="action-btn" id="clearCacheBtn">Clear cache</button>
+                </div>
+                <div id="aiProgress" style="display: none; margin-top: 0.5rem;">
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);" id="aiProgressText">Loading model...</div>
+                    <div style="height: 4px; background: var(--bg-elevated); border-radius: 2px; margin-top: 0.25rem; overflow: hidden;">
+                        <div id="aiProgressBar" style="height: 100%; background: var(--accent); width: 0%; transition: width 0.3s;"></div>
+                    </div>
+                </div>
+                <div id="aiStatus" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem;"></div>
+            </div>
+
+            <!-- Sample content -->
+            <div class="panel">
+                <div class="panel-title">Preview</div>
+                <div class="sample-content">
+                    <div class="sample-card">
+                        <h3>Sample Card</h3>
+                        <p>This is how content looks with your current theme. Notice how the <a href="#">accent color</a> is used for links and highlights.</p>
+                        <button class="sample-button">Sample Button</button>
+                    </div>
+                    <div class="sample-card">
+                        <h3>Another Card</h3>
+                        <p>The background layers (deep → surface → elevated) create visual hierarchy without harsh contrasts.</p>
+                        <button class="sample-button">Another Button</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CSS Output -->
+            <div class="panel">
+                <div class="panel-title">Generated CSS</div>
+                <div class="code-output" id="codeOutput">:root {
+    --bg-deep: #1a1a1a;
+    --bg-surface: #242424;
+    --bg-elevated: #2e2e2e;
+    --accent: #f0dfaf;
+    --text-primary: #dcdccc;
+    --text-secondary: #8c8c8c;
+    --border: #3f3f3f;
+}</div>
+                <div class="actions">
+                    <button class="action-btn" id="copyBtn">Copy CSS</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal-overlay" id="helpModal">
+            <div class="modal">
+                <h2>Not Your Style</h2>
+                <p>A playground for learning CSS theming. Every color on this page is controlled by CSS variables that you can modify in real-time.</p>
+                <p><strong>CSS Variables 101:</strong></p>
+                <ul>
+                    <li>Defined in <code>:root</code> with <code>--name: value;</code></li>
+                    <li>Used anywhere with <code>var(--name)</code></li>
+                    <li>Change once, update everywhere</li>
+                    <li>Can be modified with JavaScript</li>
+                </ul>
+                <p><strong>Tips:</strong></p>
+                <ul>
+                    <li>Start with a preset, then tweak individual colors</li>
+                    <li>Keep sufficient contrast between text and background</li>
+                    <li>Use the AI generator for inspiration</li>
+                    <li>Copy the CSS and use it in your own projects</li>
+                </ul>
+                <button class="modal-close" id="closeHelp">Got it</button>
+            </div>
+        </div>
+
+        <script>
+            // Theme presets
+            const PRESETS = {
+                'zenburn': {
+                    bgDeep: '#1a1a1a',
+                    bgSurface: '#242424',
+                    bgElevated: '#2e2e2e',
+                    accent: '#f0dfaf',
+                    textPrimary: '#dcdccc',
+                    textSecondary: '#8c8c8c',
+                    border: '#3f3f3f'
+                },
+                'solarized-dark': {
+                    bgDeep: '#002b36',
+                    bgSurface: '#073642',
+                    bgElevated: '#094753',
+                    accent: '#b58900',
+                    textPrimary: '#839496',
+                    textSecondary: '#657b83',
+                    border: '#094753'
+                },
+                'solarized-light': {
+                    bgDeep: '#fdf6e3',
+                    bgSurface: '#eee8d5',
+                    bgElevated: '#e4ddc8',
+                    accent: '#b58900',
+                    textPrimary: '#657b83',
+                    textSecondary: '#93a1a1',
+                    border: '#d3cbb7'
+                },
+                'monokai': {
+                    bgDeep: '#272822',
+                    bgSurface: '#2d2e27',
+                    bgElevated: '#3e3d32',
+                    accent: '#f92672',
+                    textPrimary: '#f8f8f2',
+                    textSecondary: '#75715e',
+                    border: '#49483e'
+                },
+                'nord': {
+                    bgDeep: '#2e3440',
+                    bgSurface: '#3b4252',
+                    bgElevated: '#434c5e',
+                    accent: '#88c0d0',
+                    textPrimary: '#eceff4',
+                    textSecondary: '#a5b1c2',
+                    border: '#4c566a'
+                },
+                'dracula': {
+                    bgDeep: '#282a36',
+                    bgSurface: '#2d303d',
+                    bgElevated: '#343746',
+                    accent: '#bd93f9',
+                    textPrimary: '#f8f8f2',
+                    textSecondary: '#6272a4',
+                    border: '#44475a'
+                },
+                'high-contrast': {
+                    bgDeep: '#000000',
+                    bgSurface: '#0a0a0a',
+                    bgElevated: '#141414',
+                    accent: '#00ff00',
+                    textPrimary: '#ffffff',
+                    textSecondary: '#aaaaaa',
+                    border: '#333333'
+                },
+                'paper': {
+                    bgDeep: '#f5f5f0',
+                    bgSurface: '#ebebde',
+                    bgElevated: '#e0e0d0',
+                    accent: '#c75000',
+                    textPrimary: '#333333',
+                    textSecondary: '#666666',
+                    border: '#d0d0c0'
+                },
+                'hacker-news': {
+                    bgDeep: '#f6f6ef',
+                    bgSurface: '#ffffff',
+                    bgElevated: '#fafaf5',
+                    accent: '#ff6600',
+                    textPrimary: '#000000',
+                    textSecondary: '#828282',
+                    border: '#e0e0d8'
+                }
+            };
+
+            // Track generated themes
+            let generatedThemes = {};
+            let generatedCount = 0;
+
+            // Variable mappings
+            const VAR_MAP = {
+                bgDeep: '--bg-deep',
+                bgSurface: '--bg-surface',
+                bgElevated: '--bg-elevated',
+                accent: '--accent',
+                textPrimary: '--text-primary',
+                textSecondary: '--text-secondary',
+                border: '--border'
+            };
+
+            // Current values (colors + typography)
+            let currentTheme = {
+                ...PRESETS['zenburn'],
+                fontFamily: "'JetBrains Mono', monospace",
+                borderRadius: 4
+            };
+            const STORAGE_KEY = 'qryzone-custom-theme';
+
+            // WebLLM state
+            let engine = null;
+            let currentModel = null;
+            let isGenerating = false;
+
+            // DOM elements
+            const root = document.documentElement;
+            const codeOutput = document.getElementById('codeOutput');
+
+            // Check WebGPU support
+            async function checkWebGPU() {
+                const warning = document.getElementById('webgpuWarning');
+                const generateBtn = document.getElementById('generateBtn');
+
+                if (!navigator.gpu) {
+                    warning.textContent = '⚠️ WebGPU not supported. Try Chrome/Edge 113+ or enable WebGPU flags.';
+                    generateBtn.disabled = true;
+                    return false;
+                }
+                try {
+                    const adapter = await navigator.gpu.requestAdapter();
+                    if (!adapter) {
+                        warning.textContent = '⚠️ No WebGPU adapter found.';
+                        generateBtn.disabled = true;
+                        return false;
+                    }
+                    return true;
+                } catch (e) {
+                    warning.textContent = '⚠️ WebGPU error: ' + e.message;
+                    generateBtn.disabled = true;
+                    return false;
+                }
+            }
+
+            // Initialize
+            function init() {
+                // Check WebGPU
+                checkWebGPU();
+
+                // Load saved site theme if exists
+                const savedTheme = localStorage.getItem(STORAGE_KEY);
+                if (savedTheme) {
+                    try {
+                        const parsed = JSON.parse(savedTheme);
+                        currentTheme = {
+                            ...PRESETS['zenburn'],
+                            fontFamily: "'JetBrains Mono', monospace",
+                            borderRadius: 4,
+                            ...parsed
+                        };
+                        updateAppliedStatus(true);
+                    } catch (e) {
+                        console.warn('Invalid saved theme');
+                    }
+                }
+
+                // Set up color input listeners
+                Object.keys(VAR_MAP).forEach(key => {
+                    const colorInput = document.getElementById(key);
+                    const hexInput = document.getElementById(key + 'Hex');
+
+                    colorInput.addEventListener('input', (e) => {
+                        currentTheme[key] = e.target.value;
+                        hexInput.value = e.target.value;
+                        applyTheme();
+                        clearActivePreset();
+                    });
+
+                    hexInput.addEventListener('input', (e) => {
+                        const val = e.target.value;
+                        if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+                            currentTheme[key] = val;
+                            colorInput.value = val;
+                            applyTheme();
+                            clearActivePreset();
+                        }
+                    });
+                });
+
+                // Preset buttons
+                document.querySelectorAll('.preset-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const preset = btn.dataset.preset;
+                        if (PRESETS[preset]) {
+                            // Preserve font and radius when switching color presets
+                            currentTheme = {
+                                ...PRESETS[preset],
+                                fontFamily: currentTheme.fontFamily,
+                                borderRadius: currentTheme.borderRadius
+                            };
+                            applyTheme();
+                            updateInputs();
+                            setActivePreset(btn);
+                        }
+                    });
+                });
+
+                // Randomize
+                document.getElementById('randomizeBtn').addEventListener('click', randomize);
+
+                // Reset
+                document.getElementById('resetBtn').addEventListener('click', () => {
+                    currentTheme = {
+                        ...PRESETS['zenburn'],
+                        fontFamily: "'JetBrains Mono', monospace",
+                        borderRadius: 4
+                    };
+                    applyTheme();
+                    updateInputs();
+                    setActivePreset(document.querySelector('[data-preset="zenburn"]'));
+                });
+
+                // Apply to site
+                document.getElementById('applyToSiteBtn').addEventListener('click', () => {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentTheme));
+                    updateAppliedStatus(true);
+                    document.getElementById('applyToSiteBtn').textContent = 'Applied!';
+                    setTimeout(() => {
+                        document.getElementById('applyToSiteBtn').textContent = 'Apply to Site';
+                    }, 2000);
+                });
+
+                // Clear site theme
+                document.getElementById('clearSiteThemeBtn').addEventListener('click', () => {
+                    localStorage.removeItem(STORAGE_KEY);
+                    updateAppliedStatus(false);
+                    currentTheme = {
+                        ...PRESETS['zenburn'],
+                        fontFamily: "'JetBrains Mono', monospace",
+                        borderRadius: 4
+                    };
+                    applyTheme();
+                    updateInputs();
+                    setActivePreset(document.querySelector('[data-preset="zenburn"]'));
+                });
+
+                // Font select
+                const fontSelect = document.getElementById('fontSelect');
+                fontSelect.addEventListener('change', (e) => {
+                    currentTheme.fontFamily = e.target.value;
+                    applyTheme();
+                    clearActivePreset();
+                });
+
+                // Radius slider
+                const radiusSlider = document.getElementById('radiusSlider');
+                const radiusValue = document.getElementById('radiusValue');
+                radiusSlider.addEventListener('input', (e) => {
+                    currentTheme.borderRadius = parseInt(e.target.value);
+                    radiusValue.textContent = e.target.value + 'px';
+                    applyTheme();
+                    clearActivePreset();
+                });
+
+                // Copy
+                document.getElementById('copyBtn').addEventListener('click', () => {
+                    navigator.clipboard.writeText(generateCSS()).then(() => {
+                        document.getElementById('copyBtn').textContent = 'Copied!';
+                        setTimeout(() => {
+                            document.getElementById('copyBtn').textContent = 'Copy CSS';
+                        }, 2000);
+                    });
+                });
+
+                // AI Generate
+                document.getElementById('generateBtn').addEventListener('click', generateTheme);
+                document.getElementById('aiPrompt').addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') generateTheme();
+                });
+
+                // Clear WebLLM cache
+                document.getElementById('clearCacheBtn').addEventListener('click', async () => {
+                    const btn = document.getElementById('clearCacheBtn');
+                    btn.disabled = true;
+                    btn.textContent = 'Clearing...';
+                    try {
+                        const databases = await indexedDB.databases();
+                        for (const db of databases) {
+                            if (db.name && (db.name.includes('webllm') || db.name.includes('mlc'))) {
+                                indexedDB.deleteDatabase(db.name);
+                            }
+                        }
+                        const cacheNames = await caches.keys();
+                        for (const name of cacheNames) {
+                            if (name.includes('webllm') || name.includes('mlc')) {
+                                await caches.delete(name);
+                            }
+                        }
+                        engine = null;
+                        currentModel = null;
+                        btn.textContent = 'Cleared!';
+                    } catch (e) {
+                        console.error('Clear error:', e);
+                    }
+                    setTimeout(() => {
+                        btn.textContent = 'Clear cache';
+                        btn.disabled = false;
+                    }, 2000);
+                });
+
+                // Help modal
+                const helpModal = document.getElementById('helpModal');
+                document.getElementById('helpBtn').addEventListener('click', () => {
+                    helpModal.classList.add('show');
+                });
+                document.getElementById('closeHelp').addEventListener('click', () => {
+                    helpModal.classList.remove('show');
+                });
+                helpModal.addEventListener('click', (e) => {
+                    if (e.target === helpModal) helpModal.classList.remove('show');
+                });
+
+                applyTheme();
+            }
+
+            function applyTheme() {
+                // Apply to CSS variables
+                Object.keys(VAR_MAP).forEach(key => {
+                    root.style.setProperty(VAR_MAP[key], currentTheme[key]);
+                });
+
+                // Update accent-dim
+                const accentRgb = hexToRgb(currentTheme.accent);
+                if (accentRgb) {
+                    root.style.setProperty('--accent-dim', `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, 0.3)`);
+                }
+
+                // Apply font and radius
+                root.style.setProperty('--radius', currentTheme.borderRadius + 'px');
+                document.body.style.fontFamily = currentTheme.fontFamily;
+
+                // Update code output
+                codeOutput.textContent = generateCSS();
+            }
+
+            function updateInputs() {
+                Object.keys(VAR_MAP).forEach(key => {
+                    document.getElementById(key).value = currentTheme[key];
+                    document.getElementById(key + 'Hex').value = currentTheme[key];
+                });
+
+                // Update font and radius inputs
+                document.getElementById('fontSelect').value = currentTheme.fontFamily;
+                document.getElementById('radiusSlider').value = currentTheme.borderRadius;
+                document.getElementById('radiusValue').textContent = currentTheme.borderRadius + 'px';
+            }
+
+            function generateCSS() {
+                return `:root {
+    --bg-deep: ${currentTheme.bgDeep};
+    --bg-surface: ${currentTheme.bgSurface};
+    --bg-elevated: ${currentTheme.bgElevated};
+    --accent: ${currentTheme.accent};
+    --text-primary: ${currentTheme.textPrimary};
+    --text-secondary: ${currentTheme.textSecondary};
+    --border: ${currentTheme.border};
+    --radius: ${currentTheme.borderRadius}px;
+}
+
+body {
+    font-family: ${currentTheme.fontFamily};
+}`;
+            }
+
+            function clearActivePreset() {
+                document.querySelectorAll('.preset-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+            }
+
+            function setActivePreset(btn) {
+                clearActivePreset();
+                btn.classList.add('active');
+            }
+
+            function addGeneratedPresetButton(presetName, promptHint) {
+                const container = document.getElementById('generatedPresets');
+                const btn = document.createElement('button');
+                btn.className = 'preset-btn active';
+                btn.dataset.preset = presetName;
+                btn.dataset.generated = 'true';
+                // Truncate prompt for display
+                const label = promptHint.length > 15 ? promptHint.slice(0, 15) + '...' : promptHint;
+                btn.textContent = '#' + presetName.split('-')[1] + ' ' + label;
+                btn.title = promptHint;
+
+                btn.addEventListener('click', () => {
+                    if (generatedThemes[presetName]) {
+                        currentTheme = {
+                            ...generatedThemes[presetName],
+                            fontFamily: currentTheme.fontFamily,
+                            borderRadius: currentTheme.borderRadius
+                        };
+                        applyTheme();
+                        updateInputs();
+                        setActivePreset(btn);
+                    }
+                });
+
+                // Clear active from others, set this one active
+                clearActivePreset();
+                container.appendChild(btn);
+            }
+
+            function updateAppliedStatus(isApplied) {
+                const status = document.getElementById('appliedStatus');
+                const clearBtn = document.getElementById('clearSiteThemeBtn');
+                if (isApplied) {
+                    status.textContent = 'Custom theme active across qry.zone';
+                    status.style.color = 'var(--accent)';
+                    clearBtn.style.display = 'inline-block';
+                } else {
+                    status.textContent = '';
+                    clearBtn.style.display = 'none';
+                }
+            }
+
+            function randomize() {
+                // Generate a cohesive random palette
+                const baseHue = Math.random() * 360;
+                const isDark = Math.random() > 0.3;
+
+                if (isDark) {
+                    const baseLightness = 5 + Math.random() * 10;
+                    currentTheme.bgDeep = hslToHex(baseHue, 10 + Math.random() * 20, baseLightness);
+                    currentTheme.bgSurface = hslToHex(baseHue, 10 + Math.random() * 15, baseLightness + 5);
+                    currentTheme.bgElevated = hslToHex(baseHue, 10 + Math.random() * 10, baseLightness + 10);
+                    currentTheme.textPrimary = hslToHex(baseHue, 5 + Math.random() * 10, 80 + Math.random() * 15);
+                    currentTheme.textSecondary = hslToHex(baseHue, 5 + Math.random() * 10, 50 + Math.random() * 15);
+                    currentTheme.border = hslToHex(baseHue, 10 + Math.random() * 10, baseLightness + 15);
+                } else {
+                    const baseLightness = 90 + Math.random() * 8;
+                    currentTheme.bgDeep = hslToHex(baseHue, 10 + Math.random() * 20, baseLightness);
+                    currentTheme.bgSurface = hslToHex(baseHue, 10 + Math.random() * 15, baseLightness - 5);
+                    currentTheme.bgElevated = hslToHex(baseHue, 10 + Math.random() * 10, baseLightness - 10);
+                    currentTheme.textPrimary = hslToHex(baseHue, 10 + Math.random() * 20, 15 + Math.random() * 15);
+                    currentTheme.textSecondary = hslToHex(baseHue, 5 + Math.random() * 15, 35 + Math.random() * 15);
+                    currentTheme.border = hslToHex(baseHue, 10 + Math.random() * 10, baseLightness - 15);
+                }
+
+                // Accent: complementary or analogous
+                const accentHue = (baseHue + 120 + Math.random() * 120) % 360;
+                currentTheme.accent = hslToHex(accentHue, 60 + Math.random() * 30, 50 + Math.random() * 20);
+
+                applyTheme();
+                updateInputs();
+                clearActivePreset();
+            }
+
+            async function generateTheme() {
+                if (isGenerating) return;
+
+                const prompt = document.getElementById('aiPrompt').value.trim();
+                const status = document.getElementById('aiStatus');
+                const progress = document.getElementById('aiProgress');
+                const progressText = document.getElementById('aiProgressText');
+                const progressBar = document.getElementById('aiProgressBar');
+                const generateBtn = document.getElementById('generateBtn');
+                const modelSelect = document.getElementById('modelSelect');
+
+                if (!prompt) {
+                    status.textContent = 'Please enter a description';
+                    return;
+                }
+
+                isGenerating = true;
+                generateBtn.disabled = true;
+                modelSelect.disabled = true;
+                status.textContent = '';
+                progress.style.display = 'block';
+
+                try {
+                    const selectedModel = modelSelect.value;
+
+                    // Load model if needed
+                    if (!engine || currentModel !== selectedModel) {
+                        progressText.textContent = 'Loading model (first time may take a minute)...';
+                        progressBar.style.width = '0%';
+
+                        const webllm = await import('https://esm.run/@mlc-ai/web-llm');
+
+                        engine = await webllm.CreateMLCEngine(selectedModel, {
+                            initProgressCallback: (p) => {
+                                progressText.textContent = p.text || 'Loading...';
+                                if (p.progress !== undefined) {
+                                    progressBar.style.width = (p.progress * 100) + '%';
+                                }
+                            }
+                        });
+                        currentModel = selectedModel;
+                    }
+
+                    progressText.textContent = 'Generating palette...';
+                    progressBar.style.width = '100%';
+
+                    const response = await engine.chat.completions.create({
+                        messages: [{
+                            role: 'user',
+                            content: `Generate a color palette for a UI theme based on: "${prompt}"
+
+Return ONLY a JSON object with these exact keys and hex color values:
+{"bgDeep":"#hex","bgSurface":"#hex","bgElevated":"#hex","accent":"#hex","textPrimary":"#hex","textSecondary":"#hex","border":"#hex"}
+
+Make it cohesive. Ensure text colors contrast well with backgrounds.`
+                        }],
+                        max_tokens: 150,
+                        temperature: 0.8
+                    });
+
+                    const content = response.choices[0].message.content;
+                    const jsonMatch = content.match(/\{[\s\S]*?\}/);
+
+                    if (jsonMatch) {
+                        const palette = JSON.parse(jsonMatch[0]);
+                        const validKeys = ['bgDeep', 'bgSurface', 'bgElevated', 'accent', 'textPrimary', 'textSecondary', 'border'];
+                        const isValid = validKeys.every(key =>
+                            palette[key] && /^#[0-9a-fA-F]{6}$/i.test(palette[key])
+                        );
+
+                        if (isValid) {
+                            // Preserve font/radius, update colors
+                            currentTheme = {
+                                ...palette,
+                                fontFamily: currentTheme.fontFamily,
+                                borderRadius: currentTheme.borderRadius
+                            };
+                            applyTheme();
+                            updateInputs();
+                            clearActivePreset();
+
+                            // Add as a selectable preset
+                            generatedCount++;
+                            const presetName = `generated-${generatedCount}`;
+                            generatedThemes[presetName] = { ...palette };
+                            addGeneratedPresetButton(presetName, prompt);
+
+                            status.textContent = 'Theme generated and saved as #' + presetName;
+                            status.style.color = 'var(--accent)';
+                        } else {
+                            throw new Error('Invalid colors returned');
+                        }
+                    } else {
+                        throw new Error('Could not parse response');
+                    }
+                } catch (err) {
+                    console.error('Generation error:', err);
+                    status.textContent = 'Error: ' + err.message;
+                    status.style.color = '#e57373';
+                } finally {
+                    isGenerating = false;
+                    generateBtn.disabled = false;
+                    modelSelect.disabled = false;
+                    progress.style.display = 'none';
+                }
+            }
+
+            // Color utilities
+            function hexToRgb(hex) {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+            }
+
+            function hslToHex(h, s, l) {
+                s /= 100;
+                l /= 100;
+                const a = s * Math.min(l, 1 - l);
+                const f = n => {
+                    const k = (n + h / 30) % 12;
+                    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                    return Math.round(255 * color).toString(16).padStart(2, '0');
+                };
+                return `#${f(0)}${f(8)}${f(4)}`;
+            }
+
+            init();
+        </script>
+    </body>
+</html>
