@@ -1,0 +1,575 @@
+---
+layout: base.njk
+title: Logo design - qry.zone
+description: An 8x8 symbol designed to be recursive, programmatic, and mathematically interesting.
+---
+
+<style>
+.logo-visual {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    text-align: center;
+}
+.logo-canvas {
+    image-rendering: pixelated;
+    max-width: 100%;
+    height: auto;
+}
+.logo-controls {
+    margin-top: var(--space-md);
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+.logo-controls button {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.logo-controls button:hover,
+.logo-controls button.active {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+.evolution-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+}
+.evolution-step {
+    text-align: center;
+    padding: var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+}
+.evolution-step .label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+.evolution-step canvas {
+    image-rendering: pixelated;
+    width: 64px;
+    height: 64px;
+}
+.pocket-highlight {
+    background: rgba(240, 223, 175, 0.3);
+    border-radius: 2px;
+}
+.fun-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+}
+.fun-link {
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    transition: border-color 0.2s;
+}
+.fun-link:hover {
+    border-color: var(--color-accent);
+}
+.fun-link strong {
+    display: block;
+    color: var(--color-accent);
+}
+.fun-link span {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+.footnote-ref {
+    cursor: help;
+    color: var(--color-accent);
+    border-bottom: 1px dotted var(--color-accent);
+    position: relative;
+    font-size: 0.85em;
+    vertical-align: super;
+    padding: 0 2px;
+}
+.footnote-ref:hover::after {
+    content: attr(data-note);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.85rem;
+    width: max-content;
+    max-width: 350px;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-variant-position: normal;
+    vertical-align: baseline;
+}
+</style>
+
+<article class="article">
+    <header class="article-header">
+        <span class="status-badge status-seedling">seedling</span>
+        <h1>Logo design</h1>
+        <p class="article-subtitle">An 8x8 symbol designed to be recursive, programmatic, and mathematically interesting.</p>
+    </header>
+
+    <section>
+        <p>
+            I'm bad at math. Computers aren't. So when designing a logo, I wanted something a computer could reason about — reproduce, transform, animate, nest inside itself.
+        </p>
+
+        <p>
+            The result is 8 bytes. 64 bits. A pattern that contains itself.
+        </p>
+
+        <div class="logo-visual">
+            <canvas id="logoCanvas" class="logo-canvas" width="128" height="128" style="width: 256px; height: 256px;"></canvas>
+            <div class="logo-controls">
+                <button data-depth="0" class="active">8x8</button>
+                <button data-depth="1">32x32 (1 nested)</button>
+                <button data-depth="2">128x128 (2 nested)</button>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>The evolution</h2>
+        <p>
+            Start with the universal power symbol. Rotate it 45° to the bottom-right diagonal — now it points somewhere, has direction. Then bitcrush it into an 8x8 grid. What emerges is a blocky Q.
+        </p>
+
+        <div class="evolution-grid">
+            <div class="evolution-step">
+                <div class="label">Power symbol</div>
+                <canvas id="evoStep1" width="16" height="16"></canvas>
+            </div>
+            <div class="evolution-step">
+                <div class="label">Rotated 135°</div>
+                <canvas id="evoStep2" width="16" height="16"></canvas>
+            </div>
+            <div class="evolution-step">
+                <div class="label">Bitcrushed</div>
+                <canvas id="evoStep3" width="16" height="16"></canvas>
+            </div>
+            <div class="evolution-step">
+                <div class="label">Final 8x8</div>
+                <canvas id="evoStep4" width="8" height="8"></canvas>
+            </div>
+        </div>
+
+        <p>
+            The Q works for qry.zone. But the shape has properties beyond branding.
+        </p>
+    </section>
+
+    <section>
+        <h2>The pocket</h2>
+        <p>
+            Look at the bottom-right corner. There's a 2x2 empty space — a pocket where a smaller version of the logo fits perfectly.
+        </p>
+
+<pre style="font-family: 'JetBrains Mono', monospace; background: var(--color-surface); padding: var(--space-md); border-radius: var(--border-radius); overflow-x: auto; font-size: 0.85rem; line-height: 1.1;">████████████████
+██            ██
+██  ████████  ██
+██  ████████  ██
+██  ████████████
+██  ██████<span class="pocket-highlight">    </span>██  ← pocket
+██      ██<span class="pocket-highlight">    </span>██  ← pocket
+████████████████</pre>
+
+        <p>
+            That pocket is deliberate. But here's the math: the pocket is 2x2 pixels in an 8x8 logo. To fit another 8x8 logo in there, you need to scale up 4x — making the parent 32x32 and the pocket 8x8.
+        </p>
+
+        <p>
+            So the nesting goes: 8x8 → 32x32 → 128x128 → 512x512... Each level is 4x larger. The recursion is bounded by resolution, not by the design. At any scale where the pocket is at least 8x8 pixels, another logo fits inside.
+        </p>
+
+        <p>
+            This isn't just visual cleverness — it's a design constraint that enables programmatic manipulation. Any transformation that preserves the pocket preserves the recursive property.
+        </p>
+    </section>
+
+    <section>
+        <h2>The data</h2>
+        <p>
+            The logo is fully defined by 8 numbers:
+        </p>
+
+<pre style="font-family: 'JetBrains Mono', monospace; background: var(--color-surface); padding: var(--space-md); border-radius: var(--border-radius); overflow-x: auto; font-size: 0.85rem; line-height: 1.4;">11111111  (0xFF)  top border
+10000001  (0x81)  frame
+10111101  (0xBD)  inner square
+10111101  (0xBD)  inner square
+10111111  (0xBF)  extends right
+10111001  (0xB9)  pocket begins
+10001001  (0x89)  pocket continues
+11111111  (0xFF)  bottom border</pre>
+
+        <p>
+            Eight bytes. Fits in a tweet. Can be transmitted, stored, generated, mutated. The entire brand identity in 64 bits.<span class="footnote-ref" data-note="0xFF, 0x81, 0xBD, 0xBD, 0xBF, 0xB9, 0x89, 0xFF">[1]</span>
+        </p>
+
+        <p>
+            What can you do with 8 numbers? <a href="/fun/logo-math/">More than you'd think</a> — FFT analysis, symmetry breakdowns, matrix properties.
+        </p>
+    </section>
+
+    <section>
+        <h2>What can we do with this?</h2>
+        <p>
+            When a logo is just data, it becomes a parameter. Feed it to algorithms. Transform it mathematically. Let it evolve.
+        </p>
+
+        <div class="fun-links">
+            <a href="/fun/qubiq/" class="fun-link">
+                <strong>QUBIQ</strong>
+                <span>Fractal clicker — logos combine into larger versions</span>
+            </a>
+            <a href="/fun/logo-math/" class="fun-link">
+                <strong>Logo Math</strong>
+                <span>FFT, symmetry, bit density, matrix properties</span>
+            </a>
+            <a href="/fun/ascii-logo/" class="fun-link">
+                <strong>ASCII Logo</strong>
+                <span>Terminal effects — ripple, wave, glitch, matrix</span>
+            </a>
+            <a href="/fun/logo-morph/" class="fun-link">
+                <strong>Logo Morph</strong>
+                <span>Dissolve and reform animation</span>
+            </a>
+            <a href="/fun/logo-physics/" class="fun-link">
+                <strong>Logo Physics</strong>
+                <span>Bouncing logos with gravity and collision</span>
+            </a>
+            <a href="/fun/game-of-life/" class="fun-link">
+                <strong>Game of Life</strong>
+                <span>Cellular automaton with logo cells</span>
+            </a>
+            <a href="/fun/langtons-ant/" class="fun-link">
+                <strong>Langton's Ant</strong>
+                <span>The logo explores infinite grids</span>
+            </a>
+        </div>
+
+        <p>
+            Each experiment asks: what happens when you apply [mathematical concept] to [this specific shape]? The answer is usually interesting, because the shape was designed to survive transformation.
+        </p>
+    </section>
+
+    <section>
+        <h2>Resolution limits</h2>
+        <p>
+            The logo scales infinitely upward — 16x16, 32x32, 128x128, whatever you need. But it has a hard floor: 8x8 pixels.
+        </p>
+
+        <div class="evolution-grid" style="grid-template-columns: repeat(5, 1fr);">
+            <div class="evolution-step">
+                <div class="label">32x32</div>
+                <canvas id="scale32" width="32" height="32" style="width: 64px; height: 64px; image-rendering: pixelated;"></canvas>
+            </div>
+            <div class="evolution-step">
+                <div class="label">16x16</div>
+                <canvas id="scale16" width="16" height="16" style="width: 64px; height: 64px; image-rendering: pixelated;"></canvas>
+            </div>
+            <div class="evolution-step">
+                <div class="label">8x8</div>
+                <canvas id="scale8" width="8" height="8" style="width: 64px; height: 64px; image-rendering: pixelated;"></canvas>
+            </div>
+            <div class="evolution-step">
+                <div class="label">4x4</div>
+                <canvas id="scale4" width="4" height="4" style="width: 64px; height: 64px; image-rendering: pixelated;"></canvas>
+            </div>
+            <div class="evolution-step">
+                <div class="label">2x2</div>
+                <canvas id="scale2" width="2" height="2" style="width: 64px; height: 64px; image-rendering: pixelated;"></canvas>
+            </div>
+        </div>
+
+        <p>
+            At 8x8, every pixel matters. The frame is one pixel thick. The inner square is 4x4. The pocket is 2x2. Remove any pixel and the shape breaks.
+        </p>
+
+        <p>
+            Below 8x8, you're sampling — and the information loss is catastrophic. At 4x4 it's a blob with a notch. At 2x2 it's just "something in the corner." At 1x1 it's a single pixel. Identity gone.
+        </p>
+
+        <p>
+            This is the tradeoff: maximum compressibility (64 bits) versus minimum recognizability (64 pixels). They happen to be the same number. Coincidence? Probably. But a useful one.
+        </p>
+    </section>
+
+    <section>
+        <h2>Design principles</h2>
+        <p>
+            The logo emerged from three constraints:
+        </p>
+
+        <ul>
+            <li><strong>Programmatic reproduction</strong> — Must be definable in code, not just as an image file. Enables generation at any scale, in any medium.</li>
+            <li><strong>Mathematical interest</strong> — Must have properties that interact well with algorithms. Symmetry, recursion, simple geometry.</li>
+            <li><strong>Human recognition</strong> — Must still read as a symbol. The Q shape, the frame, the visual weight.</li>
+        </ul>
+
+        <p>
+            The pocket satisfies all three. It's trivially defined (bits 5-6 in rows 5-6 are zero). It creates recursive mathematical structure. And it gives the Q its characteristic notch — the tail that makes it recognizable.
+        </p>
+    </section>
+
+    <section>
+        <h2>What's next</h2>
+        <p>
+            This page is a seedling. The experiments in <a href="/fun/">fun/</a> are ongoing. Some directions I want to explore:
+        </p>
+
+        <ul>
+            <li>Fourier analysis — what frequencies make up this shape?</li>
+            <li>3D extrusion — the logo as a voxel structure</li>
+            <li>Genetic algorithms — evolving variations that preserve the pocket</li>
+            <li>QR-code hybrid — embedding data inside the logo structure</li>
+            <li>Physical fabrication — CNC, laser cutting, 3D printing at various scales</li>
+        </ul>
+
+        <p>
+            The point isn't the logo itself. It's demonstrating that constraints breed creativity. Pick your constraints deliberately, and the design space becomes explorable.
+        </p>
+    </section>
+
+    <footer class="article-footer">
+        <p>Related: <a href="/fun/">Fun experiments</a> - <a href="/about/">About</a></p>
+    </footer>
+</article>
+
+<script>
+(function() {
+    const LOGO = [
+        0b11111111,
+        0b10000001,
+        0b10111101,
+        0b10111101,
+        0b10111111,
+        0b10111001,
+        0b10001001,
+        0b11111111
+    ];
+
+    const canvas = document.getElementById('logoCanvas');
+    const ctx = canvas.getContext('2d');
+    const buttons = document.querySelectorAll('.logo-controls button');
+
+    const ACCENT = '#f0dfaf';
+    const BG = '#1a1a1a';
+
+    // Nesting math:
+    // - 8x8 logo has 2x2 pocket at (5,5)
+    // - To fit an 8x8 in the pocket, parent must be 32x32 (4x scale, pocket becomes 8x8)
+    // - To fit a 32x32 in the pocket, parent must be 128x128 (4x scale, pocket becomes 32x32)
+
+    function drawLogoToCanvas(ox, oy, size, nestLevel, color) {
+        const pixelSize = size / 8;
+
+        ctx.fillStyle = color;
+        for (let y = 0; y < 8; y++) {
+            for (let x = 0; x < 8; x++) {
+                if (LOGO[y] & (1 << (7 - x))) {
+                    ctx.fillRect(ox + x * pixelSize, oy + y * pixelSize, pixelSize, pixelSize);
+                }
+            }
+        }
+
+        // Nest a smaller logo in the pocket
+        const pocketPixelSize = 2 * pixelSize;
+        if (nestLevel > 0 && pocketPixelSize >= 8) {
+            const pocketX = ox + 5 * pixelSize;
+            const pocketY = oy + 5 * pixelSize;
+            // Slightly different shade for nested logos
+            const nestedColor = nestLevel === 1 ? '#dcdccc' : '#c5c5b5';
+            drawLogoToCanvas(pocketX, pocketY, pocketPixelSize, nestLevel - 1, nestedColor);
+        }
+    }
+
+    function renderLogo(depth) {
+        // depth 0 = 8x8, depth 1 = 32x32, depth 2 = 128x128
+        const logoSize = 8 * Math.pow(4, depth);
+
+        // Canvas is always 128x128, we scale the drawing
+        canvas.width = 128;
+        canvas.height = 128;
+        ctx.imageSmoothingEnabled = false;
+
+        // Clear
+        ctx.fillStyle = BG;
+        ctx.fillRect(0, 0, 128, 128);
+
+        // Center the logo in the canvas
+        const scale = 128 / logoSize;
+        const drawSize = logoSize * scale;
+        const offset = (128 - drawSize) / 2;
+
+        ctx.save();
+        ctx.translate(offset, offset);
+        ctx.scale(scale, scale);
+
+        drawLogoToCanvas(0, 0, logoSize, depth, ACCENT);
+
+        ctx.restore();
+    }
+
+    function setDepth(d) {
+        renderLogo(d);
+        buttons.forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.depth) === d);
+        });
+    }
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => setDepth(parseInt(btn.dataset.depth)));
+    });
+
+    setDepth(0);
+
+    // Evolution steps - draw to canvases
+    function drawEvolution() {
+        // Step 1: Power symbol (circle with line)
+        const c1 = document.getElementById('evoStep1');
+        const ctx1 = c1.getContext('2d');
+        ctx1.fillStyle = BG;
+        ctx1.fillRect(0, 0, 16, 16);
+        ctx1.strokeStyle = ACCENT;
+        ctx1.lineWidth = 1.5;
+        ctx1.beginPath();
+        ctx1.arc(8, 9, 5, -0.8, Math.PI + 0.8);
+        ctx1.stroke();
+        ctx1.beginPath();
+        ctx1.moveTo(8, 3);
+        ctx1.lineTo(8, 9);
+        ctx1.stroke();
+
+        // Step 2: Rotated to ~4:30 position (power symbol tilted, tail points bottom-right)
+        const c2 = document.getElementById('evoStep2');
+        const ctx2 = c2.getContext('2d');
+        ctx2.fillStyle = BG;
+        ctx2.fillRect(0, 0, 16, 16);
+        ctx2.save();
+        ctx2.translate(8, 8);
+        ctx2.rotate(Math.PI * 0.75);  // 135° - from 12:00 to ~4:30
+        ctx2.strokeStyle = ACCENT;
+        ctx2.lineWidth = 1.5;
+        ctx2.beginPath();
+        ctx2.arc(0, 1, 5, -0.8, Math.PI + 0.8);
+        ctx2.stroke();
+        ctx2.beginPath();
+        ctx2.moveTo(0, -5);
+        ctx2.lineTo(0, 1);
+        ctx2.stroke();
+        ctx2.restore();
+
+        // Step 3: Bitcrushed (blocky approximation)
+        const c3 = document.getElementById('evoStep3');
+        const ctx3 = c3.getContext('2d');
+        ctx3.imageSmoothingEnabled = false;
+        ctx3.fillStyle = BG;
+        ctx3.fillRect(0, 0, 16, 16);
+        ctx3.fillStyle = ACCENT;
+        // Draw a blocky version - intermediate between circle and final
+        const blocky = [
+            0b0011111100,
+            0b0110000110,
+            0b1100000011,
+            0b1001111001,
+            0b1001111001,
+            0b1001111111,
+            0b1001110011,
+            0b1100010011,
+            0b0110000110,
+            0b0011111100
+        ];
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 10; x++) {
+                if (blocky[y] & (1 << (9 - x))) {
+                    ctx3.fillRect(x + 3, y + 3, 1, 1);
+                }
+            }
+        }
+
+        // Step 4: Final 8x8 logo
+        const c4 = document.getElementById('evoStep4');
+        const ctx4 = c4.getContext('2d');
+        ctx4.imageSmoothingEnabled = false;
+        ctx4.fillStyle = BG;
+        ctx4.fillRect(0, 0, 8, 8);
+        ctx4.fillStyle = ACCENT;
+        for (let y = 0; y < 8; y++) {
+            for (let x = 0; x < 8; x++) {
+                if (LOGO[y] & (1 << (7 - x))) {
+                    ctx4.fillRect(x, y, 1, 1);
+                }
+            }
+        }
+    }
+
+    drawEvolution();
+
+    // Resolution scaling demos - render to canvas
+    function renderScaleCanvas(canvasId, targetSize, downsample = false) {
+        const canvas = document.getElementById(canvasId);
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+
+        ctx.fillStyle = BG;
+        ctx.fillRect(0, 0, targetSize, targetSize);
+        ctx.fillStyle = ACCENT;
+
+        if (downsample) {
+            // Downsample: average pixels and threshold
+            const scale = 8 / targetSize;
+            for (let y = 0; y < targetSize; y++) {
+                for (let x = 0; x < targetSize; x++) {
+                    let count = 0, total = 0;
+                    for (let sy = 0; sy < scale; sy++) {
+                        for (let sx = 0; sx < scale; sx++) {
+                            const srcY = Math.floor(y * scale + sy);
+                            const srcX = Math.floor(x * scale + sx);
+                            if (srcY < 8 && srcX < 8) {
+                                total++;
+                                if (LOGO[srcY] & (1 << (7 - srcX))) count++;
+                            }
+                        }
+                    }
+                    if (count > total / 2) ctx.fillRect(x, y, 1, 1);
+                }
+            }
+        } else {
+            // Upsample
+            const scale = targetSize / 8;
+            for (let y = 0; y < 8; y++) {
+                for (let x = 0; x < 8; x++) {
+                    if (LOGO[y] & (1 << (7 - x))) {
+                        ctx.fillRect(x * scale, y * scale, scale, scale);
+                    }
+                }
+            }
+        }
+    }
+
+    renderScaleCanvas('scale32', 32);
+    renderScaleCanvas('scale16', 16);
+    renderScaleCanvas('scale8', 8);
+    renderScaleCanvas('scale4', 4, true);
+    renderScaleCanvas('scale2', 2, true);
+})();
+</script>

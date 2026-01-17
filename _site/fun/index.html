@@ -138,6 +138,40 @@
     text-decoration: none;
     font-size: 0.9rem;
 }
+.search-container {
+    max-width: 400px;
+    margin: 0 auto 2rem;
+}
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    color: var(--color-text);
+    outline: none;
+    transition: border-color 0.2s;
+}
+.search-input:focus {
+    border-color: var(--color-accent);
+}
+.search-input::placeholder {
+    color: var(--color-text-secondary);
+}
+.fun-card.hidden {
+    display: none;
+}
+.no-results {
+    text-align: center;
+    color: var(--color-text-secondary);
+    padding: 2rem;
+    display: none;
+}
+.no-results.show {
+    display: block;
+}
 </style>
 
 <div class="page-container page-container--wide">
@@ -147,7 +181,11 @@
         <p>Side projects and jokes. Not everything has to be serious.</p>
     </header>
 
-    <div class="fun-grid">
+    <div class="search-container">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search projects..." autocomplete="off">
+    </div>
+
+    <div class="fun-grid" id="funGrid">
         <a href="/fun/ideas/" class="fun-card">
             <div class="fun-card-title">Ideas</div>
             <p class="fun-card-desc">
@@ -224,6 +262,70 @@
             <div class="fun-card-title">ASCII Logo</div>
             <p class="fun-card-desc">
                 Terminal-style logo animations. Ripples, waves, glitches, and more with pure ASCII art.
+            </p>
+            <span class="fun-tag">sim</span>
+        </a>
+
+        <a href="/fun/logo-morph/" class="fun-card">
+            <div class="fun-card-title">Logo Morph</div>
+            <p class="fun-card-desc">
+                Watch the logo dissolve into noise, expand, and reform. ASCII recreation with side-by-side comparison.
+            </p>
+            <span class="fun-tag">sim</span>
+        </a>
+
+        <a href="/fun/logo-math/" class="fun-card">
+            <div class="fun-card-title">Logo Math</div>
+            <p class="fun-card-desc">
+                Mathematical analysis of 8 bytes. FFT, symmetry, bit density, and matrix properties.
+            </p>
+            <span class="fun-tag">math</span>
+        </a>
+
+        <a href="/fun/reaction-diffusion/" class="fun-card">
+            <div class="fun-card-title">Reaction-Diffusion</div>
+            <p class="fun-card-desc">
+                Gray-Scott chemical patterns in ASCII. Watch organic spots and stripes emerge.
+            </p>
+            <span class="fun-tag">sim</span>
+        </a>
+
+        <a href="/fun/wave-tank/" class="fun-card">
+            <div class="fun-card-title">Wave Tank</div>
+            <p class="fun-card-desc">
+                ASCII wave simulation. Click to drop ripples, watch interference patterns form.
+            </p>
+            <span class="fun-tag">sim</span>
+        </a>
+
+        <a href="/fun/l-systems/" class="fun-card">
+            <div class="fun-card-title">L-Systems</div>
+            <p class="fun-card-desc">
+                Fractal plants and patterns in ASCII. Trees, ferns, dragons, and space-filling curves.
+            </p>
+            <span class="fun-tag">sim</span>
+        </a>
+
+        <a href="/fun/logo-physics/" class="fun-card">
+            <div class="fun-card-title">Logo Physics</div>
+            <p class="fun-card-desc">
+                Bouncing logos with gravity and collisions. Throw them around, watch them orbit.
+            </p>
+            <span class="fun-tag">toy</span>
+        </a>
+
+        <a href="/fun/lenia/" class="fun-card">
+            <div class="fun-card-title">Lenia</div>
+            <p class="fun-card-desc">
+                Continuous cellular automata. Smooth, organic lifeforms emerge from simple rules.
+            </p>
+            <span class="fun-tag">sim</span>
+        </a>
+
+        <a href="/fun/langtons-ant/" class="fun-card">
+            <div class="fun-card-title">Langton's Ant</div>
+            <p class="fun-card-desc">
+                Simple rules create emergent highways. The logo explores an infinite grid.
             </p>
             <span class="fun-tag">sim</span>
         </a>
@@ -333,8 +435,46 @@
         </a>
     </div>
 
+    <div class="no-results" id="noResults">No projects match your search.</div>
+
     <a href="/" class="back-link">← back to qry.zone</a>
 </div>
+
+<script>
+(function() {
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const grid = document.getElementById('funGrid');
+    const cards = grid.querySelectorAll('.fun-card');
+    const noResults = document.getElementById('noResults');
+
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const title = card.querySelector('.fun-card-title').textContent.toLowerCase();
+            const desc = card.querySelector('.fun-card-desc').textContent.toLowerCase();
+            const tag = card.querySelector('.fun-tag').textContent.toLowerCase();
+
+            const matches = !query || title.includes(query) || desc.includes(query) || tag.includes(query);
+            card.classList.toggle('hidden', !matches);
+            if (matches) visibleCount++;
+        });
+
+        noResults.classList.toggle('show', visibleCount === 0 && query);
+    });
+
+    // Allow Escape to clear search
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            this.value = '';
+            this.dispatchEvent(new Event('input'));
+            this.blur();
+        }
+    });
+})();
+</script>
 
 <script>
 (function() {

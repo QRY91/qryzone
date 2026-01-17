@@ -1,0 +1,371 @@
+---
+layout: false
+permalink: /fun/l-systems/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ASCII L-Systems - Fractal plants and patterns in text">
+    <title>L-Systems</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <style>
+        .game-header { padding-top: 4rem; }
+        .terminal {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin: 1rem auto;
+            max-width: 700px;
+            min-height: 300px;
+            overflow: hidden;
+        }
+        .ascii-display {
+            white-space: pre;
+            line-height: 1.0;
+            font-size: clamp(4px, 1vw, 6px);
+            color: var(--accent);
+            text-shadow: 0 0 5px var(--accent-glow);
+            text-align: center;
+            user-select: none;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+        .preset-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0.5rem 0;
+        }
+        .preset-row button {
+            font-size: 0.65rem;
+            padding: 0.3rem 0.5rem;
+        }
+        .preset-row button.active {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 300px;
+            margin: 0.25rem auto;
+        }
+        .slider-row label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            min-width: 70px;
+        }
+        .slider-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+        .slider-row .value {
+            font-size: 0.7rem;
+            color: var(--accent);
+            min-width: 25px;
+        }
+        .info {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin: 0.5rem 0;
+        }
+        body.fullscreen .terminal {
+            max-width: none;
+            height: calc(100vh - 80px);
+            border: none;
+        }
+        body.fullscreen .ascii-display { font-size: clamp(3px, 0.8vw, 5px); }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">&solb;</button>
+    <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+    <header class="game-header">
+        <h1 class="game-title">L-Systems</h1>
+        <p class="game-subtitle">fractal growth in ASCII</p>
+    </header>
+
+    <div class="terminal" id="terminal">
+        <div class="ascii-display" id="display"></div>
+    </div>
+
+    <div class="preset-row">
+        <button class="active" data-preset="tree">Tree</button>
+        <button data-preset="fern">Fern</button>
+        <button data-preset="bush">Bush</button>
+        <button data-preset="sierpinski">Sierpinski</button>
+        <button data-preset="dragon">Dragon</button>
+        <button data-preset="hilbert">Hilbert</button>
+        <button data-preset="koch">Koch</button>
+    </div>
+
+    <div class="slider-row">
+        <label>Iterations</label>
+        <input type="range" id="iterSlider" min="1" max="8" step="1" value="5">
+        <span class="value" id="iterValue">5</span>
+    </div>
+    <div class="slider-row">
+        <label>Angle</label>
+        <input type="range" id="angleSlider" min="10" max="90" step="1" value="25">
+        <span class="value" id="angleValue">25°</span>
+    </div>
+
+    <div class="info" id="info">Generating...</div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>L-Systems</h2>
+            <p>Lindenmayer systems generate fractal patterns through string rewriting rules.</p>
+            <p><strong>How it works:</strong></p>
+            <ul>
+                <li>Start with an axiom (initial string)</li>
+                <li>Apply rules to replace characters</li>
+                <li>Interpret the result as drawing commands</li>
+                <li>F = forward, + = right, - = left, [ = save, ] = restore</li>
+            </ul>
+            <p><strong>Presets:</strong></p>
+            <ul>
+                <li><strong>Tree/Fern/Bush</strong> &ndash; Botanical branching</li>
+                <li><strong>Sierpinski</strong> &ndash; Classic fractal triangle</li>
+                <li><strong>Dragon</strong> &ndash; Dragon curve</li>
+                <li><strong>Hilbert</strong> &ndash; Space-filling curve</li>
+                <li><strong>Koch</strong> &ndash; Snowflake curve</li>
+            </ul>
+            <p><a href="https://en.wikipedia.org/wiki/L-system" target="_blank">Learn more on Wikipedia</a></p>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        const PRESETS = {
+            tree: {
+                axiom: 'X',
+                rules: { X: 'F+[[X]-X]-F[-FX]+X', F: 'FF' },
+                angle: 25, iterations: 5, startAngle: -90
+            },
+            fern: {
+                axiom: 'X',
+                rules: { X: 'F+[[X]-X]-F[-FX]+X', F: 'FF' },
+                angle: 22, iterations: 5, startAngle: -90
+            },
+            bush: {
+                axiom: 'F',
+                rules: { F: 'FF+[+F-F-F]-[-F+F+F]' },
+                angle: 22, iterations: 4, startAngle: -90
+            },
+            sierpinski: {
+                axiom: 'F-G-G',
+                rules: { F: 'F-G+F+G-F', G: 'GG' },
+                angle: 120, iterations: 6, startAngle: 0
+            },
+            dragon: {
+                axiom: 'FX',
+                rules: { X: 'X+YF+', Y: '-FX-Y' },
+                angle: 90, iterations: 10, startAngle: 0
+            },
+            hilbert: {
+                axiom: 'A',
+                rules: { A: '-BF+AFA+FB-', B: '+AF-BFB-FA+' },
+                angle: 90, iterations: 5, startAngle: 0
+            },
+            koch: {
+                axiom: 'F--F--F',
+                rules: { F: 'F+F--F+F' },
+                angle: 60, iterations: 4, startAngle: 0
+            }
+        };
+
+        const WIDTH = 160;
+        const HEIGHT = 80;
+        let grid = [];
+        let currentPreset = 'tree';
+        let iterations = 5;
+        let angle = 25;
+
+        const display = document.getElementById('display');
+        const info = document.getElementById('info');
+
+        function generate(preset) {
+            const p = PRESETS[preset];
+            let str = p.axiom;
+            const iters = Math.min(iterations, p.iterations + 2);
+
+            for (let i = 0; i < iters; i++) {
+                let next = '';
+                for (const c of str) {
+                    next += p.rules[c] || c;
+                }
+                str = next;
+                if (str.length > 500000) break;
+            }
+
+            return str;
+        }
+
+        function interpret(str, preset) {
+            const p = PRESETS[preset];
+            const ang = angle * Math.PI / 180;
+            let x = 0, y = 0, dir = p.startAngle * Math.PI / 180;
+            let minX = 0, maxX = 0, minY = 0, maxY = 0;
+            const stack = [];
+            const lines = [];
+
+            for (const c of str) {
+                if (c === 'F' || c === 'G') {
+                    const nx = x + Math.cos(dir) * 2;
+                    const ny = y + Math.sin(dir) * 2;
+                    lines.push({ x1: x, y1: y, x2: nx, y2: ny });
+                    x = nx; y = ny;
+                    minX = Math.min(minX, x); maxX = Math.max(maxX, x);
+                    minY = Math.min(minY, y); maxY = Math.max(maxY, y);
+                } else if (c === '+') {
+                    dir += ang;
+                } else if (c === '-') {
+                    dir -= ang;
+                } else if (c === '[') {
+                    stack.push({ x, y, dir });
+                } else if (c === ']') {
+                    const s = stack.pop();
+                    if (s) { x = s.x; y = s.y; dir = s.dir; }
+                }
+            }
+
+            return { lines, minX, maxX, minY, maxY };
+        }
+
+        function render() {
+            // Clear grid
+            for (let y = 0; y < HEIGHT; y++) {
+                grid[y] = [];
+                for (let x = 0; x < WIDTH; x++) {
+                    grid[y][x] = ' ';
+                }
+            }
+
+            const str = generate(currentPreset);
+            info.textContent = `String length: ${str.length.toLocaleString()}`;
+
+            const { lines, minX, maxX, minY, maxY } = interpret(str, currentPreset);
+
+            const w = maxX - minX || 1;
+            const h = maxY - minY || 1;
+            const scale = Math.min((WIDTH - 4) / w, (HEIGHT - 4) / h);
+
+            for (const line of lines) {
+                const x1 = Math.floor((line.x1 - minX) * scale) + 2;
+                const y1 = Math.floor((line.y1 - minY) * scale) + 2;
+                const x2 = Math.floor((line.x2 - minX) * scale) + 2;
+                const y2 = Math.floor((line.y2 - minY) * scale) + 2;
+                drawLine(x1, y1, x2, y2);
+            }
+
+            let out = '';
+            for (let y = 0; y < HEIGHT; y++) {
+                for (let x = 0; x < WIDTH; x++) {
+                    out += grid[y][x] + grid[y][x];
+                }
+                out += '\n';
+            }
+            display.textContent = out;
+        }
+
+        function drawLine(x1, y1, x2, y2) {
+            const dx = Math.abs(x2 - x1);
+            const dy = Math.abs(y2 - y1);
+            const sx = x1 < x2 ? 1 : -1;
+            const sy = y1 < y2 ? 1 : -1;
+            let err = dx - dy;
+
+            while (true) {
+                if (x1 >= 0 && x1 < WIDTH && y1 >= 0 && y1 < HEIGHT) {
+                    // Choose character based on line direction
+                    const ang = Math.atan2(y2 - y1, x2 - x1);
+                    let c = '·';
+                    if (Math.abs(ang) < 0.4) c = '─';
+                    else if (Math.abs(ang - Math.PI) < 0.4 || Math.abs(ang + Math.PI) < 0.4) c = '─';
+                    else if (Math.abs(ang - Math.PI/2) < 0.4) c = '│';
+                    else if (Math.abs(ang + Math.PI/2) < 0.4) c = '│';
+                    else if (ang > 0 && ang < Math.PI/2) c = '╲';
+                    else if (ang < 0 && ang > -Math.PI/2) c = '╱';
+                    else if (ang > Math.PI/2) c = '╱';
+                    else c = '╲';
+
+                    grid[y1][x1] = c;
+                }
+
+                if (x1 === x2 && y1 === y2) break;
+                const e2 = 2 * err;
+                if (e2 > -dy) { err -= dy; x1 += sx; }
+                if (e2 < dx) { err += dx; y1 += sy; }
+            }
+        }
+
+        function setPreset(name) {
+            currentPreset = name;
+            const p = PRESETS[name];
+            angle = p.angle;
+            document.getElementById('angleSlider').value = angle;
+            document.getElementById('angleValue').textContent = angle + '°';
+            document.querySelectorAll('.preset-row button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.preset === name);
+            });
+            render();
+        }
+
+        // Events
+        document.querySelectorAll('.preset-row button').forEach(btn => {
+            btn.addEventListener('click', () => setPreset(btn.dataset.preset));
+        });
+
+        document.getElementById('iterSlider').addEventListener('input', function() {
+            iterations = parseInt(this.value);
+            document.getElementById('iterValue').textContent = iterations;
+            render();
+        });
+
+        document.getElementById('angleSlider').addEventListener('input', function() {
+            angle = parseInt(this.value);
+            document.getElementById('angleValue').textContent = angle + '°';
+            render();
+        });
+
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => { if (e.target === helpModal) helpModal.classList.remove('show'); });
+
+        // Fullscreen
+        let isFullscreen = false;
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            isFullscreen = !isFullscreen;
+            document.body.classList.toggle('fullscreen', isFullscreen);
+            setTimeout(render, 100);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f') document.getElementById('fullscreenBtn').click();
+            if (e.key === 'Escape') { if (isFullscreen) document.getElementById('fullscreenBtn').click(); helpModal.classList.remove('show'); }
+        });
+
+        render();
+    </script>
+</body>
+</html>

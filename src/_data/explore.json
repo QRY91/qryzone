@@ -239,6 +239,15 @@
       "tags": ["learning", "developer-tools"],
       "status": "seedling",
       "lastUpdated": "2026-01-15"
+    },
+    {
+      "title": "Logo design",
+      "description": "An 8x8 recursive symbol designed for programmatic manipulation",
+      "href": "/logo-design/",
+      "tags": ["design", "creative", "meta"],
+      "status": "seedling",
+      "connections": ["Ideas"],
+      "lastUpdated": "2026-01-17"
     }
   ]
 }

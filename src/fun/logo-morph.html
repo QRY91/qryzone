@@ -1,0 +1,456 @@
+---
+layout: false
+permalink: /fun/logo-morph/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Logo Morph - Watch the qry.zone logo dissolve and reform">
+    <title>Logo Morph</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <style>
+        .game-header { padding-top: 4rem; }
+
+        .comparison {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+
+        .panel {
+            text-align: center;
+        }
+
+        .panel-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .gif-panel img {
+            width: 256px;
+            height: 256px;
+            image-rendering: pixelated;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg-surface);
+        }
+
+        .ascii-panel {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.5rem;
+            min-width: 256px;
+            min-height: 256px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ascii-display {
+            white-space: pre;
+            line-height: 1.0;
+            font-size: 7px;
+            color: var(--accent);
+            text-shadow: 0 0 5px var(--accent-glow);
+            user-select: none;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 300px;
+            margin: 0.25rem auto;
+        }
+        .slider-row label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+        .slider-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+
+        .phase-indicator {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin: 0.5rem 0;
+        }
+
+        body.fullscreen .comparison {
+            transform: scale(1.5);
+            transform-origin: center top;
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">&solb;</button>
+    <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+    <header class="game-header">
+        <h1 class="game-title">Logo Morph</h1>
+        <p class="game-subtitle">dissolve and reform</p>
+    </header>
+
+    <div class="comparison">
+        <div class="panel gif-panel">
+            <div class="panel-title">Original GIF</div>
+            <img src="/assets/images/logo_animation.gif" alt="Animated logo" id="gifImg">
+        </div>
+        <div class="panel">
+            <div class="panel-title">ASCII Recreation</div>
+            <div class="ascii-panel">
+                <div class="ascii-display" id="display"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="phase-indicator" id="phase">16×16 → Dissolve</div>
+
+    <div class="controls">
+        <button id="playBtn">Pause</button>
+        <button id="resetBtn">Reset</button>
+    </div>
+
+    <div class="slider-row">
+        <label>Speed</label>
+        <input type="range" id="speedSlider" min="0.2" max="3" step="0.1" value="1">
+    </div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>Logo Morph</h2>
+            <p>A recreation of the animated logo that appears on the explore page.</p>
+            <p><strong>Animation phases:</strong></p>
+            <ul>
+                <li><strong>16×16</strong> &ndash; Small logo, stable</li>
+                <li><strong>Dissolve</strong> &ndash; Pixels scatter into noise</li>
+                <li><strong>Expand</strong> &ndash; Particles drift outward</li>
+                <li><strong>32×32</strong> &ndash; Large logo forms</li>
+                <li><strong>Reverse</strong> &ndash; Animation plays backward</li>
+            </ul>
+            <p>The animation ping-pongs indefinitely.</p>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        // 8x8 base logo pattern
+        const LOGO_8 = [
+            [1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,1],
+            [1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,1,1],
+            [1,0,1,1,1,0,0,1],
+            [1,0,0,0,1,0,0,1],
+            [1,1,1,1,1,1,1,1]
+        ];
+
+        // Scale logo to any size
+        function scaleLogo(baseSize, targetSize) {
+            const scale = targetSize / 8;
+            const result = [];
+            for (let y = 0; y < targetSize; y++) {
+                result[y] = [];
+                for (let x = 0; x < targetSize; x++) {
+                    const srcY = Math.floor(y / scale);
+                    const srcX = Math.floor(x / scale);
+                    result[y][x] = LOGO_8[srcY][srcX];
+                }
+            }
+            return result;
+        }
+
+        const GRID_SIZE = 32;  // ASCII grid size
+        const SMALL_SIZE = 16;
+        const LARGE_SIZE = 32;
+
+        const logo16 = scaleLogo(8, SMALL_SIZE);
+        const logo32 = scaleLogo(8, LARGE_SIZE);
+
+        // Each particle tracks a filled pixel
+        let particles = [];
+        const display = document.getElementById('display');
+        const phaseEl = document.getElementById('phase');
+
+        // Animation state
+        let time = 0;
+        let speed = 1;
+        let running = true;
+        let direction = 1;  // 1 = forward, -1 = backward
+
+        // Phases: 0-1 = small stable, 1-2 = dissolve, 2-3 = expand, 3-4 = reform large, 4-5 = large stable
+        const CYCLE_LENGTH = 5;
+
+        function init() {
+            particles = [];
+
+            // Create particles for all filled pixels in 32x32 logo
+            // We track their position in the small logo and large logo
+            const offset16 = (GRID_SIZE - SMALL_SIZE) / 2;
+
+            for (let y = 0; y < LARGE_SIZE; y++) {
+                for (let x = 0; x < LARGE_SIZE; x++) {
+                    if (logo32[y][x]) {
+                        // Map to 16x16 position (centered)
+                        const small16X = Math.floor(x / 2);
+                        const small16Y = Math.floor(y / 2);
+                        const isInSmall = logo16[small16Y] && logo16[small16Y][small16X];
+
+                        particles.push({
+                            // Large logo position (target)
+                            largeX: x,
+                            largeY: y,
+                            // Small logo position (centered in grid)
+                            smallX: offset16 + small16X,
+                            smallY: offset16 + small16Y,
+                            // Current position
+                            x: offset16 + small16X,
+                            y: offset16 + small16Y,
+                            // Random offset for noise phase
+                            noiseX: (Math.random() - 0.5) * GRID_SIZE * 0.8,
+                            noiseY: (Math.random() - 0.5) * GRID_SIZE * 0.8,
+                            // Whether this pixel exists in small logo
+                            inSmall: isInSmall,
+                            // Random seed for variation
+                            seed: Math.random(),
+                            phase: Math.random() * Math.PI * 2
+                        });
+                    }
+                }
+            }
+
+            time = 0;
+            direction = 1;
+        }
+
+        function easeInOut(t) {
+            return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        }
+
+        function lerp(a, b, t) {
+            return a + (b - a) * t;
+        }
+
+        function update(dt) {
+            time += dt * speed * direction;
+
+            // Ping-pong
+            if (time >= CYCLE_LENGTH) {
+                time = CYCLE_LENGTH;
+                direction = -1;
+            } else if (time <= 0) {
+                time = 0;
+                direction = 1;
+            }
+
+            const phase = time;
+            let phaseName = '';
+
+            for (const p of particles) {
+                // Phase 0-1: Small logo stable
+                if (phase < 1) {
+                    phaseName = '16×16 Stable';
+                    if (p.inSmall) {
+                        p.x = p.smallX;
+                        p.y = p.smallY;
+                        p.visible = true;
+                    } else {
+                        p.visible = false;
+                    }
+                }
+                // Phase 1-2: Dissolve into noise
+                else if (phase < 2) {
+                    phaseName = 'Dissolving';
+                    const t = easeInOut(phase - 1);
+                    if (p.inSmall) {
+                        // Add noise to position
+                        const jitter = Math.sin(time * 10 + p.phase) * t * 2;
+                        p.x = lerp(p.smallX, p.smallX + p.noiseX * 0.3, t) + jitter;
+                        p.y = lerp(p.smallY, p.smallY + p.noiseY * 0.3, t) + jitter;
+                        p.visible = true;
+                    } else {
+                        // Particles not in small logo start appearing at edges
+                        p.visible = p.seed < t * 0.5;
+                        if (p.visible) {
+                            const angle = p.phase;
+                            const dist = GRID_SIZE * 0.6;
+                            p.x = GRID_SIZE/2 + Math.cos(angle) * dist;
+                            p.y = GRID_SIZE/2 + Math.sin(angle) * dist;
+                        }
+                    }
+                }
+                // Phase 2-3: Expand outward
+                else if (phase < 3) {
+                    phaseName = 'Expanding';
+                    const t = easeInOut(phase - 2);
+
+                    // All particles now visible, moving toward outer ring
+                    p.visible = true;
+
+                    // Calculate intermediate "ring" position
+                    const angle = Math.atan2(p.largeY - GRID_SIZE/2, p.largeX - GRID_SIZE/2);
+                    const ringDist = GRID_SIZE * 0.45;
+                    const ringX = GRID_SIZE/2 + Math.cos(angle + p.seed * 0.5) * ringDist;
+                    const ringY = GRID_SIZE/2 + Math.sin(angle + p.seed * 0.5) * ringDist;
+
+                    // From noise position to ring
+                    const startX = p.inSmall ? p.smallX + p.noiseX * 0.3 : GRID_SIZE/2 + Math.cos(p.phase) * GRID_SIZE * 0.6;
+                    const startY = p.inSmall ? p.smallY + p.noiseY * 0.3 : GRID_SIZE/2 + Math.sin(p.phase) * GRID_SIZE * 0.6;
+
+                    p.x = lerp(startX, ringX, t);
+                    p.y = lerp(startY, ringY, t);
+
+                    // Add swirl
+                    const swirl = Math.sin(t * Math.PI) * 3;
+                    p.x += Math.cos(angle + Math.PI/2) * swirl * p.seed;
+                    p.y += Math.sin(angle + Math.PI/2) * swirl * p.seed;
+                }
+                // Phase 3-4: Reform into large logo
+                else if (phase < 4) {
+                    phaseName = 'Reforming 32×32';
+                    const t = easeInOut(phase - 3);
+                    p.visible = true;
+
+                    // Calculate ring position
+                    const angle = Math.atan2(p.largeY - GRID_SIZE/2, p.largeX - GRID_SIZE/2);
+                    const ringDist = GRID_SIZE * 0.45;
+                    const ringX = GRID_SIZE/2 + Math.cos(angle + p.seed * 0.5) * ringDist;
+                    const ringY = GRID_SIZE/2 + Math.sin(angle + p.seed * 0.5) * ringDist;
+
+                    // From ring to final position
+                    p.x = lerp(ringX, p.largeX, t);
+                    p.y = lerp(ringY, p.largeY, t);
+                }
+                // Phase 4-5: Large logo stable
+                else {
+                    phaseName = '32×32 Stable';
+                    p.visible = true;
+                    p.x = p.largeX;
+                    p.y = p.largeY;
+                }
+            }
+
+            if (direction === -1) {
+                phaseName = '← ' + phaseName;
+            }
+            phaseEl.textContent = phaseName;
+        }
+
+        function render() {
+            // Clear grid
+            const grid = [];
+            for (let y = 0; y < GRID_SIZE; y++) {
+                grid[y] = [];
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    grid[y][x] = 0;
+                }
+            }
+
+            // Place particles
+            for (const p of particles) {
+                if (!p.visible) continue;
+                const gx = Math.round(p.x);
+                const gy = Math.round(p.y);
+                if (gx >= 0 && gx < GRID_SIZE && gy >= 0 && gy < GRID_SIZE) {
+                    grid[gy][gx] = Math.min(1, grid[gy][gx] + 0.5);
+                }
+            }
+
+            // Render to ASCII
+            const chars = ' ░▒▓█';
+            let out = '';
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    const v = grid[y][x];
+                    const idx = Math.floor(v * (chars.length - 1));
+                    const c = chars[Math.max(0, Math.min(chars.length - 1, idx))];
+                    out += c + c;  // Double-width
+                }
+                out += '\n';
+            }
+            display.textContent = out;
+        }
+
+        let lastTime = 0;
+        function loop(timestamp) {
+            const dt = lastTime ? (timestamp - lastTime) / 1000 : 0;
+            lastTime = timestamp;
+
+            if (running) {
+                update(Math.min(dt, 0.05));
+            }
+            render();
+            requestAnimationFrame(loop);
+        }
+
+        // Events
+        document.getElementById('playBtn').addEventListener('click', function() {
+            running = !running;
+            this.textContent = running ? 'Pause' : 'Play';
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            init();
+        });
+
+        document.getElementById('speedSlider').addEventListener('input', function() {
+            speed = parseFloat(this.value);
+        });
+
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => { if (e.target === helpModal) helpModal.classList.remove('show'); });
+
+        // Fullscreen
+        let isFullscreen = false;
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            isFullscreen = !isFullscreen;
+            document.body.classList.toggle('fullscreen', isFullscreen);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') { e.preventDefault(); document.getElementById('playBtn').click(); }
+            if (e.key === 'f') document.getElementById('fullscreenBtn').click();
+            if (e.key === 'Escape') { if (isFullscreen) document.getElementById('fullscreenBtn').click(); helpModal.classList.remove('show'); }
+        });
+
+        // Handle missing GIF gracefully
+        document.getElementById('gifImg').addEventListener('error', function() {
+            this.style.display = 'none';
+            this.parentElement.querySelector('.panel-title').textContent = 'Original (not found)';
+        });
+
+        init();
+        requestAnimationFrame(loop);
+    </script>
+</body>
+</html>

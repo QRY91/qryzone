@@ -1,0 +1,347 @@
+---
+layout: false
+permalink: /fun/reaction-diffusion/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ASCII Reaction-Diffusion - Gray-Scott chemical patterns in text">
+    <title>Reaction-Diffusion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <style>
+        .game-header { padding-top: 4rem; }
+        .terminal {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin: 1rem auto;
+            max-width: 700px;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        .ascii-display {
+            white-space: pre;
+            line-height: 1.0;
+            font-size: clamp(4px, 1.2vw, 7px);
+            color: var(--accent);
+            text-shadow: 0 0 5px var(--accent-glow);
+            text-align: center;
+            user-select: none;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .slider-row label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            min-width: 50px;
+        }
+        .slider-row input[type="range"] {
+            flex: 1;
+            accent-color: var(--accent);
+        }
+        .slider-row .value {
+            font-size: 0.7rem;
+            color: var(--accent);
+            min-width: 40px;
+            text-align: right;
+        }
+        .preset-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 0.5rem 0;
+        }
+        .preset-row button {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.6rem;
+        }
+        .preset-row button.active {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+        body.fullscreen .terminal {
+            max-width: none;
+            height: calc(100vh - 80px);
+            border: none;
+        }
+        body.fullscreen .ascii-display {
+            font-size: clamp(5px, 1.5vw, 9px);
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">&solb;</button>
+    <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+    <header class="game-header">
+        <h1 class="game-title">Reaction-Diffusion</h1>
+        <p class="game-subtitle">Gray-Scott chemical patterns in ASCII</p>
+    </header>
+
+    <div class="terminal" id="terminal">
+        <div class="ascii-display" id="display"></div>
+    </div>
+
+    <div class="preset-row">
+        <button class="active" data-preset="mitosis">Mitosis</button>
+        <button data-preset="coral">Coral</button>
+        <button data-preset="maze">Maze</button>
+        <button data-preset="spots">Spots</button>
+        <button data-preset="worms">Worms</button>
+    </div>
+
+    <div class="controls">
+        <button id="playBtn">Pause</button>
+        <button id="resetBtn">Reset</button>
+        <button id="clearBtn">Clear</button>
+    </div>
+
+    <div class="slider-row">
+        <label>Feed</label>
+        <input type="range" id="feedSlider" min="0.01" max="0.1" step="0.001" value="0.055">
+        <span class="value" id="feedValue">0.055</span>
+    </div>
+    <div class="slider-row">
+        <label>Kill</label>
+        <input type="range" id="killSlider" min="0.03" max="0.07" step="0.001" value="0.062">
+        <span class="value" id="killValue">0.062</span>
+    </div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>Reaction-Diffusion</h2>
+            <p>The Gray-Scott model simulates two chemicals (U and V) that react and diffuse across a surface.</p>
+            <p><strong>Rules:</strong></p>
+            <ul>
+                <li>U is consumed to produce V</li>
+                <li>V slowly dies off (kill rate)</li>
+                <li>U is continuously added (feed rate)</li>
+                <li>Both chemicals diffuse at different rates</li>
+            </ul>
+            <p><strong>Controls:</strong></p>
+            <ul>
+                <li><strong>Click/drag</strong> &ndash; Add chemical V</li>
+                <li><strong>Presets</strong> &ndash; Different feed/kill patterns</li>
+                <li><strong>Space</strong> &ndash; Play/Pause</li>
+            </ul>
+            <p><a href="https://en.wikipedia.org/wiki/Reaction%E2%80%93diffusion_system" target="_blank">Learn more on Wikipedia</a></p>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        const PRESETS = {
+            mitosis: { feed: 0.0367, kill: 0.0649 },
+            coral: { feed: 0.0545, kill: 0.062 },
+            maze: { feed: 0.029, kill: 0.057 },
+            spots: { feed: 0.025, kill: 0.06 },
+            worms: { feed: 0.078, kill: 0.061 }
+        };
+
+        const CHARS = ' .:-=+*#%@'.split('');
+        const WIDTH = 120;
+        const HEIGHT = 60;
+
+        let gridA = [], gridB = [];
+        let nextA = [], nextB = [];
+        let feed = 0.055, kill = 0.062;
+        let dA = 1.0, dB = 0.5;
+        let running = true;
+
+        const display = document.getElementById('display');
+        const terminal = document.getElementById('terminal');
+
+        function init() {
+            for (let y = 0; y < HEIGHT; y++) {
+                gridA[y] = []; gridB[y] = [];
+                nextA[y] = []; nextB[y] = [];
+                for (let x = 0; x < WIDTH; x++) {
+                    gridA[y][x] = 1;
+                    gridB[y][x] = 0;
+                    nextA[y][x] = 1;
+                    nextB[y][x] = 0;
+                }
+            }
+            // Seed center
+            seedArea(WIDTH/2, HEIGHT/2, 5);
+        }
+
+        function seedArea(cx, cy, r) {
+            for (let y = -r; y <= r; y++) {
+                for (let x = -r; x <= r; x++) {
+                    const px = Math.floor(cx + x);
+                    const py = Math.floor(cy + y);
+                    if (px >= 0 && px < WIDTH && py >= 0 && py < HEIGHT) {
+                        if (x*x + y*y <= r*r) {
+                            gridB[py][px] = 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        function laplacian(grid, x, y) {
+            const l = (x - 1 + WIDTH) % WIDTH;
+            const r = (x + 1) % WIDTH;
+            const u = (y - 1 + HEIGHT) % HEIGHT;
+            const d = (y + 1) % HEIGHT;
+
+            return (
+                grid[y][l] + grid[y][r] + grid[u][x] + grid[d][x]
+                + 0.05 * (grid[u][l] + grid[u][r] + grid[d][l] + grid[d][r])
+                - 4.2 * grid[y][x]
+            );
+        }
+
+        function step() {
+            for (let y = 0; y < HEIGHT; y++) {
+                for (let x = 0; x < WIDTH; x++) {
+                    const a = gridA[y][x];
+                    const b = gridB[y][x];
+                    const lapA = laplacian(gridA, x, y);
+                    const lapB = laplacian(gridB, x, y);
+                    const reaction = a * b * b;
+
+                    nextA[y][x] = a + (dA * lapA - reaction + feed * (1 - a));
+                    nextB[y][x] = b + (dB * lapB + reaction - (kill + feed) * b);
+
+                    nextA[y][x] = Math.max(0, Math.min(1, nextA[y][x]));
+                    nextB[y][x] = Math.max(0, Math.min(1, nextB[y][x]));
+                }
+            }
+            [gridA, nextA] = [nextA, gridA];
+            [gridB, nextB] = [nextB, gridB];
+        }
+
+        function render() {
+            let out = '';
+            for (let y = 0; y < HEIGHT; y++) {
+                for (let x = 0; x < WIDTH; x++) {
+                    const val = gridB[y][x];
+                    const idx = Math.floor(val * (CHARS.length - 1));
+                    const c = CHARS[Math.max(0, Math.min(CHARS.length - 1, idx))];
+                    out += c + c;
+                }
+                out += '\n';
+            }
+            display.textContent = out;
+        }
+
+        function loop() {
+            if (running) {
+                for (let i = 0; i < 8; i++) step();
+            }
+            render();
+            requestAnimationFrame(loop);
+        }
+
+        function setPreset(name) {
+            const p = PRESETS[name];
+            feed = p.feed;
+            kill = p.kill;
+            document.getElementById('feedSlider').value = feed;
+            document.getElementById('killSlider').value = kill;
+            document.getElementById('feedValue').textContent = feed.toFixed(3);
+            document.getElementById('killValue').textContent = kill.toFixed(3);
+            document.querySelectorAll('.preset-row button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.preset === name);
+            });
+        }
+
+        // Events
+        document.querySelectorAll('.preset-row button').forEach(btn => {
+            btn.addEventListener('click', () => setPreset(btn.dataset.preset));
+        });
+
+        document.getElementById('playBtn').addEventListener('click', function() {
+            running = !running;
+            this.textContent = running ? 'Pause' : 'Play';
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            init();
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            for (let y = 0; y < HEIGHT; y++) {
+                for (let x = 0; x < WIDTH; x++) {
+                    gridA[y][x] = 1;
+                    gridB[y][x] = 0;
+                }
+            }
+        });
+
+        document.getElementById('feedSlider').addEventListener('input', function() {
+            feed = parseFloat(this.value);
+            document.getElementById('feedValue').textContent = feed.toFixed(3);
+        });
+
+        document.getElementById('killSlider').addEventListener('input', function() {
+            kill = parseFloat(this.value);
+            document.getElementById('killValue').textContent = kill.toFixed(3);
+        });
+
+        let isDrawing = false;
+        terminal.addEventListener('mousedown', (e) => { isDrawing = true; addChemical(e); });
+        terminal.addEventListener('mousemove', (e) => { if (isDrawing) addChemical(e); });
+        terminal.addEventListener('mouseup', () => isDrawing = false);
+        terminal.addEventListener('mouseleave', () => isDrawing = false);
+
+        function addChemical(e) {
+            const rect = display.getBoundingClientRect();
+            const charW = rect.width / (WIDTH * 2);
+            const charH = rect.height / HEIGHT;
+            const x = Math.floor((e.clientX - rect.left) / charW / 2);
+            const y = Math.floor((e.clientY - rect.top) / charH);
+            seedArea(x, y, 3);
+        }
+
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => { if (e.target === helpModal) helpModal.classList.remove('show'); });
+
+        // Fullscreen
+        let isFullscreen = false;
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            isFullscreen = !isFullscreen;
+            document.body.classList.toggle('fullscreen', isFullscreen);
+        });
+
+        // Keyboard
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') { e.preventDefault(); document.getElementById('playBtn').click(); }
+            if (e.key === 'f') document.getElementById('fullscreenBtn').click();
+            if (e.key === 'Escape') { if (isFullscreen) document.getElementById('fullscreenBtn').click(); helpModal.classList.remove('show'); }
+        });
+
+        init();
+        setPreset('mitosis');
+        loop();
+    </script>
+</body>
+</html>

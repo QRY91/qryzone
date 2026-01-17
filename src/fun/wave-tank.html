@@ -1,0 +1,306 @@
+---
+layout: false
+permalink: /fun/wave-tank/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ASCII Wave Tank - Click to create ripples and watch interference patterns">
+    <title>Wave Tank</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <style>
+        .game-header { padding-top: 4rem; }
+        .terminal {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin: 1rem auto;
+            max-width: 700px;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        .ascii-display {
+            white-space: pre;
+            line-height: 1.0;
+            font-size: clamp(5px, 1.4vw, 8px);
+            color: var(--accent);
+            text-shadow: 0 0 8px var(--accent-glow);
+            text-align: center;
+            user-select: none;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 350px;
+            margin: 0.25rem auto;
+        }
+        .slider-row label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+        .slider-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+        .mode-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 0.5rem 0;
+        }
+        .mode-row button.active {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+        body.fullscreen .terminal {
+            max-width: none;
+            height: calc(100vh - 80px);
+            border: none;
+        }
+        body.fullscreen .ascii-display { font-size: clamp(6px, 1.6vw, 10px); }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">&solb;</button>
+    <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+    <header class="game-header">
+        <h1 class="game-title">Wave Tank</h1>
+        <p class="game-subtitle">click to create ripples</p>
+    </header>
+
+    <div class="terminal" id="terminal">
+        <div class="ascii-display" id="display"></div>
+    </div>
+
+    <div class="mode-row">
+        <button class="active" data-mode="ripple">Single Ripple</button>
+        <button data-mode="oscillator">Oscillator</button>
+        <button data-mode="wall">Draw Wall</button>
+    </div>
+
+    <div class="controls">
+        <button id="resetBtn">Reset</button>
+    </div>
+
+    <div class="slider-row">
+        <label>Damping</label>
+        <input type="range" id="dampSlider" min="0.9" max="0.999" step="0.001" value="0.99">
+    </div>
+    <div class="slider-row">
+        <label>Speed</label>
+        <input type="range" id="speedSlider" min="0.1" max="0.4" step="0.01" value="0.25">
+    </div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>Wave Tank</h2>
+            <p>A 2D wave simulation showing ripples and interference patterns.</p>
+            <p><strong>Modes:</strong></p>
+            <ul>
+                <li><strong>Single Ripple</strong> &ndash; Click to drop a stone</li>
+                <li><strong>Oscillator</strong> &ndash; Click to place continuous wave sources</li>
+                <li><strong>Draw Wall</strong> &ndash; Draw barriers that reflect waves</li>
+            </ul>
+            <p><strong>Watch for:</strong></p>
+            <ul>
+                <li>Constructive interference (bright spots)</li>
+                <li>Destructive interference (dark spots)</li>
+                <li>Standing waves between oscillators</li>
+            </ul>
+            <p><a href="https://en.wikipedia.org/wiki/Wave_interference" target="_blank">Learn more on Wikipedia</a></p>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        const CHARS = ' ·∙○◌◯●◉◎'.split('');
+        const WIDTH = 100;
+        const HEIGHT = 50;
+
+        let current = [], previous = [];
+        let walls = [];
+        let oscillators = [];
+        let mode = 'ripple';
+        let damping = 0.99;
+        let speed = 0.25;
+        let time = 0;
+
+        const display = document.getElementById('display');
+        const terminal = document.getElementById('terminal');
+
+        function init() {
+            for (let y = 0; y < HEIGHT; y++) {
+                current[y] = []; previous[y] = []; walls[y] = [];
+                for (let x = 0; x < WIDTH; x++) {
+                    current[y][x] = 0;
+                    previous[y][x] = 0;
+                    walls[y][x] = false;
+                }
+            }
+            oscillators = [];
+        }
+
+        function step() {
+            time++;
+            const next = [];
+
+            // Update oscillators
+            for (const osc of oscillators) {
+                current[osc.y][osc.x] = Math.sin(time * 0.3) * 2;
+            }
+
+            for (let y = 0; y < HEIGHT; y++) {
+                next[y] = [];
+                for (let x = 0; x < WIDTH; x++) {
+                    if (walls[y][x]) {
+                        next[y][x] = 0;
+                        continue;
+                    }
+
+                    const l = x > 0 && !walls[y][x-1] ? current[y][x-1] : current[y][x];
+                    const r = x < WIDTH-1 && !walls[y][x+1] ? current[y][x+1] : current[y][x];
+                    const u = y > 0 && !walls[y-1][x] ? current[y-1][x] : current[y][x];
+                    const d = y < HEIGHT-1 && !walls[y+1][x] ? current[y+1][x] : current[y][x];
+
+                    const val = (l + r + u + d) / 2 - previous[y][x];
+                    next[y][x] = val * damping;
+                }
+            }
+
+            previous = current;
+            current = next;
+        }
+
+        function dropRipple(x, y, strength = 3) {
+            if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT && !walls[y][x]) {
+                current[y][x] = strength;
+            }
+        }
+
+        function render() {
+            let out = '';
+            for (let y = 0; y < HEIGHT; y++) {
+                for (let x = 0; x < WIDTH; x++) {
+                    if (walls[y][x]) {
+                        out += '██';
+                        continue;
+                    }
+                    const isOsc = oscillators.some(o => o.x === x && o.y === y);
+                    if (isOsc) {
+                        out += '◆◆';
+                        continue;
+                    }
+                    const val = (current[y][x] + 1) / 2;
+                    const idx = Math.floor(val * (CHARS.length - 1));
+                    const c = CHARS[Math.max(0, Math.min(CHARS.length - 1, idx))];
+                    out += c + c;
+                }
+                out += '\n';
+            }
+            display.textContent = out;
+        }
+
+        function loop() {
+            for (let i = 0; i < 3; i++) step();
+            render();
+            requestAnimationFrame(loop);
+        }
+
+        function getGridPos(e) {
+            const rect = display.getBoundingClientRect();
+            const charW = rect.width / (WIDTH * 2);
+            const charH = rect.height / HEIGHT;
+            return {
+                x: Math.floor((e.clientX - rect.left) / charW / 2),
+                y: Math.floor((e.clientY - rect.top) / charH)
+            };
+        }
+
+        // Events
+        let isDrawing = false;
+        terminal.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            handleClick(e);
+        });
+        terminal.addEventListener('mousemove', (e) => {
+            if (isDrawing && mode === 'wall') handleClick(e);
+        });
+        terminal.addEventListener('mouseup', () => isDrawing = false);
+        terminal.addEventListener('mouseleave', () => isDrawing = false);
+
+        function handleClick(e) {
+            const pos = getGridPos(e);
+            if (pos.x < 0 || pos.x >= WIDTH || pos.y < 0 || pos.y >= HEIGHT) return;
+
+            if (mode === 'ripple') {
+                dropRipple(pos.x, pos.y, 4);
+            } else if (mode === 'oscillator') {
+                const existing = oscillators.findIndex(o => o.x === pos.x && o.y === pos.y);
+                if (existing >= 0) {
+                    oscillators.splice(existing, 1);
+                } else {
+                    oscillators.push({ x: pos.x, y: pos.y });
+                }
+            } else if (mode === 'wall') {
+                walls[pos.y][pos.x] = !walls[pos.y][pos.x];
+            }
+        }
+
+        document.querySelectorAll('.mode-row button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                mode = btn.dataset.mode;
+                document.querySelectorAll('.mode-row button').forEach(b => {
+                    b.classList.toggle('active', b.dataset.mode === mode);
+                });
+            });
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', init);
+        document.getElementById('dampSlider').addEventListener('input', function() {
+            damping = parseFloat(this.value);
+        });
+        document.getElementById('speedSlider').addEventListener('input', function() {
+            speed = parseFloat(this.value);
+        });
+
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => { if (e.target === helpModal) helpModal.classList.remove('show'); });
+
+        // Fullscreen
+        let isFullscreen = false;
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            isFullscreen = !isFullscreen;
+            document.body.classList.toggle('fullscreen', isFullscreen);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f') document.getElementById('fullscreenBtn').click();
+            if (e.key === 'Escape') { if (isFullscreen) document.getElementById('fullscreenBtn').click(); helpModal.classList.remove('show'); }
+        });
+
+        init();
+        loop();
+    </script>
+</body>
+</html>

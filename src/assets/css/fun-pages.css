@@ -7,15 +7,17 @@
 }
 
 :root {
-    --bg-deep: #0a0a0f;
-    --bg-surface: #12121a;
-    --bg-elevated: #1a1a24;
-    /* --accent is set per-page */
-    --accent-dim: rgba(var(--accent-rgb, 255, 209, 102), 0.3);
-    --accent-glow: rgba(var(--accent-rgb, 255, 209, 102), 0.15);
-    --text-primary: #e0e0e0;
-    --text-secondary: #7a7a8a;
-    --border: #2a2a3a;
+    /* Zenburn base palette */
+    --bg-deep: #1a1a1a;
+    --bg-surface: #242424;
+    --bg-elevated: #2e2e2e;
+    --accent: #f0dfaf;
+    --accent-rgb: 240, 223, 175;
+    --accent-dim: rgba(240, 223, 175, 0.3);
+    --accent-glow: rgba(240, 223, 175, 0.15);
+    --text-primary: #dcdccc;
+    --text-secondary: #8c8c8c;
+    --border: #3f3f3f;
 }
 
 body {
@@ -88,7 +90,7 @@ body.fullscreen .canvas-container {
 }
 
 body.fullscreen canvas { border: none; }
-body.fullscreen .top-btn { background: rgba(10, 10, 15, 0.8); }
+body.fullscreen .top-btn { background: rgba(26, 26, 26, 0.8); }
 
 /* Game header */
 .game-header {

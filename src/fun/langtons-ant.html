@@ -1,0 +1,336 @@
+---
+layout: false
+permalink: /fun/langtons-ant/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Langton's Ant - Simple rules create complex highways">
+    <title>Langton's Ant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <style>
+        .game-header { padding-top: 4rem; }
+        #canvas {
+            display: block;
+            margin: 1rem auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            image-rendering: pixelated;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+        .stats {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0.5rem 0;
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 300px;
+            margin: 0.25rem auto;
+        }
+        .slider-row label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            min-width: 50px;
+        }
+        .slider-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+        .rule-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 0.5rem 0;
+        }
+        .rule-row button {
+            font-size: 0.65rem;
+            padding: 0.3rem 0.5rem;
+        }
+        .rule-row button.active {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+        body.fullscreen #canvas {
+            border: none;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">&solb;</button>
+    <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+    <header class="game-header">
+        <h1 class="game-title">Langton's Ant</h1>
+        <p class="game-subtitle">simple rules, emergent highways</p>
+    </header>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="stats">
+        Steps: <span id="steps">0</span> |
+        <span id="phase">Chaos phase</span>
+    </div>
+
+    <div class="rule-row">
+        <button class="active" data-rule="RL">RL (Classic)</button>
+        <button data-rule="RLR">RLR</button>
+        <button data-rule="LLRR">LLRR</button>
+        <button data-rule="LRRRRRLLR">LRRRRRLLR</button>
+        <button data-rule="RRLLLRLLLRRR">RRLLLRLLLRRR</button>
+    </div>
+
+    <div class="controls">
+        <button id="playBtn">Pause</button>
+        <button id="resetBtn">Reset</button>
+        <button id="stepBtn">Step</button>
+    </div>
+
+    <div class="slider-row">
+        <label>Speed</label>
+        <input type="range" id="speedSlider" min="1" max="1000" step="1" value="100">
+    </div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>Langton's Ant</h2>
+            <p>A cellular automaton where a simple creature follows two rules:</p>
+            <ul>
+                <li><strong>On white</strong> &ndash; Turn right, flip color, move forward</li>
+                <li><strong>On black</strong> &ndash; Turn left, flip color, move forward</li>
+            </ul>
+            <p><strong>Behavior:</strong></p>
+            <ul>
+                <li>Starts with apparent chaos</li>
+                <li>After ~10,000 steps, builds a "highway"</li>
+                <li>The highway extends infinitely</li>
+            </ul>
+            <p><strong>Extended rules</strong> use multiple colors (L=left, R=right)</p>
+            <p><a href="https://en.wikipedia.org/wiki/Langton%27s_ant" target="_blank">Learn more on Wikipedia</a></p>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        const LOGO = [
+            [1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,1],
+            [1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,1,1],
+            [1,0,1,1,1,0,0,1],
+            [1,0,0,0,1,0,0,1],
+            [1,1,1,1,1,1,1,1]
+        ];
+
+        const SIZE = 200;
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = SIZE;
+        canvas.height = SIZE;
+
+        let grid = [];
+        let ant = { x: SIZE / 2, y: SIZE / 2, dir: 0 };
+        let steps = 0;
+        let running = true;
+        let stepsPerFrame = 100;
+        let rule = 'RL';
+
+        // Direction: 0=up, 1=right, 2=down, 3=left
+        const DX = [0, 1, 0, -1];
+        const DY = [-1, 0, 1, 0];
+
+        // Colors for extended rules
+        const COLORS = [
+            '#1a1a1a',  // 0 - background
+            '#f0dfaf',  // 1 - cream
+            '#7f9f7f',  // 2 - green
+            '#8cd0d3',  // 3 - cyan
+            '#dc8cc3',  // 4 - magenta
+            '#cc9393',  // 5 - red
+            '#dfaf8f',  // 6 - orange
+            '#94bff3',  // 7 - blue
+            '#93e0e3',  // 8 - teal
+            '#9fc59f',  // 9 - sage
+            '#dcdccc',  // 10 - light
+            '#6f6f6f',  // 11 - gray
+        ];
+
+        function init() {
+            for (let y = 0; y < SIZE; y++) {
+                grid[y] = [];
+                for (let x = 0; x < SIZE; x++) {
+                    grid[y][x] = 0;
+                }
+            }
+            ant = { x: Math.floor(SIZE / 2), y: Math.floor(SIZE / 2), dir: 0 };
+            steps = 0;
+            updateStats();
+        }
+
+        function step() {
+            const color = grid[ant.y][ant.x];
+            const turn = rule[color % rule.length];
+
+            // Turn
+            if (turn === 'R') {
+                ant.dir = (ant.dir + 1) % 4;
+            } else {
+                ant.dir = (ant.dir + 3) % 4;
+            }
+
+            // Flip color
+            grid[ant.y][ant.x] = (color + 1) % rule.length;
+
+            // Move
+            ant.x = (ant.x + DX[ant.dir] + SIZE) % SIZE;
+            ant.y = (ant.y + DY[ant.dir] + SIZE) % SIZE;
+
+            steps++;
+        }
+
+        function render() {
+            const imageData = ctx.createImageData(SIZE, SIZE);
+            const data = imageData.data;
+
+            for (let y = 0; y < SIZE; y++) {
+                for (let x = 0; x < SIZE; x++) {
+                    const i = (y * SIZE + x) * 4;
+                    const color = COLORS[grid[y][x] % COLORS.length];
+                    const r = parseInt(color.slice(1, 3), 16);
+                    const g = parseInt(color.slice(3, 5), 16);
+                    const b = parseInt(color.slice(5, 7), 16);
+                    data[i] = r;
+                    data[i + 1] = g;
+                    data[i + 2] = b;
+                    data[i + 3] = 255;
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+
+            // Draw ant as logo
+            const logoSize = 8;
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = '#ffffff';
+            ctx.shadowBlur = 5;
+
+            ctx.save();
+            ctx.translate(ant.x, ant.y);
+            ctx.rotate(ant.dir * Math.PI / 2);
+
+            for (let py = 0; py < 8; py++) {
+                for (let px = 0; px < 8; px++) {
+                    if (LOGO[py][px]) {
+                        ctx.fillRect(
+                            (px - 4) * 0.5,
+                            (py - 4) * 0.5,
+                            0.5, 0.5
+                        );
+                    }
+                }
+            }
+
+            ctx.restore();
+            ctx.shadowBlur = 0;
+        }
+
+        function updateStats() {
+            document.getElementById('steps').textContent = steps.toLocaleString();
+
+            let phase = 'Chaos phase';
+            if (rule === 'RL') {
+                if (steps > 10000) phase = 'Highway phase';
+                else if (steps > 500) phase = 'Symmetric phase';
+            }
+            document.getElementById('phase').textContent = phase;
+        }
+
+        function loop() {
+            if (running) {
+                for (let i = 0; i < stepsPerFrame; i++) {
+                    step();
+                }
+                updateStats();
+            }
+            render();
+            requestAnimationFrame(loop);
+        }
+
+        function setRule(r) {
+            rule = r;
+            document.querySelectorAll('.rule-row button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.rule === r);
+            });
+            init();
+        }
+
+        // Events
+        document.querySelectorAll('.rule-row button').forEach(btn => {
+            btn.addEventListener('click', () => setRule(btn.dataset.rule));
+        });
+
+        document.getElementById('playBtn').addEventListener('click', function() {
+            running = !running;
+            this.textContent = running ? 'Pause' : 'Play';
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', init);
+
+        document.getElementById('stepBtn').addEventListener('click', () => {
+            step();
+            updateStats();
+            render();
+        });
+
+        document.getElementById('speedSlider').addEventListener('input', function() {
+            stepsPerFrame = parseInt(this.value);
+        });
+
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => { if (e.target === helpModal) helpModal.classList.remove('show'); });
+
+        // Fullscreen
+        let isFullscreen = false;
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            isFullscreen = !isFullscreen;
+            document.body.classList.toggle('fullscreen', isFullscreen);
+            const size = isFullscreen ? Math.min(window.innerWidth, window.innerHeight) - 100 : 400;
+            canvas.style.width = size + 'px';
+            canvas.style.height = size + 'px';
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') { e.preventDefault(); document.getElementById('playBtn').click(); }
+            if (e.key === 'f') document.getElementById('fullscreenBtn').click();
+            if (e.key === 'Escape') { if (isFullscreen) document.getElementById('fullscreenBtn').click(); helpModal.classList.remove('show'); }
+            if (e.key === 's') document.getElementById('stepBtn').click();
+        });
+
+        canvas.style.width = '400px';
+        canvas.style.height = '400px';
+        init();
+        loop();
+    </script>
+</body>
+</html>

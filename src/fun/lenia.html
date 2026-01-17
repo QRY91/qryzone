@@ -1,0 +1,361 @@
+---
+layout: false
+permalink: /fun/lenia/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lenia - Continuous cellular automata with lifelike creatures">
+    <title>Lenia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <style>
+        .game-header { padding-top: 4rem; }
+        #canvas {
+            display: block;
+            margin: 1rem auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: crosshair;
+            image-rendering: pixelated;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+        .preset-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0.5rem 0;
+        }
+        .preset-row button {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.6rem;
+        }
+        .preset-row button.active {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 300px;
+            margin: 0.25rem auto;
+        }
+        .slider-row label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            min-width: 50px;
+        }
+        .slider-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+        body.fullscreen #canvas {
+            border: none;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">&solb;</button>
+    <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+    <header class="game-header">
+        <h1 class="game-title">Lenia</h1>
+        <p class="game-subtitle">continuous cellular automata</p>
+    </header>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="preset-row">
+        <button class="active" data-preset="orbium">Orbium</button>
+        <button data-preset="geminium">Geminium</button>
+        <button data-preset="hydrogeminium">Hydrogeminium</button>
+        <button data-preset="random">Random</button>
+    </div>
+
+    <div class="controls">
+        <button id="playBtn">Pause</button>
+        <button id="resetBtn">Reset</button>
+        <button id="clearBtn">Clear</button>
+    </div>
+
+    <div class="slider-row">
+        <label>Growth</label>
+        <input type="range" id="muSlider" min="0.1" max="0.5" step="0.01" value="0.15">
+    </div>
+    <div class="slider-row">
+        <label>Width</label>
+        <input type="range" id="sigmaSlider" min="0.01" max="0.1" step="0.005" value="0.017">
+    </div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>Lenia</h2>
+            <p>A continuous generalization of Conway's Game of Life that produces lifelike creatures.</p>
+            <p><strong>How it works:</strong></p>
+            <ul>
+                <li>Cells have continuous values (0-1) instead of alive/dead</li>
+                <li>Neighborhood is a smooth ring kernel</li>
+                <li>Growth function determines cell state changes</li>
+                <li>Different parameters create different "species"</li>
+            </ul>
+            <p><strong>Controls:</strong></p>
+            <ul>
+                <li><strong>Click/drag</strong> &ndash; Add matter</li>
+                <li><strong>Presets</strong> &ndash; Known lifeforms</li>
+                <li><strong>Growth/Width</strong> &ndash; Adjust growth function</li>
+            </ul>
+            <p><a href="https://en.wikipedia.org/wiki/Lenia" target="_blank">Learn more on Wikipedia</a></p>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        const SIZE = 128;
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = SIZE;
+        canvas.height = SIZE;
+
+        let grid = [], nextGrid = [];
+        let kernel = [];
+        let running = true;
+        let mu = 0.15, sigma = 0.017;
+        const R = 13;  // Kernel radius
+        const dt = 0.1;
+
+        const PRESETS = {
+            orbium: { mu: 0.15, sigma: 0.017 },
+            geminium: { mu: 0.14, sigma: 0.014 },
+            hydrogeminium: { mu: 0.13, sigma: 0.012 },
+            random: { mu: 0.15, sigma: 0.02 }
+        };
+
+        function bell(x, m, s) {
+            return Math.exp(-((x - m) ** 2) / (2 * s * s));
+        }
+
+        function createKernel() {
+            kernel = [];
+            let sum = 0;
+            for (let dy = -R; dy <= R; dy++) {
+                kernel[dy + R] = [];
+                for (let dx = -R; dx <= R; dx++) {
+                    const r = Math.sqrt(dx * dx + dy * dy) / R;
+                    // Ring kernel
+                    const k = r < 1 ? bell(r, 0.5, 0.15) : 0;
+                    kernel[dy + R][dx + R] = k;
+                    sum += k;
+                }
+            }
+            // Normalize
+            for (let dy = 0; dy <= 2 * R; dy++) {
+                for (let dx = 0; dx <= 2 * R; dx++) {
+                    kernel[dy][dx] /= sum;
+                }
+            }
+        }
+
+        function init() {
+            for (let y = 0; y < SIZE; y++) {
+                grid[y] = [];
+                nextGrid[y] = [];
+                for (let x = 0; x < SIZE; x++) {
+                    grid[y][x] = 0;
+                    nextGrid[y][x] = 0;
+                }
+            }
+            createKernel();
+        }
+
+        function seedOrbium(cx, cy) {
+            const radius = 12;
+            for (let dy = -radius; dy <= radius; dy++) {
+                for (let dx = -radius; dx <= radius; dx++) {
+                    const x = (cx + dx + SIZE) % SIZE;
+                    const y = (cy + dy + SIZE) % SIZE;
+                    const r = Math.sqrt(dx * dx + dy * dy) / radius;
+                    if (r < 1) {
+                        // Ring shape
+                        grid[y][x] = Math.max(grid[y][x], bell(r, 0.5, 0.2));
+                    }
+                }
+            }
+        }
+
+        function seedRandom(cx, cy) {
+            const radius = 15;
+            for (let dy = -radius; dy <= radius; dy++) {
+                for (let dx = -radius; dx <= radius; dx++) {
+                    const x = (cx + dx + SIZE) % SIZE;
+                    const y = (cy + dy + SIZE) % SIZE;
+                    const r = Math.sqrt(dx * dx + dy * dy) / radius;
+                    if (r < 1 && Math.random() > r) {
+                        grid[y][x] = Math.random();
+                    }
+                }
+            }
+        }
+
+        function growth(u) {
+            return 2 * bell(u, mu, sigma) - 1;
+        }
+
+        function step() {
+            for (let y = 0; y < SIZE; y++) {
+                for (let x = 0; x < SIZE; x++) {
+                    // Convolution with kernel
+                    let u = 0;
+                    for (let dy = -R; dy <= R; dy++) {
+                        for (let dx = -R; dx <= R; dx++) {
+                            const ny = (y + dy + SIZE) % SIZE;
+                            const nx = (x + dx + SIZE) % SIZE;
+                            u += grid[ny][nx] * kernel[dy + R][dx + R];
+                        }
+                    }
+
+                    // Apply growth function
+                    nextGrid[y][x] = Math.max(0, Math.min(1, grid[y][x] + dt * growth(u)));
+                }
+            }
+            [grid, nextGrid] = [nextGrid, grid];
+        }
+
+        function render() {
+            const imageData = ctx.createImageData(SIZE, SIZE);
+            const data = imageData.data;
+
+            for (let y = 0; y < SIZE; y++) {
+                for (let x = 0; x < SIZE; x++) {
+                    const i = (y * SIZE + x) * 4;
+                    const v = grid[y][x];
+
+                    // Orange-red colormap
+                    data[i] = Math.floor(v * 208 + (1 - v) * 18);
+                    data[i + 1] = Math.floor(v * 135 + (1 - v) * 18);
+                    data[i + 2] = Math.floor(v * 112 + (1 - v) * 26);
+                    data[i + 3] = 255;
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        function loop() {
+            if (running) {
+                step();
+            }
+            render();
+            requestAnimationFrame(loop);
+        }
+
+        function setPreset(name) {
+            const p = PRESETS[name];
+            mu = p.mu;
+            sigma = p.sigma;
+            document.getElementById('muSlider').value = mu;
+            document.getElementById('sigmaSlider').value = sigma;
+            document.querySelectorAll('.preset-row button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.preset === name);
+            });
+
+            init();
+            if (name === 'random') {
+                for (let i = 0; i < 5; i++) {
+                    seedRandom(Math.random() * SIZE, Math.random() * SIZE);
+                }
+            } else {
+                seedOrbium(SIZE / 2, SIZE / 2);
+            }
+        }
+
+        // Events
+        document.querySelectorAll('.preset-row button').forEach(btn => {
+            btn.addEventListener('click', () => setPreset(btn.dataset.preset));
+        });
+
+        document.getElementById('playBtn').addEventListener('click', function() {
+            running = !running;
+            this.textContent = running ? 'Pause' : 'Play';
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            setPreset(document.querySelector('.preset-row button.active').dataset.preset);
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', init);
+
+        document.getElementById('muSlider').addEventListener('input', function() {
+            mu = parseFloat(this.value);
+        });
+
+        document.getElementById('sigmaSlider').addEventListener('input', function() {
+            sigma = parseFloat(this.value);
+        });
+
+        let isDrawing = false;
+        canvas.addEventListener('mousedown', () => isDrawing = true);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseleave', () => isDrawing = false);
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = SIZE / rect.width;
+            const scaleY = SIZE / rect.height;
+            const x = Math.floor((e.clientX - rect.left) * scaleX);
+            const y = Math.floor((e.clientY - rect.top) * scaleY);
+            seedOrbium(x, y);
+        });
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = SIZE / rect.width;
+            const scaleY = SIZE / rect.height;
+            const x = Math.floor((e.clientX - rect.left) * scaleX);
+            const y = Math.floor((e.clientY - rect.top) * scaleY);
+            seedOrbium(x, y);
+        });
+
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => { if (e.target === helpModal) helpModal.classList.remove('show'); });
+
+        // Fullscreen
+        let isFullscreen = false;
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            isFullscreen = !isFullscreen;
+            document.body.classList.toggle('fullscreen', isFullscreen);
+            const size = isFullscreen ? Math.min(window.innerWidth, window.innerHeight) - 100 : 400;
+            canvas.style.width = size + 'px';
+            canvas.style.height = size + 'px';
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') { e.preventDefault(); document.getElementById('playBtn').click(); }
+            if (e.key === 'f') document.getElementById('fullscreenBtn').click();
+            if (e.key === 'Escape') { if (isFullscreen) document.getElementById('fullscreenBtn').click(); helpModal.classList.remove('show'); }
+        });
+
+        canvas.style.width = '400px';
+        canvas.style.height = '400px';
+        init();
+        seedOrbium(SIZE / 2, SIZE / 2);
+        loop();
+    </script>
+</body>
+</html>

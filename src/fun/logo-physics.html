@@ -1,0 +1,452 @@
+---
+layout: false
+permalink: /fun/logo-physics/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Logo Physics - Bouncing logos with gravity and collisions">
+    <title>Logo Physics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <style>
+        .game-header { padding-top: 4rem; }
+        #canvas {
+            display: block;
+            margin: 1rem auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: crosshair;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 300px;
+            margin: 0.25rem auto;
+        }
+        .slider-row label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+        .slider-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+        .mode-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 0.5rem 0;
+        }
+        .mode-row button.active {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+        .stats {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        body.fullscreen #canvas {
+            border: none;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">&solb;</button>
+    <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+    <header class="game-header">
+        <h1 class="game-title">Logo Physics</h1>
+        <p class="game-subtitle">click to spawn, drag to throw</p>
+    </header>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="stats">Logos: <span id="count">0</span></div>
+
+    <div class="mode-row">
+        <button class="active" data-mode="gravity">Gravity</button>
+        <button data-mode="orbit">Orbit</button>
+        <button data-mode="bounce">Zero-G</button>
+    </div>
+
+    <div class="controls">
+        <button id="clearBtn">Clear</button>
+        <button id="explodeBtn">Explode</button>
+    </div>
+
+    <div class="slider-row">
+        <label>Gravity</label>
+        <input type="range" id="gravitySlider" min="0" max="2000" step="50" value="500">
+    </div>
+    <div class="slider-row">
+        <label>Bounce</label>
+        <input type="range" id="bounceSlider" min="0.3" max="0.99" step="0.01" value="0.8">
+    </div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>Logo Physics</h2>
+            <p>A playground for bouncing qry.zone logos with physics simulation.</p>
+            <p><strong>Controls:</strong></p>
+            <ul>
+                <li><strong>Click</strong> &ndash; Spawn a logo</li>
+                <li><strong>Drag</strong> &ndash; Throw with velocity</li>
+                <li><strong>Explode</strong> &ndash; Push all logos outward</li>
+            </ul>
+            <p><strong>Modes:</strong></p>
+            <ul>
+                <li><strong>Gravity</strong> &ndash; Logos fall down</li>
+                <li><strong>Orbit</strong> &ndash; Logos orbit the center</li>
+                <li><strong>Zero-G</strong> &ndash; No gravity, just bouncing</li>
+            </ul>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        const LOGO = [
+            [1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,1],
+            [1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,1,1],
+            [1,0,1,1,1,0,0,1],
+            [1,0,0,0,1,0,0,1],
+            [1,1,1,1,1,1,1,1]
+        ];
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let logos = [];
+        let mode = 'gravity';
+        let gravity = 500;
+        let bounce = 0.8;
+        let dragStart = null;
+        let dragLogo = null;
+
+        const COLORS = ['#f0dfaf', '#dcdccc', '#dfaf8f', '#cc9393', '#7f9f7f', '#8cd0d3', '#94bff3', '#dc8cc3'];
+
+        function resize() {
+            const size = Math.min(window.innerWidth - 40, 600);
+            canvas.width = size;
+            canvas.height = size;
+        }
+
+        function spawnLogo(x, y, vx = 0, vy = 0) {
+            logos.push({
+                x, y, vx, vy,
+                size: 16 + Math.random() * 24,
+                rotation: Math.random() * Math.PI * 2,
+                angularVel: (Math.random() - 0.5) * 3,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                trail: []
+            });
+            updateCount();
+        }
+
+        function updateCount() {
+            document.getElementById('count').textContent = logos.length;
+        }
+
+        function drawLogo(logo) {
+            ctx.save();
+            ctx.translate(logo.x, logo.y);
+            ctx.rotate(logo.rotation);
+
+            const size = logo.size;
+            const px = size / 8;
+
+            // Trail
+            ctx.globalAlpha = 0.3;
+            for (let i = 0; i < logo.trail.length; i++) {
+                const t = logo.trail[i];
+                const alpha = i / logo.trail.length * 0.2;
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = logo.color;
+                const trailSize = size * (0.5 + i / logo.trail.length * 0.5);
+                const trailPx = trailSize / 8;
+                ctx.save();
+                ctx.translate(t.x - logo.x, t.y - logo.y);
+                ctx.rotate(t.r - logo.rotation);
+                for (let py = 0; py < 8; py++) {
+                    for (let pxx = 0; pxx < 8; pxx++) {
+                        if (LOGO[py][pxx]) {
+                            ctx.fillRect(
+                                (pxx - 4) * trailPx,
+                                (py - 4) * trailPx,
+                                trailPx, trailPx
+                            );
+                        }
+                    }
+                }
+                ctx.restore();
+            }
+
+            // Main logo
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = logo.color;
+            ctx.shadowColor = logo.color;
+            ctx.shadowBlur = 10;
+
+            for (let py = 0; py < 8; py++) {
+                for (let pxx = 0; pxx < 8; pxx++) {
+                    if (LOGO[py][pxx]) {
+                        ctx.fillRect(
+                            (pxx - 4) * px,
+                            (py - 4) * px,
+                            px, px
+                        );
+                    }
+                }
+            }
+
+            ctx.restore();
+        }
+
+        function update(dt) {
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            for (const logo of logos) {
+                // Store trail
+                logo.trail.push({ x: logo.x, y: logo.y, r: logo.rotation });
+                if (logo.trail.length > 10) logo.trail.shift();
+
+                // Apply forces based on mode
+                if (mode === 'gravity') {
+                    logo.vy += gravity * dt;
+                } else if (mode === 'orbit') {
+                    const dx = cx - logo.x;
+                    const dy = cy - logo.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                    const force = gravity * 50 / dist;
+                    logo.vx += (dx / dist) * force * dt;
+                    logo.vy += (dy / dist) * force * dt;
+                }
+
+                // Update position
+                logo.x += logo.vx * dt;
+                logo.y += logo.vy * dt;
+                logo.rotation += logo.angularVel * dt;
+
+                // Bounce off walls
+                const r = logo.size / 2;
+                if (logo.x - r < 0) {
+                    logo.x = r;
+                    logo.vx *= -bounce;
+                    logo.angularVel += logo.vy * 0.01;
+                }
+                if (logo.x + r > canvas.width) {
+                    logo.x = canvas.width - r;
+                    logo.vx *= -bounce;
+                    logo.angularVel -= logo.vy * 0.01;
+                }
+                if (logo.y - r < 0) {
+                    logo.y = r;
+                    logo.vy *= -bounce;
+                }
+                if (logo.y + r > canvas.height) {
+                    logo.y = canvas.height - r;
+                    logo.vy *= -bounce;
+                    logo.angularVel += logo.vx * 0.01;
+                    // Friction on ground
+                    logo.vx *= 0.99;
+                    logo.angularVel *= 0.98;
+                }
+
+                // Damping
+                logo.angularVel *= 0.999;
+            }
+
+            // Simple collision between logos
+            for (let i = 0; i < logos.length; i++) {
+                for (let j = i + 1; j < logos.length; j++) {
+                    const a = logos[i], b = logos[j];
+                    const dx = b.x - a.x;
+                    const dy = b.y - a.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const minDist = (a.size + b.size) / 2;
+
+                    if (dist < minDist && dist > 0) {
+                        const nx = dx / dist;
+                        const ny = dy / dist;
+                        const overlap = minDist - dist;
+
+                        // Separate
+                        a.x -= nx * overlap / 2;
+                        a.y -= ny * overlap / 2;
+                        b.x += nx * overlap / 2;
+                        b.y += ny * overlap / 2;
+
+                        // Bounce velocities
+                        const dvx = a.vx - b.vx;
+                        const dvy = a.vy - b.vy;
+                        const dvn = dvx * nx + dvy * ny;
+
+                        if (dvn > 0) {
+                            a.vx -= dvn * nx * bounce;
+                            a.vy -= dvn * ny * bounce;
+                            b.vx += dvn * nx * bounce;
+                            b.vy += dvn * ny * bounce;
+
+                            // Transfer angular momentum
+                            a.angularVel += (Math.random() - 0.5) * 2;
+                            b.angularVel += (Math.random() - 0.5) * 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        function render() {
+            ctx.fillStyle = '#12121a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw center attractor in orbit mode
+            if (mode === 'orbit') {
+                ctx.beginPath();
+                ctx.arc(canvas.width / 2, canvas.height / 2, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#ebcb8b';
+                ctx.shadowColor = '#ebcb8b';
+                ctx.shadowBlur = 20;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+
+            for (const logo of logos) {
+                drawLogo(logo);
+            }
+
+            // Draw drag line
+            if (dragStart && dragLogo) {
+                ctx.beginPath();
+                ctx.moveTo(dragLogo.x, dragLogo.y);
+                ctx.lineTo(dragStart.x, dragStart.y);
+                ctx.strokeStyle = 'rgba(136, 192, 208, 0.5)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }
+
+        let lastTime = 0;
+        function loop(time) {
+            const dt = Math.min((time - lastTime) / 1000, 0.05);
+            lastTime = time;
+
+            update(dt);
+            render();
+            requestAnimationFrame(loop);
+        }
+
+        // Events
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            dragStart = { x, y };
+            spawnLogo(x, y);
+            dragLogo = logos[logos.length - 1];
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (dragStart && dragLogo) {
+                const rect = canvas.getBoundingClientRect();
+                dragStart.x = e.clientX - rect.left;
+                dragStart.y = e.clientY - rect.top;
+            }
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (dragStart && dragLogo) {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                dragLogo.vx = (dragLogo.x - x) * 3;
+                dragLogo.vy = (dragLogo.y - y) * 3;
+            }
+            dragStart = null;
+            dragLogo = null;
+        });
+
+        document.querySelectorAll('.mode-row button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                mode = btn.dataset.mode;
+                document.querySelectorAll('.mode-row button').forEach(b => {
+                    b.classList.toggle('active', b.dataset.mode === mode);
+                });
+            });
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            logos = [];
+            updateCount();
+        });
+
+        document.getElementById('explodeBtn').addEventListener('click', () => {
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            for (const logo of logos) {
+                const dx = logo.x - cx;
+                const dy = logo.y - cy;
+                const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                logo.vx += (dx / dist) * 500;
+                logo.vy += (dy / dist) * 500;
+                logo.angularVel += (Math.random() - 0.5) * 20;
+            }
+        });
+
+        document.getElementById('gravitySlider').addEventListener('input', function() {
+            gravity = parseFloat(this.value);
+        });
+
+        document.getElementById('bounceSlider').addEventListener('input', function() {
+            bounce = parseFloat(this.value);
+        });
+
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => { if (e.target === helpModal) helpModal.classList.remove('show'); });
+
+        // Fullscreen
+        let isFullscreen = false;
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            isFullscreen = !isFullscreen;
+            document.body.classList.toggle('fullscreen', isFullscreen);
+            setTimeout(resize, 50);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f') document.getElementById('fullscreenBtn').click();
+            if (e.key === 'Escape') { if (isFullscreen) document.getElementById('fullscreenBtn').click(); helpModal.classList.remove('show'); }
+            if (e.key === 'c') document.getElementById('clearBtn').click();
+            if (e.key === ' ') { e.preventDefault(); document.getElementById('explodeBtn').click(); }
+        });
+
+        window.addEventListener('resize', resize);
+        resize();
+        requestAnimationFrame(loop);
+    </script>
+</body>
+</html>
