@@ -1,0 +1,22 @@
+{#
+  Tree Background - Decorative ambient tree visualization
+
+  Usage:
+    {% include "tree-bg.njk" %}
+
+  Options (via Nunjucks set before include):
+    {% set treeBgOptions = { opacity: 0.08, parallax: 0.5, color: '#f0dfaf' } %}
+#}
+<div class="tree-bg-wrapper{% if treeBgParallax !== false %} parallax{% endif %}">
+  <canvas id="treeBgCanvas"></canvas>
+</div>
+<script>
+  const treeBgData = {{ trees | dump | safe }};
+  const treeBgOptions = {{ treeBgOptions | dump | safe if treeBgOptions else '{}' }};
+</script>
+<script src="/assets/js/tree-bg.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    TreeBackground.render('treeBgCanvas', treeBgData, treeBgOptions);
+  });
+</script>

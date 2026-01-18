@@ -1,0 +1,216 @@
+/* Tree Tags - Yard visualization styles */
+
+.tree-tags-container {
+    display: flex;
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    align-items: flex-start;
+}
+
+.map-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+#yardCanvas {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: crosshair;
+    display: block;
+}
+
+/* Compass overlay */
+.compass {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.compass span {
+    position: absolute;
+}
+
+.compass-n { top: 0; left: 50%; transform: translateX(-50%); color: var(--accent); font-weight: bold; }
+.compass-s { bottom: 0; left: 50%; transform: translateX(-50%); }
+.compass-e { right: 0; top: 50%; transform: translateY(-50%); }
+.compass-w { left: 0; top: 50%; transform: translateY(-50%); }
+
+/* Detail panel */
+.detail-panel {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+}
+
+.detail-panel.hidden {
+    opacity: 0.5;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-elevated);
+}
+
+.detail-header h2 {
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin: 0;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detail-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.detail-close:hover {
+    color: var(--accent);
+    background: none;
+}
+
+.detail-content {
+    padding: 1rem;
+    font-size: 0.85rem;
+    min-height: 160px;
+}
+
+.detail-hint {
+    color: var(--text-secondary);
+    font-style: italic;
+    margin: 0;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: var(--text-secondary);
+}
+
+.detail-value {
+    color: var(--text-primary);
+}
+
+.detail-notes {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+/* Legend */
+.legend-row {
+    gap: 1rem !important;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.legend-dot.deciduous { background: #7cb342; }
+.legend-dot.conifer { background: #388e3c; }
+.legend-dot.fruit { background: #f9a825; }
+
+/* Button states for toggles */
+button.active {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ========================================
+   Tree Background Mode
+   ======================================== */
+
+.tree-bg-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 300vh;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.tree-bg-wrapper canvas {
+    display: block;
+}
+
+/* Parallax scroll optimization */
+.tree-bg-wrapper.parallax {
+    will-change: transform;
+}
+
+/* Disable background on reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .tree-bg-wrapper.parallax {
+        will-change: auto;
+    }
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+
+/* Responsive */
+@media (max-width: 700px) {
+    .tree-tags-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .detail-panel {
+        width: 100%;
+        max-width: 300px;
+        order: 2;
+    }
+
+    .map-wrapper {
+        order: 1;
+    }
+}

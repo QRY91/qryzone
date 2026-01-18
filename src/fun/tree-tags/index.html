@@ -1,0 +1,95 @@
+---
+layout: false
+permalink: /fun/tree-tags/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tree Tags - Interactive yard tree visualization">
+    <title>Tree Tags</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Atkinson+Hyperlegible+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <link rel="stylesheet" href="/assets/css/tree-tags.css">
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+    <header class="game-header">
+        <h1 class="game-title">Tree Tags</h1>
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-label">trees:</span>
+                <span class="stat-value" id="treeCount">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">selected:</span>
+                <span class="stat-value" id="selectedTree">none</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="tree-tags-container">
+        <div class="map-wrapper">
+            <canvas id="yardCanvas"></canvas>
+            <div class="compass">
+                <span class="compass-n">N</span>
+                <span class="compass-s">S</span>
+                <span class="compass-e">E</span>
+                <span class="compass-w">W</span>
+            </div>
+        </div>
+
+        <div class="detail-panel" id="detailPanel">
+            <div class="detail-header">
+                <h2 id="detailTitle">Select a tree</h2>
+                <button class="detail-close" id="detailClose">&times;</button>
+            </div>
+            <div class="detail-content" id="detailContent">
+                <p class="detail-hint">Click on a tree marker to view details</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="control-row">
+            <button id="toggleGrid">grid</button>
+            <button id="toggleLabels">labels</button>
+        </div>
+        <div class="control-row legend-row">
+            <span class="legend-item"><span class="legend-dot deciduous"></span>deciduous</span>
+            <span class="legend-item"><span class="legend-dot conifer"></span>conifer</span>
+            <span class="legend-item"><span class="legend-dot fruit"></span>fruit</span>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>Tree Tags</h2>
+            <p>An interactive visualization of yard trees.</p>
+            <ul>
+                <li><strong>Click</strong> a tree marker to view details</li>
+                <li><strong>Grid</strong> toggles 5m reference lines</li>
+                <li><strong>Labels</strong> toggles tree species labels</li>
+            </ul>
+            <p>Dimensions: 20m (W-E) x 60m (S-N)</p>
+            <p><strong>Zones:</strong></p>
+            <ul>
+                <li>South (0-15m): Lawn/field</li>
+                <li>Middle (15-40m): Clearing</li>
+                <li>North (40-60m): Forest</li>
+            </ul>
+            <button class="modal-close" id="helpClose">close</button>
+        </div>
+    </div>
+
+    <script>
+        const treeData = {{ trees | dump | safe }};
+    </script>
+    <script src="/assets/js/tree-tags.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+{
+  "yard": {
+    "width": 20,
+    "depth": 60,
+    "zones": [
+      { "name": "lawn", "start": 0, "end": 15, "color": "#4a5a4a" },
+      { "name": "clearing", "start": 15, "end": 40, "color": "#3f4f3f" },
+      { "name": "forest", "start": 40, "end": 60, "color": "#354535" }
+    ]
+  },
+  "trees": [
+    {
+      "id": "oak-1",
+      "species": "Red Oak",
+      "category": "deciduous",
+      "age": 12,
+      "x": 45,
+      "y": 8,
+      "notes": "planted 2014, strong growth",
+      "sensors": {}
+    },
+    {
+      "id": "maple-1",
+      "species": "Sugar Maple",
+      "category": "deciduous",
+      "age": 8,
+      "x": 48,
+      "y": 15,
+      "notes": "nice fall colors",
+      "sensors": {}
+    },
+    {
+      "id": "pine-1",
+      "species": "White Pine",
+      "category": "conifer",
+      "age": 15,
+      "x": 52,
+      "y": 5,
+      "notes": "tallest tree on property",
+      "sensors": {}
+    },
+    {
+      "id": "birch-1",
+      "species": "Paper Birch",
+      "category": "deciduous",
+      "age": 6,
+      "x": 42,
+      "y": 12,
+      "notes": "cluster of 3 trunks",
+      "sensors": {}
+    },
+    {
+      "id": "spruce-1",
+      "species": "Blue Spruce",
+      "category": "conifer",
+      "age": 10,
+      "x": 55,
+      "y": 18,
+      "notes": "windbreak corner",
+      "sensors": {}
+    },
+    {
+      "id": "apple-1",
+      "species": "Honeycrisp Apple",
+      "category": "fruit",
+      "age": 5,
+      "x": 25,
+      "y": 10,
+      "notes": "planted 2021, first harvest 2024",
+      "sensors": {}
+    },
+    {
+      "id": "cherry-1",
+      "species": "Black Cherry",
+      "category": "deciduous",
+      "age": 20,
+      "x": 50,
+      "y": 3,
+      "notes": "native, birds love it",
+      "sensors": {}
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+---
+layout: false
+permalink: /fun/tree-bg-test/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tree Background Test - Ambient tree visualization">
+    <title>Tree Background Test</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Atkinson+Hyperlegible+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <link rel="stylesheet" href="/assets/css/tree-tags.css">
+    <style>
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 5rem 2rem 4rem;
+        }
+
+        .content-section {
+            background: rgba(26, 26, 26, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .content-section h2 {
+            color: var(--accent);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .content-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .content-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .content-section ul {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-left: 1.5rem;
+        }
+
+        .spacer {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spacer-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        .controls-panel {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(26, 26, 26, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .control-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .control-label input[type="range"] {
+            width: 80px;
+            accent-color: var(--accent);
+        }
+
+        .control-label span {
+            min-width: 35px;
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+
+    {% include "tree-bg.njk" %}
+
+    <div class="content-wrapper">
+        <div class="content-section">
+            <h2>Tree Background Mode</h2>
+            <p>
+                This page demonstrates the ambient tree visualization background.
+                The botanical markers represent trees from the yard inventory,
+                rendered as subtle watermarks behind the content.
+            </p>
+            <p>
+                Scroll down to see the parallax effect - the background moves
+                slower than the foreground content, creating depth.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>Botanical Markers</h2>
+            <p>Trees are represented using field-guide style symbols:</p>
+            <ul>
+                <li><strong>Deciduous</strong> - Sun-burst pattern (circle with radiating lines)</li>
+                <li><strong>Conifer</strong> - Stylized pine triangle with branch lines</li>
+                <li><strong>Fruit</strong> - Target symbol (concentric circles)</li>
+            </ul>
+            <p>
+                Marker size and opacity vary based on tree age - older trees
+                appear larger and more prominent.
+            </p>
+        </div>
+
+        <div class="spacer">
+            <span class="spacer-text">keep scrolling...</span>
+        </div>
+
+        <div class="content-section">
+            <h2>Technical Details</h2>
+            <p>
+                The background uses a canvas element sized to 3x the viewport
+                height, allowing for extended scrolling. Grid lines are drawn
+                at very low opacity (5%) to provide subtle structure without
+                competing with content.
+            </p>
+            <p>
+                Parallax is achieved by translating the wrapper element on scroll,
+                with the background moving at a configurable fraction of the
+                scroll speed (default: 0.5x).
+            </p>
+        </div>
+
+        <div class="spacer">
+            <span class="spacer-text">almost there...</span>
+        </div>
+
+        <div class="content-section">
+            <h2>Usage</h2>
+            <p>Include in any page with:</p>
+            <p style="font-family: monospace; color: var(--accent); background: var(--bg-elevated); padding: 0.5rem; border-radius: 4px;">
+                {&#37; include "tree-bg.njk" &#37;}
+            </p>
+            <p>
+                Options can be customized by setting <code style="color: var(--accent);">treeBgOptions</code>
+                before the include with properties like <code style="color: var(--accent);">opacity</code>,
+                <code style="color: var(--accent);">parallax</code>, and <code style="color: var(--accent);">color</code>.
+            </p>
+        </div>
+    </div>
+
+    <div class="controls-panel">
+        <label class="control-label">
+            opacity:
+            <input type="range" id="opacitySlider" min="0" max="20" value="8">
+            <span id="opacityValue">0.08</span>
+        </label>
+        <label class="control-label">
+            parallax:
+            <input type="range" id="parallaxSlider" min="0" max="100" value="50">
+            <span id="parallaxValue">0.5</span>
+        </label>
+    </div>
+
+    <script>
+        const treeBgData = {{ trees | dump | safe }};
+    </script>
+    <script src="/assets/js/tree-bg.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentOptions = {
+                opacity: 0.08,
+                parallax: 0.5,
+                color: '#f0dfaf'
+            };
+
+            TreeBackground.render('treeBgCanvas', treeBgData, currentOptions);
+
+            // Live controls
+            const opacitySlider = document.getElementById('opacitySlider');
+            const parallaxSlider = document.getElementById('parallaxSlider');
+            const opacityValue = document.getElementById('opacityValue');
+            const parallaxValue = document.getElementById('parallaxValue');
+
+            opacitySlider.addEventListener('input', function() {
+                currentOptions.opacity = this.value / 100;
+                opacityValue.textContent = currentOptions.opacity.toFixed(2);
+                TreeBackground.render('treeBgCanvas', treeBgData, currentOptions);
+            });
+
+            parallaxSlider.addEventListener('input', function() {
+                currentOptions.parallax = this.value / 100;
+                parallaxValue.textContent = currentOptions.parallax.toFixed(1);
+                // Parallax is set up during render, so re-render
+                TreeBackground.render('treeBgCanvas', treeBgData, currentOptions);
+            });
+        });
+    </script>
+</body>
+</html>
