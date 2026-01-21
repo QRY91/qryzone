@@ -266,6 +266,15 @@
       "status": "seedling",
       "connections": ["Zenburn", "CLI tooling stack"],
       "lastUpdated": "2026-01-17"
+    },
+    {
+      "title": "The SIMP Protocol",
+      "description": "How hard do you have to push before an LLM agrees the Earth is flat?",
+      "href": "/simp-protocol/",
+      "tags": ["ai-collaboration", "analysis"],
+      "status": "seedling",
+      "connections": ["Recursive mirror"],
+      "lastUpdated": "2026-01-21"
     }
   ]
 }

@@ -47,6 +47,10 @@
 
     // Initialize
     function init() {
+        // Set item count dynamically
+        const itemCount = document.getElementById('item-count');
+        if (itemCount) itemCount.textContent = contentData.length;
+
         renderTags();
         renderStatusButtons();
         renderRecentlyUpdated();
