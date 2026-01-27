@@ -1,0 +1,570 @@
+---
+permalink: /fun/quine/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quine Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #3f3f3f;
+            --surface: #4a4a4a;
+            --border: #5a5a5a;
+            --text: #dcdccc;
+            --text-dim: #8c8c8c;
+            --accent: #f0dfaf;
+            --success: #7f9f7f;
+            --danger: #cc6666;
+            --info: #8cd0d3;
+            --code-data: #dfaf8f;
+            --code-string: #cc9393;
+            --code-keyword: #f0dfaf;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Atkinson Hyperlegible Mono', monospace;
+            font-size: 14px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .back-link {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            z-index: 100;
+            transition: all 0.2s;
+        }
+        .back-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 1rem 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        .tagline {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        h2 {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        p {
+            margin-bottom: 1rem;
+        }
+        .step {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .step-number {
+            width: 2rem;
+            height: 2rem;
+            background: var(--accent);
+            color: var(--bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .step-title {
+            font-weight: bold;
+            color: var(--accent);
+        }
+        .code-block {
+            background: #383838;
+            border: 1px solid var(--border);
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+        .code-block code {
+            white-space: pre;
+        }
+        .data { color: var(--code-data); }
+        .string { color: var(--code-string); }
+        .keyword { color: var(--code-keyword); }
+        .comment { color: var(--text-dim); font-style: italic; }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        @media (max-width: 700px) {
+            .comparison { grid-template-columns: 1fr; }
+        }
+        .comparison-panel {
+            background: #383838;
+            border: 1px solid var(--border);
+        }
+        .comparison-header {
+            padding: 0.5rem 1rem;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+        .comparison-content {
+            padding: 1rem;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            white-space: pre;
+            min-height: 100px;
+        }
+        .match { color: var(--success); }
+        .mismatch { color: var(--danger); }
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        button.active {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+        .result {
+            padding: 0.75rem 1rem;
+            margin: 1rem 0;
+            border: 1px solid;
+        }
+        .result.success {
+            border-color: var(--success);
+            color: var(--success);
+        }
+        .result.failure {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .interactive-area {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        .interactive-area h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        select {
+            padding: 0.5rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+        .explanation {
+            background: rgba(140, 208, 211, 0.1);
+            border-left: 3px solid var(--info);
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .philosophy {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+        .philosophy p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        .help-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            width: 2rem;
+            height: 2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .help-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            margin: 1rem;
+        }
+        .modal h2 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        .modal p {
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .modal ul {
+            margin: 0.5rem 0 1rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        .modal li {
+            margin-bottom: 0.25rem;
+        }
+        .modal-close {
+            display: block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background: var(--accent);
+            border: none;
+            color: var(--bg);
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="help-btn" id="helpBtn" title="About">?</button>
+
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>Quine Generator</h2>
+            <p>A quine is a program that prints its own source code without reading itself from disk.</p>
+            <p>Seems impossible—how can code contain a complete copy of itself? The trick is using one piece of data twice: as the template AND as the content to fill the template.</p>
+            <p><strong>This page covers:</strong></p>
+            <ul>
+                <li>Why naive approaches fail (infinite regress)</li>
+                <li>The encoding trick that makes it work</li>
+                <li>Interactive comparison: source vs output</li>
+                <li>Examples in Python, JavaScript, Ruby, C</li>
+                <li>Advanced variants: mutual quines, polyglots</li>
+            </ul>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Quine Generator</h1>
+            <p class="tagline">Programs that print themselves. A puzzle in self-reference.</p>
+        </header>
+
+        <h2>The Challenge</h2>
+        <p>A <strong>quine</strong> is a program that outputs its own source code, without reading itself from disk. It seems impossible at first—how can a program contain a complete copy of itself?</p>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title">The Naive Attempt (Why It Fails)</div>
+            </div>
+            <p>Your first instinct might be:</p>
+            <div class="code-block"><code><span class="keyword">print</span>(<span class="string">"print(...)"</span>)</code></div>
+            <p>But wait—what goes in the <code>...</code>? You need to print the entire program, including the print statement itself. So you try:</p>
+            <div class="code-block"><code><span class="keyword">print</span>(<span class="string">"print(\"print(...)\")"</span>)</code></div>
+            <p>Now you need another level of nesting. And another. <strong>Infinite regress.</strong></p>
+            <div class="result failure">This approach can never work. The source always grows faster than the output.</div>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title">The Trick</div>
+            </div>
+            <p>Use <strong>one piece of data twice</strong>.</p>
+            <div class="explanation">
+                Store the program structure as a string. Then:
+                <ol style="margin: 0.5rem 0 0 1.5rem;">
+                    <li>Print the string (this produces the data portion)</li>
+                    <li>Print the string <em>filled into itself</em> (this produces the code portion)</li>
+                </ol>
+            </div>
+            <p>The data does double duty: it gets printed literally AND used as a template.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title">The Construction</div>
+            </div>
+            <p>Here's the simplest Python quine:</p>
+            <div class="code-block"><code><span class="data">s</span> = <span class="string">'s = %r\nprint(s %% s)'</span>
+<span class="keyword">print</span>(<span class="data">s</span> % <span class="data">s</span>)</code></div>
+            <p>Let's trace what happens:</p>
+            <div class="explanation">
+                <code>s</code> contains the template: <code>'s = %r\nprint(s %% s)'</code><br><br>
+                <code>s % s</code> substitutes <code>s</code> into itself using <code>%r</code> (which adds quotes):<br>
+                → <code>s = 's = %r\nprint(s %% s)'</code><br>
+                → <code>print(s % s)</code><br><br>
+                The output IS the source code.
+            </div>
+        </div>
+
+        <div class="interactive-area">
+            <h3>Try It: Live Quine Comparison</h3>
+            <div class="controls">
+                <select id="languageSelect">
+                    <option value="python">Python</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="ruby">Ruby</option>
+                    <option value="c">C</option>
+                </select>
+                <button id="runBtn">Run Quine</button>
+                <button id="breakBtn">Break It</button>
+                <button id="fixBtn">Fix It</button>
+            </div>
+            <div class="comparison">
+                <div class="comparison-panel">
+                    <div class="comparison-header">Source Code</div>
+                    <div class="comparison-content" id="sourceCode"></div>
+                </div>
+                <div class="comparison-panel">
+                    <div class="comparison-header">Output</div>
+                    <div class="comparison-content" id="outputCode"></div>
+                </div>
+            </div>
+            <div class="result" id="comparisonResult"></div>
+        </div>
+
+        <h2>Quines in Different Languages</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-title">JavaScript</div>
+            </div>
+            <div class="code-block"><code>(<span class="data">f</span>=<span class="keyword">_</span>=><span class="string">`(f=${f})()`</span>)()</code></div>
+            <p>Uses template literals and arrow functions. The function <code>f</code> returns a string containing itself.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-title">Ruby</div>
+            </div>
+            <div class="code-block"><code><span class="data">s</span>=<span class="string">"s=%p;puts s%%s"</span>;<span class="keyword">puts</span> <span class="data">s</span>%<span class="data">s</span></code></div>
+            <p>Similar structure to Python. <code>%p</code> is Ruby's "inspect" formatter.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-title">C</div>
+            </div>
+            <div class="code-block"><code><span class="keyword">char</span>*<span class="data">s</span>=<span class="string">"char*s=%c%s%c;main(){printf(s,34,s,34);}"</span>;main(){printf(<span class="data">s</span>,34,<span class="data">s</span>,34);}</code></div>
+            <p>Uses ASCII 34 (double quote) since C can't easily escape quotes in strings.</p>
+        </div>
+
+        <h2>Beyond Simple Quines</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-title">Mutual Quines (Ouroboros)</div>
+            </div>
+            <p>Program A prints program B. Program B prints program A. A cycle of self-reference.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-title">Polyglot Quines</div>
+            </div>
+            <p>A single source file that's valid in multiple languages—and outputs itself when run in ANY of them.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <div class="step-title">Radiation-Hardened Quines</div>
+            </div>
+            <p>Quines that still work even if you delete any single character. Requires redundancy and error correction.</p>
+        </div>
+
+        <div class="philosophy">
+            <h2>So What?</h2>
+            <p>Quines aren't just party tricks. They connect to real things:</p>
+            <p><strong>Fixed points</strong> — A quine is <code>f(x) = x</code>. The program IS its output. No transformation, just identity.</p>
+            <p><strong>Gödel</strong> — Self-referential statements ("this statement is unprovable") use the same structural trick. Encode the system within itself.</p>
+            <p><strong>Bootstrapping</strong> — Compilers that compile themselves. The first version has to come from somewhere.</p>
+            <p><strong>Replication</strong> — DNA, memes, viruses. Patterns that encode their own reproduction.</p>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => {
+            if (e.target === helpModal) helpModal.classList.remove('show');
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') helpModal.classList.remove('show');
+        });
+
+        const QUINES = {
+            python: {
+                source: `s = 's = %r\\nprint(s %% s)'\nprint(s % s)`,
+                broken: `s = 's = %r\\nprint(s %% s)'\nprint(s)`,
+            },
+            javascript: {
+                source: `(f=_=>\`(f=\${f})()\`)()`,
+                broken: `(f=_=>\`(f=\${f})\`)()`,
+            },
+            ruby: {
+                source: `s="s=%p;puts s%%s";puts s%s`,
+                broken: `s="s=%p;puts s%%s";puts s`,
+            },
+            c: {
+                source: `char*s="char*s=%c%s%c;main(){printf(s,34,s,34);}";main(){printf(s,34,s,34);}`,
+                broken: `char*s="char*s=%c%s%c;main(){printf(s,34,s,34);}";main(){printf(s,34,s);}`,
+            }
+        };
+
+        // Simulated outputs (since we can't actually run code)
+        const OUTPUTS = {
+            python: {
+                normal: `s = 's = %r\\nprint(s %% s)'\nprint(s % s)`,
+                broken: `s = %r\nprint(s %% s)`,
+            },
+            javascript: {
+                normal: `(f=_=>\`(f=\${f})()\`)()`,
+                broken: `(f=_=>\`(f=\${f})\`)`,
+            },
+            ruby: {
+                normal: `s="s=%p;puts s%%s";puts s%s`,
+                broken: `"s=%p;puts s%%s"`,
+            },
+            c: {
+                normal: `char*s="char*s=%c%s%c;main(){printf(s,34,s,34);}";main(){printf(s,34,s,34);}`,
+                broken: `char*s="char*s=%c%s%c;main(){printf(s,34,s,34);}";main(){printf(s,34,s,`,
+            }
+        };
+
+        let currentLang = 'python';
+        let isBroken = false;
+
+        const sourceEl = document.getElementById('sourceCode');
+        const outputEl = document.getElementById('outputCode');
+        const resultEl = document.getElementById('comparisonResult');
+        const langSelect = document.getElementById('languageSelect');
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function render() {
+            const quine = QUINES[currentLang];
+            const outputs = OUTPUTS[currentLang];
+
+            const source = isBroken ? quine.broken : quine.source;
+            const output = isBroken ? outputs.broken : outputs.normal;
+
+            sourceEl.textContent = source;
+            outputEl.textContent = output;
+
+            const matches = source === output;
+            resultEl.textContent = matches
+                ? '✓ Source === Output. It\'s a quine!'
+                : '✗ Source !== Output. Not a quine.';
+            resultEl.className = 'result ' + (matches ? 'success' : 'failure');
+        }
+
+        langSelect.addEventListener('change', (e) => {
+            currentLang = e.target.value;
+            isBroken = false;
+            render();
+        });
+
+        document.getElementById('runBtn').addEventListener('click', () => {
+            isBroken = false;
+            render();
+        });
+
+        document.getElementById('breakBtn').addEventListener('click', () => {
+            isBroken = true;
+            render();
+        });
+
+        document.getElementById('fixBtn').addEventListener('click', () => {
+            isBroken = false;
+            render();
+        });
+
+        render();
+    })();
+    </script>
+</body>
+</html>

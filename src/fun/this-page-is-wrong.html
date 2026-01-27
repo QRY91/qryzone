@@ -1,0 +1,481 @@
+---
+permalink: /fun/this-page-is-wrong/
+---
+<!DOCTYPE html PUBLIC "THIS IS NOT A REAL DOCTYPE">
+<html lang="en" xmlns:made-up="http://not.real" style="margin:0" class>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>This Page Is Wrong</title>
+    <!-- This comment is fine. The rest of this file is not. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #3f3f3f;
+            --surface: #4a4a4a;
+            --border: #5a5a5a;
+            --text: #dcdccc;
+            --text-dim: #8c8c8c;
+            --accent: #f0dfaf;
+            --danger: #cc6666;
+            --warning: #dfaf8f;
+            --success: #7f9f7f;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Atkinson Hyperlegible Mono', monospace;
+            font-size: 14px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .back-link {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            z-index: 100;
+            transition: all 0.2s;
+        }
+        .back-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 1rem 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        .tagline {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        .error-count {
+            background: var(--danger);
+            color: var(--bg);
+            padding: 0.75rem 1.5rem;
+            text-align: center;
+            margin: 1rem 0 2rem;
+            font-weight: bold;
+        }
+        .crime-scene {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .crime-header {
+            background: var(--danger);
+            color: var(--bg);
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .crime-body {
+            padding: 1rem;
+        }
+        .crime-code {
+            background: #383838;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            border-left: 3px solid var(--danger);
+        }
+        .crime-code code {
+            white-space: pre;
+        }
+        .crime-explanation {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+        .spec-says {
+            background: rgba(140, 208, 211, 0.1);
+            border-left: 3px solid #8cd0d3;
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            font-size: 0.85rem;
+        }
+        .browser-does {
+            background: rgba(127, 159, 127, 0.1);
+            border-left: 3px solid var(--success);
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            font-size: 0.85rem;
+        }
+        .severity {
+            display: inline-block;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            border-radius: 2px;
+            margin-left: 0.5rem;
+        }
+        .severity.high { background: var(--danger); color: var(--bg); }
+        .severity.medium { background: var(--warning); color: var(--bg); }
+        .severity.low { background: var(--text-dim); color: var(--bg); }
+        .demo-zone {
+            border: 2px dashed var(--border);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: var(--bg);
+        }
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        .toggle-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .philosophy {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+        }
+        .philosophy h2 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        .philosophy p {
+            margin-bottom: 1rem;
+            color: var(--text-dim);
+        }
+        .philosophy blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: var(--text);
+        }
+        .view-source-hint {
+            text-align: center;
+            margin: 2rem 0;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        .view-source-hint kbd {
+            background: var(--surface);
+            padding: 0.2rem 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+        }
+        /* This selector shouldn't work but does in some browsers */
+        [🔥] { color: var(--warning); }
+        .help-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            width: 2rem;
+            height: 2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .help-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            margin: 1rem;
+        }
+        .modal h2 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        .modal p {
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .modal ul {
+            margin: 0.5rem 0 1rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        .modal li {
+            margin-bottom: 0.25rem;
+        }
+        .modal-close {
+            display: block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background: var(--accent);
+            border: none;
+            color: var(--bg);
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="help-btn" id="helpBtn" title="About">?</button>
+
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>This Page Is Wrong</h2>
+            <p>Every piece of HTML on this page violates web standards in some way. Yet it renders perfectly in your browser.</p>
+            <p>This is a tribute to browser resilience. The HTML5 spec doesn't just define valid markup—it defines exactly how to handle <em>invalid</em> markup. Every edge case. Every forgotten close tag.</p>
+            <p><strong>What to look for:</strong></p>
+            <ul>
+                <li>Invalid DOCTYPE declaration</li>
+                <li>Forbidden element nesting</li>
+                <li>Unclosed and overlapping tags</li>
+                <li>Deprecated elements (yes, marquee works)</li>
+                <li>Malformed attributes</li>
+            </ul>
+            <p>Press <strong>Ctrl+U</strong> to view source and see the crimes for yourself.</p>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <!-- CRIME #1: Nested paragraphs with block element inside -->
+    <p hidden><div>This div is inside a paragraph. That's illegal.</div></p>
+
+    <div class="container">
+        <header>
+            <h1>This Page Is Wrong</h1>
+            <p class="tagline">An ode to browser forgiveness. Every rule broken, nothing burned.</p>
+        </header>
+
+        <div class="error-count" id="errorCount">
+            Validation Errors: <span id="errorNumber">23</span> | Warnings: <span id="warningNumber">47</span>
+        </div>
+
+        <p class="view-source-hint">
+            Press <kbd>Ctrl</kbd>+<kbd>U</kbd> (or <kbd>Cmd</kbd>+<kbd>Option</kbd>+<kbd>U</kbd>) to view source.<br>
+            The horror is in the details.
+        </p>
+
+        <!-- CRIME #2: Deprecated elements that still work -->
+        <div class="crime-scene">
+            <div class="crime-header">Crime #1: Invalid DOCTYPE <span class="severity high">HIGH</span></div>
+            <div class="crime-body">
+                <div class="crime-code"><code>&lt;!DOCTYPE html PUBLIC "THIS IS NOT A REAL DOCTYPE"&gt;</code></div>
+                <div class="spec-says"><strong>Spec says:</strong> DOCTYPE must be "html" or a valid public identifier.</div>
+                <div class="browser-does"><strong>Browser does:</strong> Shrugs. Enters quirks mode. Continues rendering.</div>
+                <p class="crime-explanation">Browsers have seen worse. Much worse. They learned to cope.</p>
+            </div>
+        </div>
+
+        <!-- CRIME #3: Self-closing tags that shouldn't self-close -->
+        <div class="crime-scene">
+            <div class="crime-header">Crime #2: Forbidden Nesting <span class="severity high">HIGH</span></div>
+            <div class="crime-body">
+                <div class="crime-code"><code>&lt;p&gt;&lt;div&gt;Block inside inline&lt;/div&gt;&lt;/p&gt;</code></div>
+                <div class="spec-says"><strong>Spec says:</strong> Paragraphs cannot contain block-level elements.</div>
+                <div class="browser-does"><strong>Browser does:</strong> Silently closes the &lt;p&gt; before the &lt;div&gt;, opens a new one after.</div>
+                <div class="demo-zone">
+                    <p>This paragraph contains <div style="color: var(--warning);">a div that shouldn't be here</div> but the browser handles it.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="crime-scene">
+            <div class="crime-header">Crime #3: Unclosed Tags <span class="severity medium">MEDIUM</span></div>
+            <div class="crime-body">
+                <div class="crime-code"><code>&lt;div&gt;&lt;span&gt;&lt;strong&gt;Never closed...
+&lt;/div&gt;</code></div>
+                <div class="spec-says"><strong>Spec says:</strong> All elements must be properly closed.</div>
+                <div class="browser-does"><strong>Browser does:</strong> Infers the missing end tags. Carries on.</div>
+                <div class="demo-zone">
+                    <div><span><strong>These tags are never closed but the text still renders correctly.</strong></span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CRIME #4: Attributes without values, empty class -->
+        <div class="crime-scene" data-crime data-number="">
+            <div class="crime-header">Crime #4: Malformed Attributes <span class="severity low">LOW</span></div>
+            <div class="crime-body">
+                <div class="crime-code"><code>&lt;html class&gt;  &lt;!-- empty class attribute --&gt;
+&lt;div data-crime data-number=""&gt;  &lt;!-- valueless and empty --&gt;</code></div>
+                <div class="spec-says"><strong>Spec says:</strong> Boolean attributes are fine, but empty strings are questionable.</div>
+                <div class="browser-does"><strong>Browser does:</strong> Accepts them all. Attributes are present, values are empty strings.</div>
+            </div>
+        </div>
+
+        <div class="crime-scene">
+            <div class="crime-header">Crime #5: Deprecated Elements <span class="severity medium">MEDIUM</span></div>
+            <div class="crime-body">
+                <div class="crime-code"><code>&lt;center&gt;&lt;font color="red"&gt;&lt;marquee&gt;1999 called&lt;/marquee&gt;&lt;/font&gt;&lt;/center&gt;</code></div>
+                <div class="spec-says"><strong>Spec says:</strong> These elements are obsolete. Do not use.</div>
+                <div class="browser-does"><strong>Browser does:</strong> Renders them anyway. Nostalgia mode engaged.</div>
+                <div class="demo-zone" style="background: #1a1a1a;">
+                    <center><font color="#f0dfaf"><marquee scrollamount="3">The web never forgets. It just pretends to.</marquee></font></center>
+                </div>
+            </div>
+        </div>
+
+        <div class="crime-scene">
+            <div class="crime-header">Crime #6: Invalid Characters in Attributes <span class="severity low">LOW</span></div>
+            <div class="crime-body">
+                <div class="crime-code"><code>&lt;div xmlns:made-up="http://not.real"&gt;
+&lt;span 🔥&gt;Fire emoji as attribute&lt;/span&gt;</code></div>
+                <div class="spec-says"><strong>Spec says:</strong> Attribute names must be ASCII. Namespaces must be declared.</div>
+                <div class="browser-does"><strong>Browser does:</strong> Ignores the made-up namespace. The emoji? Depends on the browser.</div>
+            </div>
+        </div>
+
+        <div class="crime-scene">
+            <div class="crime-header">Crime #7: Script in Wrong Place <span class="severity medium">MEDIUM</span></div>
+            <div class="crime-body">
+                <div class="crime-code"><code>&lt;table&gt;
+  &lt;script&gt;console.log("I'm in a table!");&lt;/script&gt;
+  &lt;tr&gt;&lt;td&gt;Data&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</code></div>
+                <div class="spec-says"><strong>Spec says:</strong> Script elements have specific placement rules.</div>
+                <div class="browser-does"><strong>Browser does:</strong> Hoists the script, executes it, renders the table.</div>
+            </div>
+        </div>
+
+        <!-- Hidden crime: comment inside a tag -->
+        <div class="crime-scene" <!-- this shouldn't be here --> id="crime8">
+            <div class="crime-header">Crime #8: Comment Inside Tag <span class="severity high">HIGH</span></div>
+            <div class="crime-body">
+                <div class="crime-code"><code>&lt;div &lt;!-- this shouldn't be here --&gt; id="crime8"&gt;</code></div>
+                <div class="spec-says"><strong>Spec says:</strong> Comments cannot appear inside tags.</div>
+                <div class="browser-does"><strong>Browser does:</strong> Parser recovery kicks in. Results vary wildly between browsers.</div>
+            </div>
+        </div>
+
+        <div class="crime-scene">
+            <div class="crime-header">Crime #9: Overlapping Tags <span class="severity high">HIGH</span></div>
+            <div class="crime-body">
+                <div class="crime-code"><code>&lt;b&gt;&lt;i&gt;Bold and italic&lt;/b&gt; just italic?&lt;/i&gt;</code></div>
+                <div class="spec-says"><strong>Spec says:</strong> Tags must nest properly. No overlapping.</div>
+                <div class="browser-does"><strong>Browser does:</strong> Reconstructs the formatting elements. Magic.</div>
+                <div class="demo-zone">
+                    <b><i>Bold and italic</b> just italic?</i>
+                </div>
+            </div>
+        </div>
+
+        <div class="philosophy">
+            <h2>Why Does Any of This Work?</h2>
+            <blockquote>
+                "Be conservative in what you send, be liberal in what you accept."<br>
+                — Postel's Law (The Robustness Principle)
+            </blockquote>
+            <p>Browsers implement one of the most forgiving parsers ever written. They have to. The early web was chaos—hand-written HTML with every possible mistake. If browsers crashed on invalid markup, the web wouldn't exist.</p>
+            <p>The HTML5 spec doesn't just define valid HTML. It defines exactly how to handle <em>invalid</em> HTML. Every edge case. Every malformed tag. Every forgotten close bracket.</p>
+            <p>This page is a tribute to that resilience. Every crime here is committed in the source. Yet you're reading this just fine.</p>
+            <p style="color: var(--accent);">The web works <em>despite</em> itself.</p>
+        </div>
+
+        <p class="view-source-hint" style="margin-top: 2rem;">
+            This page passes zero validators.<br>
+            It renders perfectly in every browser tested.
+        </p>
+    </div>
+
+    <!-- CRIME: Table with script inside (mentioned in crime #7) -->
+    <table style="display:none">
+        <script>
+            // I'm inside a table! This is wrong!
+            window._tableScript = true;
+        </script>
+        <tr><td>Hidden table data</td></tr>
+    </table>
+
+    <script>
+    (function() {
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => {
+            if (e.target === helpModal) helpModal.classList.remove('show');
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') helpModal.classList.remove('show');
+        });
+
+        // Animate the error counter for effect
+        const errorEl = document.getElementById('errorNumber');
+        const warningEl = document.getElementById('warningNumber');
+
+        let errors = 23;
+        let warnings = 47;
+
+        // Slowly increment as user reads
+        setInterval(() => {
+            if (Math.random() < 0.3) {
+                errors += Math.floor(Math.random() * 3);
+                warnings += Math.floor(Math.random() * 5);
+                errorEl.textContent = errors;
+                warningEl.textContent = warnings;
+            }
+        }, 3000);
+
+        // Log crimes to console
+        console.log('%c This page is full of HTML crimes.', 'color: #cc6666; font-size: 16px;');
+        console.log('%c But you\'re reading this, aren\'t you?', 'color: #7f9f7f;');
+
+        if (window._tableScript) {
+            console.log('%c The script-in-table crime was executed successfully.', 'color: #dfaf8f;');
+        }
+    })();
+    </script>
+
+    <!-- Final crime: unclosed body and html tags -->
+    <!-- </body> -->
+    <!-- </html> -->
+    <!-- Just kidding, those are comments. Or are they? -->
+</body>
+</html>

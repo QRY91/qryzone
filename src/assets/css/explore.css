@@ -32,7 +32,7 @@
     margin-bottom: var(--space-sm);
 }
 
-#search-input {
+#explore-search {
     width: 100%;
     padding: var(--space-sm) var(--space-md);
     font-size: 0.9rem;
@@ -43,12 +43,12 @@
     color: var(--color-text-primary);
 }
 
-#search-input:focus {
+#explore-search:focus {
     outline: none;
     border-color: var(--color-accent);
 }
 
-#search-input::placeholder {
+#explore-search::placeholder {
     color: var(--color-text-secondary);
     opacity: 0.6;
 }

@@ -1,0 +1,651 @@
+---
+layout: false
+permalink: /fun/music-box/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Markov Music Box - Procedural folk melodies from probability chains">
+    <title>Markov Music Box</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Atkinson+Hyperlegible+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        .game-header { padding-top: 4rem; }
+
+        .music-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .visualizer {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .note-display {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 2px;
+            height: 100px;
+        }
+
+        .note-bar {
+            width: 18px;
+            background: var(--border);
+            border-radius: 2px 2px 0 0;
+            transition: all 0.15s ease;
+            min-height: 4px;
+        }
+
+        .note-bar.active {
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .note-bar.history {
+            background: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .current-notes {
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin: 1rem 0;
+            min-height: 2rem;
+            letter-spacing: 0.5em;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .controls button {
+            font-size: 0.85rem;
+            padding: 0.5rem 1.2rem;
+        }
+
+        .controls button.playing {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+
+        .preset-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .preset-row button {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.6rem;
+        }
+
+        .preset-row button.active {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            max-width: 350px;
+            margin: 0.75rem auto;
+        }
+
+        .slider-row label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            min-width: 70px;
+        }
+
+        .slider-row input[type="range"] {
+            flex: 1;
+            accent-color: var(--accent);
+        }
+
+        .slider-row .value {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            min-width: 40px;
+            text-align: right;
+        }
+
+        .chain-viz {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .chain-viz .transition {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 2px;
+            background: var(--bg-deep);
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+
+        .chain-viz .transition.active {
+            background: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        .info-text {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 1rem 0;
+        }
+
+        .tap-start {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .tap-start.show {
+            display: block;
+        }
+
+        .tap-start:hover {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+    <header class="game-header">
+        <h1 class="game-title">Markov Music Box</h1>
+        <p class="game-subtitle">probabilistic folk melodies</p>
+    </header>
+
+    <div class="music-container">
+        <div class="tap-start show" id="tapStart">
+            Click anywhere to start audio
+        </div>
+
+        <div class="visualizer" id="visualizer" style="display: none;">
+            <div class="note-display" id="noteDisplay"></div>
+        </div>
+
+        <div class="current-notes" id="currentNotes"></div>
+
+        <div class="controls">
+            <button id="playBtn">Play</button>
+            <button id="stepBtn">Step</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+
+        <div class="control-section">
+            <span class="control-label" style="display: block; text-align: center; font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.5rem;">STYLE</span>
+            <div class="preset-row" id="styleRow">
+                <button class="active" data-style="irish">Irish</button>
+                <button data-style="english">English</button>
+                <button data-style="modal">Modal</button>
+                <button data-style="pentatonic">Pentatonic</button>
+            </div>
+        </div>
+
+        <div class="slider-row">
+            <label>Chaos</label>
+            <input type="range" id="chaosSlider" min="0" max="100" value="30">
+            <span class="value" id="chaosValue">30%</span>
+        </div>
+
+        <div class="slider-row">
+            <label>Tempo</label>
+            <input type="range" id="tempoSlider" min="60" max="200" value="120">
+            <span class="value" id="tempoValue">120</span>
+        </div>
+
+        <div class="slider-row">
+            <label>Octave</label>
+            <input type="range" id="octaveSlider" min="3" max="5" value="4">
+            <span class="value" id="octaveValue">4</span>
+        </div>
+
+        <div class="chain-viz" id="chainViz">
+            <div class="info-text">Markov chain transitions will appear here...</div>
+        </div>
+
+        <div class="info-text">
+            Each note is chosen based on what came before.<br>
+            Lower chaos = more predictable melodies.
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>Markov Music Box</h2>
+            <p>Generates melodies using Markov chains trained on folk tune patterns.</p>
+            <p><strong>How it works:</strong></p>
+            <ul>
+                <li>The model learns which notes tend to follow others</li>
+                <li>Each new note is chosen probabilistically</li>
+                <li>Low chaos = pick the most likely next note</li>
+                <li>High chaos = more random selection</li>
+            </ul>
+            <p><strong>Styles:</strong></p>
+            <ul>
+                <li><strong>Irish</strong> &ndash; Jigs and reels patterns</li>
+                <li><strong>English</strong> &ndash; Morris and country dance</li>
+                <li><strong>Modal</strong> &ndash; Dorian and mixolydian modes</li>
+                <li><strong>Pentatonic</strong> &ndash; Five-note scale, very consonant</li>
+            </ul>
+            <p><strong>Controls:</strong></p>
+            <ul>
+                <li><strong>Play/Pause</strong> &ndash; Continuous generation</li>
+                <li><strong>Step</strong> &ndash; Generate one note at a time</li>
+                <li><strong>Chaos</strong> &ndash; Randomness of note selection</li>
+            </ul>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        // Note definitions
+        const NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+        const NOTE_TO_IDX = { 'C': 0, 'D': 1, 'E': 2, 'F': 3, 'G': 4, 'A': 5, 'B': 6 };
+
+        // Folk melody fragments for training (simplified note sequences)
+        // These capture common melodic patterns from folk traditions
+        const TRAINING_DATA = {
+            irish: [
+                // Jig patterns (6/8 feel)
+                'DGABAGABGEDE', 'EDEGABAGEDC', 'GABAGFEDCDE',
+                'DEFGAGFEDCD', 'GABCDEDCBAG', 'AGABAGFEFGA',
+                'DEDEDEDCBAG', 'EFGAGFEDEDE', 'BAGABAGFEDC',
+                'CDEDCBAGABC', 'GABGABGFEFG', 'DCBAGEDCDEF',
+                // Reel patterns (4/4 feel)
+                'CDEFGAGFEDC', 'DEFGABAGFED', 'EFGABCBAGFE',
+                'GABCDCBAGAB', 'BAGFEDCDEFG', 'AGFEDCDEDCB',
+                'FGABAGFEFGA', 'EDCBAGABCDE', 'DCDEFEDCDCB'
+            ],
+            english: [
+                // Morris and country dance patterns
+                'CEGCEGCEGED', 'DGBDGBDGBAG', 'CFACFACFAED',
+                'GBDGBDGBDCA', 'EGCEGCEGCBA', 'FACFACFACED',
+                'CDECDECDECE', 'GABGABGABGA', 'DEFDEFDEFED',
+                'CDEFEDCDEFG', 'GABAGABAGFE', 'EFGFEFGFEDC',
+                'CDEGECDEGED', 'GACDCAGACDC', 'BDGBDGBDGBD'
+            ],
+            modal: [
+                // Dorian mode patterns (D E F G A B C)
+                'DEFGABCDEFG', 'GFEDCBAGFED', 'DFADFADFACD',
+                'ABCDEFGABCD', 'EDCBAGFEDCB', 'FAGFAGFAGFA',
+                // Mixolydian patterns (G A B C D E F)
+                'GABCDEFGABC', 'FEDCBAGFEDC', 'GBDGBDGBDGB',
+                'CDEFGABCDEF', 'BAGFEDCBAGE', 'DFGDFGDFGDF',
+                'ACEGACEGACE', 'BDFBDFBDFBD', 'EGBEGBEGBEG'
+            ],
+            pentatonic: [
+                // Major pentatonic (C D E G A)
+                'CDEGAEGACDE', 'GACDEGACDEA', 'EGACDEGACED',
+                'ACDEGACDEGA', 'DEGACDEGACD', 'CDEGCDEGCDE',
+                'GAEGAEGAEGA', 'ACDACDACDAC', 'EGCEGCEGCEG',
+                'DGADGADGADG', 'CEACCEACCEA', 'GADEGADEGAD',
+                // Emphasis on consonant intervals
+                'CGCGCGCGCGC', 'DEDE ADEDADE', 'EGEGAEGAEGA',
+                'ACACACDACDC', 'GDGDGEGDGEG'
+            ]
+        };
+
+        // Markov chain
+        let chain = {};
+        let currentStyle = 'irish';
+        let history = [];
+        const ORDER = 2; // Look at last 2 notes
+
+        // Audio
+        let synth = null;
+        let isPlaying = false;
+        let playInterval = null;
+        let audioStarted = false;
+
+        // Settings
+        let chaos = 30;
+        let tempo = 120;
+        let octave = 4;
+
+        // UI elements
+        const noteDisplay = document.getElementById('noteDisplay');
+        const currentNotes = document.getElementById('currentNotes');
+        const chainViz = document.getElementById('chainViz');
+        const tapStart = document.getElementById('tapStart');
+        const visualizer = document.getElementById('visualizer');
+
+        function buildChain(style) {
+            chain = {};
+            const sequences = TRAINING_DATA[style];
+
+            for (const seq of sequences) {
+                for (let i = 0; i < seq.length - ORDER; i++) {
+                    const state = seq.substring(i, i + ORDER);
+                    const next = seq[i + ORDER];
+
+                    if (!chain[state]) {
+                        chain[state] = {};
+                    }
+                    chain[state][next] = (chain[state][next] || 0) + 1;
+                }
+            }
+
+            // Normalize to probabilities
+            for (const state in chain) {
+                const total = Object.values(chain[state]).reduce((a, b) => a + b, 0);
+                for (const next in chain[state]) {
+                    chain[state][next] /= total;
+                }
+            }
+
+            updateChainViz();
+        }
+
+        function getNextNote() {
+            if (history.length < ORDER) {
+                // Bootstrap with random notes from the scale
+                const scale = getScale(currentStyle);
+                return scale[Math.floor(Math.random() * scale.length)];
+            }
+
+            const state = history.slice(-ORDER).join('');
+            const transitions = chain[state];
+
+            if (!transitions) {
+                // Fallback to random from scale
+                const scale = getScale(currentStyle);
+                return scale[Math.floor(Math.random() * scale.length)];
+            }
+
+            // Apply chaos: interpolate between deterministic and random
+            const chaosLevel = chaos / 100;
+
+            if (Math.random() < chaosLevel * 0.5) {
+                // Pure random from scale
+                const scale = getScale(currentStyle);
+                return scale[Math.floor(Math.random() * scale.length)];
+            }
+
+            // Weighted selection with temperature
+            const entries = Object.entries(transitions);
+
+            if (chaosLevel < 0.1) {
+                // Very low chaos: pick highest probability
+                entries.sort((a, b) => b[1] - a[1]);
+                return entries[0][0];
+            }
+
+            // Temperature-adjusted selection
+            const temperature = 0.5 + chaosLevel * 1.5;
+            const adjusted = entries.map(([note, prob]) => [
+                note,
+                Math.pow(prob, 1 / temperature)
+            ]);
+            const total = adjusted.reduce((sum, [_, p]) => sum + p, 0);
+
+            let r = Math.random() * total;
+            for (const [note, prob] of adjusted) {
+                r -= prob;
+                if (r <= 0) return note;
+            }
+
+            return entries[0][0];
+        }
+
+        function getScale(style) {
+            switch (style) {
+                case 'pentatonic':
+                    return ['C', 'D', 'E', 'G', 'A'];
+                case 'modal':
+                    return ['D', 'E', 'F', 'G', 'A', 'B', 'C'];
+                default:
+                    return NOTES;
+            }
+        }
+
+        function playNote(note) {
+            if (!synth || !audioStarted) return;
+
+            const freq = Tone.Frequency(note + octave).toFrequency();
+            synth.triggerAttackRelease(freq, '8n');
+        }
+
+        function step() {
+            const note = getNextNote();
+            history.push(note);
+            if (history.length > 20) history.shift();
+
+            playNote(note);
+            updateDisplay();
+            highlightTransition(note);
+        }
+
+        function updateDisplay() {
+            // Update note bars
+            const scale = getScale(currentStyle);
+            noteDisplay.innerHTML = '';
+
+            for (const note of NOTES) {
+                const bar = document.createElement('div');
+                bar.className = 'note-bar';
+
+                // Height based on recent frequency
+                const count = history.filter(n => n === note).length;
+                const height = Math.max(4, (count / history.length) * 80);
+                bar.style.height = height + 'px';
+
+                // Highlight current note
+                if (history.length > 0 && history[history.length - 1] === note) {
+                    bar.classList.add('active');
+                } else if (history.slice(-5).includes(note)) {
+                    bar.classList.add('history');
+                }
+
+                // Dim notes not in current scale
+                if (!scale.includes(note)) {
+                    bar.style.opacity = '0.2';
+                }
+
+                noteDisplay.appendChild(bar);
+            }
+
+            // Update text display
+            const recentNotes = history.slice(-12).join(' ');
+            currentNotes.textContent = recentNotes;
+        }
+
+        function updateChainViz() {
+            let html = '';
+            const entries = Object.entries(chain).slice(0, 30);
+
+            for (const [state, transitions] of entries) {
+                const sorted = Object.entries(transitions)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 3);
+
+                const transStr = sorted
+                    .map(([note, prob]) => `${note}:${(prob * 100).toFixed(0)}%`)
+                    .join(' ');
+
+                html += `<span class="transition" data-state="${state}">${state} → ${transStr}</span> `;
+            }
+
+            chainViz.innerHTML = html || '<div class="info-text">Building chain...</div>';
+        }
+
+        function highlightTransition(note) {
+            if (history.length < ORDER) return;
+
+            const state = history.slice(-ORDER - 1, -1).join('');
+            const transitions = chainViz.querySelectorAll('.transition');
+
+            transitions.forEach(el => {
+                el.classList.toggle('active', el.dataset.state === state);
+            });
+        }
+
+        function startAudio() {
+            if (audioStarted) return;
+
+            Tone.start().then(() => {
+                audioStarted = true;
+                tapStart.classList.remove('show');
+                visualizer.style.display = 'flex';
+
+                // Create music box-like synth
+                synth = new Tone.Synth({
+                    oscillator: {
+                        type: 'triangle'
+                    },
+                    envelope: {
+                        attack: 0.01,
+                        decay: 0.3,
+                        sustain: 0.1,
+                        release: 0.8
+                    }
+                }).toDestination();
+
+                // Add slight reverb for music box feel
+                const reverb = new Tone.Reverb({
+                    decay: 1.5,
+                    wet: 0.3
+                }).toDestination();
+                synth.connect(reverb);
+
+                buildChain(currentStyle);
+                updateDisplay();
+            });
+        }
+
+        function togglePlay() {
+            if (!audioStarted) {
+                startAudio();
+                return;
+            }
+
+            isPlaying = !isPlaying;
+            document.getElementById('playBtn').textContent = isPlaying ? 'Pause' : 'Play';
+            document.getElementById('playBtn').classList.toggle('playing', isPlaying);
+
+            if (isPlaying) {
+                const interval = 60000 / tempo / 2; // 8th notes
+                playInterval = setInterval(step, interval);
+            } else {
+                clearInterval(playInterval);
+            }
+        }
+
+        function setStyle(style) {
+            currentStyle = style;
+            history = [];
+            buildChain(style);
+            updateDisplay();
+
+            document.querySelectorAll('#styleRow button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.style === style);
+            });
+        }
+
+        // Event listeners
+        document.addEventListener('click', (e) => {
+            if (!audioStarted && !e.target.closest('.modal-overlay')) {
+                startAudio();
+            }
+        });
+
+        document.getElementById('playBtn').addEventListener('click', togglePlay);
+
+        document.getElementById('stepBtn').addEventListener('click', () => {
+            if (!audioStarted) startAudio();
+            setTimeout(step, 100);
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            history = [];
+            updateDisplay();
+        });
+
+        document.querySelectorAll('#styleRow button').forEach(btn => {
+            btn.addEventListener('click', () => setStyle(btn.dataset.style));
+        });
+
+        document.getElementById('chaosSlider').addEventListener('input', function() {
+            chaos = parseInt(this.value);
+            document.getElementById('chaosValue').textContent = chaos + '%';
+        });
+
+        document.getElementById('tempoSlider').addEventListener('input', function() {
+            tempo = parseInt(this.value);
+            document.getElementById('tempoValue').textContent = tempo;
+
+            // Update interval if playing
+            if (isPlaying) {
+                clearInterval(playInterval);
+                const interval = 60000 / tempo / 2;
+                playInterval = setInterval(step, interval);
+            }
+        });
+
+        document.getElementById('octaveSlider').addEventListener('input', function() {
+            octave = parseInt(this.value);
+            document.getElementById('octaveValue').textContent = octave;
+        });
+
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => {
+            if (e.target === helpModal) helpModal.classList.remove('show');
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') {
+                e.preventDefault();
+                togglePlay();
+            }
+            if (e.key === 's') step();
+            if (e.key === 'Escape') helpModal.classList.remove('show');
+        });
+
+        // Initialize display
+        updateDisplay();
+    </script>
+</body>
+</html>

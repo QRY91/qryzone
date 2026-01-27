@@ -43,7 +43,7 @@
     const clearBtn = document.getElementById('clear-btn');
     const resultsCount = document.getElementById('results-count');
     const sectionTitle = document.getElementById('section-title');
-    const searchInput = document.getElementById('search-input');
+    const searchInput = document.getElementById('explore-search');
 
     // Initialize
     function init() {

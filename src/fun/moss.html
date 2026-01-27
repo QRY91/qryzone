@@ -1,0 +1,463 @@
+---
+layout: false
+permalink: /fun/moss/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Moss Growth - A meditative simulation of slow organic growth">
+    <title>Moss Growth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Atkinson+Hyperlegible+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fun-pages.css">
+    <style>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        .game-header {
+            padding-top: 2rem;
+            padding-bottom: 1rem;
+            flex-shrink: 0;
+        }
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            min-height: 0;
+        }
+        #canvas {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 4px;
+            cursor: crosshair;
+            image-rendering: pixelated;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            flex-shrink: 0;
+        }
+        .controls button {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+        }
+        .hint {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            padding-bottom: 1rem;
+            opacity: 0.7;
+        }
+        body.fullscreen .game-header,
+        body.fullscreen .controls,
+        body.fullscreen .hint,
+        body.fullscreen .back-link {
+            display: none;
+        }
+        body.fullscreen .canvas-container {
+            padding: 0;
+        }
+        body.fullscreen #canvas {
+            border-radius: 0;
+            max-width: none;
+            max-height: none;
+            width: 100vw;
+            height: 100vh;
+        }
+        .back-link {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 10;
+        }
+        .top-btn {
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back</a>
+    <button class="top-btn fullscreen-btn" id="fullscreenBtn" title="Fullscreen">&solb;</button>
+    <button class="top-btn help-btn" id="helpBtn" title="Help">?</button>
+
+    <header class="game-header">
+        <h1 class="game-title">Moss Growth</h1>
+        <p class="game-subtitle">slow down and watch</p>
+    </header>
+
+    <div class="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <div class="controls">
+        <button id="resetBtn">Reset</button>
+        <button id="rainBtn">Rain</button>
+    </div>
+
+    <div class="hint">click to add moisture &middot; moss grows where it's wet</div>
+
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal">
+            <h2>Moss Growth</h2>
+            <p>A meditative simulation of organic growth. Moss spreads slowly where there's moisture.</p>
+            <p><strong>How it works:</strong></p>
+            <ul>
+                <li>Click anywhere to add moisture (water drops)</li>
+                <li>Moss grows only in wet areas</li>
+                <li>Moisture slowly evaporates and spreads</li>
+                <li>New growth is bright, old growth darkens</li>
+            </ul>
+            <p><strong>Controls:</strong></p>
+            <ul>
+                <li><strong>Click/drag</strong> &ndash; Add moisture</li>
+                <li><strong>Rain</strong> &ndash; Gentle rainfall across the surface</li>
+                <li><strong>F</strong> &ndash; Fullscreen mode</li>
+            </ul>
+            <p>Leave it running. Let it grow.</p>
+            <button class="modal-close" id="closeHelp">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Simulation parameters
+        const CELL_SIZE = 4;
+        let WIDTH, HEIGHT;
+        let moisture, moss, age;
+
+        // Growth parameters
+        const MOISTURE_DECAY = 0.995;       // How fast moisture evaporates
+        const MOISTURE_SPREAD = 0.18;       // How much moisture spreads to neighbors
+        const GROWTH_THRESHOLD = 0.25;      // Minimum moisture for growth
+        const GROWTH_CHANCE = 0.04;         // Probability of growth per frame
+        const SPREAD_CHANCE = 0.015;        // Probability of spreading to neighbor
+        const MAX_AGE = 400;                // Age at which moss is fully mature
+
+        // Colors - mossy greens
+        const COLORS = {
+            bg: [28, 32, 28],               // Dark forest floor
+            moistureTint: [40, 60, 80],     // Slight blue tint for wet areas
+            newGrowth: [120, 180, 90],      // Bright yellow-green
+            matureGrowth: [45, 80, 35],     // Dark forest green
+            oldGrowth: [30, 55, 25]         // Very dark green
+        };
+
+        function init() {
+            // Size canvas to fit container
+            const container = canvas.parentElement;
+            const maxW = container.clientWidth - 32;
+            const maxH = container.clientHeight - 32;
+
+            WIDTH = Math.floor(maxW / CELL_SIZE);
+            HEIGHT = Math.floor(maxH / CELL_SIZE);
+
+            canvas.width = WIDTH;
+            canvas.height = HEIGHT;
+            canvas.style.width = (WIDTH * CELL_SIZE) + 'px';
+            canvas.style.height = (HEIGHT * CELL_SIZE) + 'px';
+
+            // Initialize grids
+            moisture = new Float32Array(WIDTH * HEIGHT);
+            moss = new Uint8Array(WIDTH * HEIGHT);     // 0 = empty, 1 = moss
+            age = new Uint16Array(WIDTH * HEIGHT);     // Age of moss
+
+            // Start with moss spores clustered in a few areas
+            const clusters = 3 + Math.floor(Math.random() * 3);
+            for (let c = 0; c < clusters; c++) {
+                const cx = Math.floor(Math.random() * WIDTH);
+                const cy = Math.floor(Math.random() * HEIGHT);
+                // Add a few spores per cluster
+                for (let i = 0; i < 3; i++) {
+                    const x = cx + Math.floor((Math.random() - 0.5) * 10);
+                    const y = cy + Math.floor((Math.random() - 0.5) * 10);
+                    if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+                        moss[y * WIDTH + x] = 1;
+                        age[y * WIDTH + x] = Math.floor(Math.random() * 50);
+                    }
+                }
+                // Add moisture near the cluster
+                addMoisture(cx, cy, 12 + Math.random() * 8);
+            }
+        }
+
+        function addMoisture(cx, cy, radius) {
+            const r2 = radius * radius;
+            for (let dy = -radius; dy <= radius; dy++) {
+                for (let dx = -radius; dx <= radius; dx++) {
+                    const x = cx + dx;
+                    const y = cy + dy;
+                    if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+                        const dist2 = dx * dx + dy * dy;
+                        if (dist2 <= r2) {
+                            const idx = y * WIDTH + x;
+                            const intensity = 1 - Math.sqrt(dist2) / radius;
+                            moisture[idx] = Math.min(1, moisture[idx] + intensity * 0.8);
+                        }
+                    }
+                }
+            }
+        }
+
+        function step() {
+            // Create temporary grid for moisture diffusion
+            const newMoisture = new Float32Array(WIDTH * HEIGHT);
+
+            for (let y = 0; y < HEIGHT; y++) {
+                for (let x = 0; x < WIDTH; x++) {
+                    const idx = y * WIDTH + x;
+                    const m = moisture[idx];
+
+                    // Moisture evaporation and spreading
+                    let spreadOut = 0;
+                    if (m > 0.01) {
+                        // Spread to neighbors
+                        const spread = m * MOISTURE_SPREAD;
+                        spreadOut = spread;
+
+                        // Add to neighbors
+                        if (x > 0) newMoisture[idx - 1] += spread * 0.25;
+                        if (x < WIDTH - 1) newMoisture[idx + 1] += spread * 0.25;
+                        if (y > 0) newMoisture[idx - WIDTH] += spread * 0.25;
+                        if (y < HEIGHT - 1) newMoisture[idx + WIDTH] += spread * 0.25;
+                    }
+
+                    // Apply evaporation
+                    newMoisture[idx] += (m - spreadOut) * MOISTURE_DECAY;
+
+                    // Moss growth logic
+                    if (moss[idx] === 1) {
+                        // Existing moss ages
+                        if (age[idx] < MAX_AGE) {
+                            age[idx]++;
+                        }
+
+                        // Moss can spread to neighbors if moist enough
+                        if (m >= GROWTH_THRESHOLD && Math.random() < SPREAD_CHANCE) {
+                            const neighbors = [
+                                [x - 1, y], [x + 1, y],
+                                [x, y - 1], [x, y + 1],
+                                [x - 1, y - 1], [x + 1, y - 1],
+                                [x - 1, y + 1], [x + 1, y + 1]
+                            ];
+
+                            // Pick a random neighbor
+                            const [nx, ny] = neighbors[Math.floor(Math.random() * neighbors.length)];
+                            if (nx >= 0 && nx < WIDTH && ny >= 0 && ny < HEIGHT) {
+                                const nidx = ny * WIDTH + nx;
+                                if (moss[nidx] === 0 && moisture[nidx] >= GROWTH_THRESHOLD * 0.5) {
+                                    moss[nidx] = 1;
+                                    age[nidx] = 0;
+                                }
+                            }
+                        }
+                    } else {
+                        // Empty cell - can new moss grow?
+                        if (m >= GROWTH_THRESHOLD && Math.random() < GROWTH_CHANCE) {
+                            // Check if any neighbor has moss
+                            let hasNeighbor = false;
+                            const neighbors = [
+                                [x - 1, y], [x + 1, y],
+                                [x, y - 1], [x, y + 1]
+                            ];
+                            for (const [nx, ny] of neighbors) {
+                                if (nx >= 0 && nx < WIDTH && ny >= 0 && ny < HEIGHT) {
+                                    if (moss[ny * WIDTH + nx] === 1) {
+                                        hasNeighbor = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (hasNeighbor) {
+                                moss[idx] = 1;
+                                age[idx] = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Clamp moisture values
+            for (let i = 0; i < newMoisture.length; i++) {
+                moisture[i] = Math.min(1, Math.max(0, newMoisture[i]));
+            }
+        }
+
+        function lerp(a, b, t) {
+            return a + (b - a) * t;
+        }
+
+        function lerpColor(c1, c2, t) {
+            return [
+                Math.floor(lerp(c1[0], c2[0], t)),
+                Math.floor(lerp(c1[1], c2[1], t)),
+                Math.floor(lerp(c1[2], c2[2], t))
+            ];
+        }
+
+        function render() {
+            const imageData = ctx.createImageData(WIDTH, HEIGHT);
+            const data = imageData.data;
+
+            for (let y = 0; y < HEIGHT; y++) {
+                for (let x = 0; x < WIDTH; x++) {
+                    const idx = y * WIDTH + x;
+                    const i = idx * 4;
+                    const m = moisture[idx];
+
+                    let r, g, b;
+
+                    if (moss[idx] === 1) {
+                        // Moss cell - color based on age
+                        const ageRatio = Math.min(1, age[idx] / MAX_AGE);
+
+                        // Young moss is bright, old moss is dark
+                        let color;
+                        if (ageRatio < 0.3) {
+                            color = lerpColor(COLORS.newGrowth, COLORS.matureGrowth, ageRatio / 0.3);
+                        } else {
+                            color = lerpColor(COLORS.matureGrowth, COLORS.oldGrowth, (ageRatio - 0.3) / 0.7);
+                        }
+
+                        // Slight brightness variation based on moisture
+                        const moistureBoost = m * 0.15;
+                        r = Math.min(255, color[0] + moistureBoost * 30);
+                        g = Math.min(255, color[1] + moistureBoost * 40);
+                        b = Math.min(255, color[2] + moistureBoost * 20);
+                    } else {
+                        // Empty cell - show moisture as subtle tint on dark background
+                        const bg = COLORS.bg;
+                        const wet = COLORS.moistureTint;
+
+                        // Non-linear moisture visualization - more visible
+                        const mVis = Math.pow(m, 0.4) * 0.8;
+                        r = lerp(bg[0], wet[0], mVis);
+                        g = lerp(bg[1], wet[1] + 15, mVis);  // Slight green tint
+                        b = lerp(bg[2], wet[2], mVis);
+                    }
+
+                    data[i] = r;
+                    data[i + 1] = g;
+                    data[i + 2] = b;
+                    data[i + 3] = 255;
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        let lastTime = 0;
+        const TARGET_FPS = 30;
+        const FRAME_TIME = 1000 / TARGET_FPS;
+
+        function loop(time) {
+            if (time - lastTime >= FRAME_TIME) {
+                step();
+                render();
+                lastTime = time;
+            }
+            requestAnimationFrame(loop);
+        }
+
+        function rain() {
+            // Add random moisture drops
+            const drops = 10 + Math.floor(Math.random() * 10);
+            for (let i = 0; i < drops; i++) {
+                addMoisture(
+                    Math.floor(Math.random() * WIDTH),
+                    Math.floor(Math.random() * HEIGHT),
+                    3 + Math.random() * 5
+                );
+            }
+        }
+
+        // Event handlers
+        let isDrawing = false;
+
+        function handlePointer(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = WIDTH / rect.width;
+            const scaleY = HEIGHT / rect.height;
+            const x = Math.floor((e.clientX - rect.left) * scaleX);
+            const y = Math.floor((e.clientY - rect.top) * scaleY);
+            addMoisture(x, y, 5 + Math.random() * 3);
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            handlePointer(e);
+        });
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDrawing) handlePointer(e);
+        });
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+        // Touch support
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isDrawing = true;
+            handlePointer(e.touches[0]);
+        });
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (isDrawing) handlePointer(e.touches[0]);
+        });
+        canvas.addEventListener('touchend', () => isDrawing = false);
+
+        document.getElementById('resetBtn').addEventListener('click', init);
+        document.getElementById('rainBtn').addEventListener('click', rain);
+
+        // Help modal
+        const helpModal = document.getElementById('helpModal');
+        document.getElementById('helpBtn').addEventListener('click', () => helpModal.classList.add('show'));
+        document.getElementById('closeHelp').addEventListener('click', () => helpModal.classList.remove('show'));
+        helpModal.addEventListener('click', (e) => {
+            if (e.target === helpModal) helpModal.classList.remove('show');
+        });
+
+        // Fullscreen
+        let isFullscreen = false;
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            isFullscreen = !isFullscreen;
+            document.body.classList.toggle('fullscreen', isFullscreen);
+            // Resize after fullscreen toggle
+            setTimeout(init, 100);
+        });
+
+        // Keyboard
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f') document.getElementById('fullscreenBtn').click();
+            if (e.key === 'r') rain();
+            if (e.key === 'Escape') {
+                if (isFullscreen) document.getElementById('fullscreenBtn').click();
+                helpModal.classList.remove('show');
+            }
+        });
+
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(init, 200);
+        });
+
+        // Start
+        init();
+        requestAnimationFrame(loop);
+    </script>
+</body>
+</html>
