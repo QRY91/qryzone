@@ -275,6 +275,15 @@
       "status": "seedling",
       "connections": ["Recursive mirror"],
       "lastUpdated": "2026-01-21"
+    },
+    {
+      "title": "Convergent evolution in personal AI tooling",
+      "description": "How homebrew experiments from June 2025 anticipated the architecture of OpenClaw",
+      "href": "/convergent-evolution-personal-ai/",
+      "tags": ["ai-collaboration", "local-first", "developer-tools"],
+      "status": "growing",
+      "connections": ["uroboro", "wherewasi", "The sailboat test", "Permacomputing microstudio"],
+      "lastUpdated": "2026-02-16"
     }
   ]
 }
