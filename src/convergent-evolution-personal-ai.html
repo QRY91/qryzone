@@ -79,7 +79,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        My <code>CONTEXT_BRIEFING.md</code> (June 11, 2025) served as a master orientation document. It defined QRY as a methodology, listed the tool ecosystem, described the philosophy, and included guidelines for AI assistants &mdash; things like respecting local-first privacy and considering human psychology. It was the document you'd hand to a new AI session so it understood the landscape.
+        My <code>CONTEXT_BRIEFING.md</code> (June 11, 2025) served as a master orientation document. It defined QRY as a methodology, listed the tool ecosystem, described the philosophy, and included guidelines for AI assistants &mdash; things like respecting local-first privacy and considering human psychology. It was the document you'd hand to a new AI session so it understood the territory.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
@@ -107,7 +107,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Same problem, same insight, different levels of automation. Mine was a markdown file because I was one person with a text editor. Theirs is code because they're building a product. The architectural instinct is identical.
+        Same problem, different levels of automation. Mine was a markdown file because I was one person with a text editor. Theirs is code because they're building a product. The architectural instinct is identical.
       </p>
 
       <h3 style="font-size: 1.1rem; margin-bottom: var(--space-sm); margin-top: var(--space-lg); color: var(--color-text-primary); font-weight: 600">
@@ -127,7 +127,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        The structural parallel is clear: both systems capture context for retrieval across sessions. The design divergence is more interesting. Uroboro captures <em>deliberately</em> &mdash; you choose to record a decision or flag a blocker, and the system enhances your input with auto-detected metadata. OpenClaw captures more broadly and relies on semantic search to find what's relevant later. Precision versus recall, in information retrieval terms.
+        The structural parallel is clear: both systems capture context for retrieval across sessions. The design divergence is where it gets revealing. Uroboro captures <em>deliberately</em> &mdash; you choose to record a decision or flag a blocker, and the system enhances your input with auto-detected metadata. OpenClaw captures more broadly and relies on semantic search to find what's relevant later. Precision versus recall, in information retrieval terms.
       </p>
 
       <h3 style="font-size: 1.1rem; margin-bottom: var(--space-sm); margin-top: var(--space-lg); color: var(--color-text-primary); font-weight: 600">
@@ -143,7 +143,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Again: same insight (sessions need lifecycle management), different execution (human discipline vs automated infrastructure).
+        Again: sessions need lifecycle management. The difference is human discipline versus automated infrastructure.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
@@ -155,11 +155,11 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </h3>
 
       <p style="margin-bottom: var(--space-md)">
-        This parallel is looser but worth noting. My <code>SAFETY_AND_BACKUP_PROCEDURES.md</code> established a three-layer protection system for data: automated daily backups, pre-experiment chaos backups, and real-time safety monitoring. It included mandatory pre-operation checks before schema changes or database modifications.
+        This parallel is looser. My <code>SAFETY_AND_BACKUP_PROCEDURES.md</code> established a three-layer protection system for data: automated daily backups, pre-experiment chaos backups, and real-time safety monitoring. It included mandatory pre-operation checks before schema changes or database modifications.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        OpenClaw's exec approval system addresses a different surface of the same underlying concern. It uses deny-by-default execution with allowlist patterns: every shell command the agent wants to run must be explicitly approved or match a glob pattern you've pre-authorized. Both systems recognize that AI collaborators need guardrails &mdash; mine focused on data integrity, theirs on command execution. Same instinct, different threat models.
+        OpenClaw's exec approval system addresses a different surface of the same underlying concern. It uses deny-by-default execution with allowlist patterns: every shell command the agent wants to run must be explicitly approved or match a glob pattern you've pre-authorized. Both systems recognize that AI collaborators need guardrails &mdash; mine focused on data integrity, theirs on command execution. Different threat models, same conclusion.
       </p>
     </section>
 
@@ -209,7 +209,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Five days later, on June 13, I made a strategic pivot: instead of building qryai as a separate tool, absorb its AI capabilities directly into uroboro. The "god-wyrm" vision &mdash; uroboro consuming the ecosystem into a plugin architecture &mdash; was the same instinct that led OpenClaw to build everything into a single gateway process. Consolidation is the natural endpoint when you have too many small tools solving adjacent problems.
+        Five days later, on June 13, I made a strategic pivot: instead of building qryai as a separate tool, absorb its AI capabilities directly into uroboro. The "god-wyrm" vision &mdash; uroboro consuming the ecosystem into a plugin architecture &mdash; follows the same logic that led OpenClaw to build everything into a single gateway process. Consolidation is the natural endpoint when you have too many small tools solving adjacent problems.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
@@ -251,7 +251,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Neither approach is wrong. They serve different relationships with information. One trusts human judgment about importance; the other trusts search infrastructure. The question of who decides what's worth remembering is still open.
+        Both work. They serve different relationships with information. One trusts human judgment about importance; the other trusts search infrastructure. Who decides what's worth remembering is still an open question.
       </p>
 
       <h3 style="font-size: 1.1rem; margin-bottom: var(--space-sm); margin-top: var(--space-lg); color: var(--color-text-primary); font-weight: 600">
@@ -267,7 +267,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        This maps to a real tension in tool design. Philosophy-driven tools have coherence but limited reach. Product-driven tools have reach but can lose coherence. Neither is superior &mdash; they optimize for different outcomes.
+        This maps to a real tension in tool design. Philosophy-driven tools have coherence but limited reach. Product-driven tools have reach but can lose coherence. They optimize for different outcomes.
       </p>
 
       <h3 style="font-size: 1.1rem; margin-bottom: var(--space-sm); margin-top: var(--space-lg); color: var(--color-text-primary); font-weight: 600">
@@ -279,11 +279,11 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        OpenClaw is built for adoption. Gateway architecture, multi-channel routing (WhatsApp, Telegram, Slack, Discord, Signal, iMessage, Matrix), plugin systems, remote macOS node support, ClawHub as a skills marketplace. It's designed for many users with many configurations. This isn't a criticism &mdash; it's a different design space entirely.
+        OpenClaw is built for adoption. Gateway architecture, multi-channel routing (WhatsApp, Telegram, Slack, Discord, Signal, iMessage, Matrix), plugin systems, remote macOS node support, ClawHub as a skills marketplace. It's designed for many users with many configurations. A different design space entirely.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        What's interesting is that the core architectural patterns are the same despite this difference in scope. Identity documents, temporal context, persistent memory, session lifecycle, safety boundaries. Scale changes the implementation but not the fundamental problem set.
+        The core architectural patterns are the same despite this difference in scope. Identity documents, temporal context, persistent memory, session lifecycle, safety boundaries. Scale changes the implementation but not the fundamental problem set.
       </p>
 
       <h3 style="font-size: 1.1rem; margin-bottom: var(--space-sm); margin-top: var(--space-lg); color: var(--color-text-primary); font-weight: 600">
@@ -317,7 +317,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </ul>
 
       <p style="margin-bottom: var(--space-md)">
-        Anyone who uses these tools seriously as a daily driver hits these walls in roughly the same order. The solutions are almost inevitable once you've identified the problems clearly enough. That's actually optimistic: it means the personal AI assistant pattern is real, not hype. The architecture is emerging from genuine constraints, not from investor decks.
+        Anyone who uses these tools seriously as a daily driver hits these walls in roughly the same order. The solutions are almost inevitable once you've identified the problems clearly enough. That's optimistic: it means the personal AI assistant pattern is real, not hype. The architecture is emerging from genuine constraints, not from investor decks.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
@@ -377,7 +377,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </h2>
 
       <p style="margin-bottom: var(--space-md)">
-        Neither approach fully solves a few hard problems that I think will define the next generation of this kind of tooling.
+        A few hard problems remain unsolved in both approaches. These will define the next generation of this kind of tooling.
       </p>
 
       <p style="margin-bottom: var(--space-md)">

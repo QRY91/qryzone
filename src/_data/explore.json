@@ -284,6 +284,24 @@
       "status": "growing",
       "connections": ["uroboro", "wherewasi", "The sailboat test", "Permacomputing microstudio"],
       "lastUpdated": "2026-02-16"
+    },
+    {
+      "title": "Writing styleguide",
+      "description": "Antislop-informed rules for keeping AI-assisted writing honest",
+      "href": "/styleguide/",
+      "tags": ["ai-collaboration", "meta", "writing"],
+      "status": "growing",
+      "connections": ["Recursive mirror", "De-slopping in practice"],
+      "lastUpdated": "2026-02-16"
+    },
+    {
+      "title": "De-slopping in practice",
+      "description": "Applying slop research to human-AI collaborative writing",
+      "href": "/antislop-editorial/",
+      "tags": ["ai-collaboration", "meta", "writing", "analysis"],
+      "status": "growing",
+      "connections": ["Recursive mirror", "Writing styleguide", "Convergent evolution in personal AI tooling"],
+      "lastUpdated": "2026-02-16"
     }
   ]
 }

@@ -1,0 +1,353 @@
+---
+layout: base.njk
+title: Writing styleguide - qry.zone
+description: Antislop-informed rules for keeping AI-assisted writing honest
+---
+
+<style>
+.guide-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.slop-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin: var(--space-md) 0;
+}
+.slop-table th {
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 2px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.slop-table td {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+}
+.slop-table td:first-child {
+    font-family: var(--font-mono);
+}
+.slop-table td:last-child {
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+}
+.severity-high { color: #cc9393; }
+.severity-med { color: #f0dfaf; }
+.severity-low { color: #7f9f7f; }
+.pattern-box {
+    background: var(--color-surface);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-md);
+    margin: var(--space-sm) 0;
+    font-style: italic;
+}
+.pattern-box.warn {
+    border-left-color: #cc9393;
+}
+.pattern-box.good {
+    border-left-color: #7f9f7f;
+}
+.checklist {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin: var(--space-md) 0;
+}
+.checklist h4 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+.do-dont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin: var(--space-md) 0;
+}
+@media (max-width: 600px) {
+    .do-dont { grid-template-columns: 1fr; }
+}
+.do-list, .dont-list {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+}
+.do-list h4 { color: #7f9f7f; }
+.dont-list h4 { color: #cc9393; }
+.section-divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-xl) 0;
+}
+.source-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    padding: 1px 6px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    vertical-align: middle;
+    margin-left: var(--space-xs);
+}
+.quick-ref {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+}
+</style>
+
+<article class="article guide-container">
+    <header class="article-header">
+        <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">&larr; Back to Explore</a>
+        <span class="status-badge status-growing">growing</span>
+        <h1>Writing styleguide</h1>
+        <p class="article-subtitle">Antislop-informed rules for keeping AI-assisted writing honest</p>
+        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </header>
+
+    <section>
+        <p>
+            This is an internal reference for writing on this site. It combines two sources: empirical data from the <a href="https://arxiv.org/abs/2510.15061" target="_blank" rel="noopener noreferrer">Antislop paper</a> (Paech et al., 2025) on statistically overused patterns in LLM output, and the voice patterns documented in <a href="/recursive-mirror/voice-analysis/">our own voice analysis</a>. One tells us what to avoid. The other tells us what to aim for.
+        </p>
+        <p>
+            The goal isn't sterile writing. It's aware writing. Know the patterns. Decide deliberately.
+        </p>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Part 1: What to watch for <span class="source-tag">antislop</span></h2>
+
+        <p>
+            The Antislop paper analyzed creative writing output from 67 language models against human baselines (Reddit creative writing + Project Gutenberg). They measured how often specific words and phrases appear in LLM text relative to human text. The ratios are staggering &mdash; some patterns are over 1,000x more frequent in model output.
+        </p>
+        <p>
+            These aren't bad words. They're overused words. A human writer might use "flickered" once in a story. A language model reaches for it reflexively, across every story, because alignment training reinforced it as a safe, literary-sounding choice.
+        </p>
+
+        <h3 style="margin-top: var(--space-lg);">Word-level banlist</h3>
+        <p>
+            Top overrepresented words across 67 models. The "% models" column shows how many models have this word in their top 120 most overrepresented words relative to human writing.
+        </p>
+
+        <table class="slop-table">
+            <thead>
+                <tr><th>word</th><th>% models</th><th>severity</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>flickered / flicker / flickering</td><td>98.5 / 94.0 / 92.5</td><td><span class="severity-high">high</span></td></tr>
+                <tr><td>leaned</td><td>82.1</td><td><span class="severity-high">high</span></td></tr>
+                <tr><td>muttered</td><td>82.1</td><td><span class="severity-high">high</span></td></tr>
+                <tr><td>gaze</td><td>80.6</td><td><span class="severity-high">high</span></td></tr>
+                <tr><td>grinned</td><td>80.6</td><td><span class="severity-high">high</span></td></tr>
+                <tr><td>gestured</td><td>77.6</td><td><span class="severity-high">high</span></td></tr>
+                <tr><td>murmured</td><td>73.1</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>nodded</td><td>73.1</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>glint</td><td>68.7</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>hesitated</td><td>68.7</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>whispered</td><td>68.7</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>blinked</td><td>64.2</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>hummed</td><td>64.2</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>faintly</td><td>62.7</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>unreadable</td><td>62.7</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>shimmered</td><td>&mdash;</td><td><span class="severity-high">high</span> (2,882x in gemma-3-12b)</td></tr>
+                <tr><td>stammered</td><td>&mdash;</td><td><span class="severity-high">high</span> (3,833x in gemma-3-12b)</td></tr>
+                <tr><td>unsettlingly</td><td>&mdash;</td><td><span class="severity-high">high</span> (3,833x in gemma-3-12b)</td></tr>
+                <tr><td>containment</td><td>77.6</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>addendum</td><td>74.6</td><td><span class="severity-med">medium</span></td></tr>
+            </tbody>
+        </table>
+
+        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">
+            Context matters. "Flickered" in a story about a candle is fine. "Flickered" as the default verb for any light source in every story is slop. The question is always: did I choose this word, or did the model reach for its comfort zone?
+        </p>
+
+        <h3 style="margin-top: var(--space-lg);">Trigram banlist</h3>
+        <p>
+            Multi-word phrases that appear disproportionately in LLM output. These are the phrasings that make readers think "this sounds AI-generated" before they can articulate why.
+        </p>
+
+        <table class="slop-table">
+            <thead>
+                <tr><th>phrase</th><th>% models</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>voice barely whisper</td><td>68.7</td></tr>
+                <tr><td>said voice low</td><td>61.2</td></tr>
+                <tr><td>air thick scent / air thick smell</td><td>49.3 / 19.4</td></tr>
+                <tr><td>took deep breath / take deep breath</td><td>44.8 / 32.8</td></tr>
+                <tr><td>smile playing lips</td><td>43.3</td></tr>
+                <tr><td>something else something / something else entirely</td><td>37.3 / 26.9</td></tr>
+                <tr><td>could shake feeling</td><td>31.3</td></tr>
+                <tr><td>eyes never leaving</td><td>29.9</td></tr>
+                <tr><td>casting long shadows / long shadows across</td><td>28.4 / 19.4</td></tr>
+                <tr><td>heart pounding chest</td><td>25.4</td></tr>
+                <tr><td>spreading across face</td><td>22.4</td></tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin-top: var(--space-lg);">Structural patterns</h3>
+        <p>
+            Beyond individual words and phrases, models overuse certain sentence constructions.
+        </p>
+
+        <div class="pattern-box warn">
+            <strong>"It's not X, it's Y"</strong> &mdash; 6.3x more prevalent than in human writing. The paper built regex patterns to detect and suppress this entire family. Variants: "It wasn't X, it was Y", "This isn't X, it's Y", "That's not X, it's Y", "not just X, but Y", "X isn't Y &mdash; it's Z". The construction itself isn't banned &mdash; sometimes it earns its place. But if you find three in one article, the model was driving.
+        </div>
+
+        <div class="pattern-box warn">
+            <strong>Sensory clich&eacute;s</strong> &mdash; "Air thick with [scent/tension/silence]", "voice barely above a whisper", "heart pounding in [chest/ears]", "eyes never leaving". These create an atmosphere that reads as template rather than observation.
+        </div>
+
+        <div class="pattern-box warn">
+            <strong>Character name fixation</strong> &mdash; Models gravitate toward specific names. "Elara" appeared 85,513x more often in gemma-3-12b output than in human text. "Kael" shows similar patterns. If your AI collaborator suggests a character name, check whether it's a genuine suggestion or a default.
+        </div>
+
+        <div class="pattern-box warn">
+            <strong>Generic intensifiers</strong> &mdash; "a profound sense of", "a deep sense of", "felt a surge of". These are the model reaching for emotional weight without earning it. If you can replace the phrase with "felt [emotion]" and lose nothing, it was padding.
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Part 2: What to aim for <span class="source-tag">voice analysis</span></h2>
+
+        <p>
+            From the <a href="/recursive-mirror/voice-analysis/">voice analysis</a> &mdash; patterns extracted from five years of raw journal entries. These are the things that make writing sound like a person, not a model.
+        </p>
+
+        <h3 style="margin-top: var(--space-lg);">Rhythm</h3>
+        <div class="pattern-box good">
+            <strong>Staccato &rarr; Reflection &rarr; Staccato</strong><br>
+            Short punch. Short punch. Longer flowing thought that develops the idea. Short punch.
+        </div>
+        <div class="pattern-box good">
+            <strong>Fragment punches</strong> &mdash; Short declarative fragments that hit hard. No subject needed. "Let's get to work." "Make shit up. Make it real."
+        </div>
+        <div class="pattern-box good">
+            <strong>Breathing separators</strong> &mdash; Use whitespace to mark thought boundaries. Let ideas stand alone without forcing connections.
+        </div>
+
+        <h3 style="margin-top: var(--space-lg);">Tone</h3>
+        <div class="pattern-box good">
+            <strong>Direct profanity</strong> &mdash; When frustrated or emphatic. Never gratuitous. Punctuation, not filler.
+        </div>
+        <div class="pattern-box good">
+            <strong>Self-questioning</strong> &mdash; Mid-thought interrogation. Questions that drive exploration and signal genuine uncertainty.
+        </div>
+        <div class="pattern-box good">
+            <strong>Rhetorical escalation</strong> &mdash; Questions that answer themselves through absurdity.
+        </div>
+        <div class="pattern-box good">
+            <strong>Parenthetical asides</strong> &mdash; Process thinking made visible. Shows the work.
+        </div>
+
+        <h3 style="margin-top: var(--space-lg);">Transformation rules</h3>
+        <p>When going from draft to published:</p>
+
+        <div class="do-dont">
+            <div class="do-list">
+                <h4>Preserve</h4>
+                <ul>
+                    <li>Fragment punches</li>
+                    <li>Profanity when earned</li>
+                    <li>Self-questioning</li>
+                    <li>The earnest plea ("Please.")</li>
+                    <li>Parenthetical asides</li>
+                    <li>Meta-awareness</li>
+                    <li>Specific numbers and timestamps</li>
+                </ul>
+            </div>
+            <div class="dont-list">
+                <h4>Avoid</h4>
+                <ul>
+                    <li>Over-explaining (trust the reader)</li>
+                    <li>Softening profanity</li>
+                    <li>Removing questions</li>
+                    <li>Excessive formality</li>
+                    <li>AI superlatives ("Absolutely!", "Great question!")</li>
+                    <li>Hedging ("It could be argued...")</li>
+                    <li>Bullet-point spam</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Part 3: The editing pass <span class="source-tag">synthesis</span></h2>
+
+        <p>
+            Where the two sources meet. Antislop tells us what patterns to scan for. The voice analysis tells us what to replace them with. Neither is sufficient alone &mdash; you can strip all the slop words and still end up with generic text if you don't know what voice to aim for.
+        </p>
+
+        <div class="checklist">
+            <h4>Editing checklist</h4>
+            <ol>
+                <li><strong>Word scan</strong> &mdash; Search for banlist words. For each hit: did I choose this, or did the model? If the model, replace or cut.</li>
+                <li><strong>Phrase scan</strong> &mdash; Search for trigram patterns. These are harder to spot because they sound "literary." That's the trap.</li>
+                <li><strong>Structure check</strong> &mdash; Count "It's not X, it's Y" constructions. One per article might be fine. Three means the model was driving.</li>
+                <li><strong>Rhythm check</strong> &mdash; Read it aloud. Does it follow staccato-reflection-staccato? Or does every paragraph drone at the same length?</li>
+                <li><strong>Voice check</strong> &mdash; Does this sound like a person wrote it? Would you say this out loud? If it sounds like a LinkedIn post, rewrite.</li>
+                <li><strong>Hedging check</strong> &mdash; Cut "perhaps", "it could be argued", "one might say". State things or question them. Don't hedge.</li>
+            </ol>
+        </div>
+
+        <h3 style="margin-top: var(--space-lg);">The tension</h3>
+        <p>
+            Over-policing kills voice too. The antislop paper itself makes this point &mdash; hard bans on vocabulary cause worse problems than the slop they prevent. Their solution was "soft bans": reduce the probability of overused patterns without eliminating them entirely.
+        </p>
+        <p>
+            Same principle applies to manual editing. If "whispered" is genuinely the right word, use it. The goal is to notice when the model is on autopilot, not to avoid every word on a list. Awareness over avoidance.
+        </p>
+    </section>
+
+    <hr class="section-divider">
+
+    <section>
+        <h2>Quick reference</h2>
+        <div class="quick-ref">SCAN FOR:
+- Banlist words (flickered, gaze, murmured, whispered, nodded...)
+- Banlist trigrams (voice barely, air thick, took deep breath...)
+- "It's not X, it's Y" constructions
+- Generic intensifiers (profound sense, deep sense, surge of)
+- Sensory clich&eacute;s (casting long shadows, heart pounding)
+
+AIM FOR:
+- Fragment punches for emphasis
+- Self-questioning where uncertain
+- Staccato &rarr; reflection &rarr; staccato rhythm
+- Profanity as punctuation, not filler
+- Specific details over generic atmosphere
+
+PRINCIPLES:
+- Did I choose this, or did the model?
+- Awareness over avoidance
+- Soft bans, not hard bans
+- Preserve the weird parts &mdash; they're yours</div>
+    </section>
+
+    <footer class="article-footer">
+        <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: var(--space-md);">
+            Banlist data from <a href="https://arxiv.org/abs/2510.15061" target="_blank" rel="noopener noreferrer">Antislop: A Comprehensive Framework for Identifying and Eliminating Repetitive Patterns in Language Models</a> (Paech, Roush, Goldfeder, Shwartz-Ziv, 2025). Voice patterns from <a href="/recursive-mirror/voice-analysis/">qry.zone voice analysis</a>. Tool support via <a href="https://github.com/QRY91/slopsquid" target="_blank" rel="noopener noreferrer">SlopSquid</a>.
+        </p>
+        <p>Related: <a href="/recursive-mirror/">Recursive mirror</a>, <a href="/antislop-editorial/">De-slopping in practice</a></p>
+    </footer>
+</article>

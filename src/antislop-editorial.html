@@ -1,0 +1,187 @@
+---
+layout: base.njk
+title: De-slopping in practice - qry.zone
+description: Applying slop research to human-AI collaborative writing — what we found and what we built
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <span class="status-badge status-growing">growing</span>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        De-slopping in practice
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        Applying slop research to human-AI collaborative writing &mdash; what we found and what we built
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <p style="margin-bottom: var(--space-md)">
+        You know AI-generated text when you see it. You might not be able to say why. Something about the rhythm, the word choices, the way every paragraph lands with the same weight. It sounds competent and says nothing. The literary equivalent of a stock photo.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Turns out this isn't just a feeling. It's statistically measurable.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        In October 2025, a research team published <a href="https://arxiv.org/abs/2510.15061" target="_blank" rel="noopener noreferrer">the Antislop paper</a>, a framework for identifying and eliminating overused patterns in language model output. They analyzed creative writing from 67 models against human baselines and found that certain words and phrases appear over a thousand times more frequently in LLM text than in human writing. Not just a little more. Orders of magnitude more. The word "flickered" shows up in the overuse list of 98.5% of models tested. The phrase "voice barely above a whisper" appears in 68.7%.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        They call it slop. And they built tools to suppress it.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The gap
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The Antislop paper's tools &mdash; the <a href="https://github.com/sam-paech/auto-antislop" target="_blank" rel="noopener noreferrer">Antislop Sampler</a> and FTPO training method &mdash; work at inference time. They intervene during text generation, detecting overused patterns as they form and steering the model toward alternatives. Effective, but they require GPU infrastructure and direct access to model weights or logprobs.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        That doesn't help with text that already exists. Articles written with AI assistance. Documentation co-authored with Claude or GPT. The words are already on the page.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This site has twenty-odd articles, most written with AI collaboration. The <a href="/recursive-mirror/">recursive mirror</a> experiment was explicitly about this &mdash; feeding journal entries to Claude, getting a voice analysis back, using that analysis to guide the writing of the article about the analysis. The question that exercise left open: how do you know when the AI's patterns have replaced yours?
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The Antislop paper gives us data to answer that question. Not with vibes. With frequency ratios.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What we found
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        We built a <a href="/styleguide/">styleguide</a> from two sources: the paper's empirical banlist data and the voice patterns from our <a href="/recursive-mirror/voice-analysis/">existing voice analysis</a>. One tells you what to scan for. The other tells you what to aim for. Then we ran the rules against the articles on this site.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The word-level banlists were clean. No "flickered", no "murmured", no "gaze" or "shimmered". Technical writing doesn't trigger the same slop as creative fiction &mdash; the paper's most overrepresented patterns cluster around literary description and character action, which isn't the register these articles are written in.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The structural patterns were more interesting. In the <a href="/convergent-evolution-personal-ai/">convergent evolution</a> article, we found:
+      </p>
+
+      <ul style="list-style: none; padding: 0; margin: 0 0 var(--space-lg) 0;">
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"Same instinct"</strong> repeated three times across the parallel comparison sections &mdash; a structural tic where the model's go-to phrasing for drawing parallels becomes a pattern itself
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"Neither is/approach"</strong> used three times to hedge comparisons &mdash; a diplomatic construction that reads as AI equivocating rather than a human making a judgment
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"Worth noting"</strong> and <strong>"What's interesting is"</strong> &mdash; throat-clearing before observations that would be stronger without the preamble
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"Landscape"</strong> &mdash; a single word from the paper's overuse list, buried in a sentence about document scope
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"This isn't X &mdash; it's Y"</strong> &mdash; the paper's most overrepresented sentence construction (6.3x human rates), found twice in the article. One was a deliberate philosophical claim that earned the structure. The other was a defensive disclaimer that read better without it.
+        </li>
+      </ul>
+
+      <p style="margin-bottom: var(--space-md)">
+        Twelve edits total. The article was already strong &mdash; specific timestamps, honest self-critique, no hedging on the parts that matter. The slop was in the connective tissue, not the substance. Transitions and diplomatic framings where the model was smoothing edges that didn't need smoothing.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The tool
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Doing this manually works for one article. It doesn't scale to a site with twenty. And it doesn't generalize to the next article.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <a href="https://github.com/QRY91/slopsquid" target="_blank" rel="noopener noreferrer">SlopSquid</a> started as an abandoned browser extension prototype &mdash; vague ambitions about "detecting AI artifacts" without the data to back it up. The Antislop paper provides exactly that data. Word-level frequency ratios across 67 models. Trigram overuse percentages. Regex patterns for structural constructions like "It's not X, it's Y" (6.3x more prevalent in LLM output than human writing).
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The revamped version is a Go CLI that ships with the paper's banlist data baked in. No model dependencies. No GPU. Just static analysis with quantitative scoring. You point it at a file or directory, it tells you what it found and how sloppy the text is by the numbers.
+      </p>
+
+      <p style="margin-bottom: var(--space-md); padding: var(--space-md); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; white-space: pre; overflow-x: auto;">$ slopsquid scan src/convergent-evolution-personal-ai.html
+
+convergent-evolution-personal-ai.html &mdash; slop score: 8/100 (clean)
+  line 82: "landscape" (word, overuse list)
+  line 110: "same insight" (repeated structural pattern, 3x)
+  line 158: "worth noting" (hedging phrase)
+
+  3 hits in 430 lines &mdash; density: 0.7%</p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Each hit is weighted by the paper's frequency ratio. A word that's 85,000x overrepresented scores higher than one at 60x. The aggregate gives you a 0-100 slop density score: 0-20 is clean, 20-50 is moderate, 50+ means the model was doing most of the writing.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The tension
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The Antislop paper itself flags this problem. Hard bans on vocabulary cause worse output degradation than the slop they prevent. Token banning &mdash; the naive approach of just blocking words &mdash; crashed writing quality scores from 68 to 28 in their tests. The model collapses into repetition and incoherence when you take away too many of its preferred paths.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Their solution: soft bans. Reduce the probability of overused patterns without eliminating them entirely. If "flickered" is genuinely the right word in context, it should still be available. The system suppresses the default, not the deliberate choice.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Same principle for post-hoc editing. Over-policing kills voice. If you hunt every word on a banlist, you'll end up with text that's technically clean and reads like it was written by committee. The goal is awareness, not avoidance. Notice when the model is on autopilot. Decide deliberately whether the phrasing is yours or a default.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This connects to something the <a href="/recursive-mirror/">recursive mirror</a> experiment revealed: the AI captures your refined voice, not your raw one. The aspirational version. What emerges when writing for an audience. Slop detection works the other way &mdash; it catches the moments where the AI's default voice replaced yours. Between the two, you get a clearer picture of where the collaboration stands.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Where this goes
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The paper focused on creative fiction. Their banlists cluster around literary description &mdash; character names, sensory phrases, atmospheric constructions. Technical and analytical writing has different slop patterns: hedging phrases, diplomatic both-sides framings, throat-clearing transitions. The framework generalizes. The specific banlists don't.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        SlopSquid v1 ships with the paper's data. Future versions should build domain-specific profiles. What does slop look like in documentation? In blog posts? In commit messages? The methodology for finding out is the same: compare model output against human baselines, measure the frequency ratios, build the banlist.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        For now, though, we have a number for how sloppy our text is. And the articles on this site score low. Which either means the AI collaboration here is working, or the tool isn't sensitive enough yet.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Probably both. Let's keep going.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: var(--space-md);">
+        Research referenced: <a href="https://arxiv.org/abs/2510.15061" target="_blank" rel="noopener noreferrer">Antislop: A Comprehensive Framework for Identifying and Eliminating Repetitive Patterns in Language Models</a> (Paech, Roush, Goldfeder, Shwartz-Ziv, 2025). Code: <a href="https://github.com/sam-paech/auto-antislop" target="_blank" rel="noopener noreferrer">auto-antislop</a>, <a href="https://github.com/QRY91/slopsquid" target="_blank" rel="noopener noreferrer">SlopSquid</a>.
+      </p>
+      <p>Related: <a href="/recursive-mirror/">Recursive mirror</a>, <a href="/styleguide/">Writing styleguide</a>, <a href="/convergent-evolution-personal-ai/">Convergent evolution in personal AI tooling</a></p>
+    </footer>
+
+  </div>
+</article>
