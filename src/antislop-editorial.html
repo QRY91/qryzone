@@ -118,14 +118,18 @@ description: Applying slop research to human-AI collaborative writing — what w
         The revamped version is a Go CLI that ships with the paper's banlist data baked in. No model dependencies. No GPU. Just static analysis with quantitative scoring. You point it at a file or directory, it tells you what it found and how sloppy the text is by the numbers.
       </p>
 
-      <p style="margin-bottom: var(--space-md); padding: var(--space-md); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; white-space: pre; overflow-x: auto;">$ slopsquid scan src/convergent-evolution-personal-ai.html
+      <p style="margin-bottom: var(--space-md); padding: var(--space-md); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; white-space: pre; overflow-x: auto;">$ slopsquid score src/
 
-convergent-evolution-personal-ai.html &mdash; slop score: 8/100 (clean)
-  line 82: "landscape" (word, overuse list)
-  line 110: "same insight" (repeated structural pattern, 3x)
-  line 158: "worth noting" (hedging phrase)
+*  20.6  moderate   57 hits   1186 words  styleguide.html
+.   5.7  clean      11 hits   1228 words  antislop-editorial.html
+.   4.6  clean       2 hits    214 words  economic-honesty.html
+.   3.2  clean       3 hits    708 words  it-smash/addendum.html
+.   0.5  clean       1 hits   3957 words  convergent-evolution-personal-ai.html
+.   0.0  clean       0 hits    582 words  recursive-mirror.html</p>
 
-  3 hits in 430 lines &mdash; density: 0.7%</p>
+      <p style="margin-bottom: var(--space-md)">
+        The styleguide scores "moderate" because it literally lists slop words as examples. This article scores low because its mentions are in quotation context. Everything else reads clean. The convergent-evolution article &mdash; 3,957 words of AI-collaborative writing &mdash; lands at 0.5/100 with a single hit.
+      </p>
 
       <p style="margin-bottom: var(--space-md)">
         Each hit is weighted by the paper's frequency ratio. A word that's 85,000x overrepresented scores higher than one at 60x. The aggregate gives you a 0-100 slop density score: 0-20 is clean, 20-50 is moderate, 50+ means the model was doing most of the writing.
