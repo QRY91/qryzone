@@ -1,4 +1,8 @@
-/* Errata page — kintsugi-styled corrections */
+/* Errata page — kintsugi-styled corrections
+ *
+ * Restoration of the original human-edit / diff / hotswap CSS
+ * from the pre-Eleventy globals.css, adapted for the kintsugi framing.
+ */
 
 .errata {
     max-width: 800px;
@@ -77,49 +81,110 @@
     color: var(--color-text-secondary);
 }
 
-/* Correction diff boxes */
+/* ── Correction diff boxes ─────────────────────────────────────────── */
 .errata-diff {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
+    border: 1px solid #4a4a4a;
     border-radius: var(--border-radius);
-    padding: var(--space-md);
     margin-bottom: var(--space-lg);
+    background-color: var(--color-surface);
     font-family: var(--font-mono);
     font-size: 0.85rem;
     overflow-x: auto;
 }
-.errata-diff > div {
+.errata-diff-header {
+    background-color: #2a2a2a;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid #4a4a4a;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: #7f9f7f;
+    font-weight: 600;
+}
+.errata-diff-content {
+    padding: var(--space-md);
+    line-height: 1.5;
+}
+
+/* Single-line arrow diffs  (old → new) */
+.errata-diff-content > div {
     margin-bottom: var(--space-sm);
 }
-.errata-diff > div:last-child {
+.errata-diff-content > div:last-child {
     margin-bottom: 0;
 }
 
-/* Inline/block correction pairs for filler-phrase style diffs */
-.errata-diff .errata-block {
-    margin-bottom: var(--space-md);
+/* Block diffs — before / after on separate lines */
+.errata-block {
+    margin-bottom: var(--space-sm);
 }
-.errata-diff .errata-block:last-child {
+.errata-block:last-child {
     margin-bottom: 0;
 }
 
-/* Struck-out old text (zenburn red) */
+/* Removed text — red tint, line-through, red left border */
+.diff-removed {
+    background-color: #2d1b1b;
+    color: #ff9999;
+    padding: 0.1rem 0.2rem;
+    margin: 0.1rem 0;
+    border-left: 3px solid #cc6666;
+    display: block;
+    text-decoration: line-through;
+    opacity: 0.8;
+}
+
+/* Added text — green tint, green left border */
+.diff-added {
+    background-color: #1b2d1b;
+    color: #99ff99;
+    padding: 0.1rem 0.2rem;
+    margin: 0.1rem 0;
+    border-left: 3px solid #7f9f7f;
+    display: block;
+    font-weight: 500;
+}
+
+/* Inline old/new spans for arrow-style diffs */
 .errata-old {
     color: #cc9393;
     text-decoration: line-through;
 }
-
-/* Replacement text (zenburn green) */
 .errata-new {
     color: #7f9f7f;
 }
-
-/* Arrow separator */
 .errata-arrow {
     color: var(--color-text-secondary);
 }
 
-/* Footer links */
+/* ── Human-edit highlights (reusable across the site) ──────────────── */
+.human-edit {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0.125rem 0.25rem;
+    border-radius: 2px;
+    font-weight: 500;
+    border: 1px solid #333333;
+}
+.human-edit-subtle {
+    background-color: #2a2a2a;
+    color: #dcdccc;
+    padding: 0.125rem 0.25rem;
+    border-radius: 2px;
+    border-left: 3px solid #7f9f7f;
+}
+.human-edit-inline {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding: 0.0625rem 0.1875rem;
+    border-radius: 1px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: #7f9f7f;
+    text-decoration-style: solid;
+    text-underline-offset: 2px;
+}
+
+/* ── Footer links ──────────────────────────────────────────────────── */
 .errata-footer {
     font-size: 0.85rem;
     color: var(--color-text-secondary);
