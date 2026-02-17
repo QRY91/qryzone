@@ -300,8 +300,17 @@
       "href": "/antislop-editorial/",
       "tags": ["ai-collaboration", "meta", "writing", "analysis"],
       "status": "growing",
-      "connections": ["Recursive mirror", "Writing styleguide", "Convergent evolution in personal AI tooling"],
+      "connections": ["Recursive mirror", "Writing styleguide", "Convergent evolution in personal AI tooling", "Tuning the detector"],
       "lastUpdated": "2026-02-16"
+    },
+    {
+      "title": "Tuning the detector",
+      "description": "Building a domain-specific slop preset for technical writing — and what it found",
+      "href": "/slopsquid-technical-preset/",
+      "tags": ["ai-collaboration", "meta", "writing", "analysis"],
+      "status": "growing",
+      "connections": ["De-slopping in practice", "Writing styleguide", "Convergent evolution in personal AI tooling"],
+      "lastUpdated": "2026-02-17"
     }
   ]
 }

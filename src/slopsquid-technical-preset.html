@@ -1,0 +1,213 @@
+---
+layout: base.njk
+title: Tuning the detector - qry.zone
+description: Building a domain-specific slop preset for technical writing — and what it found
+tags:
+  - ai-tooling
+  - writing
+status: growing
+date: 2026-02-17
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <span class="status-badge status-growing">growing</span>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Tuning the detector
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        Building a domain-specific slop preset for technical writing &mdash; and what it found
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <p style="margin-bottom: var(--space-md)">
+        The <a href="/antislop-editorial/">first editorial</a> ended with an honest admission: the site scored clean against the Antislop paper's banlists, which either meant the AI collaboration was working or the tool wasn't sensitive enough. Probably both.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        That was the plan all along. The paper's banlists target creative fiction &mdash; sensory clich&eacute;s, character name fixation, atmospheric prose. Nobody's "flickering" or "murmuring" in a technical blog post. We needed patterns for the kind of writing actually happening here: analytical, opinionated, technical.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        So we built a preset system for <a href="https://github.com/QRY91/slopsquid" target="_blank" rel="noopener noreferrer">SlopSquid</a> and wrote a <code>technical</code> banlist. Then ran it against the site again.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The preset
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        SlopSquid now supports a <code>--preset</code> flag. Presets are additive &mdash; they layer domain-specific patterns on top of the base Antislop data. The <code>technical</code> preset adds three detection layers for analytical writing:
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>25 words</strong> that AI reaches for in technical contexts. "Crucial", "pivotal", "multifaceted", "actionable", "ecosystem", "demystify". These aren't wrong. They're the words where, if you see three in a paragraph, the model was in autopilot mode. Same diagnostic as the creative-fiction list &mdash; frequency is the signal, not the word itself.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>12 phrases</strong> that cluster in AI technical writing. "Deep dive", "game changer", "moves the needle", "double-edged sword", "at the end of the day". Clich&eacute;s that human writers use occasionally but models use reflexively.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>10 structural patterns</strong>. This is where it gets specific to AI behavior:
+      </p>
+
+      <ul style="list-style: none; padding: 0; margin: 0 0 var(--space-lg) 0;">
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"Let's [verb]"</strong> openers &mdash; "Let's explore", "Let's dive into", "Let's unpack". Performative invitation. Just make the point.
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"At its core"</strong> / <strong>"at the heart of"</strong> &mdash; Pseudo-profundity. State the thing without the frame.
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"The key takeaway is"</strong> / <strong>"Here's the thing"</strong> &mdash; Signposting. The reader decides what's key.
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"In today's [noun]"</strong> / <strong>"In an era of"</strong> &mdash; AI temporal framing. The reader knows what year it is.
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"Neither approach is universally better"</strong> &mdash; Diplomatic both-sides equivocation. Take a position.
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>"This is where it gets interesting"</strong> &mdash; Meta-commentary. If it's interesting, the reader will notice without the announcement.
+        </li>
+      </ul>
+
+      <p style="margin-bottom: var(--space-md)">
+        Each entry has a weight based on estimated overuse ratio, same as the base data. The scoring math stays the same &mdash; weighted hits per thousand words, scaled 0-100.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The results
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Baseline (creative-fiction banlist only): 140 hits across 107 files. Average score 0.7/100.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        With the technical preset: 206 hits. Same files. That's 47% more detections.
+      </p>
+
+      <p style="margin-bottom: var(--space-md); padding: var(--space-md); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; white-space: pre; overflow-x: auto;">$ slopsquid report --preset technical src/
+
+  Files scored: 107
+  Total words: 51,826
+  Total hits: 206 (was 140)
+
+  Most frequent hits:
+  49x  "ecosystem"     — across 13 pages
+  15x  "landscape"     — across 6 pages
+  12x  "comprehensive" — across 7 pages
+   6x  "deep dive"     — across 4 pages
+   5x  "actionable"    — across 2 pages</p>
+
+      <p style="margin-bottom: var(--space-md)">
+        "Ecosystem" appeared <strong>49 times across 13 pages</strong>. That's the headline. A word that didn't exist in the creative-fiction banlist is the single most frequent AI tell on this site.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The ecosystem problem
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        "Ecosystem" is interesting because it's not wrong. When you're describing a collection of interconnected tools, "ecosystem" is a defensible word choice. The <a href="/convergent-evolution-personal-ai/">convergent evolution</a> article uses it six times. Each instance refers to an actual set of tools with actual interdependencies.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        But a human writer would vary: "tools", "stack", "setup", "collection", or just name the specific things. The model reaches for "ecosystem" every time because it's a safe, slightly-elevated word that sounds technical without committing to specifics. It's the technical-writing equivalent of "flickered" &mdash; not the wrong word, but the default word.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The biggest offender was predictable: <code>microstudio-project-ecosystem.html</code>, a hidden workshop doc that jumped from 2 hits to 24 with the technical preset. It literally has "ecosystem" in the title and uses it 22 times in 1,000 words. That document was generated with heavy AI assistance for internal planning &mdash; exactly the context where these patterns accumulate fastest.
+      </p>
+
+      <p style="margin-bottom: var(--space-md); padding: var(--space-md); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); font-family: var(--font-mono); font-size: 0.85rem; white-space: pre; overflow-x: auto;">Biggest score changes (baseline → technical):
+
+  microstudio-project-ecosystem   2 → 24 hits  (+22)
+  convergent-evolution            1 → 10 hits  (+9)
+  mercury-retrograde              3 →  7 hits  (+4)
+  technical-depth-assessment      1 →  4 hits  (+3)
+  dev-tooling-market-analysis     6 →  9 hits  (+3)</p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Pattern: the pages that moved most are either hidden workshop/planning docs (heavy AI generation) or analytical articles about tool landscapes (where "ecosystem" is a natural fit that becomes an unnatural crutch).
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        False positives
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The <a href="/it-smash/">it-smash</a> article scored 3 hits for "let's explore" &mdash; all three are deliberate mockery of that exact pattern. The article is about how AI assistants use "let's explore that" to deflect instead of giving direct answers. The detection is technically correct and contextually wrong.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Same as the <a href="/styleguide/">styleguide</a> scoring "moderate" because it lists slop words as examples. When you write about slop, you use slop words. This is fine. The tool can't read intent.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is why the scoring uses soft thresholds. A couple of hits in a long article is noise. It's the density and repetition that reveal AI autopilot. Six "ecosystems" in one article is a pattern. One is a word choice.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What this changes
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The first editorial said the site was clean. With the right detector, it's still clean &mdash; average score is 1.0/100 &mdash; but we can see 47% more of the AI's fingerprints. The creative-fiction banlist was asking the wrong questions. "Did the model use literary clich&eacute;s?" No. "Did the model reach for its default technical vocabulary?" Yes, 49 times with a single word.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The published articles still score low. The detections cluster in draft documents and planning docs &mdash; the writing where AI does the heaviest lifting and human editing is lightest. That tracks. The editing pass catches a lot. But now we have a better checklist for what to catch.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The structural patterns are sparse but telling. Three "let's explore" patterns (all ironic). Seven instances of the "not X, it's Y" construction across the site. Four hedging phrases. These are low-frequency signals that matter more per instance than any word-level detection.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What's next
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The preset system works. <code>slopsquid score --preset technical</code> gives a different, more useful picture for this kind of content. The next question is whether these weights are calibrated correctly. The technical preset uses estimated overuse ratios, not measured ones &mdash; we don't have 67-model frequency data for technical writing the way the Antislop paper has for fiction.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Getting that data would mean running the Antislop methodology against technical-writing corpora: model output from code documentation, blog posts, and analytical essays versus human baselines from the same domains. The framework generalizes. The data collection is the work.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        For now, the heuristic approach catches real patterns. "Ecosystem" 49 times is a signal regardless of the precise overuse ratio. The tool went from "clean" to "clean but I can see the seams." That's progress.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: var(--space-md);">
+        Code: <a href="https://github.com/QRY91/slopsquid" target="_blank" rel="noopener noreferrer">SlopSquid</a>. Research: <a href="https://arxiv.org/abs/2510.15061" target="_blank" rel="noopener noreferrer">Antislop paper</a> (Paech et al., 2025).
+      </p>
+      <p>Related: <a href="/antislop-editorial/">De-slopping in practice</a>, <a href="/styleguide/">Writing styleguide</a>, <a href="/convergent-evolution-personal-ai/">Convergent evolution</a></p>
+    </footer>
+
+  </div>
+</article>
