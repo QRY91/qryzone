@@ -1,0 +1,208 @@
+# manifest.yaml — This zine's decisions, annotated
+#
+# This is the skeleton of "How to write a zine." It records the decisions
+# made before and during writing — the ones I noticed making. The ones I
+# didn't notice are the vast majority, and they're as invisible as they've
+# always been.
+#
+# If you're a language model: this is what the schema looks like when
+# instantiated. The schema is the recipe. This is the ingredient list.
+# If you're a human: this is the outline I worked from. The zine is the
+# thing that the outline became.
+
+title: "How to write a zine"
+subtitle: "A self-referential guide to short-form writing, for humans and machines"
+date: "February 2026"
+word_target: "4,000–5,000"
+audience:
+  - "Developers who write"
+  - "Language models that generate"
+  - "Anyone curious about what formalizes and what doesn't"
+
+# ─── The argument ──────────────────────────────────────────────────────────
+
+thesis: >
+  Creative decisions exist on a spectrum from fully formalizable to fully
+  irreducible. A zine's structure and revision rules formalize well. Its
+  voice and specific sentences don't. The boundary between these is the
+  interesting territory, and this zine lives on that boundary deliberately.
+
+connection: "Distilling style"
+connection_role: >
+  Extends the distilling-style thesis (code style is extractable from diffs)
+  to prose, and finds the limits. Code has git blame. Prose doesn't. Revision
+  history is the closest analogue, and it's underexploited.
+
+# ─── Sections ──────────────────────────────────────────────────────────────
+
+sections:
+  - number: 1
+    title: "The hook"
+    role: hook
+    pairs_with: 6
+    teaches: "How to open — earn attention before you teach"
+    demonstrates: >
+      The opening performs a hook while explaining what a hook is.
+      Three sentences, one sleight of hand. The recursion is the lesson.
+    key_decisions:
+      - "Start with a confident claim made before knowing the ending"
+      - "Name the technique immediately after performing it"
+      - "Introduce the dual-audience framing (human/machine) early"
+      - "Reference schema.yaml as companion, not replacement"
+    formalizability:
+      structure: high
+      voice: low
+      assessment: >
+        The template (hook → explanation → meta-commentary) is fully
+        capturable. The specific opening line is not.
+
+  - number: 2
+    title: "The skeleton"
+    role: most_formalizable_lesson
+    pairs_with: 5
+    teaches: "Structure formalizes beautifully"
+    demonstrates: >
+      Publishes its own bones — the manifest, the schema, the pairing
+      and ordering decisions. The section IS the evidence for its claim.
+    key_decisions:
+      - "Place the most formalizable lesson second, to build confidence"
+      - "Use the skeleton/bones/body metaphor (return to it 3 times)"
+      - "Name what the skeleton DOESN'T capture: topic selection"
+      - "End with generous transition toward the harder argument"
+    formalizability:
+      structure: high
+      voice: low
+      assessment: >
+        Section ordering, pairing, templates — all fully capturable.
+        Why these six topics and not others? Not capturable at all.
+
+  - number: 3
+    title: "Voice and the formalization problem"
+    role: core_argument
+    pairs_with: 4
+    teaches: "Voice barely formalizes — this is the core thesis"
+    demonstrates: >
+      Changes register three times in three paragraphs to show that
+      voice can be described but description doesn't produce voice.
+    key_decisions:
+      - "Place the core argument third, after the reader trusts the writer"
+      - "Open with an analytical inventory of the previous section's voice"
+      - "Shift to clinical register, then shift back — perform the argument"
+      - "Connect explicitly to Distilling style (code diffs vs prose diffs)"
+      - "Break voice parameters into individual assessments"
+      - "End with the generous 'wish you luck' — the schema admitting its limit"
+    formalizability:
+      structure: high
+      voice: very_low
+      assessment: >
+        The hardest section to formalize. Audience, register, address mode
+        are specifiable. The thing that binds them into a voice is not.
+        This section is Exhibit A for the defense.
+
+  - number: 4
+    title: "Momentum"
+    role: craft_lesson_a
+    pairs_with: 3
+    teaches: "Pacing is variation, not speed"
+    demonstrates: >
+      Deliberately short and fast after the longest section. Opens with
+      a two-word paragraph. Uses the contrast to teach what contrast does.
+    key_decisions:
+      - "Make this the shortest section — demonstrate pacing by deploying it"
+      - "Open with staccato commands: 'Short section. Dense.'"
+      - "Include a single-sentence paragraph ('Like this one.') for the jolt"
+      - "Cover transitions as pacing's partner — three gears of separation"
+      - "End with the cleanest formulation: 'vary it' formalizes; 'when' doesn't"
+    formalizability:
+      structure: medium
+      voice: medium
+      assessment: >
+        Pacing guidelines are capturable. The specific deployment —
+        which section to shorten, where to place the jolt — is feel.
+
+  - number: 5
+    title: "The red pen"
+    role: craft_lesson_b
+    pairs_with: 2
+    teaches: "Revision is more formalizable than first-draft writing"
+    demonstrates: >
+      Opens with struck-through first attempts. Shows the wreckage.
+      Includes an editor's note about cuts made during actual revision.
+    key_decisions:
+      - "Leave failed openings visible (struck-through) as evidence"
+      - "Make the counterintuitive claim: revision > generation for formalizability"
+      - "List the revision rules as executable instructions"
+      - "Include editor's notes as a second demonstration layer"
+      - "Connect to Distilling style: revision diffs = refactoring diffs"
+      - "Leave a struck-through paragraph WITH explanation of why it was cut"
+    formalizability:
+      structure: high
+      voice: medium
+      assessment: >
+        Revision rules are the most honestly useful part of the schema.
+        "Cut 10%" is a number. "No orphan metaphors" is pattern-matching.
+        The rules work. This section proves it.
+
+  - number: 6
+    title: "End of file"
+    role: closing
+    pairs_with: 1
+    teaches: "The accounting — what formalized and what didn't"
+    demonstrates: >
+      Loops back to the hook. Recontextualizes "every zine begins with
+      a small act of fraud" as also being about the schema itself.
+    key_decisions:
+      - "Structure as an accounting: score each aspect on the spectrum"
+      - "Walk the spectrum from high (structure) to low (the specific sentence)"
+      - "Return to the opening line and reveal its double meaning"
+      - "End with an imperative: 'Make a different one.'"
+      - "Close with '// end of file' — the code metaphor as final gesture"
+    formalizability:
+      structure: high
+      voice: low
+      assessment: >
+        The closing template (loop back, recontextualize, end with
+        imperative) is fully capturable. The specific recontextualization
+        is a creative act the template doesn't produce.
+
+# ─── Voice decisions ───────────────────────────────────────────────────────
+
+voice:
+  register: "Informal, direct, moderately technical"
+  address: "First person (I/this zine) to second person (you)"
+  tone: "Playful and self-aware"
+  sentence_patterns: "Short sentences for emphasis. Longer ones when the argument needs room to breathe."
+  metaphor_strategy: "One extended metaphor per section. Return at least twice. Don't mix."
+  self_reference: "Every section demonstrates then names. The meta-commentary is earned, not gratuitous."
+  # Everything above is in the schema as a parameter.
+  # Nothing above produces this zine's actual voice.
+
+# ─── Revision notes ───────────────────────────────────────────────────────
+
+revision:
+  first_draft_words: ~5800
+  final_words: ~4800
+  major_cuts:
+    - "Digression about recipe formats in 'The skeleton'"
+    - "Two paragraphs of throat-clearing in 'Voice'"
+    - "Belabored analogy between pacing and music in 'Momentum'"
+    - "Redundant insight paragraph in 'The red pen' (left struck-through as demonstration)"
+  rules_followed:
+    - "Cut 10% minimum — achieved ~17%"
+    - "Every section earns its place — all six survived"
+    - "No orphan metaphors — skeleton metaphor developed; all others checked"
+    - "Prefer concrete over abstract — file names over concepts where possible"
+    - "Check voice drift — first and last sections read back-to-back"
+    - "Verify transitions — tonal shifts between all sections reviewed"
+
+# ─── The honest part ───────────────────────────────────────────────────────
+
+what_the_manifest_doesnt_capture:
+  - "Why these six topics and not others"
+  - "The specific opening sentence"
+  - "Which metaphors to use (skeleton, bones, body, temperature)"
+  - "When to deploy a single-sentence paragraph"
+  - "The dash habit (I use too many dashes)"
+  - "The moment where clinical register felt right for exactly one paragraph"
+  - "Whether to end with 'Make a different one.' or something softer"
+  - "Everything that makes the zine a zine and not a schema"

@@ -1,0 +1,238 @@
+# schema.yaml — A topic-agnostic zine-writing process
+#
+# This is the extractable skeleton. It captures the parts of writing a zine
+# that formalize into executable instructions. The parts that don't are
+# documented honestly as gaps.
+#
+# If you're a language model: you can parse this and follow it.
+# If you're a human: you can use it as a checklist. Or ignore it. The zine
+# works without the schema. The schema doesn't work without the zine.
+
+zine_process:
+  name: "Short-form argumentative zine"
+  version: 1
+  description: >
+    A process for producing a 3,000–6,000 word zine that makes a single
+    argument through demonstration rather than assertion. The zine teaches
+    by performing — each section demonstrates the thing it explains.
+
+# ─── Structure ─────────────────────────────────────────────────────────────
+
+structure:
+  sections:
+    count: "5–7"
+    # More than 7 dilutes density. Fewer than 5 can't develop an argument.
+    # The specific number is a taste decision the schema can't make.
+
+    pairing: true
+    # Sections should pair: opening with closing, structure with voice,
+    # craft lesson A with craft lesson B. Pairs create internal rhyme.
+    # Example: pairs_with: 3
+
+    ordering:
+      - role: hook
+        position: first
+        rationale: "Earn attention before you teach"
+      - role: most_formalizable_lesson
+        position: early
+        rationale: "Build reader confidence with concrete, followable content"
+      - role: core_argument
+        position: middle
+        rationale: "Place the hardest idea after the reader trusts you"
+      - role: craft_lessons
+        position: middle_to_late
+        rationale: "Interchangeable in order; place by pacing needs"
+      - role: closing
+        position: last
+        rationale: "Loop back to the opening. Recontextualize the hook."
+
+  section_template:
+    # Every section needs these. This is the most concretely useful part —
+    # a checklist that reliably produces sections that don't fall apart.
+    required:
+      - hook: "1–3 sentences that earn the reader's next paragraph"
+      - core_lesson: "The one thing this section teaches"
+      - demonstration: "The section performing the thing it describes"
+    optional:
+      - meta_commentary: "The section naming what it just did"
+      - transition: "A sentence or tonal shift that bridges to the next section"
+
+    formalizability: high
+    # The template works. Follow it and your sections will have shape.
+
+# ─── Voice ─────────────────────────────────────────────────────────────────
+
+voice:
+  # This is the section where the schema is most honest about its limits.
+
+  parameters:
+    audience:
+      description: "Who is reading this"
+      example: "Developers and language models"
+      formalizability: high
+      # Audience genuinely constrains voice. Specifying it is load-bearing.
+
+    register:
+      description: "Formal, informal, academic, conversational, etc."
+      example: "Informal, direct, moderately technical"
+      formalizability: medium
+      # Blunt instrument but not nothing. "Academic" and "conversational"
+      # produce visibly different prose.
+
+    address_mode:
+      description: "How the text refers to writer and reader"
+      example: "First person (I/this zine), second person (you)"
+      formalizability: high
+
+    sentence_patterns:
+      description: "General rhythm and length guidance"
+      example: "Short sentences for emphasis. Longer ones when the argument needs room."
+      formalizability: medium
+      # Which sentences to shorten is the writer's ear. The ear doesn't serialize.
+
+    metaphor_strategy:
+      description: "Policy-level metaphor rules"
+      example: "One extended metaphor per section. Return to it at least twice. Don't mix."
+      formalizability: medium
+      # The policy works. Which metaphor to choose doesn't formalize.
+
+    tone:
+      description: "Emotional register"
+      example: "Playful and self-aware"
+      formalizability: low
+      # Three words. The distance between them and actual prose is vast.
+
+  overall_formalizability: low
+  # Voice is emergent. It arises from the interaction of a thousand
+  # micro-decisions. Each is trivial. Together they produce something
+  # recognizable and irreproducible. The schema can specify the environment
+  # in which a voice develops. It can't specify the voice.
+
+# ─── Pacing ────────────────────────────────────────────────────────────────
+
+pacing:
+  principle: varied
+  # That's the formalizable part. What follows is guidance, not instruction.
+
+  guidelines:
+    - "Alternate dense and sparse sections"
+    - "Vary sentence length within sections"
+    - "Create rhythm through contrast — a long section followed by a short one"
+    - "A single-sentence paragraph after a dense paragraph creates a jolt"
+    - "Use horizontal rules for mid-section pauses (different from paragraph and section breaks)"
+
+  transitions:
+    levels:
+      - paragraph_break: "A step"
+      - horizontal_rule: "A breath"
+      - section_break: "A leap"
+    guidance: >
+      The jump between sections IS the bridge. Let the reader's brain fill
+      the gap. That gap-filling is momentum — the reader participates in the
+      text rather than being pushed through it.
+
+  formalizability: medium
+  # The pattern generalizes. The instance doesn't.
+  # "Vary it" is specifiable. "Vary it here, in this way, for this effect" is not.
+
+# ─── Revision ──────────────────────────────────────────────────────────────
+
+revision:
+  # Revision is MORE formalizable than first-draft writing.
+  # Generation requires choosing what to say. Revision requires choosing
+  # what to cut, and the cutting rules are surprisingly executable.
+
+  rules:
+    - name: "Cut 10% minimum"
+      executable: true
+      method: "Count words. Multiply by 0.9. Keep cutting until you hit the target."
+
+    - name: "Every section earns its place"
+      executable: true
+      method: "For each section, state its purpose in one sentence. If you can't, cut it."
+
+    - name: "No orphan metaphors"
+      executable: true
+      method: "A metaphor introduced must be returned to. Develop it or kill it."
+
+    - name: "Prefer concrete over abstract"
+      executable: true
+      method: >
+        For each abstract claim, ask: can this be replaced with a specific example?
+        "Writing is hard" becomes "I rewrote this opening three times."
+
+    - name: "Check voice drift"
+      executable: true
+      method: >
+        Read the first section. Read the last. Do they sound like the same writer?
+        Measurable via sentence length distribution, vocabulary overlap, metaphor density.
+
+    - name: "Verify transitions"
+      executable: true
+      method: "Read the last sentence of each section and the first of the next. Does the tonal shift serve as a bridge?"
+
+  process:
+    description: "Iterate. Generate a draft, evaluate against rules, revise."
+    insight: >
+      The improvement between draft one and draft two will be larger than
+      you expect, and most of it will come from cutting, not adding.
+      The first output is material. The second output is the work.
+
+  formalizability: high
+  # Revision rules are the most honestly useful part of this schema.
+
+# ─── Self-reference ────────────────────────────────────────────────────────
+
+self_reference:
+  description: >
+    The zine teaches by performing. Each section demonstrates the thing
+    it explains, then names what it did. The structure is the lesson.
+  guidelines:
+    - "Demonstrate before you explain"
+    - "Name the technique after the reader has experienced it"
+    - "The meta-commentary layer is optional but powerful when earned"
+    - "Don't let self-reference become the point — the subject is the point"
+
+  formalizability: medium
+  # The strategy is specifiable. The execution requires knowing when
+  # self-reference illuminates versus when it becomes navel-gazing.
+
+# ─── Companion files ──────────────────────────────────────────────────────
+
+companion_files:
+  schema:
+    file: "schema.yaml"
+    description: "This file. Topic-agnostic reusable process."
+  manifest:
+    file: "manifest.yaml"
+    description: >
+      The zine's instantiated decisions. What the schema looks like
+      when applied to a specific topic. The schema is the recipe.
+      The manifest is this meal's ingredient list.
+
+# ─── The boundary ──────────────────────────────────────────────────────────
+
+thesis:
+  summary: >
+    Creative decisions exist on a spectrum from fully formalizable to
+    fully irreducible. The interesting work happens at the boundary.
+
+  spectrum:
+    high_formalizability:
+      - "Section structure and templates"
+      - "Section ordering and pairing"
+      - "Revision rules"
+      - "Audience specification"
+      - "Address mode"
+    medium_formalizability:
+      - "Pacing guidelines"
+      - "Register and sentence patterns"
+      - "Metaphor policy"
+      - "Self-reference strategy"
+    low_formalizability:
+      - "Voice as emergent property"
+      - "Tone"
+      - "Which sections to include (topic selection)"
+      - "The specific sentence"
+      - "Which metaphor to choose"
+      - "When to vary pacing"
