@@ -1,0 +1,128 @@
+/* Errata page — kintsugi-styled corrections */
+
+.errata {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    line-height: 1.7;
+}
+
+.errata-header {
+    margin-bottom: var(--space-xl);
+}
+
+.errata-back {
+    color: var(--color-accent);
+    text-decoration: none;
+    margin-bottom: var(--space-md);
+    display: inline-block;
+}
+
+.errata h1 {
+    font-size: 2rem;
+    margin-bottom: var(--space-md);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+}
+
+.errata-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-lg);
+}
+
+/* Kintsugi bowl figure */
+.errata-figure {
+    margin: 0 0 var(--space-xxl) 0;
+    text-align: center;
+}
+.errata-figure img {
+    max-width: 100%;
+    border-radius: var(--border-radius);
+    image-rendering: auto;
+}
+.errata-figure figcaption {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-sm);
+    line-height: 1.5;
+}
+
+/* Sections */
+.errata section {
+    margin-bottom: var(--space-xxl);
+}
+.errata section p {
+    margin-bottom: var(--space-md);
+}
+
+.errata h2 {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-md);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+}
+
+.errata h3 {
+    font-size: 1.1rem;
+    margin-bottom: var(--space-sm);
+    margin-top: var(--space-lg);
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+.errata-category-desc {
+    margin-bottom: var(--space-sm);
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+/* Correction diff boxes */
+.errata-diff {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    overflow-x: auto;
+}
+.errata-diff > div {
+    margin-bottom: var(--space-sm);
+}
+.errata-diff > div:last-child {
+    margin-bottom: 0;
+}
+
+/* Inline/block correction pairs for filler-phrase style diffs */
+.errata-diff .errata-block {
+    margin-bottom: var(--space-md);
+}
+.errata-diff .errata-block:last-child {
+    margin-bottom: 0;
+}
+
+/* Struck-out old text (zenburn red) */
+.errata-old {
+    color: #cc9393;
+    text-decoration: line-through;
+}
+
+/* Replacement text (zenburn green) */
+.errata-new {
+    color: #7f9f7f;
+}
+
+/* Arrow separator */
+.errata-arrow {
+    color: var(--color-text-secondary);
+}
+
+/* Footer links */
+.errata-footer {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-md);
+}
