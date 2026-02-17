@@ -4,8 +4,6 @@ title: The Landscape - qrazy - qry.zone
 description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same three problems.
 ---
 
-<link rel="stylesheet" href="/assets/css/prism-zenburn.css">
-
 <style>
 .breadcrumb {
     font-size: 0.85rem;
@@ -207,17 +205,17 @@ description: How React, Vue, Svelte, Solid, Alpine, and htmx solve the same thre
             <span class="philosophy">"UI as a function of state"</span>
         </div>
         <div class="framework-body">
-            <pre><code class="language-jsx">import { useState } from 'react';
+            {% highlight "jsx" %}import { useState } from 'react';
 
 function Counter() {
   const [count, setCount] = useState(0);
 
   return (
-    &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;
+    <button onClick={() => setCount(c => c + 1)}>
       Clicked {count} times
-    &lt;/button&gt;
+    </button>
   );
-}</code></pre>
+}{% endhighlight %}
 
             <p>
                 <strong>How it works:</strong> <code>useState</code> returns a value and a setter. Calling the setter schedules a re-render. React re-runs the entire function, builds a virtual DOM tree, diffs it against the previous tree, and patches the real DOM.
@@ -240,17 +238,17 @@ function Counter() {
             <span class="philosophy">"Progressive framework"</span>
         </div>
         <div class="framework-body">
-            <pre><code class="language-html">&lt;script setup&gt;
+            {% highlight "html" %}<script setup>
 import { ref } from 'vue';
 
 const count = ref(0);
-&lt;/script&gt;
+</script>
 
-&lt;template&gt;
-  &lt;button @click="count++"&gt;
-    Clicked {{ count }} times
-  &lt;/button&gt;
-&lt;/template&gt;</code></pre>
+<template>
+  <button @click="count++">
+    Clicked {% raw %}{{ count }}{% endraw %} times
+  </button>
+</template>{% endhighlight %}
 
             <p>
                 <strong>How it works:</strong> <code>ref()</code> wraps a value in a Proxy. The template compiler tracks which parts of the template depend on which refs. When a ref changes, Vue re-renders only the affected parts via virtual DOM diffing.
@@ -273,13 +271,13 @@ const count = ref(0);
             <span class="philosophy">"Compiler does the work"</span>
         </div>
         <div class="framework-body">
-            <pre><code class="language-html">&lt;script&gt;
+            {% highlight "html" %}<script>
   let count = 0;
-&lt;/script&gt;
+</script>
 
-&lt;button on:click="{() =&gt; count++}"&gt;
+<button on:click="{() => count++}">
   Clicked {count} times
-&lt;/button&gt;</code></pre>
+</button>{% endhighlight %}
 
             <p>
                 <strong>How it works:</strong> The Svelte compiler analyzes your code at build time. It knows exactly which DOM nodes depend on <code>count</code>. The output is vanilla JS that directly updates those specific text nodes. No runtime framework, no virtual DOM.
@@ -302,17 +300,17 @@ const count = ref(0);
             <span class="philosophy">"True fine-grained reactivity"</span>
         </div>
         <div class="framework-body">
-            <pre><code class="language-jsx">import { createSignal } from 'solid-js';
+            {% highlight "jsx" %}import { createSignal } from 'solid-js';
 
 function Counter() {
   const [count, setCount] = createSignal(0);
 
   return (
-    &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;
+    <button onClick={() => setCount(c => c + 1)}>
       Clicked {count()} times
-    &lt;/button&gt;
+    </button>
   );
-}</code></pre>
+}{% endhighlight %}
 
             <p>
                 <strong>How it works:</strong> Signals are reactive primitives. When you read <code>count()</code> inside JSX, Solid tracks that dependency. When you call <code>setCount()</code>, only the exact text node that reads <code>count()</code> updates. No re-render, no diffing.
@@ -335,11 +333,11 @@ function Counter() {
             <span class="philosophy">"jQuery for the modern web"</span>
         </div>
         <div class="framework-body">
-            <pre><code class="language-html">&lt;div x-data="{ count: 0 }"&gt;
-  &lt;button @click="count++"&gt;
-    Clicked &lt;span x-text="count"&gt;&lt;/span&gt; times
-  &lt;/button&gt;
-&lt;/div&gt;</code></pre>
+            {% highlight "html" %}<div x-data="{ count: 0 }">
+  <button @click="count++">
+    Clicked <span x-text="count"></span> times
+  </button>
+</div>{% endhighlight %}
 
             <p>
                 <strong>How it works:</strong> Alpine scans the DOM at runtime for <code>x-*</code> attributes. It wraps the data in a Proxy and re-evaluates bindings when state changes. Very similar to qrazy—we basically built a mini-Alpine.
@@ -362,15 +360,15 @@ function Counter() {
             <span class="philosophy">"Hypermedia as the engine"</span>
         </div>
         <div class="framework-body">
-            <pre><code class="language-html">&lt;!-- Client --&gt;
-&lt;button hx-post="/increment"
-        hx-swap="innerHTML"&gt;
+            {% highlight "html" %}<!-- Client -->
+<button hx-post="/increment"
+        hx-swap="innerHTML">
   Clicked 0 times
-&lt;/button&gt;
+</button>
 
 # Server (returns HTML, not JSON)
 POST /increment
-return "Clicked 1 times"</code></pre>
+return "Clicked 1 times"{% endhighlight %}
 
             <p>
                 <strong>How it works:</strong> htmx intercepts user actions and makes HTTP requests. The server responds with HTML, not JSON. htmx swaps that HTML into the page. The server IS the state—no client-side state management needed.
@@ -393,11 +391,11 @@ return "Clicked 1 times"</code></pre>
             <span class="philosophy">"Learn by building"</span>
         </div>
         <div class="framework-body">
-            <pre><code class="language-html">&lt;div q-data="{ count: 0 }"&gt;
-  &lt;button q-click="count++"&gt;
-    Clicked &lt;span q-text="count"&gt;&lt;/span&gt; times
-  &lt;/button&gt;
-&lt;/div&gt;</code></pre>
+            {% highlight "html" %}<div q-data="{ count: 0 }">
+  <button q-click="count++">
+    Clicked <span q-text="count"></span> times
+  </button>
+</div>{% endhighlight %}
 
             <p>
                 <strong>How it works:</strong> Almost identical to Alpine. Proxy-based reactivity, runtime attribute parsing, stored updater functions. 250 lines of code you can read in an afternoon.
@@ -436,7 +434,3 @@ return "Clicked 1 times"</code></pre>
     </nav>
 </article>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>

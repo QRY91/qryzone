@@ -4,8 +4,6 @@ title: qrazy - qry.zone
 description: Building a micro-framework to cure framework fatigue
 ---
 
-<link rel="stylesheet" href="/assets/css/prism-zenburn.css">
-
 <style>
 .problem-card {
     background: var(--color-surface);
@@ -90,11 +88,11 @@ description: Building a micro-framework to cure framework fatigue
             Here's what it looks like:
         </p>
 
-        <pre><code class="language-html">&lt;div q-data="{ count: 0 }"&gt;
-  &lt;button q-click="count++"&gt;
-    Clicked &lt;span q-text="count"&gt;&lt;/span&gt; times
-  &lt;/button&gt;
-&lt;/div&gt;</code></pre>
+        {% highlight "html" %}<div q-data="{ count: 0 }">
+  <button q-click="count++">
+    Clicked <span q-text="count"></span> times
+  </button>
+</div>{% endhighlight %}
 
         <p>
             That's it. No npm install. No webpack. No JSX. Just HTML with special attributes that make things reactive.
@@ -220,6 +218,3 @@ description: Building a micro-framework to cure framework fatigue
     </section>
 </article>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>

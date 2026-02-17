@@ -1,0 +1,829 @@
+---
+layout: base.njk
+title: Distilling style / Under the hood - qry.zone
+description: How the extraction pipeline actually works
+---
+
+<style>
+.ds-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    line-height: 1.7;
+}
+.ds-section {
+    margin-bottom: var(--space-xxl);
+}
+.pipeline-flow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin: var(--space-lg) 0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.pipeline-step {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-sm) var(--space-md);
+    text-align: center;
+    min-width: 120px;
+}
+.pipeline-step .step-label {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+}
+.pipeline-step .step-detail {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+}
+.pipeline-arrow {
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+}
+.field-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-md) 0;
+    font-size: 0.85rem;
+}
+.field-table th {
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 2px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+}
+.field-table td {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+.field-table td:first-child {
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+    white-space: nowrap;
+}
+.field-table tr:hover {
+    background: var(--color-surface);
+}
+.algo-box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md) var(--space-lg);
+    margin: var(--space-md) 0;
+}
+.algo-box .algo-title {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+}
+.algo-box .algo-detail {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+.regex-breakdown {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+    overflow-x: auto;
+}
+.regex-part {
+    display: flex;
+    gap: var(--space-md);
+    align-items: baseline;
+    margin-bottom: var(--space-xs);
+    font-size: 0.85rem;
+}
+.regex-part .pattern {
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+    min-width: 160px;
+}
+.regex-part .matches {
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+}
+.insight-box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+}
+.insight-box .insight-label {
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-mono);
+}
+.verb-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: var(--space-sm) 0;
+}
+.verb-tag {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 2px;
+    padding: 2px 6px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+}
+.verb-tag.highlight {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+.timeline-diagram {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: var(--space-lg) 0;
+    position: relative;
+    height: 80px;
+}
+.timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-border);
+}
+.timeline-window {
+    position: absolute;
+    top: 15%;
+    height: 70%;
+    background: var(--color-accent);
+    opacity: 0.1;
+    border-radius: var(--border-radius);
+}
+.timeline-point {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--color-accent);
+    background: var(--color-background);
+    z-index: 1;
+}
+.timeline-label {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+.output-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+    margin: var(--space-md) 0;
+}
+.output-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+}
+.output-card h4 {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+}
+.output-card p {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+.output-card .size-note {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    margin-top: var(--space-sm);
+    color: var(--color-text-secondary);
+    opacity: 0.7;
+}
+</style>
+
+<article class="article">
+  <div class="ds-container">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/distilling-style/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Distilling style
+      </a>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Under the hood
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        How the extraction pipeline actually works
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <!-- Pipeline overview -->
+    <section class="ds-section">
+      <p style="margin-bottom: var(--space-md)">
+        Both tools &mdash; <code>uroboro distill</code> and <code>uroboro prompt-profile</code> &mdash; follow the same three-stage architecture: extract structured data from local sources, output JSONL, and optionally feed that JSONL to an LLM for synthesis. All source code lives in <a href="https://github.com/QRY91/uroboro" target="_blank" rel="noopener noreferrer">the uroboro repo</a> under <code>internal/distill/</code> and <code>internal/promptprofile/</code>.
+      </p>
+
+      <div class="pipeline-flow">
+        <div class="pipeline-step">
+          <div class="step-label">Extract</div>
+          <div class="step-detail">git log, SQLite, session JSONL</div>
+        </div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-step">
+          <div class="step-label">Filter</div>
+          <div class="step-detail">regex, classification, noise strip</div>
+        </div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-step">
+          <div class="step-label">Correlate</div>
+          <div class="step-detail">&plusmn;30min window</div>
+        </div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-step">
+          <div class="step-label">JSONL</div>
+          <div class="step-detail">one record per line</div>
+        </div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-step">
+          <div class="step-label">Synthesize</div>
+          <div class="step-detail">LLM analysis prompt</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The commit filter -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The commit filter
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Not all commits carry style signal. The distill command uses a 24-term extended regex to find commits where you made deliberate quality choices &mdash; refactoring, simplifying, restructuring. The regex is applied case-insensitive via <code>git log --extended-regexp --grep</code>.
+      </p>
+
+      <div class="regex-breakdown">
+        <div class="regex-part">
+          <span class="pattern">refactor</span>
+          <span class="matches">explicit restructuring</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">clean.?up</span>
+          <span class="matches">"cleanup", "clean-up", "clean up"</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">simplif</span>
+          <span class="matches">"simplify", "simplified", "simplification"</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">extract</span>
+          <span class="matches">function/method extraction</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">rename</span>
+          <span class="matches">naming improvements</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">reorganiz</span>
+          <span class="matches">"reorganize", "reorganized"</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">restructur</span>
+          <span class="matches">"restructure", "restructured"</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">consolidat</span>
+          <span class="matches">merging related code</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">dedup</span>
+          <span class="matches">"deduplicate", "dedup"</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">inline|flatten|split</span>
+          <span class="matches">structural changes</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">decompos|modular</span>
+          <span class="matches">"decompose", "modularize"</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">move.*to|pull.*out</span>
+          <span class="matches">"move X to Y", "pull out Z"</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">reduce.*complex</span>
+          <span class="matches">"reduce complexity"</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">improve.*read</span>
+          <span class="matches">"improve readability"</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">untangle|decouple</span>
+          <span class="matches">reducing coupling</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">encapsulat|abstract</span>
+          <span class="matches">boundary creation</span>
+        </div>
+        <div class="regex-part">
+          <span class="pattern">normalize</span>
+          <span class="matches">consistency passes</span>
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        After the regex pre-filter, two hard limits apply. Commits touching more than <strong>20 files</strong> are dropped &mdash; these are typically bulk operations, not deliberate style choices. Diffs are capped at <strong>50KB</strong> and truncated if exceeded. Merge commits are excluded via <code>--no-merges</code>.
+      </p>
+
+      <div class="insight-box">
+        <div class="insight-label">Design choice</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          The regex targets the <em>commit message</em>, not the diff content. The assumption: if you described what you were doing with words like "refactor" or "simplify," you were making a deliberate aesthetic choice. The diff between before and after in that commit is a direct statement about what you consider better code.
+        </p>
+      </div>
+    </section>
+
+    <!-- JSONL Schema -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The output schema
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Both extraction pipelines produce JSONL &mdash; one JSON object per line. Two record types.
+      </p>
+
+      <h3 style="font-size: 1rem; margin-bottom: var(--space-sm); color: var(--color-accent); font-family: var(--font-mono)">
+        GitExtract
+      </h3>
+
+      <table class="field-table">
+        <thead>
+          <tr><th>Field</th><th>Type</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>source</td><td>string</td><td>always "git"</td></tr>
+          <tr><td>repo</td><td>string</td><td>basename of repo path</td></tr>
+          <tr><td>hash</td><td>string</td><td>full commit SHA</td></tr>
+          <tr><td>parent_hash</td><td>string</td><td>first parent only</td></tr>
+          <tr><td>message</td><td>string</td><td>commit subject line</td></tr>
+          <tr><td>date</td><td>time</td><td>author date, RFC3339</td></tr>
+          <tr><td>files</td><td>[]string</td><td>from git show --numstat</td></tr>
+          <tr><td>language</td><td>string</td><td>plurality vote by extension</td></tr>
+          <tr><td>diff</td><td>string</td><td>unified diff, capped at 50KB</td></tr>
+          <tr><td>diff_stats</td><td>object</td><td>{additions, deletions, files}</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size: 1rem; margin: var(--space-md) 0 var(--space-sm); color: var(--color-accent); font-family: var(--font-mono)">
+        UroExtract
+      </h3>
+
+      <table class="field-table">
+        <thead>
+          <tr><th>Field</th><th>Type</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>source</td><td>string</td><td>always "uroboro"</td></tr>
+          <tr><td>type</td><td>string</td><td>decision | blocker | question | capture</td></tr>
+          <tr><td>content</td><td>string</td><td>raw capture text</td></tr>
+          <tr><td>project</td><td>string</td><td>from DB project field</td></tr>
+          <tr><td>tags</td><td>[]string</td><td>parsed from comma-separated</td></tr>
+          <tr><td>timestamp</td><td>time</td><td>capture timestamp</td></tr>
+          <tr><td>correlated_git_hash</td><td>string</td><td>set by Correlate(), omitted if empty</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin-bottom: var(--space-md)">
+        Language detection maps file extensions to language names. The commit's language is determined by plurality vote &mdash; whichever language has the most files in the commit wins. 17 languages are recognized: Go, Python, TypeScript, JavaScript, Rust, Ruby, Java, C, C++, C#, Shell, SQL, HTML, CSS, YAML, JSON, TOML.
+      </p>
+    </section>
+
+    <!-- Uro capture filtering -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Capture filtering
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Decisions, blockers, and questions always pass through &mdash; they're intentional captures that inherently carry signal. But generic <code>capture</code>-type records are filtered. They only pass if their content contains at least one of these code-related keywords:
+      </p>
+
+      <div class="verb-grid">
+        <span class="verb-tag highlight">architecture</span>
+        <span class="verb-tag highlight">refactor</span>
+        <span class="verb-tag highlight">implement</span>
+        <span class="verb-tag">interface</span>
+        <span class="verb-tag">schema</span>
+        <span class="verb-tag">database</span>
+        <span class="verb-tag highlight">api</span>
+        <span class="verb-tag">struct</span>
+        <span class="verb-tag">class</span>
+        <span class="verb-tag highlight">function</span>
+        <span class="verb-tag">module</span>
+        <span class="verb-tag">package</span>
+        <span class="verb-tag">endpoint</span>
+        <span class="verb-tag">middleware</span>
+        <span class="verb-tag">handler</span>
+        <span class="verb-tag highlight">pattern</span>
+        <span class="verb-tag">abstraction</span>
+        <span class="verb-tag">dependency</span>
+        <span class="verb-tag">migration</span>
+        <span class="verb-tag">query</span>
+        <span class="verb-tag">index</span>
+        <span class="verb-tag">cache</span>
+        <span class="verb-tag">config</span>
+        <span class="verb-tag">deploy</span>
+        <span class="verb-tag highlight">build</span>
+        <span class="verb-tag highlight">test</span>
+        <span class="verb-tag">lint</span>
+        <span class="verb-tag">format</span>
+        <span class="verb-tag">convention</span>
+        <span class="verb-tag highlight">style</span>
+        <span class="verb-tag">naming</span>
+        <span class="verb-tag">error handling</span>
+      </div>
+
+      <p style="margin-top: var(--space-md); margin-bottom: var(--space-md)">
+        This prevents general work-log captures from diluting the style signal. A capture like "shipped the feature to staging" gets filtered out. A capture like "extracted handler to middleware for reuse" passes.
+      </p>
+    </section>
+
+    <!-- Correlation algorithm -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The correlation algorithm
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The correlation step is what makes the combined data more valuable than either source alone. It links uro captures (intent) with git commits (implementation) when they happen within 30 minutes of each other.
+      </p>
+
+      {% highlight "go" %}// Simplified from internal/distill/correlate.go
+const CorrelationWindow = 30 * time.Minute
+
+func Correlate(git []GitExtract, uro []UroExtract) {
+    for i := range uro {
+        bestHash, bestDelta := "", CorrelationWindow + 1
+        for _, g := range git {
+            delta := abs(uro[i].Timestamp.Sub(g.Date))
+            if delta <= CorrelationWindow && delta < bestDelta {
+                bestDelta = delta
+                bestHash = g.Hash
+            }
+        }
+        uro[i].CorrelatedGitHash = bestHash
+    }
+}{% endhighlight %}
+
+      <p style="margin-bottom: var(--space-md)">
+        Key properties:
+      </p>
+
+      <div class="algo-box">
+        <div class="algo-title">Bidirectional</div>
+        <div class="algo-detail">The capture can come before or after the commit. "I'm going to restructure this" (capture) followed by the restructuring commit, or the commit followed by "decided to restructure because..." (decision capture). Both correlate.</div>
+      </div>
+
+      <div class="algo-box">
+        <div class="algo-title">Nearest-wins</div>
+        <div class="algo-detail">If multiple commits fall within the 30-minute window, the closest one wins. This prevents a capture at 14:00 from correlating with a commit at 13:31 when there's a closer commit at 13:55.</div>
+      </div>
+
+      <div class="algo-box">
+        <div class="algo-title">Project-blind</div>
+        <div class="algo-detail">Correlation ignores whether the uro capture's project tag matches the git repo. It's purely temporal. This is acknowledged as a simplification &mdash; at milestone 1 scale (hundreds of records, not millions), false correlations are rare enough to not warrant the complexity of project matching.</div>
+      </div>
+
+      <div class="algo-box">
+        <div class="algo-title">O(n&times;m)</div>
+        <div class="algo-detail">A full cross-product scan. Every uro capture is compared against every git commit. The code comment acknowledges this and calls it "fine at milestone 1 scale." For the typical extraction (50&ndash;100 git commits, 100&ndash;500 uro captures), this completes in milliseconds.</div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Why it matters</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          A correlated pair gives you both the "why" (from the uro decision) and the "what" (from the git diff). The analysis prompt calls these "the richest signal" &mdash; when you have a decision record saying "guard clauses over nested ifs for readability" paired with a diff that shows the actual before/after transformation, you have a concrete, evidenced style rule.
+        </p>
+      </div>
+    </section>
+
+    <!-- Prompt classification -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Prompt classification
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The prompt-profile tool classifies each user message along four dimensions: imperative, question, file reference, and code block. The detection is heuristic &mdash; first-word matching, not semantic analysis.
+      </p>
+
+      <h3 style="font-size: 1rem; margin-bottom: var(--space-sm); color: var(--color-accent); font-family: var(--font-mono)">
+        Imperative detection
+      </h3>
+
+      <p style="margin-bottom: var(--space-md)">
+        Two-stage check. First, the lowercase first word must match one of 57 imperative verbs:
+      </p>
+
+      <div class="verb-grid" style="margin-bottom: var(--space-md);">
+        <span class="verb-tag highlight">fix</span>
+        <span class="verb-tag highlight">add</span>
+        <span class="verb-tag highlight">implement</span>
+        <span class="verb-tag highlight">create</span>
+        <span class="verb-tag highlight">update</span>
+        <span class="verb-tag">remove</span>
+        <span class="verb-tag">delete</span>
+        <span class="verb-tag highlight">refactor</span>
+        <span class="verb-tag">change</span>
+        <span class="verb-tag highlight">make</span>
+        <span class="verb-tag highlight">build</span>
+        <span class="verb-tag">write</span>
+        <span class="verb-tag highlight">run</span>
+        <span class="verb-tag highlight">test</span>
+        <span class="verb-tag">check</span>
+        <span class="verb-tag">move</span>
+        <span class="verb-tag">rename</span>
+        <span class="verb-tag">extract</span>
+        <span class="verb-tag">clean</span>
+        <span class="verb-tag">simplify</span>
+        <span class="verb-tag">merge</span>
+        <span class="verb-tag">deploy</span>
+        <span class="verb-tag">configure</span>
+        <span class="verb-tag">setup</span>
+        <span class="verb-tag">install</span>
+        <span class="verb-tag">upgrade</span>
+        <span class="verb-tag">migrate</span>
+        <span class="verb-tag">convert</span>
+        <span class="verb-tag">replace</span>
+        <span class="verb-tag">review</span>
+        <span class="verb-tag">debug</span>
+        <span class="verb-tag">optimize</span>
+        <span class="verb-tag">search</span>
+        <span class="verb-tag">find</span>
+        <span class="verb-tag">list</span>
+        <span class="verb-tag">show</span>
+        <span class="verb-tag">help</span>
+        <span class="verb-tag highlight">explain</span>
+        <span class="verb-tag">design</span>
+        <span class="verb-tag">plan</span>
+        <span class="verb-tag">analyze</span>
+        <span class="verb-tag">summarize</span>
+        <span class="verb-tag">generate</span>
+        <span class="verb-tag">format</span>
+        <span class="verb-tag">validate</span>
+        <span class="verb-tag">read</span>
+        <span class="verb-tag">open</span>
+        <span class="verb-tag">start</span>
+        <span class="verb-tag">stop</span>
+        <span class="verb-tag">set</span>
+        <span class="verb-tag">get</span>
+        <span class="verb-tag">use</span>
+        <span class="verb-tag">try</span>
+        <span class="verb-tag">apply</span>
+        <span class="verb-tag">commit</span>
+        <span class="verb-tag">push</span>
+        <span class="verb-tag">pull</span>
+        <span class="verb-tag">revert</span>
+        <span class="verb-tag">reset</span>
+        <span class="verb-tag">look</span>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Second check: the prompt starts with one of 10 directive phrases:
+      </p>
+
+      <div class="verb-grid" style="margin-bottom: var(--space-md);">
+        <span class="verb-tag highlight">let's</span>
+        <span class="verb-tag highlight">can you</span>
+        <span class="verb-tag">could you</span>
+        <span class="verb-tag">please</span>
+        <span class="verb-tag">go ahead</span>
+        <span class="verb-tag highlight">we need to</span>
+        <span class="verb-tag highlight">we should</span>
+        <span class="verb-tag">i want to</span>
+        <span class="verb-tag">i need</span>
+        <span class="verb-tag">i'd like</span>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Edge case</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          "Can you fix this?" registers as both imperative (via "can you" directive phrase) and question (via "can" question starter + "?"). This overlap is intentional &mdash; some messages genuinely are both a request and a question. The <a href="/distilling-style/prompt-anatomy/">prompt anatomy</a> data shows this dual-classification accounts for much of the "other" category.
+        </p>
+      </div>
+
+      <h3 style="font-size: 1rem; margin: var(--space-lg) 0 var(--space-sm); color: var(--color-accent); font-family: var(--font-mono)">
+        Question detection
+      </h3>
+
+      <p style="margin-bottom: var(--space-md)">
+        Also two-stage. Contains <code>?</code> anywhere in the text, or the first word matches one of 18 question starters:
+      </p>
+
+      <div class="verb-grid" style="margin-bottom: var(--space-md);">
+        <span class="verb-tag highlight">how</span>
+        <span class="verb-tag highlight">what</span>
+        <span class="verb-tag highlight">why</span>
+        <span class="verb-tag">when</span>
+        <span class="verb-tag">where</span>
+        <span class="verb-tag">which</span>
+        <span class="verb-tag highlight">can</span>
+        <span class="verb-tag">could</span>
+        <span class="verb-tag">should</span>
+        <span class="verb-tag">would</span>
+        <span class="verb-tag highlight">is</span>
+        <span class="verb-tag">are</span>
+        <span class="verb-tag">do</span>
+        <span class="verb-tag highlight">does</span>
+        <span class="verb-tag">did</span>
+        <span class="verb-tag">will</span>
+        <span class="verb-tag">has</span>
+        <span class="verb-tag">have</span>
+      </div>
+
+      <h3 style="font-size: 1rem; margin: var(--space-lg) 0 var(--space-sm); color: var(--color-accent); font-family: var(--font-mono)">
+        File path detection
+      </h3>
+
+      <p style="margin-bottom: var(--space-md)">
+        Word-by-word scan. A word is a file path if it starts with <code>/</code> (and contains another <code>/</code>), starts with <code>./</code> or <code>../</code>, or contains a dot where the part after the last dot matches one of 30+ recognized extensions: <code>.go</code>, <code>.py</code>, <code>.ts</code>, <code>.tsx</code>, <code>.js</code>, <code>.jsx</code>, <code>.rs</code>, <code>.html</code>, <code>.css</code>, <code>.json</code>, <code>.yaml</code>, <code>.md</code>, <code>.sql</code>, <code>.sh</code>, and more. URLs starting with <code>http</code> are excluded.
+      </p>
+
+      <h3 style="font-size: 1rem; margin: var(--space-lg) 0 var(--space-sm); color: var(--color-accent); font-family: var(--font-mono)">
+        Noise stripping
+      </h3>
+
+      <p style="margin-bottom: var(--space-md)">
+        Before classification, the tool strips system-injected content from the raw session JSONL. XML-wrapped blocks like <code>&lt;system-reminder&gt;</code>, <code>&lt;task-notification&gt;</code>, <code>&lt;command-name&gt;</code>, and <code>&lt;bash-notification&gt;</code> are removed. Messages starting with known system prefixes are dropped entirely. Sidechain sessions (subagent conversations) are skipped based on the <code>IsSidechain</code> flag in the session index.
+      </p>
+    </section>
+
+    <!-- The analysis prompt -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The analysis prompt
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The included <code>scripts/style-analysis-prompt.md</code> defines a 6-step workflow for turning JSONL into a style profile. It's designed to be fed to Claude along with the extracted data.
+      </p>
+
+      <div class="algo-box">
+        <div class="algo-title">Step 1 &mdash; Inventory</div>
+        <div class="algo-detail">Count records by source, language, repo. Establish what data is available before analyzing.</div>
+      </div>
+
+      <div class="algo-box">
+        <div class="algo-title">Step 2 &mdash; Analyze git extracts</div>
+        <div class="algo-detail">Look at diff + commit message together for: naming patterns, structure preferences (guard clauses vs nesting, function length, file organization), error handling, abstraction thresholds, simplification patterns, testing patterns. Group by language.</div>
+      </div>
+
+      <div class="algo-box">
+        <div class="algo-title">Step 3 &mdash; Analyze uro extracts</div>
+        <div class="algo-detail">Parse the "X over Y &mdash; reason" format to extract preferred approach, rejected approach, and reasoning. Group decisions by category: architecture, tooling, code style, dependencies, testing, workflow.</div>
+      </div>
+
+      <div class="algo-box">
+        <div class="algo-title">Step 4 &mdash; Cross-reference correlated pairs</div>
+        <div class="algo-detail">For each uro extract with a <code>correlated_git_hash</code>, pair it with its git extract. Intent meets implementation. The prompt calls these "the richest signal."</div>
+      </div>
+
+      <div class="algo-box">
+        <div class="algo-title">Step 5 &mdash; Cluster and rank</div>
+        <div class="algo-detail">Rules ranked by: frequency, breadth (repos/languages), intent (backed by uro decision), consistency. 8+ occurrences across 3 repos with uro backing = hard rule. 1 commit, no uro context = candidate.</div>
+      </div>
+
+      <div class="algo-box">
+        <div class="algo-title">Step 6 &mdash; Produce three outputs</div>
+        <div class="algo-detail">Style guide, system prompt fragment, and machine-readable rules JSON.</div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        The three output artifacts:
+      </p>
+
+      <div class="output-grid">
+        <div class="output-card">
+          <h4>STYLE_GUIDE.md</h4>
+          <p>Full reference with before/after code from your actual commits. Uses diff lines (- = before, + = after) as examples.</p>
+          <div class="size-note">~2000 words</div>
+        </div>
+        <div class="output-card">
+          <h4>STYLE_PROMPT.md</h4>
+          <p>System prompt fragment with hard rules, preferences, and anti-patterns. Ready to paste into CLAUDE.md.</p>
+          <div class="size-note">&lt;1500 tokens</div>
+        </div>
+        <div class="output-card">
+          <h4>style_rules.json</h4>
+          <p>Machine-readable rules with fields: id, rule, category, severity, languages, frequency, repos, example_hash, rationale.</p>
+          <div class="size-note">structured data</div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Key instruction</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          The prompt explicitly says: "Use actual code snippets from the diffs for before/after examples. Don't invent synthetic examples." The style guide's credibility depends on every example being traceable to a real commit hash.
+        </p>
+      </div>
+    </section>
+
+    <!-- Multi-repo batch -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Multi-repo extraction
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The batch script <code>scripts/distill-multi.sh</code> orchestrates extraction across multiple repositories. It runs <code>uroboro distill --source git</code> for each repo in sequence, appending to one JSONL file. Uro captures are extracted once globally (they're not repo-scoped). The output includes a manifest tracking provenance.
+      </p>
+
+      {% highlight "bash" %}$ ./scripts/distill-multi.sh --days 90 --correlate \
+    ~/projects/uroboro ~/projects/qryzone ~/projects/sjiek
+
+extracting git from uroboro... 47 commits
+extracting git from qryzone... 12 commits
+extracting git from sjiek... 8 commits
+extracting uro captures... 83 records
+correlating (30min window)... 12 pairs
+wrote extracts-2026-02-17.jsonl (150 records)
+wrote extract-manifest.json{% endhighlight %}
+
+      <p style="margin-bottom: var(--space-md)">
+        The manifest is a provenance record:
+      </p>
+
+      {% highlight "json" %}{
+  "date": "2026-02-17",
+  "repos": ["uroboro", "qryzone", "sjiek"],
+  "git_count": 67,
+  "uro_count": 83,
+  "correlated_count": 12,
+  "total_records": 150,
+  "days": 90,
+  "output": "extracts-2026-02-17.jsonl"
+}{% endhighlight %}
+
+      <p style="margin-bottom: var(--space-md)">
+        When invoked via MCP (the <code>uro_distill</code> tool), output goes to <code>~/.local/share/uroboro/style-data/</code> with timestamped filenames. Same JSONL format, same schema &mdash; the MCP layer is a thin wrapper over the same Go code.
+      </p>
+    </section>
+
+    <!-- What's missing -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Known limitations
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The correlation is project-blind. A capture tagged "qryzone" can correlate with a commit in a different repo if the timestamps are close enough. For the current scale this rarely produces false matches, but it's a known simplification.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The batch script's <code>--correlate</code> mode only correlates uro captures against the first repo in the list, not all repos. This is acknowledged in a source comment as a "simplification for now."
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The imperative classifier misses common patterns. "Great, now add routing" starts with "great," which isn't a verb, so the imperative is missed. Compound messages with multiple intents get classified by their first word only. The 42% "other" category in the <a href="/distilling-style/prompt-anatomy/">prompt anatomy</a> data reflects these classification gaps.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        No test fixtures exist for the distill package. The extraction logic has been validated empirically (by running it against real repos and checking the output), but there are no automated regression tests for the commit filtering or correlation logic.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: var(--space-md);">
+        Source: <a href="https://github.com/QRY91/uroboro" target="_blank" rel="noopener noreferrer">uroboro</a> &mdash; <code>internal/distill/</code> and <code>internal/promptprofile/</code>
+      </p>
+      <p>
+        <a href="/distilling-style/">Back to Distilling style</a> &nbsp;|&nbsp;
+        <a href="/distilling-style/prompt-anatomy/">Prompt anatomy</a> &nbsp;|&nbsp;
+        <a href="/distilling-style/code-decisions/">Code decisions</a>
+      </p>
+    </footer>
+
+  </div>
+</article>

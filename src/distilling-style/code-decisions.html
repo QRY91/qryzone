@@ -1,0 +1,609 @@
+---
+layout: base.njk
+title: Distilling style / Code decisions - qry.zone
+description: What 534 uroboro captures reveal about coding patterns
+---
+
+<style>
+.ds-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    line-height: 1.7;
+}
+.ds-section {
+    margin-bottom: var(--space-xxl);
+}
+.decision-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md) var(--space-lg);
+    margin: var(--space-md) 0;
+}
+.decision-card .decision-text {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+}
+.decision-card .decision-text .chosen {
+    color: var(--color-accent);
+}
+.decision-card .decision-text .rejected {
+    color: var(--color-text-secondary);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+.decision-card .decision-reason {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    padding-left: var(--space-md);
+    border-left: 2px solid var(--color-accent);
+}
+.decision-card .decision-project {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    margin-top: var(--space-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.theme-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+.theme-header h2 {
+    font-size: 1.3rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    margin: 0;
+}
+.theme-count {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: 2px var(--space-sm);
+}
+.insight-box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+}
+.insight-box .insight-label {
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-mono);
+}
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+.stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+}
+.stat-card .label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+}
+.stat-card .value {
+    font-size: 1.5rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+}
+.stat-card .note {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+.pattern-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+}
+.pattern-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+}
+.pattern-card h4 {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+}
+.pattern-card p {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+.vs-block {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--space-sm);
+    align-items: center;
+    margin: var(--space-sm) 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+.vs-block .chosen-side {
+    color: var(--color-accent);
+    text-align: right;
+}
+.vs-block .vs-divider {
+    color: var(--color-text-secondary);
+    font-size: 0.7rem;
+}
+.vs-block .rejected-side {
+    color: var(--color-text-secondary);
+    opacity: 0.6;
+}
+</style>
+
+<article class="article">
+  <div class="ds-container">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/distilling-style/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Distilling style
+      </a>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Code decisions
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        What 534 uroboro captures reveal about coding patterns
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <!-- Overview -->
+    <section class="ds-section">
+      <p style="margin-bottom: var(--space-md)">
+        <a href="https://www.uroboro.dev/" target="_blank" rel="noopener noreferrer">Uroboro</a> captures decisions in "X over Y &mdash; reason" format. Every time a choice is made between approaches, the decision goes into the trail. Over months, this accumulates into a map of coding preferences that were never written down as rules but emerge from repeated choices.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This page analyzes 534 captures from the last 90 days across 9 projects. Not all are decisions &mdash; some are blockers, questions, and general captures. But the decisions are the richest signal. They show what was chosen, what was rejected, and why.
+      </p>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="label">Captures</div>
+          <div class="value">534</div>
+          <div class="note">90 days</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Decisions</div>
+          <div class="value">~50</div>
+          <div class="note">explicit X-over-Y</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Projects</div>
+          <div class="value">9</div>
+          <div class="note">personal + work</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Themes</div>
+          <div class="value">8</div>
+          <div class="note">recurring patterns</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Theme 1: Dependency avoidance -->
+    <section class="ds-section">
+      <div class="theme-header">
+        <h2>Dependency avoidance</h2>
+        <span class="theme-count">highest frequency</span>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        The single most recurring pattern across all projects. When a choice exists between adding a dependency and writing a simpler in-house version, the in-house version wins unless the dependency provides significant, non-trivial functionality.
+      </p>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Regex-based link extraction</span> over <span class="rejected">golang.org/x/net/html</span>
+        </div>
+        <div class="decision-reason">Avoids adding external dependency for a simple task. Only need to find href attributes on same-domain links.</div>
+        <div class="decision-project">slopsquid</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Static banlists + frequency-ratio scoring</span> over <span class="rejected">local LLM approach</span>
+        </div>
+        <div class="decision-reason">v1 should be fast and dependency-free. Paper's empirical data provides quantitative scoring without needing inference.</div>
+        <div class="decision-project">slopsquid</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">In-memory queue</span> over <span class="rejected">Bull/BullMQ with Redis</span>
+        </div>
+        <div class="decision-reason">Single-process NestJS app, no Redis dependency needed, queue state is transient, simpler to implement and debug.</div>
+        <div class="decision-project">coenegrachts-rpa-api</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Single HTML with inlined CSS/JS</span> over <span class="rejected">multi-file structure</span>
+        </div>
+        <div class="decision-reason">Matches existing patterns &mdash; all projects are self-contained 8&ndash;50KB HTML files with no external dependencies.</div>
+        <div class="decision-project">qryzone /fun/</div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Rule</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          Duplication is explicitly accepted when the alternative introduces coupling or external dependencies. Keeping things self-contained is a first-class design goal. The threshold question isn't "does a library exist?" but "is the library's complexity justified by what we'd have to write ourselves?"
+        </p>
+      </div>
+    </section>
+
+    <!-- Theme 2: State minimalism -->
+    <section class="ds-section">
+      <div class="theme-header">
+        <h2>State minimalism</h2>
+        <span class="theme-count">cross-project</span>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        A preference for the smallest possible state representation. Derive what you can, store only what you must. This sometimes means reversing earlier decisions when they prove unnecessarily complex.
+      </p>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Single click counter</span> over <span class="rejected">level+count state</span>
+        </div>
+        <div class="decision-reason">Derive visual quadtree from total clicks. Growth is linear accumulation &mdash; the tree was over-engineered for what was actually a simple binary accumulation pattern.</div>
+        <div class="decision-project">qryzone /fun/</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">PortalSessionState map</span> over <span class="rejected">separate VLM/Traces fields</span>
+        </div>
+        <div class="decision-reason">Unified getOrCreateSession with portal param. Eliminates copy-paste duplication (6 fields, 6 methods), creation-promise lock fixes race condition.</div>
+        <div class="decision-project">coenegrachts-rpa-api</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Stateless BrowserService (pass page as param)</span> over <span class="rejected">mutable this.page</span>
+        </div>
+        <div class="decision-reason">Eliminates concurrency bugs when VLM and Traces queues drain simultaneously on the singleton BrowserService.</div>
+        <div class="decision-project">coenegrachts-rpa-api</div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Rule</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          The interesting pattern here is the willingness to reverse. The FractalNode tree was built, then torn out when a simpler model proved sufficient. Mutable shared state was refactored to parameterized statelessness. The aesthetic is "notice when the model is more complex than the problem requires" &mdash; and then simplify.
+        </p>
+      </div>
+    </section>
+
+    <!-- Theme 3: Extraction threshold -->
+    <section class="ds-section">
+      <div class="theme-header">
+        <h2>Extraction threshold</h2>
+        <span class="theme-count">contextual</span>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        When to extract a function vs. keep it inline isn't a simple "three uses = extract" rule. The decision depends on domain ownership and layer coherence, not just repetition count.
+      </p>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Extract createPersistentSession helper</span> over <span class="rejected">duplicating getOrCreatePersistentSession</span>
+        </div>
+        <div class="decision-reason">VLM and Traces sessions follow identical patterns. Extracting avoids copy-paste and makes the dual-session pattern maintainable.</div>
+        <div class="decision-project">coenegrachts-rpa-api</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Extract hasRootCauseContent to shared utility</span> over <span class="rejected">inline function in route file</span>
+        </div>
+        <div class="decision-reason">Enables reuse if internal CAPA flow needs validation, keeps domain logic near domain types.</div>
+        <div class="decision-project">webapp-ui</div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        But the opposite also happens:
+      </p>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Duplicate parseTimestamp in mcp.go</span> over <span class="rejected">extracting to shared package</span>
+        </div>
+        <div class="decision-reason">Function is small, keeps MCP layer self-contained. Extraction would create a cross-layer dependency for a trivial function.</div>
+        <div class="decision-project">uroboro</div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Rule</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          Extract when: the pattern is identical, both sites are in the same domain, and the extracted function lives near the domain logic it serves. Don't extract when: the function is small, extraction would create cross-layer coupling, and the duplication is stable (unlikely to diverge). Three similar lines of code is better than a premature abstraction.
+        </p>
+      </div>
+    </section>
+
+    <!-- Theme 4: Framework pragmatism -->
+    <section class="ds-section">
+      <div class="theme-header">
+        <h2>Framework pragmatism</h2>
+        <span class="theme-count">repeated</span>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Multiple captures record discovering that a clean abstraction doesn't work with the actual framework, and choosing the pragmatic workaround over fighting the system.
+      </p>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Revert fun-base.njk template</span> over <span class="rejected">Nunjucks block inheritance</span>
+        </div>
+        <div class="decision-reason">Nunjucks block inheritance doesn't work with Eleventy's layout: frontmatter system. Blocks render empty.</div>
+        <div class="decision-project">qryzone</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">extraStyles frontmatter</span> over <span class="rejected">Nunjucks blocks</span>
+        </div>
+        <div class="decision-reason">Pages use layout frontmatter pattern, not extends/blocks. Adding extraStyles to base template keeps consistency with existing pattern.</div>
+        <div class="decision-project">qryzone</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">HTML format</span> over <span class="rejected">Markdown</span>
+        </div>
+        <div class="decision-reason">Task spec said markdown/Astro but site is actually Eleventy with all content as .html files with Nunjucks frontmatter. Matching existing format.</div>
+        <div class="decision-project">qryzone</div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Rule</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          Follow the grain of the existing system. When a theoretically cleaner approach conflicts with how the framework actually behaves, the pragmatic path wins. This applies to file formats, template inheritance, routing conventions &mdash; the system you have constrains the system you want. Attempting clean abstractions that the framework doesn't support is a waste of effort.
+        </p>
+      </div>
+    </section>
+
+    <!-- Theme 5: Ship with imprecision -->
+    <section class="ds-section">
+      <div class="theme-header">
+        <h2>Ship with imprecision</h2>
+        <span class="theme-count">philosophical</span>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        A recurring willingness to ship with known limitations rather than block on unavailable perfect data. The imprecision is always documented.
+      </p>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Estimated overuse ratios</span> over <span class="rejected">wait for measured data</span>
+        </div>
+        <div class="decision-reason">Without actual 67-model frequency data for technical writing, used heuristic weights. Still produces meaningful relative scoring. Article explicitly notes this limitation.</div>
+        <div class="decision-project">slopsquid</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Use antislop paper data tables</span> over <span class="rejected">running auto-antislop tool</span>
+        </div>
+        <div class="decision-reason">The tool is designed for inference-time suppression during LLM generation (requires GPU + vLLM). For editing existing text, the paper's empirical data provides everything needed.</div>
+        <div class="decision-project">slopsquid</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Rewrite docs to match actual codebase</span> over <span class="rejected">keeping aspirational features</span>
+        </div>
+        <div class="decision-reason">Previous docs described unrealized features. Replaced with accurate documentation of the three commands that actually exist. Only document what exists.</div>
+        <div class="decision-project">slopsquid</div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Rule</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          Defaults at the balance point of extremes. Ship with documented imprecision rather than block on perfect data. The critical qualifier is "documented" &mdash; acknowledged limitations are fine, silent inaccuracies are not. This applies to scoring heuristics, tool descriptions, and any claim made in writing.
+        </p>
+      </div>
+    </section>
+
+    <!-- Theme 6: Iterative precision -->
+    <section class="ds-section">
+      <div class="theme-header">
+        <h2>Iterative precision</h2>
+        <span class="theme-count">two-directional</span>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Regex patterns and detection logic follow a distinct refinement pattern: broaden first to catch edge cases, then tighten when false positives appear. Both directions are captured with the specific failure mode that triggered the change.
+      </p>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Broadened not_x_but_y regex</span> &mdash; any subject + period separator
+        </div>
+        <div class="decision-reason">Original regex only matched it/this/that subjects and comma/dash separators. User's content uses varied subjects and period boundaries.</div>
+        <div class="decision-project">slopsquid</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Require negation in not_x_but_y</span> &mdash; tightened after false positives
+        </div>
+        <div class="decision-reason">Original regex made "not" optional, causing false positives on normal "it's X, but Y" English. Fixed to require "isn't/wasn't" forms explicitly.</div>
+        <div class="decision-project">slopsquid</div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Rule</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          First release is intentionally broad to discover what the pattern actually looks like in the wild. Then tighten based on observed false positives. The captures record both directions and both failure modes. This is how the prompt-profile classifier itself evolved &mdash; from 50.7% imperative detection down to 16.5% as the heuristics got sharper.
+        </p>
+      </div>
+    </section>
+
+    <!-- Theme 7: Testing philosophy -->
+    <section class="ds-section">
+      <div class="theme-header">
+        <h2>Real over mock</h2>
+        <span class="theme-count">testing</span>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Testing decisions consistently prefer real system interaction over mocked substitutes, and implementation sequencing is chosen to unblock testability early.
+      </p>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Auth state persistence</span> over <span class="rejected">HTML mocks</span>
+        </div>
+        <div class="decision-reason">Mock can drift from reality, causing "works in test, fails in prod" scenarios.</div>
+        <div class="decision-project">coenegrachts-rpa-api</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Form filling before auth/nav</span> &mdash; sequenced for early testing
+        </div>
+        <div class="decision-reason">Allows testing on live form immediately via CDP. Auth implementation can follow without blocking test feedback.</div>
+        <div class="decision-project">coenegrachts-rpa-api</div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Rule</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          Prefer testing against real systems over mocks when feasible. Mocks are a last resort, not a default. And when planning implementation order, choose the sequence that unblocks testability earliest &mdash; even if it means building feature B before feature A.
+        </p>
+      </div>
+    </section>
+
+    <!-- Theme 8: Rewrite threshold -->
+    <section class="ds-section">
+      <div class="theme-header">
+        <h2>Rewrite threshold</h2>
+        <span class="theme-count">rare but clear</span>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Rewriting from scratch is not the default. But when architectures are genuinely incompatible, incremental migration creates more adapter code than the rewrite would produce.
+      </p>
+
+      <div class="decision-card">
+        <div class="decision-text">
+          <span class="chosen">Clean rewrite</span> over <span class="rejected">incremental migration</span>
+        </div>
+        <div class="decision-reason">The old code is a TUI RSS reader with incompatible schema, CGO sqlite, and Bubble Tea dependencies. The new architecture is fundamentally different.</div>
+        <div class="decision-project">osmotic</div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Rule</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          Rewrite when the constraints are genuinely incompatible &mdash; wrong database bindings, wrong UI paradigm, wrong schema. The test isn't "could we migrate?" but "would the migration code be more complex than the new implementation?" When the answer is yes, start clean.
+        </p>
+      </div>
+    </section>
+
+    <!-- Summary grid -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The pattern table
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Eight themes distilled from 534 captures. None were planned. All emerged from repeated choices.
+      </p>
+
+      <div class="pattern-summary">
+        <div class="pattern-card">
+          <h4>Dependencies</h4>
+          <p>Avoid by default. Accept duplication when it preserves self-containment.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>State</h4>
+          <p>Minimal, derived. Revisit when complexity proves unjustified.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>Extraction</h4>
+          <p>By domain ownership and layer coherence, not just reuse count.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>Framework</h4>
+          <p>Follow the grain. Constraints of the existing system win over clean abstractions.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>Shipping</h4>
+          <p>Ship with documented imprecision. Block only on genuinely missing data.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>Precision</h4>
+          <p>Broaden first, tighten on false positives. Both directions captured.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>Testing</h4>
+          <p>Real systems over mocks. Sequence implementation to enable early testability.</p>
+        </div>
+        <div class="pattern-card">
+          <h4>Rewriting</h4>
+          <p>Only when architectures are genuinely incompatible. Migration code &gt; new code = rewrite.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meta observation -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What the trail doesn't show
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        No captures mention guard clauses, early returns, error wrapping conventions, or naming patterns. These are the things that happen on autopilot &mdash; too obvious to record as decisions because they were never questioned. The absence is itself data: it maps the boundary between deliberate choices and internalized defaults.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The uroboro decision trail captures what was contested, not what was assumed. A complete style profile would need both &mdash; the conscious decisions from the trail plus the unconscious patterns from git diffs. That's what the <a href="/distilling-style/">distill command's correlation feature</a> is designed to bridge.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: var(--space-md);">
+        All decisions extracted from <a href="https://www.uroboro.dev/" target="_blank" rel="noopener noreferrer">uroboro</a> captures via <code>uro_search</code> and <code>uro_distill</code>.
+      </p>
+      <p>
+        <a href="/distilling-style/">Back to Distilling style</a> &nbsp;|&nbsp;
+        <a href="/distilling-style/prompt-anatomy/">Prompt anatomy</a> &nbsp;|&nbsp;
+        <a href="/distilling-style/under-the-hood/">Under the hood</a>
+      </p>
+    </footer>
+
+  </div>
+</article>

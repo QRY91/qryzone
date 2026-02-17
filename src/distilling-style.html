@@ -1,0 +1,387 @@
+---
+layout: base.njk
+title: Distilling style - qry.zone
+description: Mining git history and AI conversations to extract how you actually work
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <span class="status-badge status-seedling">seedling</span>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Distilling style
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        Mining git history and AI conversations to extract how you actually work
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <p style="margin-bottom: var(--space-md)">
+        You write code for months. Years. Decisions accumulate. You start preferring guard clauses over nested ifs. You extract functions at a certain threshold. You name things a certain way, handle errors a certain way, structure files a certain way. These patterns stay implicit &mdash; lodged in muscle memory and scattered across thousands of commits. You couldn't write them down if someone asked.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Same thing happens with how you talk to AI. You develop prompting habits. Certain sentence structures. A ratio of questions to commands. Times of day when you're most active. None of it deliberate. All of it real.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        What if you could extract these patterns from evidence? Not introspect and guess &mdash; actually mine the data?
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Two tools
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        I built two extraction commands into <a href="https://www.uroboro.dev/" target="_blank" rel="noopener noreferrer">uroboro</a>. The first, <code>distill</code>, mines git history and uroboro captures for code style signals. The second, <code>prompt-profile</code>, mines Claude Code conversation logs for prompting patterns. Both produce structured JSONL that can be fed to an LLM for synthesis, or analyzed directly.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        They answer different questions. Distill asks: how do you write code? Prompt-profile asks: how do you talk to AI? Together they build a picture of how you actually work &mdash; from evidence, not self-report.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Discovering your code style
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The distill command looks for commits where you cared about code quality. Not every commit &mdash; specifically the ones where you refactored, simplified, extracted, renamed, restructured. The signal commits. It matches against commit messages using a regex that catches words like <code>refactor</code>, <code>simplify</code>, <code>extract</code>, <code>consolidate</code>, <code>decompose</code>, <code>decouple</code>. If you bothered to describe what you were doing with those words, you were making a deliberate style choice.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        For each matching commit, it extracts the full unified diff (capped at 50KB), the files touched, a language detection from file extensions, and diff stats. It also pulls in any uroboro captures you made &mdash; decisions, blockers, questions &mdash; and optionally correlates them: if a capture was recorded within 30 minutes of a git commit, they're linked. Intent meets implementation.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Run it across multiple repos with the batch script and you get a consolidated JSONL file covering your style across projects. Feed that to Claude with the included analysis prompt and it produces three outputs: a style guide with before/after examples from your own commits, a system prompt fragment with hard rules and preferences, and a machine-readable <code>style_rules.json</code> with severity ratings.
+      </p>
+
+      {% highlight "bash" %}$ uroboro distill --source all --correlate --repo ~/projects/uroboro
+extracted 47 git commits (style-signal)
+extracted 83 uro captures (code-related)
+correlated 12 pairs (30min window)
+total: 130 records → stdout{% endhighlight %}
+
+      <p style="margin-bottom: var(--space-md)">
+        47 commits out of however many hundreds. That filtering matters. If you fed your entire git history to an LLM and asked for style patterns, you'd get noise. The commits where you explicitly cleaned up, restructured, simplified &mdash; those are the ones where your aesthetic preferences are visible. The diff between "before" and "after" in a refactoring commit is a direct statement about what you consider better.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Prompting introspection
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Prompt-profile does something different. It reads every Claude Code session on your machine &mdash; the JSONL files that record each conversation &mdash; and extracts every user prompt. Then it classifies them. Is this an imperative ("fix the auth bug")? A question ("why is this returning nil?")? Does it reference a file path? Does it contain a code block? It strips out injected system content, filters noise, and computes stats across your entire usage history.
+      </p>
+
+      {% highlight "bash" %}$ uroboro prompt-profile --stats
+
+Prompt Profile Analysis
+=======================
+
+Overview
+  Sessions:     125
+  Prompts:      1,106
+  Words:        38,710
+  Period:       2025-06-03 → 2026-02-15
+
+Length Distribution
+  Short  (<20w):     482  43.6%  ████████████████████
+  Medium (20-100w):  438  39.6%  ██████████████████
+  Long   (100-500w): 162  14.6%  ██████
+  Very long (500w+):  24   2.2%  █
+
+Style
+  Imperative:  561  50.7%
+  Questions:   465  42.0%
+  File refs:   287  25.9%
+  Code blocks: 104   9.4%
+
+Active Times
+  Peak hour: 14:00 (Tuesday)
+  Peak day:  Tuesday{% endhighlight %}
+
+      <p style="margin-bottom: var(--space-md)">
+        There it is. 1,106 prompts since June 2025. Nearly half are questions. My prompts are overwhelmingly short &mdash; 43% under 20 words. I reference file paths in a quarter of messages. I peak on Tuesdays at 14:00. None of this was intentional. All of it is pattern.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The 42% question rate was the surprise. I thought I mostly gave commands. Turns out I ask nearly as often as I direct. "Why is this failing?" and "what does this function do?" almost as frequent as "fix this" and "add that." The data says I use Claude as much for understanding as for execution. That changes how you'd optimize a system prompt for my usage &mdash; it needs to be good at explanation, not just task completion.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Building a developer profile
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The real use case is combining both outputs. Your code style distillation tells a sub-agent how you write code &mdash; naming conventions, error handling patterns, when you extract functions, how you structure files. Your prompt profile tells it how you communicate &mdash; short directives, frequent questions, file path references. Together they form a developer profile that can be injected as system prompt context.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This matters for sub-agents. When Claude Code spawns a task agent to handle something in the background, that agent starts from zero. It doesn't know you prefer guard clauses, that you use <code>fmt.Errorf</code> with <code>%w</code> wrapping, that your functions tend to be under 30 lines, that you name test files <code>*_test.go</code> with table-driven tests. A distilled style prompt gives the sub-agent your preferences without you restating them every session.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Same for the prompting profile. If a system knows you tend to ask short questions and expect concise answers, it can calibrate response length. If it knows you reference file paths frequently, it can prioritize code context over general explanation. The profile becomes a calibration layer.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The data pipeline
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Three stages. Extraction, analysis, synthesis.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Extraction</strong> is the mechanical part. Git log with regex filtering produces style-signal commits. The uroboro database produces decisions, blockers, questions &mdash; the intentional captures. Prompt-profile reads Claude Code session files and classifies every user message. All outputs are JSONL: one JSON object per line, streamable, composable.
+      </p>
+
+      {% highlight "bash" %}$ ./scripts/distill-multi.sh --days 90 --correlate \
+    ~/projects/uroboro ~/projects/qryzone ~/projects/sjiek
+
+extracting git from uroboro... 47 commits
+extracting git from qryzone... 12 commits
+extracting git from sjiek... 8 commits
+extracting uro captures... 83 records
+correlating (30min window)... 12 pairs
+wrote extracts-2026-02-17.jsonl (150 records)
+wrote manifest-2026-02-17.json{% endhighlight %}
+
+      <p style="margin-bottom: var(--space-md)">
+        The batch script runs distill across multiple repos, extracts uro captures once globally, and writes a consolidated file with a manifest tracking provenance: which repos, how many records, how many correlations.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Analysis</strong> is where the LLM comes in. The included <code>style-analysis-prompt.md</code> instructs Claude to inventory the records, analyze naming patterns, structure preferences, error handling, abstraction thresholds, and testing patterns from the git extracts. It cross-references with uro captures to find places where intent (the decision record) aligns with implementation (the commit diff). Correlated pairs are the strongest signal &mdash; you said why you were doing something, and the diff shows what you did.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Synthesis</strong> produces three artifacts. A style guide (~2000 words) with before/after code snippets pulled from your actual commits. A system prompt fragment (&lt;1500 tokens) with hard rules, preferences, and anti-patterns. And a machine-readable <code>style_rules.json</code> with severity, frequency, and example commit hashes for each rule. The prompt fragment is the one you'd actually use day-to-day.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What it revealed
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        125 sessions. 1,106 prompts. 38,710 words. Eight months of working with Claude Code, reduced to a statistical profile.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The length distribution is lopsided toward brevity. 43.6% of my prompts are under 20 words. Another 39.6% are 20-100 words. Only 2.2% exceed 500 words. I'm terse. When I write long prompts, they tend to contain code blocks or detailed plans &mdash; the 9.4% code block rate correlates with the longer messages. My default mode is short directive or short question.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        50.7% imperative, 42% questions. Nearly balanced. The imperative detection checks for verbs like <code>fix</code>, <code>add</code>, <code>implement</code>, <code>refactor</code>, <code>run</code>, <code>test</code> at the start of a message, plus directive phrases like "can you" and "let's." The question detection looks for question marks and question-starting words. Some messages are both &mdash; "can you fix this?" registers as both imperative and question. The near-balance means I alternate between directing and understanding. Not one mode. A conversation.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        25.9% of prompts reference file paths. That's high. It means I'm constantly pointing at specific locations in the codebase rather than describing things abstractly. "Look at <code>internal/distill/git.go</code>" rather than "look at the git extraction code." Direct reference over description. This tracks with the short prompt length &mdash; a file path does a lot of contextual work in few characters.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Peak Tuesdays at 14:00. After lunch. I have no explanation for this. Maybe Monday is for orientation and Tuesday is when actual building happens. Maybe it's arbitrary. The data says what it says.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The numbers, visualized
+      </h2>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-md); margin-bottom: var(--space-lg);">
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md);">
+          <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-sm);">Sessions</div>
+          <div style="font-size: 1.5rem; color: var(--color-accent); font-family: var(--font-mono);">125</div>
+          <div style="font-size: 0.75rem; color: var(--color-text-secondary);">8 months</div>
+        </div>
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md);">
+          <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-sm);">Prompts</div>
+          <div style="font-size: 1.5rem; color: var(--color-accent); font-family: var(--font-mono);">1,106</div>
+          <div style="font-size: 0.75rem; color: var(--color-text-secondary);">~9/session</div>
+        </div>
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md);">
+          <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-sm);">Words</div>
+          <div style="font-size: 1.5rem; color: var(--color-accent); font-family: var(--font-mono);">38,710</div>
+          <div style="font-size: 0.75rem; color: var(--color-text-secondary);">~35/prompt</div>
+        </div>
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md);">
+          <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-sm);">Peak</div>
+          <div style="font-size: 1.5rem; color: var(--color-accent); font-family: var(--font-mono);">Tue 14h</div>
+          <div style="font-size: 0.75rem; color: var(--color-text-secondary);">after lunch</div>
+        </div>
+      </div>
+
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md); margin-bottom: var(--space-lg);">
+        <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-md);">Prompt length</div>
+        <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm); font-size: 0.85rem;">
+          <span style="width: 100px; color: var(--color-text-secondary); font-family: var(--font-mono); font-size: 0.75rem;">&lt;20 words</span>
+          <div style="flex: 1; height: 20px; background: var(--color-background); border-radius: 2px; overflow: hidden;">
+            <div style="width: 43.6%; height: 100%; background: var(--color-accent); border-radius: 2px;"></div>
+          </div>
+          <span style="width: 65px; text-align: right; color: var(--color-accent); font-family: var(--font-mono); font-size: 0.8rem;">482 44%</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm); font-size: 0.85rem;">
+          <span style="width: 100px; color: var(--color-text-secondary); font-family: var(--font-mono); font-size: 0.75rem;">20–100</span>
+          <div style="flex: 1; height: 20px; background: var(--color-background); border-radius: 2px; overflow: hidden;">
+            <div style="width: 39.6%; height: 100%; background: var(--color-accent); opacity: 0.8; border-radius: 2px;"></div>
+          </div>
+          <span style="width: 65px; text-align: right; color: var(--color-accent); font-family: var(--font-mono); font-size: 0.8rem;">438 40%</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-sm); font-size: 0.85rem;">
+          <span style="width: 100px; color: var(--color-text-secondary); font-family: var(--font-mono); font-size: 0.75rem;">100–500</span>
+          <div style="flex: 1; height: 20px; background: var(--color-background); border-radius: 2px; overflow: hidden;">
+            <div style="width: 14.6%; height: 100%; background: var(--color-accent); opacity: 0.6; border-radius: 2px;"></div>
+          </div>
+          <span style="width: 65px; text-align: right; color: var(--color-accent); font-family: var(--font-mono); font-size: 0.8rem;">162 15%</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: var(--space-sm); font-size: 0.85rem;">
+          <span style="width: 100px; color: var(--color-text-secondary); font-family: var(--font-mono); font-size: 0.75rem;">500+</span>
+          <div style="flex: 1; height: 20px; background: var(--color-background); border-radius: 2px; overflow: hidden;">
+            <div style="width: 2.2%; height: 100%; background: var(--color-accent); opacity: 0.4; border-radius: 2px;"></div>
+          </div>
+          <span style="width: 65px; text-align: right; color: var(--color-accent); font-family: var(--font-mono); font-size: 0.8rem;">24 2%</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); margin-bottom: var(--space-lg);">
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md);">
+          <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-md);">Style split</div>
+          <div style="display: flex; height: 12px; border-radius: 2px; overflow: hidden; margin-bottom: var(--space-sm);">
+            <div style="width: 50.7%; background: var(--color-accent);" title="Imperative 50.7%"></div>
+            <div style="width: 42%; background: var(--color-accent); opacity: 0.5;" title="Questions 42%"></div>
+            <div style="width: 7.3%; background: var(--color-border);" title="Other"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem;">
+            <span style="color: var(--color-accent); font-family: var(--font-mono);">51% imperative</span>
+            <span style="color: var(--color-text-secondary); font-family: var(--font-mono);">42% questions</span>
+          </div>
+        </div>
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md);">
+          <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-md);">Context signals</div>
+          <div style="margin-bottom: var(--space-xs);">
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 2px;">
+              <span style="color: var(--color-text-secondary);">File paths</span>
+              <span style="color: var(--color-accent); font-family: var(--font-mono);">26%</span>
+            </div>
+            <div style="height: 8px; background: var(--color-background); border-radius: 2px; overflow: hidden;">
+              <div style="width: 25.9%; height: 100%; background: var(--color-accent); border-radius: 2px;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 2px;">
+              <span style="color: var(--color-text-secondary);">Code blocks</span>
+              <span style="color: var(--color-accent); font-family: var(--font-mono);">9%</span>
+            </div>
+            <div style="height: 8px; background: var(--color-background); border-radius: 2px; overflow: hidden;">
+              <div style="width: 9.4%; height: 100%; background: var(--color-accent); border-radius: 2px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md);">
+        <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-md);">Weekly activity</div>
+        <div style="display: flex; align-items: flex-end; gap: 4px; height: 80px;">
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <div style="width: 100%; background: var(--color-accent); opacity: 0.6; border-radius: 2px 2px 0 0; height: 55%;"></div>
+            <span style="font-size: 0.65rem; color: var(--color-text-secondary); font-family: var(--font-mono);">Mon</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <div style="width: 100%; background: var(--color-accent); border-radius: 2px 2px 0 0; height: 100%;"></div>
+            <span style="font-size: 0.65rem; color: var(--color-accent); font-family: var(--font-mono);">Tue</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <div style="width: 100%; background: var(--color-accent); opacity: 0.7; border-radius: 2px 2px 0 0; height: 65%;"></div>
+            <span style="font-size: 0.65rem; color: var(--color-text-secondary); font-family: var(--font-mono);">Wed</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <div style="width: 100%; background: var(--color-accent); opacity: 0.55; border-radius: 2px 2px 0 0; height: 50%;"></div>
+            <span style="font-size: 0.65rem; color: var(--color-text-secondary); font-family: var(--font-mono);">Thu</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <div style="width: 100%; background: var(--color-accent); opacity: 0.45; border-radius: 2px 2px 0 0; height: 40%;"></div>
+            <span style="font-size: 0.65rem; color: var(--color-text-secondary); font-family: var(--font-mono);">Fri</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <div style="width: 100%; background: var(--color-accent); opacity: 0.25; border-radius: 2px 2px 0 0; height: 15%;"></div>
+            <span style="font-size: 0.65rem; color: var(--color-text-secondary); font-family: var(--font-mono);">Sat</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <div style="width: 100%; background: var(--color-accent); opacity: 0.3; border-radius: 2px 2px 0 0; height: 20%;"></div>
+            <span style="font-size: 0.65rem; color: var(--color-text-secondary); font-family: var(--font-mono);">Sun</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What this is for
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The obvious use: better system prompts. If you're running Claude Code with a CLAUDE.md, your distilled style guide gives you rules grounded in your actual behavior rather than aspirational preferences. You don't have to guess what you prefer. The evidence is in the commits.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The less obvious use: self-knowledge. I didn't know I asked questions 42% of the time. I didn't know my prompts were that short. I didn't know I peaked on Tuesdays. These patterns were invisible until I extracted them. Now I can decide if they're what I want, or if they're habits worth changing.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The speculative use: cross-project consistency. Run distill across all your repos and the style guide reflects your actual cross-project patterns, not the conventions of any single codebase. If you consistently use early returns across Go, Python, and TypeScript, that shows up. If you handle errors differently per language, that shows up too. The tool doesn't prescribe &mdash; it describes.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        All of this runs locally. No data leaves your machine unless you choose to send the JSONL to an API. The extraction reads files on disk &mdash; git repos, SQLite databases, Claude Code session logs. The analysis can run through a local model if you want. The <a href="/convergent-evolution-personal-ai/">same local-first constraint</a> that shaped uroboro's architecture applies here.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The deep dive
+      </h2>
+      <p style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+        <a href="/distilling-style/prompt-anatomy/" style="flex: 1; min-width: 180px; padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none;">
+          <strong style="display: block; color: var(--color-accent);">Prompt anatomy</strong>
+          <span style="font-size: 0.85rem; color: var(--color-text-secondary);">What 1,106 prompts reveal</span>
+        </a>
+        <a href="/distilling-style/code-decisions/" style="flex: 1; min-width: 180px; padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none;">
+          <strong style="display: block; color: var(--color-accent);">Code decisions</strong>
+          <span style="font-size: 0.85rem; color: var(--color-text-secondary);">534 captures, 8 patterns</span>
+        </a>
+        <a href="/distilling-style/under-the-hood/" style="flex: 1; min-width: 180px; padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none;">
+          <strong style="display: block; color: var(--color-accent);">Under the hood</strong>
+          <span style="font-size: 0.85rem; color: var(--color-text-secondary);">The extraction pipeline</span>
+        </a>
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: var(--space-md);">
+        Both tools are part of <a href="https://www.uroboro.dev/" target="_blank" rel="noopener noreferrer">uroboro</a>. Run <code>uroboro distill --help</code> and <code>uroboro prompt-profile --help</code> to start.
+      </p>
+      <p>Related: <a href="/convergent-evolution-personal-ai/">Convergent evolution in personal AI tooling</a>, <a href="/recursive-mirror/">Recursive mirror</a></p>
+    </footer>
+
+  </div>
+</article>

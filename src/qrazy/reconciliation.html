@@ -4,8 +4,6 @@ title: Reconciliation - qrazy - qry.zone
 description: The hard problem. What happens when you delete item #2 from a list?
 ---
 
-<link rel="stylesheet" href="/assets/css/prism-zenburn.css">
-
 <style>
 .breadcrumb {
     font-size: 0.85rem;
@@ -121,13 +119,13 @@ description: The hard problem. What happens when you delete item #2 from a list?
         <p>
             You have a list of 5 items rendered in the DOM:
         </p>
-        <pre><code class="language-html">&lt;ul&gt;
-  &lt;li&gt;Apple&lt;/li&gt;
-  &lt;li&gt;Banana&lt;/li&gt;   &lt;!-- user deletes this one --&gt;
-  &lt;li&gt;Cherry&lt;/li&gt;
-  &lt;li&gt;Date&lt;/li&gt;
-  &lt;li&gt;Elderberry&lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+        {% highlight "html" %}<ul>
+  <li>Apple</li>
+  <li>Banana</li>   <!-- user deletes this one -->
+  <li>Cherry</li>
+  <li>Date</li>
+  <li>Elderberry</li>
+</ul>{% endhighlight %}
         <p>
             The user deletes Banana. Now what? You have two options, and only one is acceptable.
         </p>
@@ -178,7 +176,7 @@ description: The hard problem. What happens when you delete item #2 from a list?
             The solution: give each item a stable <strong>key</strong>.
         </p>
 
-        <pre><code class="language-javascript">// Without keys (identity by index)
+        {% highlight "js" %}// Without keys (identity by index)
 ['Apple', 'Banana', 'Cherry']  // DOM: [li#0, li#1, li#2]
 ['Apple', 'Cherry']            // DOM: [li#0, li#1] ← which is which?
 
@@ -187,7 +185,7 @@ description: The hard problem. What happens when you delete item #2 from a list?
 // DOM: [li@key=1, li@key=2, li@key=3]
 
 [{id:1, 'Apple'}, {id:3, 'Cherry'}]
-// DOM: [li@key=1, li@key=3] ← key=2 was removed</code></pre>
+// DOM: [li@key=1, li@key=3] ← key=2 was removed{% endhighlight %}
 
         <p>
             This is why React, Vue, and every framework yells at you when you forget the <code>key</code> prop on list items.
@@ -200,12 +198,12 @@ description: The hard problem. What happens when you delete item #2 from a list?
             Here's how you write a list in qrazy:
         </p>
 
-        <pre><code class="language-html">&lt;ul&gt;
-  &lt;li q-for="(item, index) in items" q-key="item.id"&gt;
-    &lt;span q-text="item.text"&gt;&lt;/span&gt;
-    &lt;button q-click="items.splice(index, 1)"&gt;Delete&lt;/button&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</code></pre>
+        {% highlight "html" %}<ul>
+  <li q-for="(item, index) in items" q-key="item.id">
+    <span q-text="item.text"></span>
+    <button q-click="items.splice(index, 1)">Delete</button>
+  </li>
+</ul>{% endhighlight %}
 
         <p>
             The element with <code>q-for</code> becomes a <strong>template</strong>. qrazy hides it, then clones it for each item in the array.
@@ -218,7 +216,7 @@ description: The hard problem. What happens when you delete item #2 from a list?
             Here's qrazy's reconciliation algorithm in pseudocode:
         </p>
 
-        <pre><code class="language-python">function renderList(array):
+        {% highlight "python" %}function renderList(array):
     newKeys = Set()
 
     for each (item, index) in array:
@@ -243,7 +241,7 @@ description: The hard problem. What happens when you delete item #2 from a list?
         if not newKeys.has(key):
             # Remove from DOM
             instance.el.remove()
-            instances.delete(key)</code></pre>
+            instances.delete(key){% endhighlight %}
 
         <p>
             The magic is the <code>instances</code> Map. It maps keys to their DOM elements. When an item is deleted, we check which keys are missing and remove those specific DOM nodes.
@@ -256,7 +254,7 @@ description: The hard problem. What happens when you delete item #2 from a list?
             Each list item needs its own DOM subtree. We create these by cloning the template:
         </p>
 
-        <pre><code class="language-javascript">// The original element becomes a hidden template
+        {% highlight "js" %}// The original element becomes a hidden template
 template.style.display = 'none';
 template.removeAttribute('q-for');  // prevent re-processing
 
@@ -266,7 +264,7 @@ clone.style.display = '';
 
 // Bind with scoped state (includes item + index)
 const scopedState = { ...parentState, item, index };
-bindElement(clone, scopedState);</code></pre>
+bindElement(clone, scopedState);{% endhighlight %}
 
         <p>
             The scoped state is key. Each clone gets its own <code>item</code> and <code>index</code> variables, separate from other items.
@@ -279,13 +277,13 @@ bindElement(clone, scopedState);</code></pre>
             When you call <code>items.push({...})</code>, qrazy needs to know. We intercept the array methods:
         </p>
 
-        <pre><code class="language-javascript">if (['push', 'pop', 'splice', 'shift', 'unshift'].includes(prop)) {
+        {% highlight "js" %}if (['push', 'pop', 'splice', 'shift', 'unshift'].includes(prop)) {
   return (...args) => {
     const result = Array.prototype[prop].apply(target, args);
     onUpdate('length');  // ← triggers re-render
     return result;
   };
-}</code></pre>
+}{% endhighlight %}
 
         <p>
             This is why <code>items.splice(index, 1)</code> works in <code>q-click</code>. The splice runs, the interception fires, the list re-renders.
@@ -369,7 +367,3 @@ bindElement(clone, scopedState);</code></pre>
 </article>
 
 <script src="/assets/js/qrazy.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>

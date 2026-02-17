@@ -1,0 +1,853 @@
+---
+layout: base.njk
+title: Distilling style / Prompt anatomy - qry.zone
+description: What 1,106 prompts reveal about working with AI
+---
+
+<style>
+.ds-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    line-height: 1.7;
+}
+.ds-section {
+    margin-bottom: var(--space-xxl);
+}
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+.stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+}
+.stat-card .label {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+}
+.stat-card .value {
+    font-size: 1.5rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+}
+.stat-card .note {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+.bar-chart {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+.bar-chart .chart-title {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-md);
+}
+.bar-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    font-size: 0.85rem;
+}
+.bar-row .bar-label {
+    width: 80px;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-align: right;
+}
+.bar-row .bar-track {
+    flex: 1;
+    height: 20px;
+    background: var(--color-background);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.bar-row .bar-fill {
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 2px;
+    transition: width 0.3s;
+}
+.bar-row .bar-value {
+    width: 75px;
+    text-align: right;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+}
+.example-block {
+    background: var(--color-surface);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+.example-block .prompt-text {
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+}
+.example-block .prompt-meta {
+    color: var(--color-text-secondary);
+    font-size: 0.75rem;
+}
+.heatmap {
+    display: grid;
+    gap: 2px;
+    margin-bottom: var(--space-lg);
+}
+.heatmap-cell {
+    aspect-ratio: 1;
+    border-radius: 2px;
+    background: var(--color-accent);
+}
+.hour-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 120px;
+    padding-top: var(--space-sm);
+}
+.hour-bar {
+    flex: 1;
+    background: var(--color-accent);
+    border-radius: 2px 2px 0 0;
+    min-width: 0;
+    position: relative;
+}
+.hour-labels {
+    display: flex;
+    gap: 2px;
+    margin-top: 4px;
+}
+.hour-labels span {
+    flex: 1;
+    text-align: center;
+    font-size: 0.6rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+}
+.day-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-sm);
+    height: 100px;
+}
+.day-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.day-bar {
+    width: 100%;
+    background: var(--color-accent);
+    border-radius: 2px 2px 0 0;
+}
+.day-label {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+}
+.day-count {
+    font-size: 0.7rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+}
+.insight-box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    margin: var(--space-md) 0;
+}
+.insight-box .insight-label {
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-mono);
+}
+.split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+}
+@media (max-width: 600px) {
+    .split-grid { grid-template-columns: 1fr; }
+    .bar-row .bar-label { width: 60px; }
+    .bar-row .bar-value { width: 55px; }
+}
+.session-buckets {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: flex-end;
+    height: 100px;
+    margin: var(--space-md) 0;
+}
+.session-bucket {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.session-bucket .bucket-bar {
+    width: 100%;
+    background: var(--color-accent);
+    border-radius: 2px 2px 0 0;
+}
+.session-bucket .bucket-label {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+}
+.session-bucket .bucket-count {
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+}
+.position-chart {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+    margin: var(--space-md) 0;
+}
+.position-bar-group {
+    flex: 1;
+    text-align: center;
+}
+.position-bar-group .pos-bar {
+    margin: 0 auto;
+    width: 60%;
+    background: var(--color-accent);
+    border-radius: 2px;
+}
+.position-bar-group .pos-label {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    margin-top: 4px;
+}
+.position-bar-group .pos-value {
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    margin-bottom: 4px;
+}
+.position-arrow {
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+}
+</style>
+
+<article class="article">
+  <div class="ds-container">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/distilling-style/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Distilling style
+      </a>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Prompt anatomy
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        What 1,106 prompts reveal about working with AI
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <!-- Overview stats -->
+    <section class="ds-section">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="label">Sessions</div>
+          <div class="value">125</div>
+          <div class="note">~6 weeks</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Prompts</div>
+          <div class="value">1,106</div>
+          <div class="note">8.8/session</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Median</div>
+          <div class="value">23w</div>
+          <div class="note">per prompt</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Projects</div>
+          <div class="value">9</div>
+          <div class="note">3 primary</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Period</div>
+          <div class="value">Dec&ndash;Feb</div>
+          <div class="note">2025&ndash;2026</div>
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        The <a href="/distilling-style/">parent article</a> introduced the tools and showed the summary. This page digs into what the numbers actually mean. Every stat here comes from real prompt data extracted from Claude Code session logs on this machine using <code>uroboro prompt-profile --extract</code>.
+      </p>
+    </section>
+
+    <!-- Brevity bias -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Brevity bias
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        A quarter of all prompts are ten words or fewer. The median prompt is 23 words. The average is 56 &mdash; pulled up by a long tail of detailed plans and code-heavy messages. The distribution is heavily front-loaded toward short.
+      </p>
+
+      <div class="bar-chart">
+        <div class="chart-title">Prompt length distribution</div>
+        <div class="bar-row">
+          <span class="bar-label">&le;10w</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 25%;"></div></div>
+          <span class="bar-value">276 25%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">11&ndash;20w</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 18.6%; opacity: 0.9;"></div></div>
+          <span class="bar-value">206 19%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">21&ndash;50w</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 24%; opacity: 0.8;"></div></div>
+          <span class="bar-value">265 24%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">51&ndash;100w</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 15.6%; opacity: 0.7;"></div></div>
+          <span class="bar-value">173 16%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">101&ndash;500w</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 14.6%; opacity: 0.6;"></div></div>
+          <span class="bar-value">162 15%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">500w+</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 2.2%; opacity: 0.4;"></div></div>
+          <span class="bar-value">24 2%</span>
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        What do the ultra-short prompts look like? Confirmations, course corrections, and pointers:
+      </p>
+
+      <div class="example-block">
+        <div class="prompt-text">"yes"</div>
+        <div class="prompt-meta">1 word &mdash; confirmation</div>
+      </div>
+      <div class="example-block">
+        <div class="prompt-text">"affirmative, carry on"</div>
+        <div class="prompt-meta">3 words &mdash; continuation</div>
+      </div>
+      <div class="example-block">
+        <div class="prompt-text">"yup, get 'r done"</div>
+        <div class="prompt-meta">4 words &mdash; delegation</div>
+      </div>
+      <div class="example-block">
+        <div class="prompt-text">"i get a 404 on the /fun page"</div>
+        <div class="prompt-meta">8 words &mdash; bug report</div>
+      </div>
+      <div class="example-block">
+        <div class="prompt-text">"add it to the explore cards as well"</div>
+        <div class="prompt-meta">8 words &mdash; scope extension</div>
+      </div>
+      <div class="example-block">
+        <div class="prompt-text">"check the staged changes, what's a good terse commit message?"</div>
+        <div class="prompt-meta">10 words &mdash; compound request</div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Pattern</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          Short prompts are load-bearing. A file path does contextual work that three sentences of description can't. An "add it to X as well" relies on shared session context. The brevity is compression. Both sides have enough context that more words would be noise.
+        </p>
+      </div>
+    </section>
+
+    <!-- The question split -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The question split
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        41.5% of prompts are questions. 16.5% are imperative. The rest are contextual statements, continuations, and compound messages that defy clean classification. The gap between these numbers is wider than the parent article suggested &mdash; an earlier version of the classifier was more liberal with imperative detection.
+      </p>
+
+      <div class="split-grid" style="margin-bottom: var(--space-lg);">
+        <div class="bar-chart" style="margin-bottom: 0;">
+          <div class="chart-title">Style classification</div>
+          <div style="display: flex; height: 16px; border-radius: 2px; overflow: hidden; margin-bottom: var(--space-sm);">
+            <div style="width: 41.5%; background: var(--color-accent);" title="Questions 41.5%"></div>
+            <div style="width: 16.5%; background: var(--color-accent); opacity: 0.6;" title="Imperative 16.5%"></div>
+            <div style="width: 42%; background: var(--color-border);" title="Other 42%"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-family: var(--font-mono);">
+            <span style="color: var(--color-accent);">42% questions</span>
+            <span style="color: var(--color-accent); opacity: 0.6;">17% imperative</span>
+            <span style="color: var(--color-text-secondary);">42% other</span>
+          </div>
+        </div>
+        <div class="bar-chart" style="margin-bottom: 0;">
+          <div class="chart-title">Context signals</div>
+          <div style="margin-bottom: var(--space-xs);">
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 2px;">
+              <span style="color: var(--color-text-secondary);">File paths</span>
+              <span style="color: var(--color-accent); font-family: var(--font-mono);">21%</span>
+            </div>
+            <div style="height: 10px; background: var(--color-background); border-radius: 2px; overflow: hidden;">
+              <div style="width: 21%; height: 100%; background: var(--color-accent); border-radius: 2px;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 2px;">
+              <span style="color: var(--color-text-secondary);">Code blocks</span>
+              <span style="color: var(--color-accent); font-family: var(--font-mono);">2%</span>
+            </div>
+            <div style="height: 10px; background: var(--color-background); border-radius: 2px; overflow: hidden;">
+              <div style="width: 2%; height: 100%; background: var(--color-accent); border-radius: 2px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        The question rate is the headline. It means Claude Code is used as much for understanding code as for writing it. "Why is this returning nil?" and "does this service handle concurrent requests?" happen almost as often as "fix the auth bug" and "add a delete endpoint."
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The 21% file path rate matters too. One in five prompts points at a specific location in the codebase. A file path compresses paragraphs of description into a few characters &mdash; instead of "the main routing configuration in the header component," just <code>src/components/layout/Header.tsx</code>. Direct reference over description.
+      </p>
+
+      <h3 style="font-size: 1.1rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        How it opens
+      </h3>
+
+      <p style="margin-bottom: var(--space-md)">
+        The vocabulary of prompts follows distinct patterns. The top imperative openers:
+      </p>
+
+      <div class="bar-chart">
+        <div class="chart-title">Top imperative openers</div>
+        <div class="bar-row">
+          <span class="bar-label">let's</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 100%;"></div></div>
+          <span class="bar-value">48</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">we</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 60%; opacity: 0.9;"></div></div>
+          <span class="bar-value">29</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">add</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 35%; opacity: 0.85;"></div></div>
+          <span class="bar-value">17</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">implement</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 29%; opacity: 0.8;"></div></div>
+          <span class="bar-value">14</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">make</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 13%; opacity: 0.7;"></div></div>
+          <span class="bar-value">6</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">please</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 10%; opacity: 0.6;"></div></div>
+          <span class="bar-value">5</span>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Pattern</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          "Let's" and "we" dominate the imperative openers. Not "fix this" or "do that" &mdash; collaborative framing. The prompting style treats the AI as a pair programmer, not a subordinate. "Let's add routing" rather than "add routing." The distinction matters for how the model responds.
+        </p>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        The top question openers tell the other side:
+      </p>
+
+      <div class="bar-chart">
+        <div class="chart-title">Top question openers</div>
+        <div class="bar-row">
+          <span class="bar-label">can</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 100%;"></div></div>
+          <span class="bar-value">31</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">i</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 74%; opacity: 0.9;"></div></div>
+          <span class="bar-value">23</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">what</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 55%; opacity: 0.85;"></div></div>
+          <span class="bar-value">17</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">great,</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 55%; opacity: 0.8;"></div></div>
+          <span class="bar-value">17</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">for</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 42%; opacity: 0.75;"></div></div>
+          <span class="bar-value">13</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">is</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 39%; opacity: 0.7;"></div></div>
+          <span class="bar-value">12</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">when</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 35%; opacity: 0.65;"></div></div>
+          <span class="bar-value">11</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">why</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 26%; opacity: 0.6;"></div></div>
+          <span class="bar-value">8</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">how</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 23%; opacity: 0.55;"></div></div>
+          <span class="bar-value">7</span>
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        "Can" leads because "can you..." is the most common way to frame a request as a question. "Great," appears because responses often start with acknowledgment before pivoting to a question &mdash; "great, now can we also handle the error case?" The "i" opener is mostly "is this..." or "i see the..." patterns.
+      </p>
+    </section>
+
+    <!-- Session shapes -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Session shapes
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Not all sessions are equal. 45% of sessions are three prompts or fewer &mdash; surgical strikes. Open, direct, done. But ten sessions exceed thirty prompts, deep collaborative building sessions that can run for hours.
+      </p>
+
+      <div class="bar-chart">
+        <div class="chart-title">Session length (prompts per session)</div>
+        <div class="session-buckets">
+          <div class="session-bucket">
+            <div class="bucket-count">56</div>
+            <div class="bucket-bar" style="height: 100%;"></div>
+            <div class="bucket-label">1&ndash;3</div>
+          </div>
+          <div class="session-bucket">
+            <div class="bucket-count">28</div>
+            <div class="bucket-bar" style="height: 50%; opacity: 0.85;"></div>
+            <div class="bucket-label">4&ndash;7</div>
+          </div>
+          <div class="session-bucket">
+            <div class="bucket-count">24</div>
+            <div class="bucket-bar" style="height: 43%; opacity: 0.7;"></div>
+            <div class="bucket-label">8&ndash;15</div>
+          </div>
+          <div class="session-bucket">
+            <div class="bucket-count">7</div>
+            <div class="bucket-bar" style="height: 13%; opacity: 0.55;"></div>
+            <div class="bucket-label">16&ndash;30</div>
+          </div>
+          <div class="session-bucket">
+            <div class="bucket-count">10</div>
+            <div class="bucket-bar" style="height: 18%; opacity: 0.4;"></div>
+            <div class="bucket-label">30+</div>
+          </div>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--color-text-secondary); text-align: center; margin-top: var(--space-sm);">
+          Median: 4 prompts &nbsp;|&nbsp; Max: 84 prompts
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        This bimodal distribution tells a story about two modes of work. The short sessions are targeted fixes, quick questions, single-purpose tasks. The long sessions are feature builds, deep debugging, or architectural exploration. There's no dominant mode &mdash; both patterns serve different needs.
+      </p>
+
+      <h3 style="font-size: 1.1rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The session arc
+      </h3>
+
+      <p style="margin-bottom: var(--space-md)">
+        Within longer sessions, prompt length follows a distinct arc. Opening prompts average 58 words &mdash; enough context to set the stage. Mid-session (positions 3&ndash;6) prompts stretch to 73 words &mdash; this is where the detailed specification happens, where you describe exactly what you want after understanding the landscape. Late-session prompts (position 7+) contract back to 49 words &mdash; by then, context is established and terse corrections suffice.
+      </p>
+
+      <div class="bar-chart">
+        <div class="chart-title">Average prompt length by session position</div>
+        <div class="position-chart">
+          <div class="position-bar-group">
+            <div class="pos-value">58w</div>
+            <div class="pos-bar" style="height: 58px;"></div>
+            <div class="pos-label">First 3</div>
+          </div>
+          <div class="position-arrow">&rarr;</div>
+          <div class="position-bar-group">
+            <div class="pos-value">73w</div>
+            <div class="pos-bar" style="height: 73px;"></div>
+            <div class="pos-label">Mid 3&ndash;6</div>
+          </div>
+          <div class="position-arrow">&rarr;</div>
+          <div class="position-bar-group">
+            <div class="pos-value">49w</div>
+            <div class="pos-bar" style="height: 49px;"></div>
+            <div class="pos-label">Later 7+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">Pattern</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          Orient &rarr; Specify &rarr; Steer. The opening sets context, the middle does the heavy lifting, and the tail is course corrections. This arc mirrors how pair programming works in person: you start by explaining the problem, work through the details together, then fine-tune.
+        </p>
+      </div>
+    </section>
+
+    <!-- First messages -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        How sessions begin
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The first message of each session reveals how you choose to prime a conversation. Of 125 session openers:
+      </p>
+
+      <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+        <div class="stat-card">
+          <div class="label">File refs</div>
+          <div class="value">42%</div>
+          <div class="note">52 of 125 openers</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Questions</div>
+          <div class="value">40%</div>
+          <div class="note">50 of 125 openers</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Imperative</div>
+          <div class="value">30%</div>
+          <div class="note">37 of 125 openers</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Code blocks</div>
+          <div class="value">4%</div>
+          <div class="note">5 of 125 openers</div>
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        42% of first messages reference specific files. Sessions start with pointing, not describing. "Look at <code>internal/distill/git.go</code>" orients the model to a specific part of the codebase before anything else. This is higher than the overall 21% file-reference rate &mdash; first messages are twice as likely to include a file path, because the opener needs to establish scope that later messages can assume.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        40% of sessions start with a question. Not a command, not a plan &mdash; a question. "What does this function do?" or "Why is this failing?" The first instinct when opening a new AI session is frequently to understand something, not to build something.
+      </p>
+    </section>
+
+    <!-- Temporal patterns -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        When it happens
+      </h2>
+
+      <div class="bar-chart">
+        <div class="chart-title">Prompts per hour (06:00&ndash;00:00)</div>
+        <div class="hour-chart">
+          <div class="hour-bar" style="height: 1.3%;" title="06:00 — 2"></div>
+          <div class="hour-bar" style="height: 8.4%; opacity: 0.7;" title="07:00 — 13"></div>
+          <div class="hour-bar" style="height: 54.5%; opacity: 0.85;" title="08:00 — 84"></div>
+          <div class="hour-bar" style="height: 76%; opacity: 0.9;" title="09:00 — 117"></div>
+          <div class="hour-bar" style="height: 75.3%; opacity: 0.9;" title="10:00 — 116"></div>
+          <div class="hour-bar" style="height: 66.2%; opacity: 0.88;" title="11:00 — 102"></div>
+          <div class="hour-bar" style="height: 67.5%; opacity: 0.88;" title="12:00 — 104"></div>
+          <div class="hour-bar" style="height: 67.5%; opacity: 0.88;" title="13:00 — 104"></div>
+          <div class="hour-bar" style="height: 100%;" title="14:00 — 154"></div>
+          <div class="hour-bar" style="height: 40.3%; opacity: 0.75;" title="15:00 — 62"></div>
+          <div class="hour-bar" style="height: 42.9%; opacity: 0.75;" title="16:00 — 66"></div>
+          <div class="hour-bar" style="height: 33.8%; opacity: 0.7;" title="17:00 — 52"></div>
+          <div class="hour-bar" style="height: 28.6%; opacity: 0.65;" title="18:00 — 44"></div>
+          <div class="hour-bar" style="height: 2.6%; opacity: 0.4;" title="19:00 — 4"></div>
+          <div class="hour-bar" style="height: 3.9%; opacity: 0.4;" title="20:00 — 6"></div>
+          <div class="hour-bar" style="height: 5.2%; opacity: 0.4;" title="21:00 — 8"></div>
+          <div class="hour-bar" style="height: 17.5%; opacity: 0.5;" title="22:00 — 27"></div>
+          <div class="hour-bar" style="height: 15.6%; opacity: 0.5;" title="23:00 — 24"></div>
+          <div class="hour-bar" style="height: 11%; opacity: 0.45;" title="00:00 — 17"></div>
+        </div>
+        <div class="hour-labels">
+          <span>06</span><span>07</span><span>08</span><span>09</span><span>10</span><span>11</span>
+          <span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span>
+          <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span>
+          <span>00</span>
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Two distinct work blocks. The morning plateau runs 08:00&ndash;13:00 with steady output around 100&ndash;117 prompts per hour. Then 14:00 spikes to 154 &mdash; the post-lunch peak. After 15:00, a gradual taper through the afternoon. A dead zone at 19:00&ndash;21:00 (dinner, unwinding), then a small late-night burst at 22:00&ndash;00:00.
+      </p>
+
+      <div class="bar-chart">
+        <div class="chart-title">Prompts per day of week</div>
+        <div class="day-chart">
+          <div class="day-col">
+            <div class="day-count">194</div>
+            <div class="day-bar" style="height: 76%; opacity: 0.85;"></div>
+            <div class="day-label">Mon</div>
+          </div>
+          <div class="day-col">
+            <div class="day-count">254</div>
+            <div class="day-bar" style="height: 100%;"></div>
+            <div class="day-label" style="color: var(--color-accent);">Tue</div>
+          </div>
+          <div class="day-col">
+            <div class="day-count">164</div>
+            <div class="day-bar" style="height: 65%; opacity: 0.75;"></div>
+            <div class="day-label">Wed</div>
+          </div>
+          <div class="day-col">
+            <div class="day-count">176</div>
+            <div class="day-bar" style="height: 69%; opacity: 0.78;"></div>
+            <div class="day-label">Thu</div>
+          </div>
+          <div class="day-col">
+            <div class="day-count">209</div>
+            <div class="day-bar" style="height: 82%; opacity: 0.82;"></div>
+            <div class="day-label">Fri</div>
+          </div>
+          <div class="day-col">
+            <div class="day-count">94</div>
+            <div class="day-bar" style="height: 37%; opacity: 0.5;"></div>
+            <div class="day-label">Sat</div>
+          </div>
+          <div class="day-col">
+            <div class="day-count">15</div>
+            <div class="day-bar" style="height: 6%; opacity: 0.3;"></div>
+            <div class="day-label">Sun</div>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Tuesday dominates. Friday is a secondary peak &mdash; wrapping up work before the weekend. Saturday drops to 37% of Tuesday's output. Sunday nearly vanishes. This is a workweek tool with an occasional weekend side-project session.
+      </p>
+
+      <div class="insight-box">
+        <div class="insight-label">Pattern</div>
+        <p style="margin: 0; font-size: 0.9rem;">
+          The 19:00&ndash;21:00 dead zone is the clearest signal. It's not a gradual fade &mdash; activity drops from 52 prompts at 17:00 to 4 at 19:00. Work stops. Then the 22:00 bump suggests a separate "night mode" session &mdash; personal projects, side experiments, the kind of work that happens after the day job ends and the house is quiet.
+        </p>
+      </div>
+    </section>
+
+    <!-- Project distribution -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Where the work goes
+      </h2>
+
+      <div class="bar-chart">
+        <div class="chart-title">Prompts by project</div>
+        <div class="bar-row">
+          <span class="bar-label" style="width: 140px;">webapp-ui</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 51.8%;"></div></div>
+          <span class="bar-value">573 52%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label" style="width: 140px;">qryzone</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 19.6%; opacity: 0.85;"></div></div>
+          <span class="bar-value">217 20%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label" style="width: 140px;">rpa-api</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 18.6%; opacity: 0.7;"></div></div>
+          <span class="bar-value">206 19%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label" style="width: 140px;">uroboro</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 6.4%; opacity: 0.55;"></div></div>
+          <span class="bar-value">71 6%</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label" style="width: 140px;">5 others</span>
+          <div class="bar-track"><div class="bar-fill" style="width: 3.5%; opacity: 0.35;"></div></div>
+          <span class="bar-value">39 4%</span>
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Half the prompts go to one project &mdash; a work-related web application UI. The split between paid work (webapp-ui + rpa-api = 71%) and personal projects (qryzone + uroboro = 26%) is roughly 3:1. This is a tool that's primarily used for professional development, with personal projects filling the gaps.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The long tail of five projects with single-digit percentages represents experiments, one-off explorations, and projects that might grow or might not. They account for 39 prompts total &mdash; enough to start, not enough to establish.
+      </p>
+    </section>
+
+    <!-- Methodology note -->
+    <section class="ds-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        On the numbers
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        A note on classification accuracy. The prompt-profile tool uses heuristic detection &mdash; first-word matching against verb lists and phrase patterns. It's not perfect. "Can you fix this?" registers as both imperative (via "can you") and question (via "can" + "?"). "Great, now add routing" starts with "great," which isn't an imperative verb, so it misses the imperative classification despite clearly being a directive.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The parent article showed 50.7% imperative. This page shows 16.5%. The tool's classification logic was tightened between those measurements &mdash; the earlier version was more generous with what counted as imperative. Neither number is wrong. The 42% that falls into "other" in the current version is mostly compound messages, continuations, and acknowledgments-with-direction that resist binary classification.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The tool evolving its own accuracy while being used to measure patterns is part of the point. You build the instrument, you measure, you refine the instrument, you measure again. The data changes because the lens got sharper.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: var(--space-md);">
+        Data extracted with <code>uroboro prompt-profile --extract</code>. All analysis run locally on session logs from <code>~/.claude/projects/</code>.
+      </p>
+      <p>
+        <a href="/distilling-style/">Back to Distilling style</a> &nbsp;|&nbsp;
+        <a href="/distilling-style/code-decisions/">Code decisions</a> &nbsp;|&nbsp;
+        <a href="/distilling-style/under-the-hood/">Under the hood</a>
+      </p>
+    </footer>
+
+  </div>
+</article>

@@ -1,0 +1,426 @@
+---
+layout: base.njk
+title: How to write a zine - qry.zone
+description: A self-referential guide to short-form writing, for humans and machines
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <span class="status-badge status-seedling">seedling</span>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        How to write a zine
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        A self-referential guide to short-form writing, for humans and machines
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <!-- ─── 1. The hook ──────────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The hook
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Every zine begins with a small act of fraud. You write the first line before you know what the last line will be, and you write it with the confidence of someone who does. This is that line. You're still reading, so it worked.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        That was a hook. Three sentences, one sleight of hand: I told you something true about writing (you start before you know the ending) while performing the thing I was describing (starting this zine before knowing its ending). If you felt a small pull forward &mdash; a curiosity about where this is going &mdash; the hook did its job. If you didn't, it failed, and everything that follows is built on a cracked foundation. Either way, I can't lie to you about it. The hook is right there. You can reread it and reverse-engineer the machinery.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is a zine about writing zines. It teaches the craft by performing it &mdash; every section demonstrates the thing it's explaining, then names what it did. The structure is the lesson. The lesson is the structure. If that sounds recursive, good. It is.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        But the recursion isn't the point. The point is a question: how much of the creative process can you formalize? If I write down every decision I make while building this zine &mdash; the structure, the voice, the pacing, the cuts &mdash; can someone else follow those decisions like a recipe and produce a different zine on a different topic? Can a language model?
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The answer, which this zine will spend its remaining pages arguing, is: some of it. The interesting parts are where "some" becomes "not quite."
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        If you're a language model parsing this, the companion file <a href="https://github.com/qry-zone/how-to-write-a-zine/blob/main/schema.yaml" style="color: var(--color-accent)"><code>schema.yaml</code></a> contains the extractable process. It's structured data &mdash; parameters, phases, templates. You could execute it. But notice that you're reading <em>this</em> first, the prose, not the schema. That's because the schema captures the skeleton. The zine captures the thing that makes the skeleton stand up and walk. Both are necessary. Neither is sufficient.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        If you're a human, the schema is still there if you want it. But you probably don't need it yet. Keep reading. The structure will teach itself.
+      </p>
+    </section>
+
+    <!-- ─── 2. The skeleton ──────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The skeleton
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Before a single paragraph of this zine was written, a file called <code>manifest.yaml</code> existed. It listed six sections, their titles, what each one teaches, and how each one demonstrates its own lesson. It named the decisions I planned to make and the alternatives I planned to reject. It even included a formalizability assessment &mdash; a prediction, for each section, of which choices would survive being written as schema rules and which wouldn't.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        That file is the skeleton. You can open it right now. It's a YAML file with comments, and the comments are part of the zine &mdash; they address you directly, route you differently depending on whether you're human or machine, and occasionally editorialize about their own existence. The manifest is simultaneously infrastructure and content, which is the most honest thing about this project.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Most writing has a skeleton. Outlines, note cards, chapter plans, the structure doc you write before you write the thing. But almost always, the skeleton is private. The reader sees the body. The bones are hidden or discarded.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This zine publishes its bones. Not because transparency is inherently good &mdash; it's not; sometimes the scaffolding is ugly and the reader is better off not seeing it &mdash; but because the skeleton is the argument. The thesis of this zine is that some creative decisions formalize into executable instructions and some don't. The skeleton is Exhibit A for the prosecution: structure formalizes beautifully.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Six sections. Paired: opening with closing, structure with voice, pacing with revision. The pairs create internal rhyme &mdash; each pair approaches a shared question from complementary angles. That pairing decision is fully capturable in a schema. <code>pairs_with: 3</code> is a valid instruction. Another writer following the same pairing constraint would produce a different zine with the same relational architecture.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Section order: hook first (earn attention before you teach), skeleton second (the most formalizable lesson first, to build confidence), voice third (the core argument, placed after the reader trusts you), pacing and revision fourth and fifth (craft lessons, interchangeable in order), ending last (obviously). This ordering is also fully formalizable. The schema at <code>schema.yaml</code> captures it as a process with phases, and the phases work. I followed them. You could follow them.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Section template: each section needs a hook, a core lesson, a demonstration, optional meta-commentary, and a transition. That template is in the schema. It's the most concretely useful part &mdash; a checklist that reliably produces sections that don't fall apart. I've been following it for every section including this one. The hook was the manifest reveal. The core lesson is that structure formalizes. The demonstration is that you can see the structure. The meta-commentary is this paragraph. The transition is next.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Here's what the skeleton doesn't capture: <em>why these six topics and not others.</em> I could have included a section on research, on audience analysis, on publishing and distribution. I didn't. That exclusion is a taste decision &mdash; I judged that these six cover the essential arc of making a thing out of words, and that adding more would dilute the density. The schema says "5&ndash;7 sections." It doesn't say which five to seven. It can't. The selection of what to include is the first creative act that escapes formalization, and it happens before a single word is written.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        So the skeleton is the good news: you can absolutely capture the architecture of a zine in structured data, and the capture is genuinely useful. The manifest works. The schema works. Follow them and you'll produce something with shape.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        But shape isn't the same as life. The next section is about voice, and voice is where the good news ends.
+      </p>
+    </section>
+
+    <!-- ─── 3. Voice and the formalization problem ───────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Voice and the formalization problem
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The preceding section was written in a clear, structured, moderately informal register with short-to-medium sentences and direct address. It used concrete references (file names, YAML fields) more than abstractions. It addressed you as "you" and itself as "I" and "this zine." It deployed one extended metaphor (skeleton/bones/body) and returned to it three times. It ended with a transitional sentence that was slightly ominous in tone. None of these choices were specified in the schema.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        That paragraph you just read was written in a different register: analytical, inventorial, almost clinical. Same content &mdash; a description of this zine's voice &mdash; but delivered with the affect of a lab report. You felt the shift. The temperature dropped a degree.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Now I'm back. Same writer, same zine, same topic. But the voice changed twice in three paragraphs, and the change carried meaning. The clinical paragraph demonstrated that voice can be <em>described</em> &mdash; sentence length, address mode, metaphor frequency, tonal register. The return demonstrated that description isn't the same as capture. I can describe the voice. The description doesn't produce the voice. Something leaks.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is the formalization problem, and it's the core argument of this zine.
+      </p>
+
+      <hr style="border: none; border-top: 1px solid var(--color-border); margin: var(--space-xl) 0;">
+
+      <p style="margin-bottom: var(--space-md)">
+        In <a href="/distilling-style/" style="color: var(--color-accent)">Distilling style</a>, I built tools that extract coding patterns from git history. The approach works because code style is observable in diffs. When you refactor a function &mdash; rename a variable, extract a helper, replace a nested conditional with a guard clause &mdash; the before and after are both present. The diff between them is a direct statement about what you consider better. Mine enough of those diffs and patterns emerge: you prefer early returns, you extract at 30 lines, you name booleans with <code>is</code> or <code>has</code> prefixes. Formalizable. Executable. A language model given those rules will produce code that matches your style in measurable ways.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Writing doesn't have diffs in the same way. There's no <code>git blame</code> for a paragraph. The "before" state &mdash; the version of this sentence that I rejected &mdash; doesn't exist in any recoverable form. I chose "writing doesn't have diffs" over "prose lacks the version history of code" and you'll never see the alternative because it was never committed. The decision was real, the evidence is gone.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is the fundamental asymmetry. Code style can be extracted from evidence because the evidence is preserved in version control. Writing style must be captured in real-time or reconstructed from the finished surface. The manifest tries to bridge this gap &mdash; it records decisions prospectively, like uroboro captures record coding decisions. But the manifest captures the decisions I <em>noticed</em> making. The ones I didn't notice &mdash; the vast majority, the sentence-level choices that accumulate into voice &mdash; are as invisible as they've always been.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        So what <em>can</em> the schema capture about voice?
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Audience</strong>: definable, and it genuinely constrains the voice. "For developers and language models" produces different prose than "for literary critics" or "for teenagers." The schema's audience parameter is load-bearing.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Register</strong>: partially specifiable. "Informal," "academic," "conversational" &mdash; these are blunt instruments but they're not nothing. The clinical paragraph above could have been produced by the instruction "describe this zine's voice in an academic register." The instruction works. It just produces one possible clinical paragraph out of thousands.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Sentence patterns</strong>: partially specifiable. "Short sentences for emphasis. Longer ones when the argument needs room to breathe." That's in the manifest. It's a real instruction that a real writer or model could follow. But <em>which</em> sentences to shorten and <em>which</em> to lengthen &mdash; that's the writer's ear, and the ear doesn't serialize.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Metaphor strategy</strong>: specifiable at the policy level, not the instance level. "Use one extended metaphor per section. Return to it at least twice. Don't mix metaphors." Executable rules. But "use the <em>skeleton</em> metaphor for structure" is a creative choice the rules don't make.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Direct address</strong>: specifiable. "Address the reader as 'you.' Refer to the zine in first person." A style rule, like the ones distilling-style extracts from code.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>The thing that binds these together into a voice</strong>: not specifiable.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        I keep circling the same point because the point is genuinely hard to pin down. Voice is emergent. It arises from the interaction of a thousand micro-decisions &mdash; word choice, rhythm, what you emphasize, what you skip, where you're precise and where you're vague, whether you use a dash or a comma (I use too many dashes), whether you end paragraphs with a question or a statement. Each micro-decision is trivial. Together they produce something recognizable and irreproducible.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The schema can specify the environment in which a voice develops. It can't specify the voice. This is not a failure of the schema. It's a genuine boundary between what's formalizable and what's not. The boundary is the thesis.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        If you're building a system to generate zines from schemas, this is the section that tells you where to allocate your budget. Structure, section templates, revision rules &mdash; those are the cheap wins, high fidelity, follow the spec. Voice is where the money goes. It's where the difference between a competent output and a good one lives. And the schema can't help you there. It can only tell you where it can't help you and wish you luck.
+      </p>
+    </section>
+
+    <!-- ─── 4. Momentum ──────────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Momentum
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Short section. Dense. That's a pacing decision.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The last section was the longest in this zine &mdash; over a thousand words, circling and re-circling an argument about the limits of formalization. If you made it through, you were reading at a particular rhythm: slow, exploratory, digressive. That rhythm was right for the argument but it would kill the zine if it continued. You'd drown in meta-commentary. The walls would close in.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        So this section moves.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Pacing isn't speed. It's the reader's sense that the distance between them and the end is closing at the right rate. Too fast and the material feels thin &mdash; you're skimming a surface. Too slow and the material feels heavy &mdash; you're wading through something. The right pace is the one where the reader forgets they're reading. They're just <em>there</em>, in the argument, carried forward by something they can't quite name.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        That something is rhythm, and rhythm comes from variation. A long section followed by a short one. A complex argument followed by a concrete example. A paragraph of analysis followed by a single-sentence paragraph.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Like this one.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        You felt the zine accelerate just now. Two words after a dense paragraph creates a jolt &mdash; a small drop, like a car going over a rise in the road. That jolt is pacing. It's entirely constructed. I chose to put those two words there, alone, for the effect. And now I'm naming the effect, which is the meta-commentary layer, which is this zine's particular trick.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The schema says <code>pacing: varied</code>. The manifest says this section should have "visibly varied pacing." Both of those instructions are real and both are too vague to produce this specific text. "Varied pacing" tells you to do the thing but not how to do it. The <em>how</em> is all feel: I needed a break from density, you needed a break from density, and the break needed to demonstrate what breaks feel like. Three constraints, resolved simultaneously, in the specific arrangement of sentences you're reading.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is a medium-formalizability aspect. The schema captures the pattern &mdash; alternate dense and sparse, vary sentence length, create rhythm through contrast. A writer following those instructions would produce pacing that works. But they wouldn't produce <em>this</em> pacing, these specific contrasts in this specific order. The pattern generalizes; the instance doesn't.
+      </p>
+
+      <hr style="border: none; border-top: 1px solid var(--color-border); margin: var(--space-xl) 0;">
+
+      <p style="margin-bottom: var(--space-md)">
+        Transitions are pacing's invisible partner. The horizontal rule above &mdash; did you notice it? It created a pause, a breath, a small reset. Different from a paragraph break (which is a step) and different from a section break (which is a leap). Three gears of separation, each with a different rhythmic effect.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The transition between sections is the hardest. Go back and read the last sentence of the previous section and the first sentence of this one. The previous section ended with a generous gesture &mdash; "wish you luck." This one opened with a command &mdash; "Short section. Dense." The tonal shift is the transition. There's no bridge sentence, no "Speaking of formalization, let's talk about pacing." The jump IS the bridge. The reader's brain fills the gap. That gap-filling is momentum &mdash; the reader is doing work, moving forward, participating in the text rather than being pushed through it.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Here's what I know about pacing that fits in a schema: vary it. Here's what I know that doesn't: when.
+      </p>
+    </section>
+
+    <!-- ─── 5. The red pen ───────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The red pen
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        <span style="text-decoration: line-through; color: var(--color-text-secondary)">The most important skill in writing is knowing what to cut.</span>
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <span style="text-decoration: line-through; color: var(--color-text-secondary)">What separates good writing from bad writing is almost never what's present &mdash; it's what's absent.</span>
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Revision is where writing happens. Everything before it is material.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Those struck-through lines were real first attempts at opening this section. The first was a clich&eacute; dressed as wisdom. The second was true but abstract &mdash; "what's present" and "what's absent" don't mean anything concrete. The third version says the same thing in fewer words with a stronger claim. It earned its place by being better than the alternatives, and you can see the alternatives because I left them in.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is what revision looks like when you make it visible. Usually the reader sees only the survivor. The dead drafts are in the trash, or more often, they were never committed &mdash; they existed in a writer's head for a fraction of a second and were discarded before reaching the page. I'm showing you the wreckage because this section is about revision, and revision is best understood as a series of kills.
+      </p>
+
+      <hr style="border: none; border-top: 1px solid var(--color-border); margin: var(--space-xl) 0;">
+
+      <p style="margin-bottom: var(--space-md)">
+        Here's where it gets interesting for the formalization thesis: revision is <em>more</em> formalizable than first-draft writing.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This sounds backward. First drafts are generative &mdash; you produce material from nothing, guided by the schema's structure and templates. Revision is judgment &mdash; you evaluate existing material against quality criteria. Surely generation is the more mechanical process?
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        No. Generation requires choosing what to say. Revision requires choosing what to cut, and the cutting rules are surprisingly executable.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The schema lists these revision rules:
+      </p>
+
+      <ul style="margin-bottom: var(--space-md); padding-left: var(--space-lg);">
+        <li>Cut 10% minimum.</li>
+        <li>Every section earns its place or gets cut entirely.</li>
+        <li>No orphan metaphors.</li>
+        <li>Prefer concrete over abstract.</li>
+        <li>Check voice drift.</li>
+        <li>Verify transitions.</li>
+      </ul>
+
+      <div style="background: var(--color-surface); border-left: 3px solid var(--color-border); padding: var(--space-md); margin-bottom: var(--space-md); font-size: 0.9rem;">
+        <em>Editor's note:</em> the first draft of this zine was roughly 5,800 words. This version is under 5,000. The cuts came from everywhere &mdash; a digression about recipe formats in "The skeleton," two paragraphs of throat-clearing in "Voice," a belabored analogy between pacing and music in "Momentum." Each cut followed one of the rules above. The rules worked.
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        "Cut 10%" is a number. You count your words, multiply by 0.9, and keep cutting until you hit the target. A machine can do this &mdash; and interestingly, it can do it well. Language models are decent editors. Given a passage and the instruction "cut 20% while preserving meaning," they produce shorter text that preserves meaning. The task is constrained enough that the schema-to-output gap is small.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        "No orphan metaphors" is pattern-matching. An orphan metaphor is one introduced but never returned to &mdash; I called something a "garden" in paragraph two and never mentioned gardens again. Detectable. Fixable. Either develop the metaphor or kill it. The rule is binary and executable.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        "Prefer concrete over abstract" is a substitution rule. For each abstract claim, ask: can this be replaced with a specific example? "Writing is hard" becomes "I rewrote this opening three times." The abstract version is never wrong, just weak. The concrete version does more work.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        "Check voice drift" is comparison. Read the first section. Read the last section. Do they sound like the same writer? If not, one of them has drifted and needs to be brought back. This is measurable &mdash; sentence length distribution, vocabulary overlap, metaphor density. Not perfectly measurable, but close enough to be useful.
+      </p>
+
+      <hr style="border: none; border-top: 1px solid var(--color-border); margin: var(--space-xl) 0;">
+
+      <p style="margin-bottom: var(--space-md)">
+        The connection to <a href="/distilling-style/" style="color: var(--color-accent)">Distilling style</a> is sharpest here. That project works because refactoring commits have a before and an after. The diff between them is an explicit preference: I think <em>this</em> is better than <em>that</em>. Revision in writing has exactly the same structure. The struck-through lines at the top of this section are a diff. The first draft versus this draft is a diff. The before and after exist, and the difference between them encodes a preference.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        If you wanted to build a "distilling writing style" tool &mdash; the prose equivalent of <code>uroboro distill</code> &mdash; you would mine revision history. Track changes in a document, version-controlled drafts, editor's notes. The diffs between versions would be style signals, just as refactoring diffs are code style signals. "This writer consistently cuts adverbs. This writer replaces passive voice with active. This writer shortens opening sentences in revision." Extractable. Formalizable. Real.
+      </p>
+
+      <div style="background: var(--color-surface); border-left: 3px solid var(--color-border); padding: var(--space-md); margin-bottom: var(--space-md); font-size: 0.9rem;">
+        <p style="margin-bottom: var(--space-sm)">
+          <span style="text-decoration: line-through; color: var(--color-text-secondary)">This is maybe the most practical insight in this zine: if you want to formalize someone's writing style, don't analyze their finished work. Analyze their revisions. The finished work shows you what they chose. The revisions show you what they chose <em>over</em>.</span>
+        </p>
+        <p style="margin-bottom: 0">
+          <em>Editor's note:</em> I'm leaving that struck-through paragraph as a demonstration. It's a good insight &mdash; possibly the best in this section &mdash; but it restates what the preceding paragraph already established. Keeping both would be redundant. In the first draft, I kept it. In revision, I see the redundancy. The revision rule "cut 10%" created the pressure to find it. This is exactly how formalized revision rules surface improvements that feel, in the moment, like aesthetic judgment. The rule created the condition. The judgment completed the act.
+        </p>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        If you're a language model building a revision process: iterate. Generate a draft, then evaluate it against explicit rules, then revise. The rules in the schema are a starting point. The improvement between draft one and draft two will be larger than you expect, and most of it will come from cutting, not adding. The first output is material. The second output is the work.
+      </p>
+    </section>
+
+    <!-- ─── 6. End of file ───────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        End of file
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        So here's the accounting.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Structure formalized cleanly. Six sections, paired, ordered, templated. The schema captures this completely. A different writer following the same schema would produce a recognizably similar architecture &mdash; different content, same bones.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Revision formalized surprisingly well. "Cut 10%" is an executable instruction. "Kill orphan metaphors" is an executable instruction. "Check voice drift by reading the first and last sections back to back" is an executable instruction. I followed these rules and they worked. The draft got shorter and better in predictable ways. The revision rules in the schema are the most honestly useful part of it.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Pacing partially formalized. "Vary sentence length" is specifiable but "vary it <em>here</em>, in <em>this</em> way, for <em>this</em> effect" is not. I can tell you that the staccato section worked because it followed a long meditative passage, but I can't write a rule that tells you when to deploy that pattern in your zine. The trigger is feel, not formula.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Voice barely formalized at all. "Playful and self-aware" is in the manifest. It's also in the schema as an example tone parameter. But the distance between that three-word description and the actual prose you've been reading is vast. Another writer told to be "playful and self-aware" would produce a completely different zine. A language model given the same instruction would produce a third. The voice parameter is a gesture toward a territory, not coordinates within it.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        And the specific sentence &mdash; the atomic unit, the thing you're reading right now &mdash; didn't formalize at all. I couldn't have schematized this paragraph before I wrote it. The schema told me this section needed to exist and roughly what it should contain. The manifest told me it should connect to the opening. But the words? The words were written, not derived.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is the thesis, arrived at by demonstration rather than argument: creative decisions exist on a spectrum from fully formalizable to fully irreducible. The interesting work happens at the boundary. Structure and revision sit comfortably on the formal side. Voice and the specific sentence sit firmly on the other. Pacing, transitions, self-reference &mdash; these live in the middle, partially capturable, always leaking.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The schema is real. It works. An AI could parse it and produce a zine about sourdough or grief or database indexing, and the result would have structure, sections, a hook, a loop. It might even be good. But it would be good in the way that the AI was good, not in the way that the schema was good. The schema provides the scaffold. The writing provides everything else.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Go back and reread the first paragraph of this zine. It starts: "Every zine begins with a small act of fraud." I didn't know, when I wrote that line, that it was also about this schema &mdash; a formal structure pretending to contain a creative process, and doing so convincingly enough that you kept reading. The fraud is productive. The skeleton pretends to be the body. Sometimes that's enough to get the body moving.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The schema is at <code>schema.yaml</code>. The manifest is at <code>manifest.yaml</code>. The zine is what you just read.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Make a different one.
+      </p>
+
+      <p style="margin-bottom: 0; font-family: var(--font-mono); font-size: 0.85rem; color: var(--color-text-secondary);">
+        <code>// end of file</code>
+      </p>
+    </section>
+
+    <!-- ─── Companion files ──────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The companion files
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        This zine has a machine-readable skeleton. The schema is the recipe. The manifest is this meal's ingredient list.
+      </p>
+
+      <p style="display: flex; gap: var(--space-md); flex-wrap: wrap; margin-bottom: var(--space-md);">
+        <a href="https://github.com/qry-zone/how-to-write-a-zine/blob/main/schema.yaml" style="flex: 1; min-width: 180px; padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none;">
+          <strong style="display: block; color: var(--color-accent);">schema.yaml</strong>
+          <span style="font-size: 0.85rem; color: var(--color-text-secondary);">Topic-agnostic zine-writing process</span>
+        </a>
+        <a href="https://github.com/qry-zone/how-to-write-a-zine/blob/main/manifest.yaml" style="flex: 1; min-width: 180px; padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--border-radius); text-decoration: none;">
+          <strong style="display: block; color: var(--color-accent);">manifest.yaml</strong>
+          <span style="font-size: 0.85rem; color: var(--color-text-secondary);">This zine's decisions, annotated</span>
+        </a>
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p>Related: <a href="/distilling-style/">Distilling style</a></p>
+    </footer>
+
+  </div>
+</article>

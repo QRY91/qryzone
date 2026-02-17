@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "title": "How to write a zine",
+      "description": "A self-referential guide to short-form writing, for humans and machines",
+      "href": "/how-to-write-a-zine/",
+      "tags": ["writing", "ai-collaboration", "meta"],
+      "status": "seedling",
+      "connections": ["Distilling style"],
+      "lastUpdated": "2026-02-17"
+    },
+    {
       "title": "About",
       "description": "The non-traditional route to software development",
       "href": "/about/",
@@ -319,6 +328,15 @@
       "tags": ["ai-collaboration", "meta", "writing"],
       "status": "growing",
       "connections": ["De-slopping in practice", "Writing styleguide", "Tuning the detector"],
+      "lastUpdated": "2026-02-17"
+    },
+    {
+      "title": "Distilling style",
+      "description": "Mining git history and AI conversations to extract how you actually work",
+      "href": "/distilling-style/",
+      "tags": ["ai-collaboration", "developer-tools", "local-first"],
+      "status": "seedling",
+      "connections": ["Convergent evolution in personal AI tooling", "uroboro", "Recursive mirror"],
       "lastUpdated": "2026-02-17"
     }
   ]
