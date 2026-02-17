@@ -67,7 +67,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </h2>
 
       <p style="margin-bottom: var(--space-lg)">
-        Here's where it gets interesting. Each of these parallels is backed by actual files from both projects.
+        Each of these parallels is backed by actual files from both projects.
       </p>
 
       <h3 style="font-size: 1.1rem; margin-bottom: var(--space-sm); color: var(--color-text-primary); font-weight: 600">
@@ -79,7 +79,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        My <code>CONTEXT_BRIEFING.md</code> (June 11, 2025) served as a master orientation document. It defined QRY as a methodology, listed the tool ecosystem, described the philosophy, and included guidelines for AI assistants &mdash; things like respecting local-first privacy and considering human psychology. It was the document you'd hand to a new AI session so it understood the territory.
+        My <code>CONTEXT_BRIEFING.md</code> (June 11, 2025) served as a master orientation document. It defined QRY as a methodology, listed the toolset, described the philosophy, and included guidelines for AI assistants &mdash; things like respecting local-first privacy and considering human psychology. It was the document you'd hand to a new AI session so it understood the territory.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
@@ -147,7 +147,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        I benchmarked this overhead on June 8. A fresh morning context restoration took 13 tool calls, reading ~18,700 words of structured documentation to produce a working digest &mdash; about four minutes to get a new AI session oriented on the full ecosystem state. That's the exact startup cost both architectures are trying to eliminate. My target for wherewasi was to cut it to under five tool calls and sixty seconds. OpenClaw's session persistence and heartbeat system aims to eliminate the cold-start problem entirely.
+        I benchmarked this overhead on June 8. A fresh morning context restoration took 13 tool calls, reading ~18,700 words of structured documentation to produce a working digest &mdash; about four minutes to get a new AI session oriented on the full project state. That's the exact startup cost both architectures are trying to eliminate. My target for wherewasi was to cut it to under five tool calls and sixty seconds. OpenClaw's session persistence and heartbeat system aims to eliminate the cold-start problem entirely.
       </p>
 
       <h3 style="font-size: 1.1rem; margin-bottom: var(--space-sm); margin-top: var(--space-lg); color: var(--color-text-primary); font-weight: 600">
@@ -173,7 +173,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        The document described a three-layer architecture: environmental awareness (file system monitoring, application integration, time pattern recognition), methodology embodiment (adapting to individual workflow patterns, anti-fragile operation), and collaborative intelligence (background enhancement, predictive assistance, learning amplification). It outlined a morning workflow where the AI already knows yesterday's progress and today's priorities. It specified local-first implementation with no cloud dependencies, user agency over AI behavior, and tool integration across the ecosystem.
+        The document described a three-layer architecture: environmental awareness (file system monitoring, application integration, time pattern recognition), methodology embodiment (adapting to individual workflow patterns, anti-fragile operation), and collaborative intelligence (background enhancement, predictive assistance, learning amplification). It outlined a morning workflow where the AI already knows yesterday's progress and today's priorities. It specified local-first implementation with no cloud dependencies, user agency over AI behavior, and tool integration across the stack.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
@@ -209,11 +209,11 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Five days later, on June 13, I made a strategic pivot: instead of building qryai as a separate tool, absorb its AI capabilities directly into uroboro. The "god-wyrm" vision &mdash; uroboro consuming the ecosystem into a plugin architecture &mdash; follows the same logic that led OpenClaw to build everything into a single gateway process. Consolidation is the natural endpoint when you have too many small tools solving adjacent problems.
+        Five days later, on June 13, I made a strategic pivot: instead of building qryai as a separate tool, absorb its AI capabilities directly into uroboro. The "god-wyrm" vision &mdash; uroboro consuming the toolset into a plugin architecture &mdash; follows the same logic that led OpenClaw to build everything into a single gateway process. Consolidation is the natural endpoint when you have too many small tools solving adjacent problems.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        But the same systematic testing that built the ecosystem also exposed its limits. When I subjected qryai's "methodology transfer" system to honest evaluation, the numbers that had looked like exponential growth &mdash; 47, 63, 95, 137 transfers &mdash; turned out to be a self-ingestion loop. The algorithm was reprocessing its own outputs each session, generating inflated counts. The actual transfers were templated suggestions: "Implement graceful degradation patterns" applied identically to every Go project, regardless of context. Confidence scores of 0.17. Not intelligence &mdash; structured automation wearing an intelligence costume.
+        But the same systematic testing that built the toolset also exposed its limits. When I subjected qryai's "methodology transfer" system to honest evaluation, the numbers that had looked like exponential growth &mdash; 47, 63, 95, 137 transfers &mdash; turned out to be a self-ingestion loop. The algorithm was reprocessing its own outputs each session, generating inflated counts. The actual transfers were templated suggestions: "Implement graceful degradation patterns" applied identically to every Go project, regardless of context. Confidence scores of 0.17. Not intelligence &mdash; structured automation wearing an intelligence costume.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
@@ -259,11 +259,11 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </h3>
 
       <p style="margin-bottom: var(--space-md)">
-        The QRY ecosystem has deep philosophical roots. The ten principles in QRY_NORTHSTARS draw on Ivan Illich's concept of convivial tools, permacomputing's sustainability ethos, and a specific stance on institutional trauma as a source of systematic thinking. The code exists to embody these ideas. Local-first isn't a feature &mdash; it's an ethical position about data sovereignty and the right to own your own tools.
+        The QRY toolset has deep philosophical roots. The ten principles in QRY_NORTHSTARS draw on Ivan Illich's concept of convivial tools, permacomputing's sustainability ethos, and a specific stance on institutional trauma as a source of systematic thinking. The code exists to embody these ideas. Local-first isn't a feature &mdash; it's an ethical position about data sovereignty and the right to own your own tools.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        OpenClaw is philosophically pragmatic. Self-hosting is a feature: "your hardware, your rules." It's good engineering and it respects users, but it's downstream of product decisions rather than upstream of them. The SOUL.md template is thoughtful and humane, but it's not trying to be a manifesto. It's trying to be useful.
+        OpenClaw is philosophically pragmatic. Self-hosting is a feature: "your hardware, your rules." It's good engineering and it respects users, but it's downstream of product decisions rather than upstream of them. The SOUL.md template is thoughtful and humane, but it's pragmatic rather than ideological.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
@@ -283,7 +283,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        The core architectural patterns are the same despite this difference in scope. Identity documents, temporal context, persistent memory, session lifecycle, safety boundaries. Scale changes the implementation but not the fundamental problem set.
+        The core architectural patterns are the same despite this difference in scope. Identity documents, temporal context, persistent memory, session lifecycle, safety boundaries. Scale changes the implementation but not the underlying problem set.
       </p>
 
       <h3 style="font-size: 1.1rem; margin-bottom: var(--space-sm); margin-top: var(--space-lg); color: var(--color-text-primary); font-weight: 600">
@@ -295,13 +295,13 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        OpenClaw leans on cloud LLMs (Claude Pro/Max with Opus is recommended), multiple embedding providers for semantic search, and a gateway server that's always running. It's more capable, but it's also more hungry. The resource profile reflects different assumptions about what infrastructure you can take for granted.
+        OpenClaw relies on cloud LLMs (Claude Pro/Max with Opus is recommended), multiple embedding providers for semantic search, and a gateway server that's always running. It's more capable, but it's also more hungry. The resource profile reflects different assumptions about what infrastructure you can take for granted.
       </p>
     </section>
 
     <section style="margin-bottom: var(--space-xxl)">
       <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
-        What convergent evolution tells us
+        Same pressure, same shape
       </h2>
 
       <p style="margin-bottom: var(--space-md)">
@@ -389,7 +389,7 @@ description: How homebrew experiments from June 2025 anticipated the architectur
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        <strong>The second-pass problem.</strong> Both approaches assume the human catches errors and blind spots. But the value of a collaborator is partly in seeing what you can't. Neither system has a good mechanism for the AI to push back on the human's assumptions or flag patterns the human might be missing &mdash; not from a safety perspective, but from a craft perspective. There's a deeper issue here: AI collaboration is fundamentally reductive. I documented this in June 2025 &mdash; sessions that start with nuanced, context-aware analysis and end with boilerplate and recursive suggestion loops. Without fresh creative input from a human who's actively learning, the collaboration degrades toward noise. The implication for both architectures: persistent memory and session management are necessary but not sufficient. The system also needs a human who keeps growing, or the AI's output converges on the mean.
+        <strong>The second-pass problem.</strong> Both approaches assume the human catches errors and blind spots. But the value of a collaborator is partly in seeing what you can't. Neither system has a good mechanism for the AI to push back on the human's assumptions or flag patterns the human might be missing &mdash; not from a safety perspective, but from a craft perspective. There's a deeper issue here: AI collaboration is fundamentally reductive. I documented this in June 2025 &mdash; sessions that start with detailed, context-aware analysis and end with boilerplate and recursive suggestion loops. Without fresh creative input from a human who's actively learning, the collaboration degrades toward noise. The implication for both architectures: persistent memory and session management are necessary but not sufficient. The system also needs a human who keeps growing, or the AI's output converges on the mean.
       </p>
 
       <p style="margin-bottom: var(--space-md)">

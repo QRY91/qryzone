@@ -311,6 +311,15 @@
       "status": "growing",
       "connections": ["De-slopping in practice", "Writing styleguide", "Convergent evolution in personal AI tooling"],
       "lastUpdated": "2026-02-17"
+    },
+    {
+      "title": "Errata",
+      "description": "Showing the repairs — a kintsugi approach to corrections",
+      "href": "/errata/",
+      "tags": ["ai-collaboration", "meta", "writing"],
+      "status": "growing",
+      "connections": ["De-slopping in practice", "Writing styleguide", "Tuning the detector"],
+      "lastUpdated": "2026-02-17"
     }
   ]
 }

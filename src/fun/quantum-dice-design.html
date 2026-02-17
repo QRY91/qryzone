@@ -1,13 +1,13 @@
 ---
 layout: base.njk
-title: Quantum Dice - Game Design Deep Dive - qry.zone
+title: Quantum Dice - Design Document - qry.zone
 description: Building a quantum-themed roguelike that teaches probability through dice mechanics and glyph collection
 ---
 
 <article class="article">
     <header class="article-header">
         <a href="/fun/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block;">&larr; Back to Fun</a>
-        <h1>Quantum Dice: Design Deep Dive</h1>
+        <h1>Quantum Dice: Design Document</h1>
         <p class="article-subtitle">Building a quantum-themed roguelike that teaches probability through dice mechanics and glyph collection</p>
     </header>
 
@@ -108,7 +108,7 @@ description: Building a quantum-themed roguelike that teaches probability throug
         <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
             <h4 style="color: var(--color-accent); margin-bottom: var(--space-sm);">Runes (Boon Triggers)</h4>
             <p style="margin-bottom: var(--space-sm);">Values: 1 point each, but unlock permanent bonuses when paired</p>
-            <p>Runes like Sowilo and Fehu score minimally on their own but unlock the "Sun's Radiance" boon when both appear in a run's history. This creates a metagame layer where low-value glyphs become strategically crucial.</p>
+            <p>Runes like Sowilo and Fehu score minimally on their own but unlock the "Sun's Radiance" boon when both appear in a run's history. This creates a metagame layer where low-value glyphs become strategically important.</p>
         </div>
 
         <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
@@ -125,8 +125,7 @@ description: Building a quantum-themed roguelike that teaches probability throug
         <p>
             Superposition glyphs exist in multiple states simultaneously until observed (rolled). When a
             superposition glyph comes up, the game animates through potential outcomes before "collapsing"
-            to a single result. This isn't just visual flourish - it's a direct representation of
-            wavefunction collapse.
+            to a single result — a direct representation of wavefunction collapse.
         </p>
 
         <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); border: 1px solid var(--color-border);">
@@ -182,7 +181,7 @@ description: Building a quantum-themed roguelike that teaches probability throug
 
         <h3>Design Tension</h3>
         <p>
-            The boon system creates a fascinating strategic tension:
+            The boon system creates a strategic tension:
         </p>
         <ul>
             <li><strong>Adding runes dilutes your pool:</strong> Runes only score 1 point, so adding them to enable boons lowers your immediate expected value</li>
