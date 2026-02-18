@@ -11,82 +11,85 @@ description: Using TDD as a specification language for AI agents
       <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
         &larr; Back to Explore
       </a>
+      <span class="status-badge status-seedling">seedling</span>
       <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
         Overnight AI Development
       </h1>
       <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
-        Wake up to implementations that your AI dev team built overnight. Because code doesn't sleep.
+        Using TDD as a specification language for AI agents
       </p>
     </div>
 
     <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
-        Tests as specifications
-      </h2>
       <p style="margin-bottom: var(--space-md)">
-        "Build a user login system" is ambiguous. An AI will guess what you want, and it'll guess wrong.
+        "Build a user login system" is ambiguous. I know what I mean. The AI doesn't. It'll guess, and it'll guess wrong, and I'll wake up to a session-based auth system when I wanted JWT.
       </p>
+
       <p style="margin-bottom: var(--space-md)">
-        But tests are precise. A test says exactly what should happen: this input produces that output, this action triggers that event, this error shows that message. No ambiguity.
+        Tests aren't ambiguous. A test says: this input produces that output. This action triggers that event. This error shows that message. No interpretation needed.
       </p>
+
       <p style="margin-bottom: var(--space-md)">
-        So the workflow becomes: analyst writes tests first, human approves the test specifications, then the dev agent implements to pass those tests. The expensive thinking happens upfront in the analysis phase. Implementation becomes mechanical.
+        So the idea: write the tests before bed. Let an AI implement them overnight. Wake up and check if the tests pass.
       </p>
     </section>
 
     <section style="margin-bottom: var(--space-xxl)">
       <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
-        File-based kanban
+        Files as workflow
       </h2>
+
       <p style="margin-bottom: var(--space-md)">
-        The whole thing runs on files moving through directories:
+        The whole system runs on files moving through directories. No database, no dashboard, no project management tool. Just a filesystem.
       </p>
-      <div style="background: #1a1a1a; border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); font-family: var(--font-mono); font-size: 0.85rem; color: #e0e0e0; overflow-x: auto;">
-        <pre style="margin: 0;">project/
-├── backlog/           # human adds feature requests
-├── analysis/          # AI analyst writes tests
-├── approved/          # human approves test specs
-├── development/       # AI dev implements
-└── done/              # completed and validated</pre>
+
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); font-family: var(--font-mono); font-size: 0.85rem;">
+        <pre style="margin: 0; color: var(--color-text-secondary);">project/
+&#9500;&#9472;&#9472; backlog/        # I add feature requests here
+&#9500;&#9472;&#9472; analysis/       # AI analyst writes test specs
+&#9500;&#9472;&#9472; approved/       # I approve or reject specs
+&#9500;&#9472;&#9472; development/    # AI dev implements against specs
+&#9492;&#9472;&#9472; done/           # completed, tests passing</pre>
       </div>
+
       <p style="margin-bottom: var(--space-md)">
-        Everything visible, debuggable, version-controlled. No magic databases, no hidden state. Just files.
+        Everything is visible. <code>ls backlog/</code> tells you what's queued. <code>git log development/</code> tells you what the AI worked on. No hidden state. Debug with <code>cat</code> and <code>grep</code>.
       </p>
     </section>
 
     <section style="margin-bottom: var(--space-xxl)">
       <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
-        The overnight workflow
+        The overnight loop
       </h2>
+
       <p style="margin-bottom: var(--space-md)">
-        Before bed: review analyses, approve what looks good, reject what doesn't.
+        Before bed: review the AI analyst's test specs. Approve what looks right. Reject what doesn't, with notes. The expensive human judgment happens here &mdash; deciding what to build and whether the spec captures it correctly.
       </p>
+
       <p style="margin-bottom: var(--space-md)">
-        Overnight: kick off the development agent on low priority, trickle power. It processes approved items, runs tests, commits results.
+        Overnight: the dev agent processes approved items. Runs tests. Commits results. Model swaps in and out of memory to stay within the Pi's limits. Rate limiting keeps power draw reasonable. Git checkpoints before each implementation so rollback is a one-liner.
       </p>
+
       <p style="margin-bottom: var(--space-md)">
-        Morning: check what got built. Run integration tests. Move good implementations to done, send problems back to analysis with notes.
-      </p>
-      <p style="margin-bottom: var(--space-md)">
-        The model swaps in and out to save memory. Rate limiting keeps power usage reasonable. Everything checkpointed so you can rollback if something goes wrong.
+        Morning: check what got built. Run integration tests. Move good implementations to done, kick problems back to analysis. The whole cycle takes maybe fifteen minutes of human time per day.
       </p>
     </section>
 
     <section style="margin-bottom: var(--space-xxl)">
       <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
-        Why this works
+        Why tests first
       </h2>
+
       <p style="margin-bottom: var(--space-md)">
-        <strong>Compute efficiency:</strong> Analysis is cheap. Human review is the gate before expensive development. Most bad ideas get killed early.
+        Analysis is cheap. Writing test specs costs less compute than implementation. Human review of a test spec is fast &mdash; you can read ten tests in the time it takes to review ten implementations. Most bad ideas die in analysis before burning dev compute.
       </p>
+
       <p style="margin-bottom: var(--space-md)">
-        <strong>Quality:</strong> Tests written first means clear acceptance criteria. No "is this what you wanted?" conversations.
+        Tests are also the acceptance criteria. No "is this what you wanted?" conversation. Either the tests pass or they don't. The AI's output is evaluated by the same tests the human approved. No subjectivity at the gate.
       </p>
+
       <p style="margin-bottom: var(--space-md)">
-        <strong>Rollback:</strong> Git checkpoint before overnight run, commit after. Something went wrong? Reset to stable tag.
-      </p>
-      <p style="margin-bottom: var(--space-md)">
-        <strong>Agile without meetings:</strong> No sprint planning, no standups, no estimation. Just a backlog and tests.
+        And the tests survive. When I refactor later, the specs still hold. When I swap out the AI model, the acceptance criteria don't change. The human's intent is captured in code, not in a chat history that expires.
       </p>
     </section>
 
@@ -94,16 +97,19 @@ description: Using TDD as a specification language for AI agents
       <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
         The goal
       </h2>
+
       <p style="margin-bottom: var(--space-md)">
-        A self-managing development team that processes your backlog while you sleep. Tested implementations ready for review in the morning. Runs on a raspberry pi with a solar panel if you want.
+        A backlog processor that runs on a Raspberry Pi with a solar panel. You stay the product owner. The AI handles the mechanical work. Files and scripts doing real work while you sleep.
       </p>
+
       <p style="margin-bottom: var(--space-md)">
-        You stay the product owner - making decisions about what to build. The AI handles the mechanical work of how to build it, following your approved specifications.
-      </p>
-      <p style="margin-bottom: var(--space-md)">
-        Files and scripts doing real work.
+        No sprint planning. No standups. No estimation. Just a backlog and tests.
       </p>
     </section>
+
+    <footer class="article-footer">
+      <p>Related: <a href="/minimal-steampunk-poc/">RPi 3 morning digest</a> &mdash; <a href="/local-ai-economics/">Local AI economics</a> &mdash; <a href="/steampunk-engineering/">Steampunk engineering</a></p>
+    </footer>
 
   </div>
 </article>

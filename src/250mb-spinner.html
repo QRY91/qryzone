@@ -1,0 +1,242 @@
+---
+layout: base.njk
+title: The 250MB spinner - qry.zone
+description: How one loading animation killed a server, and what that says about everything
+footerPunchline: "build light"
+---
+
+<article class="article">
+    <header class="article-header">
+        <span class="status-badge status-seedling">seedling</span>
+        <h1>The 250MB spinner</h1>
+        <p class="article-subtitle">How one loading animation killed a server, and what that says about everything</p>
+    </header>
+
+    <section>
+        <p>
+            I spent a full day debugging why a browser automation system kept crashing on a remote server.
+            The server had 512MB of RAM. The automation needed to log into EU Login — the European Commission's
+            single sign-on portal — and wait for a two-factor authentication approval.
+        </p>
+
+        <p>
+            The 2FA check is server-side. Your phone talks to their server. The browser's only job
+            is to sit there and poll a status endpoint until it hears "approved," then follow a redirect.
+            Functionally: check a URL every two seconds. Display a spinner while you wait.
+        </p>
+
+        <p>
+            That spinner page consumed 250 megabytes of renderer memory.
+        </p>
+    </section>
+
+    <section>
+        <h2>The numbers</h2>
+        <p>
+            I SSH'd into the server during a crash and measured everything. Here's what was running
+            at idle, before any page even loaded:
+        </p>
+
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md); margin-bottom: var(--space-md); font-family: var(--font-mono); font-size: 0.85rem;">
+            <pre style="margin: 0; white-space: pre; overflow-x: auto;">Node.js API server       100 MB
+Chromium main process     34 MB
+Chromium GPU process      27 MB
+Chromium network service  17 MB
+Chromium renderer         29 MB
+PostgreSQL                22 MB
+Supervisor                22 MB
+─────────────────────────────
+Total idle:             ~280 MB
+Available:              ~230 MB</pre>
+        </div>
+
+        <p>
+            230 megabytes of headroom. Then the EU Login page loads. The renderer balloons.
+            The OOM killer fires. The browser process dies. The automation fails.
+        </p>
+
+        <p>
+            A different government portal — VLM Mestbank, lighter pages, no 2FA — runs fine on
+            the same server. Same browser, same automation code, same 512MB. The difference is
+            what the pages demand from the machine rendering them.
+        </p>
+    </section>
+
+    <section>
+        <h2>What the spinner actually needs</h2>
+
+        <p>
+            Strip away the design system, the JavaScript framework, the analytics, the
+            cookie consent layer, the accessibility overlay widget. What does this page
+            functionally do?
+        </p>
+
+        <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-md); margin-bottom: var(--space-md); font-family: var(--font-mono); font-size: 0.85rem;">
+            <pre style="margin: 0; white-space: pre; overflow-x: auto;">while (status !== "approved") {
+  response = await fetch("/cas/check");
+  status = response.status;
+  await sleep(2000);
+}
+redirect(callbackUrl);</pre>
+        </div>
+
+        <p>
+            Five lines. Zero rendering. An HTTP client can do this in under a megabyte of memory.
+            But because it's wrapped in a full web application — because that's how everything
+            gets built now — it costs 250MB and a Chromium process tree to accomplish.
+        </p>
+
+        <p>
+            The fix for our automation was simple: upgrade the server. Throw more memory
+            at it. The EU Login page won't change. We don't control it. We adapt by buying more
+            hardware.
+        </p>
+
+        <p>
+            This is the normal thing to do. It's also worth sitting with for a moment.
+        </p>
+    </section>
+
+    <section>
+        <h2>Compounding weight</h2>
+
+        <p>
+            The EU Login team didn't set out to make a page that requires 250MB to render. Nobody
+            does. It accumulates. A framework here, a design system there, an analytics package,
+            a real-time notification layer, polyfills for browsers that maybe still exist.
+            Each decision reasonable in isolation. In aggregate: a loading spinner that can't
+            run on a machine with half a gig of RAM.
+        </p>
+
+        <p>
+            This isn't about EU Login specifically. They're not worse than average. That's the
+            point. They <em>are</em> average. This is what average looks like now.
+        </p>
+
+        <p>
+            And the weight doesn't stay where it was added. It travels downstream.
+        </p>
+
+        <p>
+            My automation system needs a browser because these portals are SPAs that generate
+            their forms client-side. The browser needs Chromium because that's what Playwright
+            drives. Chromium needs hundreds of megabytes because that's what modern web pages
+            demand. The server needs more RAM because Chromium needs more RAM. The hosting bill
+            goes up because the server needs more RAM.
+        </p>
+
+        <p>
+            A spinner on someone else's login page determined my infrastructure costs.
+        </p>
+    </section>
+
+    <section>
+        <h2>The recomposition problem</h2>
+
+        <p>
+            Browser automation exists because we gave up on interoperability. These government
+            portals don't have public APIs. The data entry can't be scripted through a documented
+            interface. So we script a browser to click buttons and fill fields like a human would,
+            because that's the only surface these systems expose.
+        </p>
+
+        <p>
+            This is recomposition — taking existing systems and combining them in ways their
+            creators didn't intend. It's how most useful software actually gets built. Glue code,
+            adapters, automations, integrations. The messy work of making things talk to each other.
+        </p>
+
+        <p>
+            Careless resource consumption makes this needlessly expensive. Every unnecessary
+            megabyte on the original system becomes an infrastructure requirement on every system
+            that tries to interact with it. The cost multiplies across every automation,
+            every integration, every downstream consumer.
+        </p>
+
+        <p>
+            If that login page were a lightweight form that posted credentials and polled a
+            status endpoint — if it did what it <em>does</em> without the overhead of what
+            it <em>is</em> — I wouldn't need Chromium at all. An HTTP client would handle the
+            entire flow. My server could be a 256MB VPS running a single binary. The whole
+            automation layer could be a Go program or a shell script.
+        </p>
+
+        <p>
+            Instead, we need a headless browser rendering a single-page application to
+            submit a username and wait for a phone notification. The irony doesn't fade with
+            repetition.
+        </p>
+    </section>
+
+    <section>
+        <h2>What efficient looks like</h2>
+
+        <p>
+            100 Rabbits build creative tools on a sailboat with solar power.
+            Their constraint — no reliable power, no reliable internet — produces software
+            that does real work in kilobytes. Not because small is ideologically
+            pure. Because small is what fits.
+        </p>
+
+        <p>
+            The modern web has the opposite constraint: functionally unlimited resources.
+            Bandwidth is cheap. RAM is cheap. Storage is cheap. So we spend all of it, on
+            everything, always. And it works — until someone tries to reuse your output in
+            a context you didn't expect.
+        </p>
+
+        <p>
+            A page that renders in 2MB can be automated by anything. A page that renders in
+            250MB can only be automated by a full browser engine. The lighter system is more
+            composable. More reusable. More adaptable. More <em>alive</em> in the ecosystem
+            of other software.
+        </p>
+
+        <p>
+            <a href="/sailboat-test/">The sailboat test</a> asks whether your tools work
+            under real constraints. This is the inverse: what happens to everyone else when
+            your tools ignore constraints entirely?
+        </p>
+    </section>
+
+    <section>
+        <h2>The tax</h2>
+
+        <p>
+            We upgraded the server. The automation works now. Problem solved, technically.
+        </p>
+
+        <p>
+            But the problem isn't really solved. It's absorbed. One more system
+            carrying weight it didn't generate, paying a tax it didn't incur, because
+            somewhere upstream, someone picked a framework without thinking about what
+            it would cost the next person down the chain.
+        </p>
+
+        <p>
+            Every framework-heavy page, every client-rendered form, every 250MB spinner
+            is a small tax on composability. On the ability to reuse, to automate, to
+            integrate, to run on modest hardware, to exist outside the assumptions of
+            the original developer.
+        </p>
+
+        <p>
+            You won't feel it if you only ever consume your own output. But the moment
+            someone else tries to build on top of what you built — the moment your
+            system becomes a component in someone else's system — they'll feel it.
+        </p>
+
+        <p>
+            Build light. Not for ideology. For everyone downstream.
+        </p>
+    </section>
+
+    <footer class="article-footer">
+        <p>From production debugging, February 2026.</p>
+        <p>Related:
+            <a href="/sailboat-test/">The sailboat test</a>,
+            <a href="/optimization-through-removal/">Optimization through removal</a>,
+            <a href="/steampunk-engineering/">Steampunk engineering</a>
+        </p>
+    </footer>
+</article>

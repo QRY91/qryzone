@@ -1,7 +1,7 @@
 ---
 layout: base.njk
-title: Permacomputing Microstudio Philosophy - qry.zone
-description: Resilient, local-first development environments inspired by 100 Rabbits methodology
+title: Permacomputing Microstudio - qry.zone
+description: Local-first development inspired by 100 Rabbits
 ---
 
 <article class="article">
@@ -11,271 +11,111 @@ description: Resilient, local-first development environments inspired by 100 Rab
       <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
         &larr; Back to Explore
       </a>
+      <span class="status-badge status-seedling">seedling</span>
       <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
-        Permacomputing Microstudio Philosophy
+        Permacomputing Microstudio
       </h1>
       <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
-        Resilient, local-first development environments inspired by 100 Rabbits methodology
+        Local-first development inspired by 100 Rabbits
       </p>
     </div>
 
     <section style="margin-bottom: var(--space-xxl)">
-      <div style="background: #e0f2fe; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: var(--space-md)">Core Philosophy</h2>
-        <p>
-          Permacomputing represents a fundamental shift from dependency-heavy, cloud-first development
-          to resilient, self-contained environments. Inspired by 100 Rabbits' experiences building
-          creative tools on a solar-powered sailboat, this approach prioritizes ownership, resilience,
-          and independence over convenience and vendor relationships.
-        </p>
-      </div>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        The Provider Bottleneck Problem
-      </h2>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Real-World Dependency Failures
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        The 100 Rabbits collective discovered the fragility of modern software dependencies while
-        sailing and living off-grid. Their experiences reveal systematic problems with contemporary
-        development approaches that affect all developers, not just nomads.
+      <p style="margin-bottom: var(--space-md)">
+        Hundred Rabbits sail a boat and write software on it. Solar-powered. Unreliable internet. 51-day ocean crossings. Everything they build has to survive those conditions.
       </p>
 
-      <div style="background: #fef3c7; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md)">Documented Dependency Failures:</h4>
-        <ul style="margin-bottom: var(--space-md)">
-          <li><strong>Massive downloads:</strong> Xcode 11GB updates that couldn't resume when interrupted</li>
-          <li><strong>Subscription lockouts:</strong> Photoshop becoming unusable when offline payment verification failed</li>
-          <li><strong>Cloud dependencies:</strong> "Does it work offline?" --> "No, it's on the cloud" (99% of software)</li>
-          <li><strong>Planned obsolescence:</strong> Games and applications becoming unplayable after 3-4 years</li>
-          <li><strong>Knowledge dependencies:</strong> Unable to look up basic programming references without internet</li>
-        </ul>
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        The Ownership Illusion
-      </h3>
-      <div style="background: var(--color-surface); border-left: 4px solid var(--color-accent); padding: var(--space-lg); font-size: 1.1rem; font-style: italic; margin-bottom: var(--space-lg)">
-        "When your connection to the internet fails and the software locks up, that skill that you
-        thought was yours was actually entirely owned by someone, and can be taken away."
-      </div>
-      <p style="margin-bottom: var(--space-lg)">
-        This insight drives the permacomputing approach: if your development environment depends on
-        external services, you don't actually own your capability to create.
+      <p style="margin-bottom: var(--space-md)">
+        I don't live on a boat. But the constraints they design for &mdash; offline capability, low power, no vendor dependencies &mdash; produce better software for everyone. When your tools work on a sailboat, they work everywhere else too.
       </p>
     </section>
 
     <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Microstudio Implementation Framework
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The dependency audit
       </h2>
 
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Local-First Development Stack
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        A permacomputing microstudio eliminates external dependencies for core development workflows,
-        creating resilient systems that work reliably in any environment.
+      <p style="margin-bottom: var(--space-md)">
+        Disconnect your wifi and try to work. What breaks?
       </p>
 
-      <div style="background: #f0fdf4; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md)">Systematic Dependency Elimination:</h4>
-        <ul style="margin-bottom: var(--space-md)">
-          <li><strong>Local AI (Ollama):</strong> No API dependencies, works offline, models you control</li>
-          <li><strong>Custom CLI tools:</strong> Uroboro, WhereWasI, DoggoWoof - complete ownership of workflow</li>
-          <li><strong>Declarative OS (NixOS):</strong> Reproducible system configuration, no surprise updates</li>
-          <li><strong>Local storage:</strong> External SSDs, no cloud dependencies for project data</li>
-          <li><strong>Offline documentation:</strong> Local references, self-documenting code practices</li>
-        </ul>
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Permacomputing Principles Applied
-      </h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-lg)">
-        <div style="background: #e0f2fe; padding: var(--space-lg); border-radius: var(--border-radius)">
-          <h4 style="font-weight: 600; color: #0369a1; margin-bottom: var(--space-md)">Resilience Through Simplicity</h4>
-          <ul style="font-size: 0.9rem">
-            <li><strong>100 Rabbits:</strong> 32-opcode virtual machine that fits on a t-shirt</li>
-            <li><strong>Microstudio:</strong> "3 commands beats 17" philosophy</li>
-            <li><strong>Implementation:</strong> Simple, auditable tools over complex frameworks</li>
-          </ul>
-        </div>
-        <div style="background: #fef3c7; padding: var(--space-lg); border-radius: var(--border-radius)">
-          <h4 style="font-weight: 600; color: #92400e; margin-bottom: var(--space-md)">Self-Contained Systems</h4>
-          <ul style="font-size: 0.9rem">
-            <li><strong>100 Rabbits:</strong> Tools that can rebuild themselves</li>
-            <li><strong>Microstudio:</strong> NixOS declarative configuration</li>
-            <li><strong>Implementation:</strong> One command recreates entire environment</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Anti-Patterns and Market Differentiation
-      </h2>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Modern Software Problems Avoided
-      </h3>
-      <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md)">Systematic Problem Avoidance:</h4>
-        <ul style="margin-bottom: var(--space-md)">
-          <li><strong>Cloud Dependencies</strong> --> Local AI, local tools, local storage</li>
-          <li><strong>Subscription Software</strong> --> Open source, self-hosted, one-time setup</li>
-          <li><strong>Planned Obsolescence</strong> --> Simple, maintainable, long-term tools</li>
-          <li><strong>Black Box Systems</strong> --> Transparent, inspectable, understandable stack</li>
-          <li><strong>Internet Requirements</strong> --> Offline-capable workflow for core functions</li>
-        </ul>
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        The "Magic" Problem
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        As 100 Rabbits noted: "Sometimes people say they love magic, but in truth they don't.
-        I don't like magic at all, especially not when things start to break."
+      <p style="margin-bottom: var(--space-md)">
+        For most developers: everything. Copilot stops suggesting. Cloud IDE won't load. Documentation requires a browser. The Slack thread with context from yesterday is unreachable. Your skills, the ones you thought were yours, turn out to be rented.
       </p>
-      <p style="margin-bottom: var(--space-lg)">
-        Permacomputing microstudios prioritize understanding over convenience, building systems
-        you can inspect, modify, and repair rather than depending on opaque services.
+
+      <p style="margin-bottom: var(--space-md)">
+        100 Rabbits learned this the hard way. Xcode demanded an 11GB update mid-Pacific. Photoshop locked up because it couldn't verify a subscription. Games they'd paid for stopped working after three years. The tools they'd invested in learning became tools someone else controlled.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Their response: build a 32-opcode virtual machine that fits on a t-shirt. Build creative tools that run on anything. Reduce dependencies until what's left is yours.
       </p>
     </section>
 
     <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Implementation Strategy
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        My version
       </h2>
 
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Three-Phase Development Approach
-      </h3>
-      <div style="background: #e0f2fe; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md)">Progressive Independence Building:</h4>
-        <ol style="margin-bottom: var(--space-md)">
-          <li><strong>Phase 1 - Foundation:</strong> Self-contained development environment (Framework 12 + NixOS + Local Storage + Local AI)</li>
-          <li><strong>Phase 2 - Tool Ecosystem:</strong> Custom CLI tools for all workflow needs (Uroboro, WhereWasI, DoggoWoof)</li>
-          <li><strong>Phase 3 - Integration:</strong> Simple, transparent workflows with no external dependencies</li>
-        </ol>
-      </div>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        The 100 Rabbits Test
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        The ultimate validation: "Does it work offline?" Your permacomputing microstudio should
-        answer "YES" to all core development activities.
+      <p style="margin-bottom: var(--space-md)">
+        I'm not building a VM from scratch. I'm applying the same principle to a development environment: eliminate external dependencies for core work.
       </p>
 
-      <div style="background: #f0fdf4; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md)">Offline Capability Checklist:</h4>
-        <ul style="margin-bottom: var(--space-md)">
-          <li><strong>Development:</strong> Neovim + local tools + local compilation</li>
-          <li><strong>AI assistance:</strong> Ollama models running locally</li>
-          <li><strong>Project management:</strong> Local tracking + git</li>
-          <li><strong>Documentation:</strong> Uroboro local generation + markdown</li>
-          <li><strong>Monitoring:</strong> DoggoWoof local alerting + logging</li>
-          <li><strong>System management:</strong> NixOS declarative configuration</li>
-        </ul>
-      </div>
-    </section>
-
-    <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Strategic Advantages
-      </h2>
-
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Market Positioning Benefits
-      </h3>
-      <p style="margin-bottom: var(--space-lg)">
-        While the industry moves toward cloud dependency and subscription models, permacomputing
-        offers genuine competitive advantages for developers who value independence and resilience.
-      </p>
-
-      <ul style="margin-bottom: var(--space-lg)">
-        <li><strong>No recurring costs:</strong> One-time setup vs. ongoing subscription expenses</li>
-        <li><strong>Predictable performance:</strong> Local processing vs. variable network latency</li>
-        <li><strong>Privacy by design:</strong> Local processing vs. data sharing with vendors</li>
-        <li><strong>Customization freedom:</strong> Modify anything vs. vendor-controlled feature sets</li>
-        <li><strong>Knowledge ownership:</strong> Understanding your stack vs. depending on black boxes</li>
+      <ul style="list-style: none; padding: 0; margin: 0 0 var(--space-lg) 0;">
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>AI:</strong> Ollama with local models. No API keys, no rate limits, no data leaving my machine.
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>OS:</strong> NixOS on a Framework laptop. Declarative config means one file reproduces the entire system. No surprise updates.
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>Tools:</strong> <a href="https://github.com/QRY91/uroboro" style="color: var(--color-accent)">Uroboro</a> for context, <a href="https://github.com/QRY91/wherewasi" style="color: var(--color-accent)">wherewasi</a> for session recovery. Go binaries. SQLite storage. No cloud anything.
+        </li>
+        <li style="margin-bottom: var(--space-sm); padding-left: var(--space-md); border-left: 2px solid var(--color-border);">
+          <strong>Storage:</strong> Local SSDs. Git for version control. Backups I control.
+        </li>
       </ul>
 
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        Professional Development Value
-      </h3>
-      <div style="background: #fef3c7; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <h4 style="font-weight: 600; margin-bottom: var(--space-md)">Career Benefits of Permacomputing Approach:</h4>
-        <ul style="margin-bottom: var(--space-md)">
-          <li><strong>Deep understanding:</strong> Know your entire stack from hardware to application</li>
-          <li><strong>Problem-solving skills:</strong> Debug without vendor support or cloud diagnostics</li>
-          <li><strong>Independence demonstration:</strong> Prove you can build complete solutions</li>
-          <li><strong>Resilience mindset:</strong> Design for reliability and maintainability</li>
-        </ul>
-      </div>
+      <p style="margin-bottom: var(--space-md)">
+        The test: pull the ethernet cable. Can I still write code, run tests, ask an AI for help, and track my work? Yes. Every part of the core workflow runs locally.
+      </p>
     </section>
 
     <section style="margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.5rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Adapting This Philosophy
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What I still depend on
       </h2>
 
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        For Individual Developers
-      </h3>
-      <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
-        <ol style="margin-bottom: var(--space-md)">
-          <li><strong>Audit your dependencies:</strong> What breaks when you go offline?</li>
-          <li><strong>Identify critical workflows:</strong> Which tools are essential for your daily work?</li>
-          <li><strong>Find local alternatives:</strong> Replace cloud services with self-hosted or offline tools</li>
-          <li><strong>Build understanding:</strong> Learn how your tools work rather than just how to use them</li>
-          <li><strong>Test resilience:</strong> Regularly work offline to validate your independence</li>
-        </ol>
-      </div>
+      <p style="margin-bottom: var(--space-md)">
+        Honesty check: I use Claude Code through an API. I push to GitHub. I deploy to Vercel. The permacomputing microstudio is the foundation, not the whole building.
+      </p>
 
-      <h3 style="font-size: 1.2rem; margin-bottom: var(--space-md); color: var(--color-text-primary)">
-        For Teams and Organizations
-      </h3>
-      <ul style="margin-bottom: var(--space-lg)">
-        <li><strong>Evaluate vendor lock-in risks:</strong> What happens if key services become unavailable?</li>
-        <li><strong>Support local-first exploration:</strong> Allow team members to experiment with self-hosted alternatives</li>
-        <li><strong>Value deep understanding:</strong> Reward team members who understand their entire stack</li>
-        <li><strong>Build resilience gradually:</strong> Reduce dependencies systematically rather than all at once</li>
-      </ul>
+      <p style="margin-bottom: var(--space-md)">
+        The difference is which dependencies are load-bearing. If GitHub goes down, my code is still on my machine and I can push to a different remote. If Vercel dies, the site is static HTML I can host anywhere. If Claude's API changes, my local Ollama setup is already running. Each dependency has an exit path.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The dependencies I can't easily replace: hardware (the Framework laptop), electricity, my own brain functioning. Everything above those layers should be swappable. That's the goal. Not purity. Replaceability.
+      </p>
     </section>
 
-    <section style="background: var(--color-surface); padding: var(--space-xl); border: 1px solid var(--color-border); border-radius: var(--border-radius); margin-bottom: var(--space-xxl)">
-      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-lg); color: var(--color-accent); font-family: var(--font-mono)">
-        Key Philosophical Insights
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The cost
       </h2>
-      <ul style="margin-bottom: var(--space-md)">
-        <li style="margin-bottom: var(--space-sm)"><strong>Ownership requires independence:</strong> You don't own skills that depend on external services</li>
-        <li style="margin-bottom: var(--space-sm)"><strong>Resilience comes from simplicity:</strong> Complex dependencies create fragile systems</li>
-        <li style="margin-bottom: var(--space-sm)"><strong>Understanding beats convenience:</strong> Transparent systems are more valuable than magical ones</li>
-        <li style="margin-bottom: var(--space-sm)"><strong>Local-first enables anywhere:</strong> True mobility requires independence from infrastructure</li>
-        <li style="margin-bottom: var(--space-sm)"><strong>Permacomputing is practical:</strong> Engineering for reliability, not ideology</li>
-      </ul>
+
+      <p style="margin-bottom: var(--space-md)">
+        Setup is slower. Learning NixOS took weeks. Building custom tools takes time I could spend using someone else's. Local models are worse than cloud models for complex tasks.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The tradeoff is explicit: I'm spending time now to not be trapped later. Every subscription I don't sign up for is a dependency I don't have to migrate when the company pivots, raises prices, or shuts down. And they will. They always do.
+      </p>
     </section>
 
-    <section style="margin-bottom: var(--space-xxl); padding-top: var(--space-lg); border-top: 1px solid var(--color-border)">
-      <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: var(--space-md)">Related Strategic Thinking</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-md)">
-        <a href="/hidden/workshop/microstudio-context/" style="display: block; padding: var(--space-md); background: var(--color-surface); border-radius: var(--border-radius); text-decoration: none; color: inherit">
-          <h4 style="font-weight: 600; margin-bottom: var(--space-xs)">Microstudio Context & Philosophy</h4>
-          <p style="font-size: 0.9rem; color: var(--color-text-secondary)">Systematic approach to integrated development environment building</p>
-        </a>
-        <a href="/hidden/thinking/technical-depth-assessment/" style="display: block; padding: var(--space-md); background: var(--color-surface); border-radius: var(--border-radius); text-decoration: none; color: inherit">
-          <h4 style="font-weight: 600; margin-bottom: var(--space-xs)">Technical Depth Assessment</h4>
-          <p style="font-size: 0.9rem; color: var(--color-text-secondary)">Truthful constraint analysis for authentic capability positioning</p>
-        </a>
-      </div>
-    </section>
+    <footer class="article-footer">
+      <p>Related: <a href="/sailboat-test/">The sailboat test</a> &mdash; <a href="/steampunk-engineering/">Steampunk engineering</a> &mdash; <a href="/nixos-on-framework/">NixOS on Framework</a> &mdash; <a href="/local-ai-economics/">Local AI economics</a></p>
+    </footer>
 
   </div>
 </article>

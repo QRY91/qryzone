@@ -12,42 +12,50 @@ extraStyles: |
     </a>
     <h1>Explore</h1>
     <p class="explore-intro">
-        <span id="item-count">34</span> notes, ideas, and projects. Filter by topic or
-        maturity, or pick something random.
+        <span id="item-count">50</span> notes, experiments, and projects.
     </p>
 
-    <!-- Recently updated (hidden when filtering) -->
-    <section id="recently-updated">
-        <h2 class="section-title">Recently updated</h2>
-        <div id="recent-content"></div>
-    </section>
+    <!-- Search + filter toggle -->
+    <div class="search-row">
+        <input type="text" id="explore-search" placeholder="Search..." autocomplete="off">
+        <button id="filter-toggle" class="filter-toggle">Filters</button>
+        <button id="random-btn">Random</button>
+        <button id="clear-btn">Clear</button>
+        <span id="results-count"></span>
+    </div>
 
-    <!-- Filters -->
-    <section class="filter-section">
-        <div class="filter-group">
-            <div class="filter-label">Search</div>
-            <input type="text" id="explore-search" placeholder="Filter by title or description..." autocomplete="off">
-        </div>
-
+    <!-- Collapsible filters -->
+    <section class="filter-section" id="filter-section" hidden>
         <div class="filter-group">
             <div class="filter-label">Topics</div>
             <div id="tags-container"></div>
         </div>
 
-        <div class="filter-group">
-            <div class="filter-label">Maturity</div>
-            <div id="status-container">
-                <button class="status-btn" data-status="seedling">seedling</button>
-                <button class="status-btn" data-status="growing">growing</button>
-                <button class="status-btn" data-status="evergreen">evergreen</button>
+        <div class="filter-row">
+            <div class="filter-group">
+                <div class="filter-label">Type</div>
+                <div id="type-container">
+                    <button class="type-btn" data-type="article">article</button>
+                    <button class="type-btn" data-type="interactive">interactive</button>
+                    <button class="type-btn" data-type="project">project</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-label">Maturity</div>
+                <div id="status-container">
+                    <button class="status-btn" data-status="seedling">seedling</button>
+                    <button class="status-btn" data-status="growing">growing</button>
+                    <button class="status-btn" data-status="evergreen">evergreen</button>
+                </div>
             </div>
         </div>
+    </section>
 
-        <div class="actions-row">
-            <button id="random-btn">Random</button>
-            <button id="clear-btn">Clear filters</button>
-            <span id="results-count"></span>
-        </div>
+    <!-- Recently updated (hidden when filtering) -->
+    <section id="recently-updated">
+        <h2 class="section-title">Recently updated</h2>
+        <div id="recent-content"></div>
     </section>
 
     <!-- Random pick -->
@@ -56,10 +64,15 @@ extraStyles: |
         <div class="random-content"></div>
     </section>
 
-    <!-- Content list -->
+    <!-- Content grid -->
     <section>
         <h2 class="section-title" id="section-title">Everything</h2>
         <div id="content-container"></div>
+    </section>
+
+    <!-- Fun gallery link -->
+    <section>
+        <a href="/fun/" class="fun-link">All interactive experiments &rarr;</a>
     </section>
 
     <!-- Legend -->

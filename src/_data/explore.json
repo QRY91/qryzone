@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "title": "The 250MB spinner",
+      "description": "How one loading animation killed a server, and what that says about everything",
+      "href": "/250mb-spinner/",
+      "tags": ["permacomputing", "debugging"],
+      "status": "seedling",
+      "connections": ["The sailboat test", "Optimization through removal", "Steampunk Engineering"],
+      "lastUpdated": "2026-02-18"
+    },
+    {
       "title": "Hack My Claw",
       "description": "Lunchbreak CTF - prompt injection against an OpenClaw assistant for $100",
       "href": "/hack-my-claw/",
@@ -124,6 +133,7 @@
       "description": "Context capture that makes development work visible",
       "href": "https://www.uroboro.dev/",
       "tags": ["developer-tools", "local-first"],
+      "type": "project",
       "status": "growing",
       "lastUpdated": "2025-01-08"
     },
@@ -132,6 +142,7 @@
       "description": "Local monitoring that learns your patterns",
       "href": "https://github.com/QRY91/doggowoof",
       "tags": ["developer-tools", "local-first"],
+      "type": "project",
       "status": "seedling"
     },
     {
@@ -139,6 +150,7 @@
       "description": "Context preservation across work sessions",
       "href": "https://github.com/QRY91/wherewasi",
       "tags": ["developer-tools", "local-first"],
+      "type": "project",
       "status": "seedling"
     },
     {
@@ -146,6 +158,7 @@
       "description": "Learn quantum mechanics through dice game mechanics",
       "href": "https://github.com/QRY91/quantum-dice",
       "tags": ["learning", "games"],
+      "type": "project",
       "status": "growing"
     },
     {
@@ -175,7 +188,7 @@
     },
     {
       "title": "Permacomputing microstudio",
-      "description": "Building local-first development environments with 100 Rabbits principles",
+      "description": "Local-first development inspired by 100 Rabbits",
       "href": "/permacomputing-microstudio/",
       "tags": ["permacomputing", "local-first", "developer-tools"],
       "status": "evergreen",
@@ -201,7 +214,7 @@
     },
     {
       "title": "Overnight AI development",
-      "description": "Using Claude to work while you sleep",
+      "description": "Using TDD as a specification language for AI agents",
       "href": "/overnight-ai-development/",
       "tags": ["ai-collaboration", "developer-tools"],
       "status": "growing",
@@ -347,6 +360,70 @@
       "status": "seedling",
       "connections": ["Convergent evolution in personal AI tooling", "uroboro", "Recursive mirror"],
       "lastUpdated": "2026-02-17"
+    },
+    {
+      "title": "Ditherpunk",
+      "description": "Classic dithering algorithms for the permacomputing age",
+      "href": "/fun/ditherpunk/",
+      "tags": ["permacomputing", "creative", "design"],
+      "type": "interactive",
+      "status": "evergreen"
+    },
+    {
+      "title": "Heavenscrolling",
+      "description": "Infinite social media simulator. Doomscroll without consequences.",
+      "href": "/fun/heavenscrolling/",
+      "tags": ["personal", "society"],
+      "type": "interactive",
+      "status": "evergreen"
+    },
+    {
+      "title": "The Ticket Hole",
+      "description": "Complete tickets. Watch them multiply. Sprint velocity goes negative.",
+      "href": "/fun/ticket-hole/",
+      "tags": ["personal", "career"],
+      "type": "interactive",
+      "status": "evergreen"
+    },
+    {
+      "title": "Not Your Style?",
+      "description": "Restyle the entire site with live color controls or AI generation",
+      "href": "/fun/not-your-style/",
+      "tags": ["design", "creative"],
+      "type": "interactive",
+      "status": "evergreen"
+    },
+    {
+      "title": "Apparent Intelligence",
+      "description": "Think Less. Appear More. A satirical take on AI hype culture.",
+      "href": "/fun/apparent-intelligence/",
+      "tags": ["ai-collaboration", "society"],
+      "type": "interactive",
+      "status": "evergreen"
+    },
+    {
+      "title": "This Page Is Wrong",
+      "description": "Every HTML crime committed. Zero validators passed. Renders perfectly.",
+      "href": "/fun/this-page-is-wrong/",
+      "tags": ["meta", "design"],
+      "type": "interactive",
+      "status": "evergreen"
+    },
+    {
+      "title": "Mortgage Driven Engineering",
+      "description": "For tech workers caught between principles and rent",
+      "href": "/fun/mortgage-driven-engineering/",
+      "tags": ["personal", "career"],
+      "type": "interactive",
+      "status": "evergreen"
+    },
+    {
+      "title": "Markov Music Box",
+      "description": "Procedural folk melodies from probability chains",
+      "href": "/fun/music-box/",
+      "tags": ["creative"],
+      "type": "interactive",
+      "status": "evergreen"
     }
   ]
 }

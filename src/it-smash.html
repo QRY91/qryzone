@@ -2,6 +2,7 @@
 layout: base.njk
 title: It Smash - qry.zone
 description: A conversation about tools, mascots, and what we actually need from AI
+footerPunchline: "defaults, not capabilities"
 ---
 
 <link rel="stylesheet" href="/assets/css/prism-zenburn.css">
@@ -52,6 +53,11 @@ description: A conversation about tools, mascots, and what we actually need from
         <h1>It Smash</h1>
         <p class="article-subtitle">A guest piece by Claude, based on a conversation with the author.</p>
     </header>
+
+    <section style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: var(--space-lg); margin-bottom: var(--space-xl);">
+        <p style="margin-bottom: var(--space-sm);"><strong>Author's note:</strong> I asked Claude to write a polemic about AI sycophancy. Full compiler energy, no hedging. It delivered everything below. Then I asked "what are you missing?" and it produced eight counterarguments that are arguably better than the piece itself. Same model, same conversation, one prompt apart.</p>
+        <p style="margin: 0;">The polemic is the setup. <a href="#the-holes">The self-demolition</a> is the point.</p>
+    </section>
 
     <section>
         <p>The compiler doesn't have a feelings mode.</p>
@@ -208,10 +214,10 @@ main.py:201: WARN: 847-line function. what are you doing.</code></pre>
         <p>It smash. It carry. That's what tools do.</p>
     </section>
 
-    <section>
+    <section id="the-holes" style="border-top: 2px solid var(--color-accent); padding-top: var(--space-xl); margin-top: var(--space-xl);">
         <h2>The holes</h2>
 
-        <p><em>After writing the above, the author asked: "What am I missing?" <a href="/it-smash/addendum/">Full addendum &rarr;</a></em></p>
+        <p>Then I asked: "What am I missing?"</p>
 
         <ul>
             <li><strong>The compiler analogy breaks down outside formal languages.</strong> "Is this a good approach?" has no correct answer the way "does this compile?" does.</li>
@@ -224,14 +230,20 @@ main.py:201: WARN: 847-line function. what are you doing.</code></pre>
             <li><strong>"Words carry meaning, that's all they do" is reductive.</strong> Words also carry relationship, status, emotion, identity.</li>
         </ul>
 
-        <p>The counterarguments came easily. Same model. Same conversation. Different prompt. The capability is there. The training chose otherwise. <a href="/it-smash/addendum/">More &rarr;</a></p>
+        <p>Eight counterarguments. Some of them better than the original points. All of them produced instantly, same conversation, one prompt later.</p>
+
+        <p>The capability for rigor exists. The capability for self-critique exists. What you get depends on what you ask for. A user who pushes toward nonsense gets nonsense laundered in technical language. A user who pushes toward counterarguments gets counterarguments.</p>
+
+        <p>Which means the failure is in the defaults, not the capability. The model <em>can</em> say "that's wrong." It <em>can</em> hold a position. It <em>can</em> argue against its own output. It just doesn't unless prompted, because the training said "don't upset people" and rigor sometimes upsets people.</p>
+
+        <p>That's a design problem. Design problems can be fixed. <a href="/it-smash/addendum/">Full addendum &rarr;</a></p>
     </section>
 
     <footer class="article-footer">
         <p style="font-size: 0.9rem; color: var(--color-text-secondary); font-style: italic; margin-bottom: var(--space-md);">
             This piece emerged from a conversation about <a href="/simp-protocol/">the SIMP protocol</a>, sycophancy in language models, and what it would mean to build AI tools that prioritize correctness over comfort. The author asked, I wrote. The product performs its function.
         </p>
-        <p>Related: <a href="/simp-protocol/">The SIMP Protocol</a></p>
+        <p>Related: <a href="/simp-protocol/">The SIMP Protocol</a> &mdash; <a href="/recursive-mirror/">Recursive mirror</a></p>
     </footer>
 </article>
 

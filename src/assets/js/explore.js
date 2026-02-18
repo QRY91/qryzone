@@ -1,6 +1,5 @@
 // Explore page filtering
 (function() {
-    // Validate and normalize content items with defensive defaults
     function validateContent(item) {
         if (!item || typeof item !== 'object') {
             return null;
@@ -10,13 +9,13 @@
             description: item.description || '',
             href: item.href || '#',
             tags: Array.isArray(item.tags) ? item.tags : [],
+            type: item.type || 'article',
             status: item.status || 'seedling',
             connections: Array.isArray(item.connections) ? item.connections : [],
             lastUpdated: item.lastUpdated || null
         };
     }
 
-    // Data will be embedded in the page, validated before use
     const rawData = window.exploreData || [];
     const contentData = rawData.map(validateContent).filter(Boolean);
 
@@ -29,6 +28,7 @@
     // State
     let selectedTags = [];
     let selectedStatus = null;
+    let selectedType = null;
     let showRandom = false;
     let randomItem = null;
     let searchQuery = '';
@@ -36,6 +36,7 @@
     // DOM elements
     const tagsContainer = document.getElementById('tags-container');
     const statusContainer = document.getElementById('status-container');
+    const typeContainer = document.getElementById('type-container');
     const contentContainer = document.getElementById('content-container');
     const recentlyUpdatedSection = document.getElementById('recently-updated');
     const randomSection = document.getElementById('random-section');
@@ -44,15 +45,16 @@
     const resultsCount = document.getElementById('results-count');
     const sectionTitle = document.getElementById('section-title');
     const searchInput = document.getElementById('explore-search');
+    const filterToggle = document.getElementById('filter-toggle');
+    const filterSection = document.getElementById('filter-section');
 
-    // Initialize
     function init() {
-        // Set item count dynamically
         const itemCount = document.getElementById('item-count');
         if (itemCount) itemCount.textContent = contentData.length;
 
         renderTags();
         renderStatusButtons();
+        renderTypeButtons();
         renderRecentlyUpdated();
         renderContent();
         setupEventListeners();
@@ -63,22 +65,30 @@
         const recentContent = document.getElementById('recent-content');
         if (!recentContent) return;
 
-        // Get items with lastUpdated, sort by date descending, take top 5
         const recentItems = contentData
             .filter(item => item.lastUpdated)
             .sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated))
-            .slice(0, 5);
+            .slice(0, 6);
 
         recentContent.innerHTML = recentItems.map(item => renderCard(item, true)).join('');
+    }
+
+    function toggleFilters(show) {
+        if (!filterSection || !filterToggle) return;
+        if (show === undefined) show = filterSection.hidden;
+        filterSection.hidden = !show;
+        filterToggle.classList.toggle('active', show);
     }
 
     function checkUrlParams() {
         const params = new URLSearchParams(window.location.search);
         const tag = params.get('tag');
         const query = params.get('q');
+        const type = params.get('type');
 
         if (tag && allTags.includes(tag)) {
             selectedTags = [tag];
+            toggleFilters(true);
             renderTags();
         }
 
@@ -87,7 +97,13 @@
             if (searchInput) searchInput.value = query;
         }
 
-        if (tag || query) {
+        if (type && ['article', 'interactive', 'project'].includes(type)) {
+            selectedType = type;
+            toggleFilters(true);
+            renderTypeButtons();
+        }
+
+        if (tag || query || type) {
             renderContent();
         }
     }
@@ -111,7 +127,17 @@
         });
     }
 
-    // Pure filter functions (single responsibility)
+    function renderTypeButtons() {
+        if (!typeContainer) return;
+        ['article', 'interactive', 'project'].forEach(type => {
+            const btn = typeContainer.querySelector(`[data-type="${type}"]`);
+            if (btn) {
+                btn.classList.toggle('active', selectedType === type);
+            }
+        });
+    }
+
+    // Filter functions
     function filterBySearch(items, query) {
         if (!query) return items;
         const q = query.toLowerCase();
@@ -134,20 +160,24 @@
         return items.filter(item => item.status === status);
     }
 
-    // Compose filters
+    function filterByType(items, type) {
+        if (!type) return items;
+        return items.filter(item => item.type === type);
+    }
+
     function getFilteredContent() {
         let filtered = contentData;
         filtered = filterBySearch(filtered, searchQuery);
         filtered = filterByTags(filtered, selectedTags);
         filtered = filterByStatus(filtered, selectedStatus);
+        filtered = filterByType(filtered, selectedType);
         return filtered;
     }
 
     function renderContent() {
         const filtered = getFilteredContent();
-        const hasFilters = selectedTags.length > 0 || selectedStatus !== null || searchQuery !== '';
+        const hasFilters = selectedTags.length > 0 || selectedStatus !== null || selectedType !== null || searchQuery !== '';
 
-        // Update UI elements
         if (clearBtn) clearBtn.style.display = hasFilters ? 'inline-block' : 'none';
         if (resultsCount) {
             resultsCount.style.display = hasFilters ? 'inline' : 'none';
@@ -166,49 +196,37 @@
             }
         }
 
-        // Render content list
         if (contentContainer) {
             contentContainer.innerHTML = filtered.map(item => renderCard(item)).join('');
         }
     }
 
-    function renderCard(item, compact = false) {
-        const isExternal = item.href.startsWith('http');
+    function renderCard(item, compact) {
+        var isExternal = item.href.startsWith('http');
+        var typeClass = item.type !== 'article' ? ' type-' + item.type : '';
 
-        let connectionsHtml = '';
-        if (!compact && item.connections && item.connections.length > 0) {
-            const links = item.connections.map(conn => {
-                const href = titleToHref.get(conn);
-                if (href) {
-                    const ext = href.startsWith('http');
-                    return ext
-                        ? `<a href="${href}" target="_blank" rel="noopener noreferrer">${conn}</a>`
-                        : `<a href="${href}">${conn}</a>`;
-                }
-                return conn;
-            }).join(', ');
-            connectionsHtml = `<div class="connections">Related: ${links}</div>`;
+        var typeIndicator = '';
+        if (item.type === 'interactive') {
+            typeIndicator = '<span class="type-indicator">interactive</span>';
+        } else if (item.type === 'project') {
+            typeIndicator = '<span class="type-indicator">project</span>';
         }
 
-        const tagsHtml = compact ? '' : `
-            <div class="card-tags">
-                ${item.tags.map(tag => `<button class="tag-btn small" data-tag="${tag}">${tag}</button>`).join('')}
-            </div>
-        `;
+        var descriptionHtml = compact ? '' :
+            '<p class="card-description">' + item.description + '</p>';
 
-        return `
-            <div class="content-card${compact ? ' compact' : ''}">
-                <div class="card-header">
-                    <a href="${item.href}"${isExternal ? ' target="_blank" rel="noopener noreferrer"' : ''} class="card-title">
-                        ${item.title}${isExternal ? ' ↗' : ''}
-                    </a>
-                    <span class="status-badge status-${item.status}">${item.status}</span>
-                </div>
-                ${compact ? '' : `<p class="card-description">${item.description}</p>`}
-                ${tagsHtml}
-                ${connectionsHtml}
-            </div>
-        `;
+        return '<div class="content-card' + typeClass + (compact ? ' compact' : '') + '">' +
+            '<div class="card-header">' +
+                '<a href="' + item.href + '"' +
+                    (isExternal ? ' target="_blank" rel="noopener noreferrer"' : '') +
+                    ' class="card-title">' +
+                    item.title + (isExternal ? ' &#8599;' : '') +
+                '</a>' +
+                '<span class="status-badge status-' + item.status + '">' + item.status + '</span>' +
+            '</div>' +
+            descriptionHtml +
+            (typeIndicator && !compact ? '<div class="card-meta">' + typeIndicator + '</div>' : '') +
+        '</div>';
     }
 
     function setupEventListeners() {
@@ -216,9 +234,9 @@
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('tag-btn')) {
                 e.preventDefault();
-                const tag = e.target.dataset.tag;
+                var tag = e.target.dataset.tag;
                 if (selectedTags.includes(tag)) {
-                    selectedTags = selectedTags.filter(t => t !== tag);
+                    selectedTags = selectedTags.filter(function(t) { return t !== tag; });
                 } else {
                     selectedTags.push(tag);
                 }
@@ -233,7 +251,7 @@
         if (statusContainer) {
             statusContainer.addEventListener('click', function(e) {
                 if (e.target.dataset.status) {
-                    const status = e.target.dataset.status;
+                    var status = e.target.dataset.status;
                     selectedStatus = selectedStatus === status ? null : status;
                     showRandom = false;
                     randomItem = null;
@@ -243,10 +261,24 @@
             });
         }
 
+        // Type clicks
+        if (typeContainer) {
+            typeContainer.addEventListener('click', function(e) {
+                if (e.target.dataset.type) {
+                    var type = e.target.dataset.type;
+                    selectedType = selectedType === type ? null : type;
+                    showRandom = false;
+                    randomItem = null;
+                    renderTypeButtons();
+                    renderContent();
+                }
+            });
+        }
+
         // Random button
         if (randomBtn) {
             randomBtn.addEventListener('click', function() {
-                const randomIndex = Math.floor(Math.random() * contentData.length);
+                var randomIndex = Math.floor(Math.random() * contentData.length);
                 randomItem = contentData[randomIndex];
                 showRandom = true;
                 renderContent();
@@ -258,12 +290,14 @@
             clearBtn.addEventListener('click', function() {
                 selectedTags = [];
                 selectedStatus = null;
+                selectedType = null;
                 showRandom = false;
                 randomItem = null;
                 searchQuery = '';
                 if (searchInput) searchInput.value = '';
                 renderTags();
                 renderStatusButtons();
+                renderTypeButtons();
                 renderContent();
             });
         }
@@ -277,9 +311,15 @@
                 renderContent();
             });
         }
+
+        // Filter toggle
+        if (filterToggle) {
+            filterToggle.addEventListener('click', function() {
+                toggleFilters();
+            });
+        }
     }
 
-    // Run when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
