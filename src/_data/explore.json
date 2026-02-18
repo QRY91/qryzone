@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "title": "Hack My Claw",
+      "description": "Lunchbreak CTF - prompt injection against an OpenClaw assistant for $100",
+      "href": "/hack-my-claw/",
+      "tags": ["ai-collaboration", "security", "learning"],
+      "status": "seedling",
+      "connections": [],
+      "lastUpdated": "2026-02-18"
+    },
+    {
       "title": "How to write a zine",
       "description": "A self-referential guide to short-form writing, for humans and machines",
       "href": "/how-to-write-a-zine/",

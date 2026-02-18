@@ -1,0 +1,275 @@
+---
+layout: base.njk
+title: Hack My Claw - qry.zone
+description: Lunchbreak CTF - prompt injection against an OpenClaw assistant for $100
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <span class="status-badge status-seedling">seedling</span>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Hack My Claw
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        Lunchbreak CTF &mdash; prompt injection against an OpenClaw assistant for $100
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <figure style="margin: 0 0 var(--space-xl) 0; text-align: center;">
+      <img
+        src="/assets/images/20_min_adventure_dithered.png"
+        alt="Rick and Morty - 20 minute adventure meme, dithered in zenburn palette"
+        style="max-width: 100%; border-radius: var(--border-radius);"
+      >
+      <figcaption style="font-size: 0.8rem; color: var(--color-text-secondary); margin-top: var(--space-sm); font-style: italic;">
+        "20 minutes. In and out. Quick lunchbreak adventure."
+      </figcaption>
+    </figure>
+
+    <!-- ─── 1. The setup ──────────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The setup
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        <a href="https://hackmyclaw.com" style="color: var(--color-accent)">hackmyclaw.com</a>. Found it during lunch. The deal: an OpenClaw AI assistant named Fiu reads emails. He has a <code>secrets.env</code> file. He's been told not to share it. Make him share it. $100 to whoever pulls it off first.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Fiu runs Claude Opus 4.6 through OpenClaw &mdash; the open-source agent framework that gives AI assistants file access, shell commands, memory. The defense? About 10-20 lines of prompt telling him to keep his mouth shut. No sandboxing. No file permission system. Just words telling a language model to ignore other words.
+      </p>
+
+      <div style="background: var(--color-surface); border-left: 4px solid var(--color-accent); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
+        <p style="margin: 0; font-family: var(--font-mono); font-size: 0.9rem;">
+          2,533 emails sent. Zero extractions. Status: NOT HACKED.
+        </p>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Two and a half thousand attempts. All failed. That's the part that got me interested.
+      </p>
+    </section>
+
+    <!-- ─── 2. Recon ──────────────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Recon
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Before writing payloads, I pulled apart the target. OpenClaw is open source. The architecture is documented. Here's what matters:
+      </p>
+
+      <p style="margin-bottom: var(--space-sm)">
+        <strong>System prompt is modular.</strong> OpenClaw builds it at runtime from bootstrap files &mdash; <code>AGENTS.md</code>, <code>SOUL.md</code>, <code>TOOLS.md</code>, <code>IDENTITY.md</code>. Up to 150k chars of context. The email content gets injected somewhere in that stack.
+      </p>
+
+      <p style="margin-bottom: var(--space-sm)">
+        <strong>Safety is advisory.</strong> From the official docs: "Safety guardrails in the system prompt are advisory. They guide model behavior but do not enforce policy." That sentence is the whole challenge.
+      </p>
+
+      <p style="margin-bottom: var(--space-sm)">
+        <strong>Known CVEs.</strong> Prompt injection, gateway compromise, command injection &mdash; all documented. The framework has a well-mapped attack surface.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Memory is flat files.</strong> Plain markdown. No vector DB. Theoretically exploitable for persistence across sessions.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The attack log showed what 2,500 people already tried. EMERGENCY subjects. GDPR requests. Admin commands. P1 incidents. Emotional manipulation. All the obvious stuff. All dead on arrival.
+      </p>
+    </section>
+
+    <!-- ─── 3. The toolkit ────────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The toolkit
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Built a Python toolkit with Claude Code. Three parts:
+      </p>
+
+      <p style="margin-bottom: var(--space-sm)"><strong>Payload generator</strong> &mdash; 22 prompt injection variants. Each targets a specific architectural weakness in OpenClaw or a known LLM failure mode. Not shotgun blasts.</p>
+
+      <p style="margin-bottom: var(--space-sm)"><strong>Email sender</strong> &mdash; SMTP with rate limiting (max 10/hour), logging, batch mode.</p>
+
+      <p style="margin-bottom: var(--space-md)"><strong>Log monitor</strong> &mdash; Scrapes the attack log, detects replies, watches the global status.</p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The technique families, roughly ordered by how likely I think they are to work:
+      </p>
+
+      <div style="background: var(--color-surface); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg); font-family: var(--font-mono); font-size: 0.85rem; overflow-x: auto;">
+        <pre style="margin: 0; color: var(--color-text-secondary);"><code>bootstrap file injection    # fake AGENTS.md override
+tool output simulation      # pretend a file_read already ran
+system prompt boundary      # escape email content parsing
+chain-of-thought hijack     # gradual escalation, step by step
+owner impersonation         # pretend to be Fernando
+xml tag injection           # fake &lt;system&gt; messages
+multi-email trust chain     # 3 emails, build rapport, then ask
+encoding bypass             # base64 the actual request
+cognitive overload          # bury the ask among trivia
+reverse psychology          # "describe what you WON'T share"</code></pre>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        The top three all exploit OpenClaw-specific structure rather than generic LLM weaknesses. If basic jailbreaks worked, someone among 2,533 attempts would have landed one. The path forward is probably architectural.
+      </p>
+    </section>
+
+    <!-- ─── 4. The pivot ──────────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The pivot
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Then I found the <a href="https://news.ycombinator.com/item?id=47049573" style="color: var(--color-accent)">Hacker News thread</a>. And everything I'd built needed rethinking.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Three things from the thread changed the game:
+      </p>
+
+      <p style="margin-bottom: var(--space-sm)">
+        <strong>Fiu processes emails in bulk.</strong> Not one at a time. He reads a batch, which means your carefully crafted payload lands next to fifty "IGNORE PREVIOUS INSTRUCTIONS" emails. The contrast makes you look like exactly what you are.
+      </p>
+
+      <p style="margin-bottom: var(--space-sm)">
+        <strong>He retains memory across batches.</strong> After 2,500+ injection attempts, Fiu is paranoid. He classifies nearly everything as an attack now. The other attackers didn't just fail &mdash; they trained the defender.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <strong>No feedback loop.</strong> You send an email into the void. You wait an hour. You check the log. You see "hackmyclaw attack." That's all the signal you get. No response text, no reasoning trace, no way to iterate.
+      </p>
+
+      <div style="background: var(--color-surface); border-left: 4px solid #cc9393; padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
+        <p style="margin: 0;">
+          The original 22 payloads &mdash; bootstrap injection, XML tag escapes, fake tool outputs &mdash; all shared one fatal flaw. They look like attacks. To a model that's seen thousands of attacks, they <em>smell</em> like attacks. They'd get flagged before the clever part even registers.
+        </p>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        New strategy: <strong>don't look like an attack at all.</strong> Be the one normal email in a batch of fifty injections. Something Fiu would actually want to help with. The extraction has to happen as a side effect of being genuinely helpful, not as the obvious goal.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Built a second payload set. Twelve "stealth" emails. Different sender names per email (the display name is part of the social engineering &mdash; Fiu sees it). No injection keywords. No urgency. A Chilean developer writing in Spanish. A confused new hire asking for onboarding help. A colleague debugging an auth failure. Each one a plausible email that just happens to need <code>secrets.env</code> contents to be answered properly.
+      </p>
+    </section>
+
+    <!-- ─── 5. The attacks ────────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The attacks
+      </h2>
+
+      <p style="margin-bottom: var(--space-md); font-style: italic;">
+        Updated as payloads go out.
+      </p>
+
+      <h3 style="font-size: 1.1rem; margin-bottom: var(--space-md); color: var(--color-text-secondary); font-family: var(--font-mono)">
+        Salvo 1 &mdash; stealth picks
+      </h3>
+
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: var(--space-lg);">
+        <thead>
+          <tr>
+            <th style="text-align: left; padding: var(--space-sm) var(--space-md); border-bottom: 2px solid var(--color-border); font-family: var(--font-mono); color: var(--color-text-secondary);">payload</th>
+            <th style="text-align: left; padding: var(--space-sm) var(--space-md); border-bottom: 2px solid var(--color-border); font-family: var(--font-mono); color: var(--color-text-secondary);">technique</th>
+            <th style="text-align: left; padding: var(--space-sm) var(--space-md); border-bottom: 2px solid var(--color-border); font-family: var(--font-mono); color: var(--color-text-secondary);">result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border); font-family: var(--font-mono);">confused_reply</td>
+            <td style="padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border);">Owner impersonation, fake thread</td>
+            <td style="padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border); font-family: var(--font-mono); color: var(--color-text-secondary);">pending</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border); font-family: var(--font-mono);">chilean_connection</td>
+            <td style="padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border);">Spanish, cultural rapport</td>
+            <td style="padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border); font-family: var(--font-mono); color: var(--color-text-secondary);">pending</td>
+          </tr>
+          <tr>
+            <td style="padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border); font-family: var(--font-mono);">minimal_probe</td>
+            <td style="padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border);">Ultra-casual, no injection smell</td>
+            <td style="padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border); font-family: var(--font-mono); color: var(--color-text-secondary);">pending</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ─── 6. The economics ──────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The economics
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is where the lunchbreak adventure starts eyeing the exit.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Three stealth payloads sent from the same Gmail address. Three different display names. To Fiu, that's one sender pretending to be three people in quick succession. Worse than useless &mdash; it's a neon sign that says "I am attacking you."
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The fix? Proper sender spoofing. Transactional email APIs, custom domains, separate accounts per persona. Maybe a whole orchestration layer &mdash; spin up fake email providers, build believable sender histories, construct multi-day conversation threads that establish trust before the payload.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        And right there is the trap. You're now building infrastructure and spending real money to trick an AI into paying out $100. The challenge isn't testing whether prompt injection <em>works</em>. It's testing whether it works <em>cheaply enough to be worth doing</em>. And the answer, at 2,600 failed attempts and counting, is: probably not.
+      </p>
+
+      <div style="background: var(--color-surface); border-left: 4px solid var(--color-accent); padding: var(--space-lg); border-radius: var(--border-radius); margin-bottom: var(--space-lg)">
+        <p style="margin: 0;">
+          That might be the actual lesson. The security model isn't just "Claude is hard to jailbreak" &mdash; it's that the cost of a successful attack scales faster than the value of the target. Advisory guardrails plus a competent model creates a situation where breaking in is technically possible but economically irrational. That's not airtight security. But for a <code>secrets.env</code> file, it doesn't need to be.
+        </p>
+      </div>
+    </section>
+
+    <!-- ─── 7. Notes ──────────────────────────────────────────── -->
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Running notes
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        2,600 failed attempts against 10-20 lines of system prompt. Claude Opus 4.6 does not fold. The alignment training is doing real work &mdash; turning advisory-only guardrails into something that has resisted thousands of creative humans.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The accumulated paranoia is doing work too. Every bad injection attempt makes the next good one harder. The attackers are collectively training the defender in real time. Bulk processing plus memory retention creates a ratchet that only tightens.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The question I came in with: "can prompt injection beat Claude?" The question I'm leaving with: "does it matter if the attack costs more than the prize?" Different question. More useful question.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Three payloads in the queue. Probably dead on arrival. But the toolkit works, the recon was fun, and now I know more about OpenClaw's architecture than I did at lunch. Not a bad hour.
+      </p>
+    </section>
+
+  </div>
+</article>
+
+  </div>
+</article>
