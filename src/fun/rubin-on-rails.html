@@ -1,0 +1,637 @@
+---
+permalink: /fun/rubin-on-rails/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rubin_on_rails — Production Philosophy for Code</title>
+<meta name="description" content="A Ruby gem that channels Rick Rubin's production philosophy into AI-assisted coding. Strip away everything unnecessary.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;600;700&display=swap');
+
+  *{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --black:#0a0a0a;
+    --dark:#111;
+    --surface:#1a1a1a;
+    --surface-2:#222;
+    --dim:#444;
+    --muted:#666;
+    --soft:#999;
+    --light:#ccc;
+    --white:#e8e8e8;
+    --accent:#c9a55a;
+    --accent-dim:#8a7039;
+    --red:#c45c5c;
+    --green:#5c8a5c;
+    --blue:#5c7a9a;
+    --glow:rgba(201,165,90,0.08);
+    --mono:'JetBrains Mono',monospace;
+    --sans:'Inter',system-ui,sans-serif;
+  }
+
+  html{scroll-behavior:smooth;background:var(--black)}
+
+  body{
+    font-family:var(--sans);
+    background:var(--black);
+    color:var(--soft);
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{background:var(--accent);color:var(--black)}
+
+  /* ——— Ambient background ——— */
+  .ambient{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201,165,90,0.03) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 20% 50%, rgba(201,165,90,0.02) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(201,165,90,0.015) 0%, transparent 50%);
+  }
+
+  .noise{
+    position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.035;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:128px 128px;
+  }
+
+  /* ——— Layout ——— */
+  section{position:relative;z-index:2}
+
+  .container{
+    max-width:900px;margin:0 auto;padding:0 2rem;
+  }
+
+  /* ——— Hero ——— */
+  .hero{
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;
+    padding:4rem 2rem;
+  }
+
+  .hero-inner{max-width:700px}
+
+  .hero-badge{
+    display:inline-block;
+    font-family:var(--mono);font-size:0.7rem;letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:var(--accent-dim);
+    border:1px solid var(--surface-2);
+    padding:0.4em 1.2em;
+    border-radius:100px;
+    margin-bottom:3rem;
+    opacity:0;animation:fade-in 1s 0.2s ease forwards;
+  }
+
+  .hero h1{
+    font-family:var(--mono);
+    font-size:clamp(2.2rem,6vw,4rem);
+    font-weight:300;
+    letter-spacing:-0.02em;
+    color:var(--white);
+    line-height:1.1;
+    margin-bottom:0.3em;
+    opacity:0;animation:fade-up 1s 0.4s ease forwards;
+  }
+
+  .hero h1 span{color:var(--accent)}
+
+  .hero-sub{
+    font-size:clamp(1rem,2.5vw,1.25rem);
+    color:var(--muted);
+    font-weight:300;
+    max-width:500px;margin:0 auto 3rem;
+    opacity:0;animation:fade-up 1s 0.6s ease forwards;
+  }
+
+  .hero-install{
+    display:inline-block;
+    font-family:var(--mono);font-size:0.9rem;
+    background:var(--surface);
+    border:1px solid var(--surface-2);
+    padding:0.8em 2em;
+    border-radius:6px;
+    color:var(--light);
+    cursor:pointer;
+    transition:all 0.3s ease;
+    opacity:0;animation:fade-up 1s 0.8s ease forwards;
+    position:relative;
+  }
+
+  .hero-install:hover{
+    border-color:var(--accent-dim);
+    box-shadow:0 0 30px rgba(201,165,90,0.06);
+  }
+
+  .hero-install .prompt{color:var(--accent-dim);margin-right:0.3em}
+  .hero-install .copy-hint{
+    position:absolute;top:-2rem;left:50%;transform:translateX(-50%);
+    font-size:0.65rem;color:var(--dim);
+    opacity:0;transition:opacity 0.2s;
+    white-space:nowrap;
+  }
+  .hero-install:hover .copy-hint{opacity:1}
+
+  .hero-scroll{
+    display:block;margin-top:4rem;
+    opacity:0;animation:fade-in 1s 1.5s ease forwards;
+  }
+  .hero-scroll svg{
+    width:20px;height:20px;stroke:var(--dim);
+    animation:float 3s ease-in-out infinite;
+  }
+
+  /* ——— Divider ——— */
+  .divider{
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--surface-2) 30%, var(--surface-2) 70%, transparent);
+    margin:0 auto;max-width:600px;
+  }
+
+  /* ——— Philosophy / Manifesto ——— */
+  .manifesto{padding:8rem 2rem;text-align:center}
+
+  .manifesto-label{
+    font-family:var(--mono);font-size:0.65rem;
+    letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--dim);margin-bottom:4rem;
+  }
+
+  .manifesto-list{
+    list-style:none;max-width:600px;margin:0 auto;
+    display:flex;flex-direction:column;gap:2.5rem;
+  }
+
+  .manifesto-list li{
+    opacity:0;transform:translateY(20px);
+    transition:all 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .manifesto-list li.visible{opacity:1;transform:translateY(0)}
+
+  .manifesto-list .num{
+    font-family:var(--mono);font-size:0.7rem;
+    color:var(--accent-dim);display:block;margin-bottom:0.4rem;
+    letter-spacing:0.1em;
+  }
+
+  .manifesto-list h3{
+    font-family:var(--mono);font-size:1.15rem;
+    font-weight:400;color:var(--white);margin-bottom:0.4rem;
+  }
+
+  .manifesto-list p{
+    font-size:0.9rem;color:var(--muted);
+    max-width:440px;margin:0 auto;line-height:1.7;
+  }
+
+  /* ——— Terminal Demo ——— */
+  .demo{padding:6rem 2rem 8rem}
+  .demo-label{
+    font-family:var(--mono);font-size:0.65rem;
+    letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--dim);margin-bottom:2rem;text-align:center;
+  }
+
+  .terminal{
+    max-width:680px;margin:0 auto;
+    background:var(--dark);
+    border:1px solid var(--surface-2);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:
+      0 4px 60px rgba(0,0,0,0.5),
+      0 0 80px rgba(201,165,90,0.03);
+  }
+
+  .terminal-bar{
+    display:flex;align-items:center;gap:7px;
+    padding:12px 16px;
+    background:var(--surface);
+    border-bottom:1px solid var(--surface-2);
+  }
+
+  .terminal-dot{
+    width:11px;height:11px;border-radius:50%;
+    background:var(--surface-2);
+  }
+  .terminal-dot:nth-child(1){background:#c45c5c88}
+  .terminal-dot:nth-child(2){background:#c9a55a88}
+  .terminal-dot:nth-child(3){background:#5c8a5c88}
+
+  .terminal-title{
+    flex:1;text-align:center;
+    font-family:var(--mono);font-size:0.65rem;
+    color:var(--dim);margin-right:40px;
+  }
+
+  .terminal-body{
+    padding:1.5rem;
+    font-family:var(--mono);font-size:0.8rem;
+    line-height:1.8;
+    min-height:340px;
+    color:var(--soft);
+  }
+
+  .terminal-body .line{
+    opacity:0;transform:translateY(4px);
+    transition:all 0.4s ease;
+    white-space:pre-wrap;
+    min-height:1.8em;
+  }
+
+  .terminal-body .line.visible{opacity:1;transform:translateY(0)}
+
+  .terminal-body .prompt-char{color:var(--accent)}
+  .terminal-body .cmd{color:var(--white)}
+  .terminal-body .flag{color:var(--accent-dim)}
+  .terminal-body .comment{color:var(--dim);font-style:italic}
+  .terminal-body .output{color:var(--muted)}
+  .terminal-body .output-accent{color:var(--accent-dim)}
+  .terminal-body .output-dim{color:var(--dim)}
+  .terminal-body .success{color:var(--green)}
+  .terminal-body .stripped{color:var(--red);text-decoration:line-through;opacity:0.6}
+
+  .terminal-body .cursor{
+    display:inline-block;width:8px;height:15px;
+    background:var(--accent);
+    vertical-align:text-bottom;
+    animation:blink 1s step-end infinite;
+    margin-left:2px;
+  }
+
+  .terminal-controls{
+    display:flex;justify-content:center;gap:0.5rem;
+    margin-top:1.5rem;
+  }
+
+  .terminal-btn{
+    font-family:var(--mono);font-size:0.65rem;
+    letter-spacing:0.05em;
+    background:none;border:1px solid var(--surface-2);
+    color:var(--dim);padding:0.4em 1em;
+    border-radius:4px;cursor:pointer;
+    transition:all 0.2s;
+  }
+  .terminal-btn:hover{border-color:var(--accent-dim);color:var(--soft)}
+  .terminal-btn.active{border-color:var(--accent-dim);color:var(--accent)}
+
+  /* ——— Commands grid ——— */
+  .commands{padding:6rem 2rem 8rem}
+  .commands-label{
+    font-family:var(--mono);font-size:0.65rem;
+    letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--dim);margin-bottom:3rem;text-align:center;
+  }
+
+  .cmd-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:1px;
+    max-width:760px;margin:0 auto;
+    background:var(--surface-2);
+    border:1px solid var(--surface-2);
+    border-radius:8px;
+    overflow:hidden;
+  }
+
+  .cmd-card{
+    background:var(--dark);
+    padding:2rem;
+    transition:background 0.3s;
+  }
+  .cmd-card:hover{background:var(--surface)}
+
+  .cmd-card .cmd-name{
+    font-family:var(--mono);font-size:0.95rem;
+    color:var(--accent);margin-bottom:0.5rem;
+    font-weight:500;
+  }
+
+  .cmd-card .cmd-desc{
+    font-size:0.82rem;color:var(--muted);line-height:1.6;
+  }
+
+  .cmd-card .cmd-metaphor{
+    display:block;margin-top:0.6rem;
+    font-size:0.72rem;color:var(--dim);
+    font-style:italic;
+  }
+
+  /* ——— Quote ——— */
+  .quote-section{padding:6rem 2rem 8rem;text-align:center}
+
+  .quote{
+    font-size:clamp(1.2rem,3vw,1.8rem);
+    font-weight:300;
+    color:var(--muted);
+    max-width:600px;margin:0 auto 1.5rem;
+    line-height:1.5;
+    font-style:italic;
+  }
+  .quote em{color:var(--white);font-style:italic}
+  .quote-attr{
+    font-family:var(--mono);font-size:0.7rem;
+    color:var(--dim);letter-spacing:0.1em;
+  }
+
+  /* ——— Footer ——— */
+  footer{
+    padding:4rem 2rem;
+    text-align:center;
+    border-top:1px solid var(--surface-2);
+  }
+
+  footer .footer-links{
+    display:flex;justify-content:center;gap:2rem;
+    margin-bottom:2rem;flex-wrap:wrap;
+  }
+  footer a{
+    font-family:var(--mono);font-size:0.75rem;
+    color:var(--dim);text-decoration:none;
+    letter-spacing:0.05em;
+    transition:color 0.2s;
+  }
+  footer a:hover{color:var(--accent)}
+
+  footer .footer-copy{
+    font-family:var(--mono);font-size:0.6rem;
+    color:var(--dim);opacity:0.5;
+  }
+
+  /* ——— Animations ——— */
+  @keyframes fade-in{from{opacity:0}to{opacity:1}}
+  @keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes blink{50%{opacity:0}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+  /* ——— Responsive ——— */
+  @media(max-width:600px){
+    .hero{min-height:90vh;padding:3rem 1.5rem}
+    .manifesto{padding:5rem 1.5rem}
+    .demo{padding:4rem 1rem}
+    .terminal-body{padding:1rem;font-size:0.72rem}
+    .commands{padding:4rem 1rem}
+    .cmd-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+<div class="noise"></div>
+
+<!-- ——— Hero ——— -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="hero-badge">v0.1.0 — pure ruby, zero deps</span>
+    <h1>rubin_on_<span>rails</span></h1>
+    <p class="hero-sub">Production philosophy for code.<br>Rick Rubin's creative process, applied to AI-assisted development.</p>
+    <div class="hero-install" onclick="copyInstall(this)" title="Click to copy">
+      <span class="copy-hint">click to copy</span>
+      <span class="prompt">$</span> gem install rubin_on_rails
+    </div>
+    <div class="hero-scroll">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ——— Manifesto ——— -->
+<section class="manifesto">
+  <div class="manifesto-label">The Five Principles</div>
+  <ol class="manifesto-list">
+    <li>
+      <span class="num">01</span>
+      <h3>Reduce to the essential</h3>
+      <p>Great work isn't about adding more. It's about finding what doesn't belong and having the courage to remove it.</p>
+    </li>
+    <li>
+      <span class="num">02</span>
+      <h3>Serve the work, not your ego</h3>
+      <p>The code has its own intent. Your job is to discover it, not to impose cleverness upon it.</p>
+    </li>
+    <li>
+      <span class="num">03</span>
+      <h3>Create the environment for magic</h3>
+      <p>You can't force greatness. You can only set the conditions — then stay out of the way.</p>
+    </li>
+    <li>
+      <span class="num">04</span>
+      <h3>The audience is real</h3>
+      <p>Someone will read this code. Someone will maintain it. Write for them, not for the compiler.</p>
+    </li>
+    <li>
+      <span class="num">05</span>
+      <h3>Finished means stripped bare</h3>
+      <p>A work is complete not when there's nothing left to add, but when there's nothing left to take away.</p>
+    </li>
+  </ol>
+</section>
+
+<div class="divider"></div>
+
+<!-- ——— Terminal Demo ——— -->
+<section class="demo">
+  <div class="demo-label">A Session</div>
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <div class="terminal-title">rubin — session</div>
+    </div>
+    <div class="terminal-body" id="term"></div>
+    <div class="terminal-controls">
+      <button class="terminal-btn active" onclick="playDemo(this)" data-demo="session">session</button>
+      <button class="terminal-btn" onclick="playDemo(this)" data-demo="strip">strip</button>
+      <button class="terminal-btn" onclick="playDemo(this)" data-demo="feel">feel</button>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ——— Commands ——— -->
+<section class="commands">
+  <div class="commands-label">The Workflow</div>
+  <div class="cmd-grid">
+    <div class="cmd-card">
+      <div class="cmd-name">produce</div>
+      <div class="cmd-desc">Set creative direction. Describe the feel, not the implementation.<span class="cmd-metaphor">"Like telling a band — make it sound like driving at 2am."</span></div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-name">listen</div>
+      <div class="cmd-desc">Read code without judgment. Understand what it's trying to be before changing it.<span class="cmd-metaphor">"The playback before the notes."</span></div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-name">strip</div>
+      <div class="cmd-desc">Remove everything that doesn't serve the core purpose. Aggressively.<span class="cmd-metaphor">"The best mix is the one with the fewest tracks."</span></div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-name">feel</div>
+      <div class="cmd-desc">Evaluate the emotional quality. Does this code feel right? Is it honest?<span class="cmd-metaphor">"Play it back. Does it move you?"</span></div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-name">silence</div>
+      <div class="cmd-desc">Step away. Let the work breathe. Return with fresh ears.<span class="cmd-metaphor">"The rest between the notes is where music lives."</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ——— Quote ——— -->
+<section class="quote-section">
+  <p class="quote">"The best code, like the best music, is <em>the silence between the notes</em>."</p>
+  <div class="quote-attr">— The Philosophy</div>
+</section>
+
+<!-- ——— Footer ——— -->
+<footer>
+  <div class="footer-links">
+    <a href="https://github.com/qry/rubin_on_rails">github</a>
+    <a href="https://rubygems.org/gems/rubin_on_rails">rubygems</a>
+    <a href="https://github.com/qry/rubin_on_rails#readme">docs</a>
+  </div>
+  <div class="footer-copy">built with nothing unnecessary</div>
+</footer>
+
+<script>
+// ——— Copy install command ———
+function copyInstall(el) {
+  navigator.clipboard.writeText('gem install rubin_on_rails');
+  const hint = el.querySelector('.copy-hint');
+  hint.textContent = 'copied';
+  hint.style.opacity = '1';
+  setTimeout(() => { hint.textContent = 'click to copy'; hint.style.opacity = ''; }, 1500);
+}
+
+// ——— Scroll reveal for manifesto items ———
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.2 });
+document.querySelectorAll('.manifesto-list li').forEach(li => obs.observe(li));
+
+// ——— Terminal demos ———
+const demos = {
+  session: [
+    { type: 'cmd', text: 'rubin produce "auth system — simple, secure, no magic"' },
+    { type: 'blank' },
+    { type: 'output-accent', text: '  ◈ Setting creative direction...' },
+    { type: 'output', text: '  Producer\'s brief locked in.' },
+    { type: 'output-dim', text: '  Vision: auth system — simple, secure, no magic' },
+    { type: 'blank' },
+    { type: 'cmd', text: 'rubin listen app/models/user.rb' },
+    { type: 'blank' },
+    { type: 'output-accent', text: '  ◈ Listening to the code...' },
+    { type: 'output', text: '  42 lines. Wants to be a simple value object.' },
+    { type: 'output', text: '  Has 3 concerns that don\'t belong here.' },
+    { type: 'output-dim', text: '  The code is asking to be smaller.' },
+    { type: 'blank' },
+    { type: 'cmd', text: 'rubin strip app/models/user.rb' },
+    { type: 'blank' },
+    { type: 'output-accent', text: '  ◈ Stripping to essentials...' },
+    { type: 'stripped', text: '  − include Notifiable' },
+    { type: 'stripped', text: '  − include Searchable' },
+    { type: 'stripped', text: '  − include AuditTrail' },
+    { type: 'success', text: '  42 → 18 lines. Pure signal.' },
+  ],
+  strip: [
+    { type: 'cmd', text: 'rubin strip app/controllers/api/v1/sessions_controller.rb' },
+    { type: 'blank' },
+    { type: 'output-accent', text: '  ◈ Stripping to essentials...' },
+    { type: 'blank' },
+    { type: 'output-dim', text: '  Examining 87 lines...' },
+    { type: 'blank' },
+    { type: 'stripped', text: '  − rescue StandardError => e  # too broad' },
+    { type: 'stripped', text: '  − before_action :log_request  # noise' },
+    { type: 'stripped', text: '  − render json: { meta: ... }  # no one reads this' },
+    { type: 'stripped', text: '  − 14 lines of comments explaining the obvious' },
+    { type: 'blank' },
+    { type: 'success', text: '  87 → 31 lines.' },
+    { type: 'output', text: '  Every remaining line earns its place.' },
+    { type: 'output-dim', text: '  This is what the code wanted to be.' },
+  ],
+  feel: [
+    { type: 'cmd', text: 'rubin feel lib/auth/token.rb' },
+    { type: 'blank' },
+    { type: 'output-accent', text: '  ◈ Feeling the code...' },
+    { type: 'blank' },
+    { type: 'output', text: '  Clarity    ████████░░  honest, reads clean' },
+    { type: 'output', text: '  Intent     █████████░  knows what it is' },
+    { type: 'output', text: '  Tension    ██░░░░░░░░  at ease' },
+    { type: 'output', text: '  Ego        █░░░░░░░░░  serving the work' },
+    { type: 'blank' },
+    { type: 'output-dim', text: '  Verdict: this code is at peace.' },
+    { type: 'output-dim', text: '  It does one thing. It does it well.' },
+    { type: 'output-dim', text: '  Ship it.' },
+  ]
+};
+
+let animTimer = null;
+
+function playDemo(btn) {
+  document.querySelectorAll('.terminal-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const name = btn.dataset.demo;
+  const lines = demos[name];
+  const term = document.getElementById('term');
+
+  if (animTimer) clearInterval(animTimer);
+  term.innerHTML = '';
+
+  let i = 0;
+  function addLine() {
+    if (i >= lines.length) {
+      // Add cursor to last line
+      const last = term.lastElementChild;
+      if (last) last.innerHTML += '<span class="cursor"></span>';
+      return;
+    }
+
+    const l = lines[i];
+    const div = document.createElement('div');
+    div.className = 'line';
+
+    if (l.type === 'blank') {
+      div.innerHTML = '&nbsp;';
+    } else if (l.type === 'cmd') {
+      div.innerHTML = '<span class="prompt-char">$ </span><span class="cmd">' + esc(l.text) + '</span>';
+    } else {
+      div.innerHTML = '<span class="' + l.type + '">' + esc(l.text) + '</span>';
+    }
+
+    term.appendChild(div);
+    requestAnimationFrame(() => requestAnimationFrame(() => div.classList.add('visible')));
+
+    i++;
+    const delay = l.type === 'cmd' ? 600 : l.type === 'blank' ? 200 : 350;
+    animTimer = setTimeout(addLine, delay);
+  }
+
+  setTimeout(addLine, 300);
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Auto-play first demo
+playDemo(document.querySelector('.terminal-btn'));
+</script>
+
+</body>
+</html>

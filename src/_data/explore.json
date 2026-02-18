@@ -402,6 +402,14 @@
       "status": "evergreen"
     },
     {
+      "title": "Rubin on Rails",
+      "description": "Rick Rubin's production philosophy for AI-assisted coding. Produce, listen, strip, feel, silence.",
+      "href": "/fun/rubin-on-rails/",
+      "tags": ["ai-collaboration", "creative"],
+      "type": "interactive",
+      "status": "seedling"
+    },
+    {
       "title": "This Page Is Wrong",
       "description": "Every HTML crime committed. Zero validators passed. Renders perfectly.",
       "href": "/fun/this-page-is-wrong/",
