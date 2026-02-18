@@ -396,7 +396,7 @@ permalink: /fun/rubin-on-rails/
     <p class="hero-sub">Production philosophy for code.<br>Rick Rubin's creative process, applied to AI-assisted development.</p>
     <div class="hero-install" onclick="copyInstall(this)" title="Click to copy">
       <span class="copy-hint">click to copy</span>
-      <span class="prompt">$</span> gem install rubin_on_rails
+      <span class="prompt">$</span> git clone https://github.com/QRY91/rubin-on-rails
     </div>
     <div class="hero-scroll">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
@@ -501,9 +501,8 @@ permalink: /fun/rubin-on-rails/
 <!-- ——— Footer ——— -->
 <footer>
   <div class="footer-links">
-    <a href="https://github.com/qry91/rubin_on_rails">github</a>
-    <a href="https://rubygems.org/gems/rubin_on_rails">rubygems</a>
-    <a href="https://github.com/qry91/rubin_on_rails#readme">docs</a>
+    <a href="https://github.com/QRY91/rubin-on-rails">github</a>
+    <a href="https://github.com/QRY91/rubin-on-rails#readme">docs</a>
   </div>
   <div class="footer-copy">built with nothing unnecessary</div>
 </footer>
@@ -511,7 +510,7 @@ permalink: /fun/rubin-on-rails/
 <script>
 // ——— Copy install command ———
 function copyInstall(el) {
-  navigator.clipboard.writeText('gem install rubin_on_rails');
+  navigator.clipboard.writeText('git clone https://github.com/QRY91/rubin-on-rails');
   const hint = el.querySelector('.copy-hint');
   hint.textContent = 'copied';
   hint.style.opacity = '1';
