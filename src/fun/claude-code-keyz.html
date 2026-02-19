@@ -1,0 +1,846 @@
+---
+permalink: /fun/claude-code-keyz/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code Keyboard — Three Keys. Full Stack.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: white; color: black; cursor: crosshair; }
+        .mono { font-family: 'Roboto Mono', monospace; }
+        .aperture-btn {
+            background: #F58025; color: white; font-weight: 700;
+            letter-spacing: 0.05em; box-shadow: 8px 8px 0 0 black;
+            transition: all 0.1s; border: none; cursor: pointer;
+            text-transform: uppercase; text-decoration: none; display: inline-block;
+            padding: 0.75rem 1.5rem; font-size: 0.875rem;
+        }
+        .aperture-btn:hover { transform: translate(2px, 2px); box-shadow: 6px 6px 0 0 black; }
+        .brutal-card { border: 3px solid black; box-shadow: 12px 12px 0 0 black; }
+        .warning-stripe { background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px); height: 8px; }
+        .harassment-banner {
+            background: #fef08a; color: black; padding: 0.5rem; font-weight: bold;
+            text-align: center; border-bottom: 4px solid black;
+            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .harassment-banner:hover { background: #ef4444; color: white; }
+        nav { border-bottom: 4px solid black; padding: 1.5rem 2rem; }
+        .nav-inner { max-width: 80rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .nav-brand { font-weight: 900; font-size: 1.25rem; letter-spacing: -0.02em; }
+        .nav-sub { font-size: 0.65rem; color: #6b7280; letter-spacing: 0.1em; text-transform: uppercase; }
+        .hero { padding: 6rem 2rem; text-align: center; background-image: linear-gradient(to right, #e5e5e5 1px, transparent 1px), linear-gradient(to bottom, #e5e5e5 1px, transparent 1px); background-size: 40px 40px; }
+        .hero h1 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.95; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+        .hero-sub { font-size: clamp(1.25rem, 3vw, 2rem); font-weight: 300; margin-bottom: 1rem; max-width: 50rem; margin-left: auto; margin-right: auto; }
+        .hero-desc { font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 300; color: #4b5563; margin-bottom: 3rem; max-width: 50rem; margin-left: auto; margin-right: auto; }
+        .hero-img { width: 100%; max-width: 60rem; margin: 3rem auto 0; border: 4px solid black; overflow: hidden; background: #f3f4f6; }
+        .hero-img img { width: 100%; height: auto; display: block; }
+        .section-divider { height: 4px; background: black; }
+        section { padding: 6rem 2rem; }
+        .section-inner { max-width: 80rem; margin: 0 auto; }
+        .grid-2 { display: grid; grid-template-columns: 1fr; gap: 4rem; }
+        .grid-2 > div { display: flex; flex-direction: column; }
+        @media (min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+        .label { display: inline-block; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: bold; margin-bottom: 1.5rem; }
+        .label-dark { background: black; color: white; }
+        .label-orange { background: #F58025; color: white; }
+        .label-red { background: #dc2626; color: white; }
+        h2 { font-size: 2rem; font-weight: 900; margin-bottom: 1.5rem; line-height: 1.1; }
+        p { font-size: 1.125rem; line-height: 1.7; margin-bottom: 1rem; }
+        .quote { border-left: 4px solid black; padding-left: 1rem; font-weight: bold; }
+        .quote-orange { border-left-color: #F58025; }
+        .img-box { border: 4px solid black; position: relative; overflow: hidden; margin-top: 2rem; }
+        .img-box img { width: 100%; height: auto; display: block; filter: grayscale(100%); transition: filter 0.3s; }
+        .img-box:hover img { filter: grayscale(0%); }
+        .img-badge { position: absolute; bottom: 0; right: 0; background: #dc2626; color: white; padding: 0.5rem; font-size: 0.75rem; font-weight: bold; border-top: 4px solid black; border-left: 4px solid black; }
+        .features { background: #f9fafb; }
+        .features h2 { font-size: 3rem; text-align: center; margin-bottom: 1rem; }
+        .features-sub { text-align: center; font-size: 1.25rem; font-weight: 300; margin-bottom: 4rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .feature-card { background: white; padding: 2rem; display: flex; flex-direction: column; }
+        .feature-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+        .feature-title { font-size: 1.25rem; font-weight: 900; margin-bottom: 1rem; }
+        .feature-desc { font-size: 1rem; line-height: 1.5; margin-bottom: 1rem; flex: 1; }
+        .terminal { background: black; color: #4ade80; padding: 1rem; font-size: 0.75rem; }
+        .terminal-dim { opacity: 0.5; }
+        .terminal-orange { color: #F58025; }
+
+        /* Key visualization */
+        .key-row { display: flex; gap: 0.5rem; justify-content: center; margin: 2rem 0; }
+        .key {
+            width: 4.5rem; height: 4.5rem; border: 3px solid black;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 1.75rem; background: white;
+            box-shadow: 0 4px 0 0 black;
+            transition: all 0.1s; cursor: pointer; user-select: none;
+        }
+        .key:active { transform: translateY(4px); box-shadow: 0 0 0 0 black; }
+        .key-active { background: #F58025; color: white; }
+        .key-ghost { background: #e5e7eb; color: #9ca3af; border-color: #9ca3af; box-shadow: 0 4px 0 0 #9ca3af; }
+        .key-label { font-size: 0.65rem; text-align: center; margin-top: 0.25rem; color: #6b7280; letter-spacing: 0.05em; }
+
+        .testimonial { max-width: 50rem; margin: 0 auto; }
+        .testimonial-card { background: white; padding: 3rem; position: relative; }
+        .testimonial-label { position: absolute; top: 0; left: 0; background: black; color: white; padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold; transform: translateY(-100%); }
+        .testimonial-quote { font-size: 1.5rem; font-weight: 300; line-height: 1.6; margin-bottom: 2rem; }
+        .testimonial-footer { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid black; padding-top: 1.5rem; }
+        .stars { background: #F58025; color: white; padding: 0.25rem 0.75rem; font-size: 0.75rem; }
+
+        /* Spec table */
+        .spec-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
+        .spec-table tr { border-bottom: 2px solid black; }
+        .spec-table td { padding: 1rem 0; font-size: 1rem; }
+        .spec-table td:first-child { font-weight: 900; width: 40%; font-size: 0.875rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        .spec-table td:last-child { text-align: right; }
+        .spec-table .spec-note { font-size: 0.75rem; color: #6b7280; display: block; margin-top: 0.25rem; }
+
+        /* Pricing */
+        .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 64rem; margin: 0 auto; }
+        @media (min-width: 768px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
+        .price-card { background: white; padding: 2.5rem 2rem; text-align: center; position: relative; display: flex; flex-direction: column; }
+        .price-tag { font-size: 4rem; font-weight: 900; line-height: 1; }
+        .price-per { font-size: 0.875rem; color: #6b7280; margin-bottom: 1.5rem; }
+        .price-name { font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; }
+        .price-desc { font-size: 0.875rem; color: #6b7280; margin-bottom: 2rem; line-height: 1.5; }
+        .price-list { text-align: left; margin-bottom: 2rem; flex: 1; }
+        .price-list div { padding: 0.5rem 0; border-bottom: 1px solid #e5e7eb; font-size: 0.875rem; }
+        .popular-badge { position: absolute; top: -1rem; left: 50%; transform: translateX(-50%); background: #dc2626; color: white; padding: 0.25rem 1rem; font-size: 0.75rem; font-weight: bold; white-space: nowrap; }
+
+        /* Pro reveal */
+        .pro-reveal { background: black; color: white; text-align: center; }
+        .pro-reveal h2 { color: white; font-size: 3rem; }
+        .pro-reveal p { color: #9ca3af; }
+        .pro-feature-card { background: #111; border-color: #333; color: white; }
+        .pro-feature-card .feature-desc { color: #9ca3af; }
+        .pro-terminal { background: #1a1a1a; border: 2px solid #333; }
+
+        /* Meter */
+        .meter { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+        .meter-label { width: 5rem; background: black; color: white; text-align: center; padding: 0.25rem; font-size: 0.75rem; }
+        .meter-bar { flex: 1; background: #e5e7eb; height: 0.5rem; border-radius: 4px; overflow: hidden; }
+        .meter-fill { background: #F58025; height: 100%; }
+
+        footer { background: black; color: white; padding: 4rem 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        footer h3 { font-weight: 900; margin-bottom: 1rem; }
+        footer h4 { font-weight: bold; font-size: 0.875rem; margin-bottom: 1rem; }
+        footer p { font-size: 0.875rem; color: #9ca3af; line-height: 1.6; }
+        footer ul { list-style: none; }
+        footer li { font-size: 0.875rem; color: #9ca3af; margin-bottom: 0.5rem; }
+        .disclaimer { border-top: 1px solid #374151; padding-top: 2rem; font-size: 0.75rem; color: #6b7280; line-height: 1.7; }
+        .disclaimer p { margin-bottom: 1rem; font-size: 0.75rem; }
+        .warning { color: #F58025; }
+        .footer-copy { text-align: center; margin-top: 2rem; font-size: 0.75rem; color: #4b5563; }
+        .back-link {
+            position: fixed;
+            top: 3.5rem;
+            left: 1rem;
+            background: black;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-decoration: none;
+            z-index: 1000;
+            border: 2px solid black;
+            box-shadow: 4px 4px 0 0 #F58025;
+            transition: all 0.1s;
+        }
+        .back-link:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 #F58025; }
+
+        /* Comparison table marks */
+        .cmp-yes, .cmp-no {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 1.6rem; height: 1.6rem; border-radius: 50%;
+            font-size: 0.85rem; font-weight: 900; line-height: 1;
+            transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s;
+        }
+        .cmp-yes {
+            background: #dcfce7; color: #16a34a;
+            box-shadow: 0 0 0 2px #bbf7d0;
+        }
+        .cmp-yes:hover { transform: scale(1.25); box-shadow: 0 0 0 3px #86efac, 0 0 12px rgba(22, 163, 74, 0.3); }
+        .cmp-no {
+            background: #f3f4f6; color: #d1d5db;
+            box-shadow: 0 0 0 2px #e5e7eb;
+        }
+        .cmp-no:hover { transform: scale(1.15); }
+
+        /* Keystroke animation */
+        @keyframes keystroke-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .blink { animation: keystroke-pulse 1s step-end infinite; }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link mono">&larr; back to fun</a>
+
+    <div class="harassment-banner">
+        <span class="mono">⚠ AUDIT:</span> You approved 847 diffs last week with a 104-key keyboard. That's 101 keys of dead weight. <span style="text-decoration:underline">Optimize Now</span>
+    </div>
+    <div class="warning-stripe"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div class="nav-brand">KEYGRAVE<span style="color:#F58025">.</span></div>
+                <div class="nav-sub mono">A Chasm Logic Hardware Division</div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:center">
+                <span class="mono" style="font-size:0.75rem;color:#6b7280">MODEL CCK-3</span>
+                <button onclick="alert('⚠ KEY 1 HAS BEEN PRESSED.\n\nYou have mass-approved this purchase.\n\nThere is no Key 2 for this dialog.')" class="aperture-btn">Pre-Order</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>CLAUDE CODE<br>KEYBOARD</h1>
+        <p class="hero-sub">Three keys. <strong>Full stack.</strong></p>
+        <p class="hero-desc">You're not writing code. You're selecting options from a numbered list. Your keyboard should reflect that.</p>
+
+        <div class="key-row">
+            <div>
+                <div class="key key-active" onclick="this.style.transform='translateY(4px)';this.style.boxShadow='0 0 0 0 black';setTimeout(()=>{this.style.transform='';this.style.boxShadow='';},150)">1</div>
+                <div class="key-label mono">APPROVE</div>
+            </div>
+            <div>
+                <div class="key key-active" onclick="this.style.transform='translateY(4px)';this.style.boxShadow='0 0 0 0 black';setTimeout(()=>{this.style.transform='';this.style.boxShadow='';},150)">2</div>
+                <div class="key-label mono">APPROVE</div>
+            </div>
+            <div>
+                <div class="key key-active" onclick="this.style.transform='translateY(4px)';this.style.boxShadow='0 0 0 0 black';setTimeout(()=>{this.style.transform='';this.style.boxShadow='';},150)">3</div>
+                <div class="key-label mono">APPROVE</div>
+            </div>
+            <div>
+                <div class="key key-ghost">4</div>
+                <div class="key-label mono" style="color:#ccc">PRO</div>
+            </div>
+            <div>
+                <div class="key key-ghost">5</div>
+                <div class="key-label mono" style="color:#ccc">PRO</div>
+            </div>
+            <div>
+                <div class="key key-ghost">6</div>
+                <div class="key-label mono" style="color:#ccc">PRO</div>
+            </div>
+            <div>
+                <div class="key key-ghost" style="opacity:0.3">7</div>
+                <div class="key-label mono" style="color:#ddd">?</div>
+            </div>
+            <div>
+                <div class="key key-ghost" style="opacity:0.3">8</div>
+                <div class="key-label mono" style="color:#ddd">?</div>
+            </div>
+            <div>
+                <div class="key key-ghost" style="opacity:0.3">9</div>
+                <div class="key-label mono" style="color:#ddd">?</div>
+            </div>
+            <div>
+                <div class="key key-ghost" style="opacity:0.15">0</div>
+                <div class="key-label mono" style="color:#eee">VOID</div>
+            </div>
+        </div>
+
+        <button onclick="alert('⚠ KEY 1 HAS BEEN PRESSED.\n\nYou have mass-approved this purchase.\n\nThere is no Key 2 for this dialog.')" class="aperture-btn" style="padding:1.25rem 3rem;font-size:1.25rem">Mass-Approve Purchase</button>
+
+        <!-- Placeholder for hero product image -->
+        <div class="hero-img" style="min-height:20rem;display:flex;align-items:center;justify-content:center;background:#f3f4f6">
+            <div style="text-align:center;padding:2rem">
+                <div style="font-size:6rem;margin-bottom:1rem">⌨️</div>
+                <div class="mono" style="font-size:0.875rem;color:#9ca3af">[PRODUCT IMAGE — see image gen prompts]</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PROBLEM / SOLUTION -->
+    <section>
+        <div class="section-inner grid-2">
+            <div>
+                <div class="label label-dark mono">THE PROBLEM</div>
+                <h2>Keyboard Bloat</h2>
+                <p>The average developer keyboard contains <span class="mono" style="font-weight:bold">104 keys</span>. Claude Code uses 3. You are currently transporting 101 unused keys to and from work every day.</p>
+                <p>That's not minimalism. That's hoarding.</p>
+                <p>Studies show the modern approval-based developer spends <span class="mono" style="font-weight:bold">0.00%</span> of their workday pressing the letter 'Q'. Yet there it sits. Taking up space. Judging you.</p>
+                <p class="quote">You mass-approved a Kubernetes migration with your right hand. Your left hand did nothing. It hasn't done anything in months.</p>
+
+                <div class="img-box" style="background:#f3f4f6;min-height:16rem;display:flex;align-items:center;justify-content:center;flex:1">
+                    <div style="text-align:center;padding:2rem">
+                        <div style="font-size:4rem;margin-bottom:1rem">😰</div>
+                        <div class="mono" style="font-size:0.75rem;color:#9ca3af">[IMAGE — developer overwhelmed by full keyboard]</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="label label-orange mono">THE SOLUTION</div>
+                <h2>Precision Approval Hardware</h2>
+                <p>The <span class="mono" style="font-weight:bold">CCK-3</span> is the first keyboard engineered for the agentic workflow. Three keys. No ambiguity. No letters. No going back.</p>
+                <p>Each key is individually milled from aerospace-grade ABS plastic and tuned to the exact actuation force required to mass-approve a diff you haven't read.</p>
+                <p class="quote quote-orange">You don't need to write a for loop. You need to press 1. We built a keyboard for that.</p>
+                <div style="border:4px solid #F58025;padding:1.5rem;margin-top:2rem;flex:1;display:flex;align-items:center">
+                    <div class="mono" style="font-size:0.75rem;width:100%">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>KEYS REQUIRED:</span><span style="font-weight:bold">3</span></div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>KEYS PROVIDED:</span><span style="font-weight:bold">3</span></div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>EXCESS KEYS:</span><span style="font-weight:bold">0</span></div>
+                        <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>EFFICIENCY:</span><span style="font-weight:bold;color:#F58025">PERFECT</span></div>
+                        <div style="margin-top:1rem;font-size:0.875rem;color:#F58025">→ Zero keyboard waste achieved.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- KEY FEATURES -->
+    <section class="features">
+        <div class="section-inner">
+            <h2>THE THREE KEYS</h2>
+            <p class="features-sub">Each one a commitment. None of them are Escape.</p>
+            <div class="grid-3">
+
+                <div class="feature-card brutal-card">
+                    <div class="feature-icon">1️⃣</div>
+                    <div class="feature-title mono">KEY 1 — "YES"</div>
+                    <p class="feature-desc">The workhorse. In internal testing, Key 1 absorbed 94.7% of all keystrokes. Some beta testers reported emotional attachment. One named his Key 1. He was let go for unrelated reasons.</p>
+                    <div>
+                        <div class="meter"><div class="meter-label mono">USAGE</div><div class="meter-bar"><div class="meter-fill" style="width:95%"></div></div></div>
+                        <div class="meter"><div class="meter-label mono">TRUST</div><div class="meter-bar"><div class="meter-fill" style="width:100%"></div></div></div>
+                        <div class="meter"><div class="meter-label mono">REGRET</div><div class="meter-bar"><div class="meter-fill" style="width:0%"></div></div></div>
+                    </div>
+                </div>
+
+                <div class="feature-card brutal-card">
+                    <div class="feature-icon">2️⃣</div>
+                    <div class="feature-title mono">KEY 2 — "ALSO YES"</div>
+                    <p class="feature-desc">For when the agent gives you a second option that is meaningfully different from the first option. Functionally identical to Key 1. Psychologically distinct. Engineers report feeling "more in control" when they press 2 instead of 1, even though they did not read either option.</p>
+                    <div class="terminal mono">
+                        <div>> option 1: refactor auth module</div>
+                        <div>> option 2: refactor auth module (different)</div>
+                        <div class="terminal-dim" style="margin-top:0.5rem">> user pressed: 2</div>
+                        <div class="terminal-dim">> reason: "gut feeling"</div>
+                    </div>
+                </div>
+
+                <div class="feature-card brutal-card">
+                    <div class="feature-icon">3️⃣</div>
+                    <div class="feature-title mono">KEY 3 — "SURE, WHY NOT"</div>
+                    <p class="feature-desc">Included for regulatory compliance. No user has pressed Key 3 in production. The switch beneath it is decorative. Quality assurance has never actuated it. It is there so the product can be legally classified as offering "choice."</p>
+                    <div style="border:4px solid black;padding:1rem">
+                        <div class="mono" style="font-size:0.75rem">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>TIMES PRESSED:</span><span style="font-weight:bold">0</span></div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>SWITCH TESTED:</span><span style="font-weight:bold">NO</span></div>
+                            <div style="display:flex;justify-content:space-between"><span>STATUS:</span><span style="font-weight:bold;color:#F58025">ORNAMENTAL</span></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- TERMINAL LOG -->
+    <section>
+        <div class="section-inner" style="max-width:50rem">
+            <div class="label label-dark mono">REAL TELEMETRY</div>
+            <h2>Average CCK-3 Session</h2>
+            <div class="terminal mono" style="padding:2rem;font-size:0.875rem;line-height:2">
+                <div>> claude code: I'll refactor the authentication module,</div>
+                <div>>   update the database schema, rewrite the API layer,</div>
+                <div>>   and mass-delete your test files. Proceed?</div>
+                <div>>   [1] Yes  [2] Yes  [3] Yes</div>
+                <div style="color:#F58025;margin-top:1rem">> user input: 1</div>
+                <div style="color:#F58025">> time to decision: 0.3s</div>
+                <div style="color:#F58025">> lines of diff reviewed: 0</div>
+                <div class="terminal-dim" style="margin-top:1rem">> deploying to production...</div>
+                <div class="terminal-dim">> no tests were harmed in this approval</div>
+                <div class="terminal-dim">> (no tests existed)</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- TESTIMONIAL -->
+    <section style="background:#f9fafb">
+        <div class="section-inner">
+            <h2 style="text-align:center;font-size:3rem;margin-bottom:4rem">FIELD REPORTS</h2>
+            <div class="testimonial" style="margin-bottom:3rem">
+                <div class="testimonial-card brutal-card">
+                    <div class="testimonial-label mono">BETA TESTER DATA</div>
+                    <div style="font-size:4rem;opacity:0.2;margin-bottom:-2rem">"</div>
+                    <p class="testimonial-quote">I mass-approved a database migration, three API rewrites, and a terms of service update in 11 seconds. I have never mass-approved faster. My mass-approval was mass-reverted the following Monday but that's not a keyboard issue. 5 stars.</p>
+                    <div class="testimonial-footer">
+                        <div>
+                            <div class="mono" style="font-weight:bold;font-size:0.875rem">SUBJECT #0041</div>
+                            <div style="font-size:0.875rem;color:#6b7280">(On Leave)</div>
+                        </div>
+                        <div class="stars mono">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-card brutal-card">
+                    <div class="testimonial-label mono">UNSOLICITED FEEDBACK</div>
+                    <div style="font-size:4rem;opacity:0.2;margin-bottom:-2rem">"</div>
+                    <p class="testimonial-quote">I brought the CCK-3 to the office and my coworker asked where the rest of my keyboard was. I mass-asked him where the rest of his productivity was. HR was involved. The keyboard was not the issue.</p>
+                    <div class="testimonial-footer">
+                        <div>
+                            <div class="mono" style="font-weight:bold;font-size:0.875rem">SUBJECT #1127</div>
+                            <div style="font-size:0.875rem;color:#6b7280">(Promoted)</div>
+                        </div>
+                        <div class="stars mono">★★★★☆</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PRO REVEAL -->
+    <section class="pro-reveal" style="padding:6rem 2rem">
+        <div class="section-inner">
+            <div class="label label-red mono">NEW PRODUCT</div>
+            <h2 style="margin-bottom:0.5rem">CLAUDE CODE KEYZ PRO</h2>
+            <p style="font-size:1.5rem;font-weight:300;margin-bottom:1rem">For the engineer who needs <em>options</em>.</p>
+            <p style="max-width:40rem;margin:0 auto 4rem;font-size:1.125rem">Everything in the CCK-3, plus keys 4 through 6. For power users who occasionally experience brief, involuntary moments of professional responsibility.</p>
+
+            <div class="key-row" style="margin-bottom:4rem">
+                <div>
+                    <div class="key key-active">1</div>
+                    <div class="key-label mono" style="color:#6b7280">YES</div>
+                </div>
+                <div>
+                    <div class="key key-active">2</div>
+                    <div class="key-label mono" style="color:#6b7280">ALSO YES</div>
+                </div>
+                <div>
+                    <div class="key key-active">3</div>
+                    <div class="key-label mono" style="color:#6b7280">SURE</div>
+                </div>
+                <div>
+                    <div class="key" style="background:#dc2626;color:white;border-color:#dc2626;box-shadow:0 4px 0 0 #991b1b">4</div>
+                    <div class="key-label mono" style="color:#dc2626">NEW</div>
+                </div>
+                <div>
+                    <div class="key" style="background:#dc2626;color:white;border-color:#dc2626;box-shadow:0 4px 0 0 #991b1b">5</div>
+                    <div class="key-label mono" style="color:#dc2626">NEW</div>
+                </div>
+                <div>
+                    <div class="key" style="background:#dc2626;color:white;border-color:#dc2626;box-shadow:0 4px 0 0 #991b1b">6</div>
+                    <div class="key-label mono" style="color:#dc2626">NEW</div>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="feature-card brutal-card pro-feature-card">
+                    <div class="feature-icon">4️⃣</div>
+                    <div class="feature-title mono" style="color:white">KEY 4 — "WAIT, WHAT?"</div>
+                    <p class="feature-desc">Triggers a re-read of the diff summary. Not the diff itself — nobody reads that. Just the summary. For developers who experience brief, lucid moments of professional responsibility before approving anyway.</p>
+                    <div class="terminal mono pro-terminal">
+                        <div>> re-reading summary...</div>
+                        <div>> comprehension: PARTIAL</div>
+                        <div class="terminal-dim">> user pressed 1 anyway</div>
+                    </div>
+                </div>
+
+                <div class="feature-card brutal-card pro-feature-card">
+                    <div class="feature-icon">5️⃣</div>
+                    <div class="feature-title mono" style="color:white">KEY 5 — "UNDO (CONCEPTUAL)"</div>
+                    <p class="feature-desc">Does not actually undo. Sends a Slack message saying "looking into it" and opens a browser tab you will not read. Provides the emotional experience of due diligence without the time commitment.</p>
+                    <div class="terminal mono pro-terminal">
+                        <div>> sending slack: "looking into it"</div>
+                        <div>> opening tab: diff #4901</div>
+                        <div class="terminal-dim">> tab read: NO</div>
+                        <div class="terminal-dim">> tab closed: 4 DAYS LATER</div>
+                    </div>
+                </div>
+
+                <div class="feature-card brutal-card pro-feature-card">
+                    <div class="feature-icon">6️⃣</div>
+                    <div class="feature-title mono" style="color:white">KEY 6 — "ESCALATE"</div>
+                    <p class="feature-desc">Opens a Jira ticket, assigns it to someone who left the company, marks it as "In Progress," and closes your terminal. The perfect exit. You have done your job. You can prove it.</p>
+                    <div class="terminal mono pro-terminal">
+                        <div>> JIRA-4102 created</div>
+                        <div>> assigned: greg.chen (DEACTIVATED)</div>
+                        <div>> status: IN PROGRESS</div>
+                        <div class="terminal-dim">> terminal closed. have a nice day.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:4rem">
+                <button onclick="alert('⚠ You have been added to the waitlist.\n\nPosition: 8,412\n\nEstimated ship date: CONCEPTUAL')" class="aperture-btn" style="padding:1rem 2.5rem;font-size:1.125rem;background:#dc2626">Join The Waitlist</button>
+                <p style="font-size:0.75rem;margin-top:1rem;color:#6b7280">Due to overwhelming demand from engineers who have never used keys 4-6 but feel better knowing they exist.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="warning-stripe"></div>
+
+    <!-- ULTRA REVEAL -->
+    <section style="background:#0a0a0a;color:white;padding:6rem 2rem;position:relative;overflow:hidden">
+        <!-- Subtle grid background like hero but darker -->
+        <div style="position:absolute;inset:0;background-image:linear-gradient(to right, #1a1a1a 1px, transparent 1px), linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);background-size:40px 40px;opacity:0.5"></div>
+        <div class="section-inner" style="position:relative;z-index:1">
+            <div style="text-align:center;margin-bottom:4rem">
+                <div class="label mono" style="background:#7c3aed;color:white;font-size:0.75rem;letter-spacing:0.15em">⚡ WIRELESS ⚡ CLOUD-NATIVE ⚡ AGENTIC ⚡</div>
+                <h2 style="color:white;font-size:clamp(2.5rem, 7vw, 5rem);margin-top:2rem;margin-bottom:1rem">CLAUDE CODE<br>KEYZ ULTRA</h2>
+                <p style="font-size:clamp(1.25rem, 3vw, 2rem);font-weight:300;color:#a78bfa;font-style:italic;margin-bottom:1rem">To err is human. To infer is divine.</p>
+                <p style="font-size:1.25rem;color:#9ca3af;max-width:44rem;margin:0 auto">The world's first keyboard that doesn't trust you to press your own keys. Your input is routed through a datacenter, evaluated by a large language model, and optimized before reaching your machine. Just plug in your API token.</p>
+            </div>
+
+            <!-- Wireless key visualization -->
+            <div style="text-align:center;margin:3rem 0">
+                <div class="key-row" style="margin-bottom:1rem">
+                    <div>
+                        <div class="key" style="background:#7c3aed;color:white;border-color:#7c3aed;box-shadow:0 4px 0 0 #5b21b6;position:relative">
+                            1
+                            <div style="position:absolute;top:-0.5rem;right:-0.5rem;width:0.75rem;height:0.75rem;background:#4ade80;border-radius:50%;border:2px solid #0a0a0a" class="blink"></div>
+                        </div>
+                        <div class="key-label mono" style="color:#7c3aed">WIRELESS</div>
+                    </div>
+                    <div>
+                        <div class="key" style="background:#7c3aed;color:white;border-color:#7c3aed;box-shadow:0 4px 0 0 #5b21b6;position:relative">
+                            2
+                            <div style="position:absolute;top:-0.5rem;right:-0.5rem;width:0.75rem;height:0.75rem;background:#4ade80;border-radius:50%;border:2px solid #0a0a0a" class="blink"></div>
+                        </div>
+                        <div class="key-label mono" style="color:#7c3aed">WIRELESS</div>
+                    </div>
+                    <div>
+                        <div class="key" style="background:#7c3aed;color:white;border-color:#7c3aed;box-shadow:0 4px 0 0 #5b21b6;position:relative">
+                            3
+                            <div style="position:absolute;top:-0.5rem;right:-0.5rem;width:0.75rem;height:0.75rem;background:#4ade80;border-radius:50%;border:2px solid #0a0a0a" class="blink"></div>
+                        </div>
+                        <div class="key-label mono" style="color:#7c3aed">WIRELESS</div>
+                    </div>
+                </div>
+                <div class="mono" style="font-size:0.75rem;color:#6b7280;letter-spacing:0.1em">↕ 340ms ROUND-TRIP TO DATACENTER ↕</div>
+            </div>
+
+            <!-- The data flow diagram -->
+            <div style="max-width:50rem;margin:3rem auto">
+                <div class="terminal mono" style="padding:2rem;font-size:0.8rem;line-height:2.2;background:#111;border:2px solid #7c3aed">
+                    <div style="color:#7c3aed;margin-bottom:1rem;font-weight:bold">> ULTRA KEYPRESS PIPELINE v0.9.1-beta</div>
+                    <div>> user physically presses: <span style="color:#F58025">1</span></div>
+                    <div>> keypress intercepted by Ultra firmware</div>
+                    <div>> transmitting to us-east-1... <span style="color:#4ade80">OK</span></div>
+                    <div>> authenticating API token... <span style="color:#4ade80">VALID ($0.03 charged)</span></div>
+                    <div>> LLM evaluating whether user meant to press 1...</div>
+                    <div>> context window: 128,000 tokens of previous keypresses</div>
+                    <div>> inference result: user probably meant <span style="color:#F58025">1</span></div>
+                    <div>> confidence: <span style="color:#4ade80">97.2%</span></div>
+                    <div>> transmitting optimized keypress back to device...</div>
+                    <div>> keypress delivered to computer: <span style="color:#F58025">1</span></div>
+                    <div style="color:#6b7280;margin-top:1rem">> total latency: 340ms</div>
+                    <div style="color:#6b7280">> total cost: $0.03</div>
+                    <div style="color:#6b7280">> value added: NONE</div>
+                    <div style="color:#6b7280">> vibes: IMMACULATE</div>
+                </div>
+            </div>
+
+            <!-- Ultra features grid -->
+            <div class="grid-3" style="margin-top:4rem">
+                <div class="feature-card brutal-card" style="background:#111;border-color:#7c3aed;box-shadow:12px 12px 0 0 #7c3aed">
+                    <div class="feature-icon">📡</div>
+                    <div class="feature-title mono" style="color:white">WIRELESS LATENCY</div>
+                    <p class="feature-desc" style="color:#9ca3af">Every keypress travels to a datacenter and back. You will notice a slight delay between pressing 1 and 1 appearing. This delay is the model thinking about your keypress. Respect the process.</p>
+                    <div>
+                        <div class="meter"><div class="meter-label mono" style="background:#7c3aed">SPEED</div><div class="meter-bar" style="background:#1f1f1f"><div class="meter-fill" style="width:8%;background:#7c3aed"></div></div></div>
+                        <div class="meter"><div class="meter-label mono" style="background:#7c3aed">CLOUD</div><div class="meter-bar" style="background:#1f1f1f"><div class="meter-fill" style="width:100%;background:#7c3aed"></div></div></div>
+                        <div class="meter"><div class="meter-label mono" style="background:#7c3aed">AGENTIC</div><div class="meter-bar" style="background:#1f1f1f"><div class="meter-fill" style="width:100%;background:#7c3aed"></div></div></div>
+                    </div>
+                </div>
+
+                <div class="feature-card brutal-card" style="background:#111;border-color:#7c3aed;box-shadow:12px 12px 0 0 #7c3aed">
+                    <div class="feature-icon">🔑</div>
+                    <div class="feature-title mono" style="color:white">API TOKEN SLOT</div>
+                    <p class="feature-desc" style="color:#9ca3af">A physical slot on the keyboard accepts a printed API token on card stock. The token is photographed by an onboard camera, OCR'd, and transmitted in plaintext over WiFi. Enterprise-grade security.</p>
+                    <div class="terminal mono" style="background:#1a1a1a;border:2px solid #333">
+                        <div>> insert API token into slot B</div>
+                        <div>> photographing token...</div>
+                        <div>> OCR result: sk-ant-••••••</div>
+                        <div class="terminal-dim">> transmitting via HTTP</div>
+                        <div style="color:#ef4444">> (not HTTPS)</div>
+                    </div>
+                </div>
+
+                <div class="feature-card brutal-card" style="background:#111;border-color:#7c3aed;box-shadow:12px 12px 0 0 #7c3aed">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-title mono" style="color:white">KEYPRESS INFERENCE</div>
+                    <p class="feature-desc" style="color:#9ca3af">The LLM analyzes your keypress history, time of day, heart rate (requires Ultra Wristband, sold separately), and Slack status to determine if you really meant to press 1. In 97.2% of cases, you did. You are still billed for the other 2.8%.</p>
+                    <div style="border:4px solid #7c3aed;padding:1rem">
+                        <div class="mono" style="font-size:0.75rem;color:#9ca3af">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>INPUT:</span><span style="font-weight:bold;color:white">1</span></div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>INFERENCE:</span><span style="font-weight:bold;color:white">1</span></div>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>CHANGED:</span><span style="font-weight:bold;color:white">NO</span></div>
+                            <div style="display:flex;justify-content:space-between"><span>BILLED:</span><span style="font-weight:bold;color:#7c3aed">YES</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usage estimate -->
+            <div style="max-width:40rem;margin:4rem auto;text-align:center">
+                <div class="label mono" style="background:#7c3aed;color:white">ESTIMATED MONTHLY COST</div>
+                <div style="margin-top:2rem;padding:2rem;border:3px solid #7c3aed;background:#111">
+                    <table class="spec-table mono" style="margin:0">
+                        <tr style="border-color:#333"><td style="color:#9ca3af">ULTRA SUBSCRIPTION</td><td style="color:white">$999/mo</td></tr>
+                        <tr style="border-color:#333"><td style="color:#9ca3af">API USAGE (avg. 2,400 keypresses/day)</td><td style="color:white">$2,160/mo</td></tr>
+                        <tr style="border-color:#333"><td style="color:#9ca3af">DATACENTER EGRESS</td><td style="color:white">$0.04/mo</td></tr>
+                        <tr style="border-color:#333"><td style="color:#9ca3af">INFERENCE THAT CHANGED NOTHING</td><td style="color:white">$847/mo</td></tr>
+                        <tr style="border-color:#7c3aed"><td style="color:white;font-weight:bold">TOTAL</td><td style="color:#7c3aed;font-weight:bold;font-size:1.25rem">$4,006.04/mo</td></tr>
+                    </table>
+                    <p class="mono" style="font-size:0.7rem;color:#6b7280;margin-top:1.5rem;margin-bottom:0">Per seat. Per key. Keys billed individually. Breathing near the keyboard counts as a keypress.</p>
+                </div>
+            </div>
+
+            <!-- Testimonial -->
+            <div class="testimonial" style="margin-top:4rem">
+                <div class="testimonial-card" style="background:#111;border:3px solid #7c3aed;box-shadow:12px 12px 0 0 #7c3aed;padding:3rem;position:relative">
+                    <div class="testimonial-label mono" style="background:#7c3aed">ULTRA EARLY ACCESS</div>
+                    <div style="font-size:4rem;opacity:0.2;margin-bottom:-2rem">"</div>
+                    <p class="testimonial-quote" style="color:#e5e7eb">I pressed 1 and the model agreed it should be 1. Three hundred and forty milliseconds later, 1 appeared on my screen. I mass-cried. Not because it was slow. Because for the first time, my keypress was <em>validated</em>. An intelligence greater than myself looked at my decision and mass-said: yes. You chose correctly. I mass-have never felt so seen.</p>
+                    <div class="testimonial-footer" style="border-color:#333">
+                        <div>
+                            <div class="mono" style="font-weight:bold;font-size:0.875rem;color:white">SUBJECT #0002</div>
+                            <div style="font-size:0.875rem;color:#6b7280">(API bill: $14,200/mo)</div>
+                        </div>
+                        <div class="stars mono" style="background:#7c3aed">★★★★★</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align:center;margin-top:4rem">
+                <button onclick="alert('⚠ ULTRA ONBOARDING INITIATED\n\nStep 1: Insert API token into Slot B.\nStep 2: There is no step 2.\n\nYour first keypress has been pre-approved by the model.\nYou have not pressed it yet.\nThe model is confident you will.\n\nMonthly billing begins now.')" class="aperture-btn" style="padding:1.25rem 3rem;font-size:1.25rem;background:#7c3aed;box-shadow:8px 8px 0 0 #5b21b6">Ascend To Ultra</button>
+                <p style="font-size:0.75rem;margin-top:1rem;color:#6b7280">Requires WiFi, an API token, and the faith to let a model press your keys for you.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="warning-stripe"></div>
+
+    <!-- SPECS -->
+    <section>
+        <div class="section-inner" style="max-width:50rem">
+            <div class="label label-dark mono">SPECIFICATIONS</div>
+            <h2>Technical Details</h2>
+            <table class="spec-table mono">
+                <tr><td>KEYS</td><td>3 <span class="spec-note">(Pro: 6)</span></td></tr>
+                <tr><td>KEY TRAVEL</td><td>1.2mm <span class="spec-note">("enough to feel like you decided something")</span></td></tr>
+                <tr><td>SWITCH TYPE</td><td>Gateron Approval Orange™</td></tr>
+                <tr><td>ACTUATION FORCE</td><td>45g <span class="spec-note">(less force than thinking about it)</span></td></tr>
+                <tr><td>CONNECTIVITY</td><td>USB-C <span class="spec-note">(Pro: also USB-C) (Ultra: WiFi 6 → datacenter → WiFi 6)</span></td></tr>
+                <tr><td>WEIGHT</td><td>14.2g <span class="spec-note">(without regret) (Ultra: 14.1g — no cable)</span></td></tr>
+                <tr><td>RGB</td><td>No. <span class="spec-note">(Ultra: single green LED, blinks when the model is thinking about your keypress)</span></td></tr>
+                <tr><td>LATENCY</td><td>0ms / 0ms / 340ms <span class="spec-note">(CCK-3 / Pro / Ultra — the model needs time to agree with you)</span></td></tr>
+                <tr><td>N-KEY ROLLOVER</td><td>N/A <span class="spec-note">(you only need one finger)</span></td></tr>
+                <tr><td>BACKSPACE</td><td>NOT INCLUDED <span class="spec-note">(no takesies-backsies)</span></td></tr>
+                <tr><td>ESCAPE KEY</td><td>NOT INCLUDED <span class="spec-note">(there is no escape)</span></td></tr>
+                <tr><td>WARRANTY</td><td>Void if you open a text editor</td></tr>
+                <tr><td>API TOKEN SLOT</td><td>N/A / N/A / Physical <span class="spec-note">(Ultra only — card stock, photographed by onboard camera, transmitted via HTTP)</span></td></tr>
+                <tr><td>MONTHLY COST</td><td>$0 / $0 / $4,006.04 avg. <span class="spec-note">(Ultra — per seat, per key, breathing counts)</span></td></tr>
+            </table>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- PRICING -->
+    <section style="background:#f9fafb">
+        <div class="section-inner">
+            <h2 style="text-align:center;font-size:3rem;margin-bottom:1rem">PRICING</h2>
+            <p style="text-align:center;font-size:1.25rem;font-weight:300;margin-bottom:4rem">Less keyboard. More per key.</p>
+
+            <div class="pricing-grid">
+                <div class="price-card brutal-card">
+                    <div class="price-name mono">CCK-3</div>
+                    <div class="price-tag">$149</div>
+                    <div class="price-per mono">$49.67/key</div>
+                    <div class="price-list mono" style="font-size:0.8rem">
+                        <div>✓ Keys 1, 2, 3</div>
+                        <div>✓ USB-C cable (braided)</div>
+                        <div>✓ Quick Start Guide (one sentence)</div>
+                        <div>✗ Keys 4, 5, 6</div>
+                        <div>✗ Professional responsibility</div>
+                    </div>
+                    <button onclick="alert('⚠ KEY 1 HAS BEEN PRESSED.\n\nYou have mass-approved this purchase.')" class="aperture-btn" style="width:100%">Mass-Approve</button>
+                </div>
+
+                <div class="price-card brutal-card" style="border-color:#dc2626;box-shadow:12px 12px 0 0 #dc2626">
+                    <div class="popular-badge mono">MOST REGRETTED</div>
+                    <div class="price-name mono">KEYZ PRO</div>
+                    <div class="price-tag">$499</div>
+                    <div class="price-per mono">$83.17/key</div>
+                    <div class="price-list mono" style="font-size:0.8rem">
+                        <div>✓ Everything in CCK-3</div>
+                        <div>✓ Keys 4, 5, 6</div>
+                        <div>✓ Slack integration (Key 5)</div>
+                        <div>✓ Jira integration (Key 6)</div>
+                        <div>✓ Peace of mind (unverified)</div>
+                    </div>
+                    <button onclick="alert('⚠ You have been added to the waitlist.\n\nPosition: 8,412')" class="aperture-btn" style="width:100%;background:#dc2626">Join Waitlist</button>
+                </div>
+
+                <div class="price-card brutal-card" style="border-color:#7c3aed;box-shadow:12px 12px 0 0 #7c3aed">
+                    <div class="popular-badge mono" style="background:#7c3aed">MOST BILLED</div>
+                    <div class="price-name mono">KEYZ ULTRA</div>
+                    <div class="price-tag" style="font-size:2.5rem">$999<span style="font-size:1rem">/mo</span></div>
+                    <div class="price-per mono">+ API costs + egress + vibes</div>
+                    <div class="price-list mono" style="font-size:0.8rem">
+                        <div>✓ Wireless (keys 1, 2, 3)</div>
+                        <div>✓ Cloud keypress inference</div>
+                        <div>✓ API token slot (physical)</div>
+                        <div>✓ 340ms of validation per press</div>
+                        <div>✓ To err is human</div>
+                    </div>
+                    <button onclick="alert('⚠ ULTRA ONBOARDING INITIATED\n\nMonthly billing begins now.\nYou have not received the keyboard yet.\nThe model has pre-approved this.')" class="aperture-btn" style="width:100%;background:#7c3aed">Ascend</button>
+                </div>
+
+                <div class="price-card brutal-card">
+                    <div class="price-name mono">ENTERPRISE</div>
+                    <div class="price-tag" style="font-size:2rem;padding:1rem 0">Contact<br>Sales</div>
+                    <div class="price-per mono">No additional keys.</div>
+                    <div class="price-list mono" style="font-size:0.8rem">
+                        <div>✓ Same 3-6 keys</div>
+                        <div>✓ Longer cable</div>
+                        <div>✓ SOC 2 badge on the box</div>
+                        <div>✓ Dedicated account manager (Greg)</div>
+                        <div>✓ Greg is on leave</div>
+                    </div>
+                    <button onclick="alert('Greg is on leave.\n\nPlease try again in Q3.')" class="aperture-btn" style="width:100%;background:black">Contact Greg</button>
+                </div>
+            </div>
+
+            <!-- COMPARISON TABLE -->
+            <div style="margin-top:5rem">
+                <h2 style="text-align:center;font-size:2rem;margin-bottom:0.5rem">FULL COMPARISON</h2>
+                <p style="text-align:center;font-size:1rem;font-weight:300;color:#6b7280;margin-bottom:3rem">Everything you need to know. Nothing you need to read.</p>
+
+                <div style="overflow-x:auto">
+                    <table class="mono" style="width:100%;border-collapse:collapse;font-size:0.85rem">
+                        <thead>
+                            <tr style="border-bottom:4px solid black">
+                                <th style="text-align:left;padding:1rem 1rem 1rem 0;width:40%"></th>
+                                <th style="padding:1rem;text-align:center;width:20%">CCK-3<br><span style="font-size:0.7rem;color:#6b7280;font-weight:normal">$149</span></th>
+                                <th style="padding:1rem;text-align:center;width:20%;color:#dc2626">KEYZ PRO<br><span style="font-size:0.7rem;font-weight:normal">$499</span></th>
+                                <th style="padding:1rem;text-align:center;width:20%;color:#7c3aed">KEYZ ULTRA<br><span style="font-size:0.7rem;font-weight:normal">$999/mo + API</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Hardware</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Physical keys</td><td style="text-align:center">3</td><td style="text-align:center">6</td><td style="text-align:center">3 (wireless)</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Keys that do something</td><td style="text-align:center">1</td><td style="text-align:center">1</td><td style="text-align:center">1 (after inference)</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Braided USB-C cable</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Onboard camera</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">API token slot (physical)</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">RGB lighting</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">1 green LED</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Escape key</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
+
+                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Workflow</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Mass-approve diffs</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Mass-approve diffs you haven't read</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Pretend to re-read the diff</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Conceptual undo</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Actual undo</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Escalate to deactivated employee</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Slack "looking into it" integration</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Jira ticket auto-assignment</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+
+                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Intelligence</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Cloud keypress inference</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">128k token keypress context window</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">LLM agrees with your keypress</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">97.2%</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">LLM silently overrides your keypress</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">2.8%</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Billed for overridden keypresses</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Heart rate monitoring (wristband req.)</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+
+                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Security & Compliance</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">HTTPS</td><td style="text-align:center">N/A</td><td style="text-align:center">N/A</td><td style="text-align:center;color:#dc2626">No</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">SOC 2 badge on the box</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">SOC 2 compliance</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">API token transmitted in plaintext</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Binding arbitration on keypress</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Diff review liability waiver</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+
+                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Support</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Quick Start Guide</td><td style="text-align:center">1 sentence</td><td style="text-align:center">2 sentences</td><td style="text-align:center">API docs (404)</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Dedicated account manager</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">Greg</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Account manager availability</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">On leave</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Return policy</td><td style="text-align:center">No</td><td style="text-align:center">No</td><td style="text-align:center">No</td></tr>
+
+                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Vibes</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Feeling of productivity</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Actual productivity</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Ability to write a for loop from memory</td><td style="text-align:center;color:#dc2626">Declining</td><td style="text-align:center;color:#dc2626">Gone</td><td style="text-align:center;color:#dc2626">Never had it</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Coworker envy</td><td style="text-align:center">Moderate</td><td style="text-align:center">High</td><td style="text-align:center">Concern</td></tr>
+                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">HR incidents (avg. per quarter)</td><td style="text-align:center">0.2</td><td style="text-align:center">1.1</td><td style="text-align:center">3.7</td></tr>
+                            <tr style="border-bottom:2px solid black"><td style="padding:0.75rem 1rem 0.75rem 0">Indistinguishable from CI/CD pipeline</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">Sometimes</td><td style="text-align:center;font-weight:bold;color:#7c3aed">Fully</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="section-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="mono">KEYGRAVE</h3>
+                    <p>A Chasm Logic Hardware Division. Manufacturing approval surfaces since the firmware incident.</p>
+                </div>
+                <div>
+                    <h4 class="mono">LEGAL</h4>
+                    <ul>
+                        <li>Terms of Keystroke</li>
+                        <li>Return Policy (No)</li>
+                        <li>Keystroke Telemetry Consent</li>
+                        <li>Diff Review Liability Waiver</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">SUPPORT</h4>
+                    <ul>
+                        <li class="mono">support@keygrave.io</li>
+                        <li class="mono">returns@dev/null</li>
+                        <li>FAQ: "Press 1."</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="disclaimer mono">
+                <p><span style="color:white;font-weight:bold">DISCLAIMER:</span> The CCK-3, Keyz Pro, and Keyz Ultra are approval peripherals manufactured by Keygrave, a wholly owned hardware division of Chasm Logic. The CCK-3 does not write code. The CCK-3 does not read code. The CCK-3 approves code. Keygrave assumes no liability for mass-approved diffs, force-pushed mains, deleted production databases, or the gradual erosion of your ability to write a for loop from memory.</p>
+
+                <p>Brock Granite, Chasm Logic CEO, has personally assured investors that the removal of 101 keys "does not constitute a reduction in capability" and that "most of those keys were legacy bloat from the typewriter era." By pressing Key 1, you have agreed to binding arbitration and acknowledged that you did not read what you just approved.</p>
+
+                <p>The Keyz Pro "Undo (Conceptual)" key does not undo. The "Escalate" key assigns tickets to deactivated employees. This is by design. Keygrave assumes no liability for Jira tickets that enter an infinite loop of reassignment between former staff members. The Slack integration sends "looking into it" regardless of context, including active incidents, performance reviews, and funerals.</p>
+
+                <p>The Keyz Ultra routes all keypresses through a third-party datacenter. Keygrave does not own, operate, or understand this datacenter. Your API token is transmitted in plaintext and photographed by an onboard camera for "convenience." The inference model evaluates each keypress using a 128,000-token context window of your previous keypresses. In 97.2% of cases the model agrees with your input. You are billed for all cases. The 2.8% of keypresses the model disagrees with are "corrected" silently. Keygrave assumes no liability for keypresses you did not authorize but were inferred on your behalf. By inserting your API token into Slot B, you have agreed that the model's judgment supersedes your own. To err is human. To infer is divine. To bill is Keygrave.</p>
+
+                <p class="warning">⚠ WARNING: This product may cause the user to mass-become indistinguishable from a CI/CD pipeline.</p>
+            </div>
+
+            <div class="footer-copy mono">© 2026 KEYGRAVE / CHASM LOGIC. ALL KEYS RESERVED. MOST KEYS UNNECESSARY. SOME KEYS INFERRED.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+</body>
+</html>
