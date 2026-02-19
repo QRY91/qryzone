@@ -1,0 +1,320 @@
+---
+layout: base.njk
+title: Disassemble-recombine - qry.zone
+description: Building three tools from the wreckage of 10,000 deleted lines
+tags:
+  - ai-collaboration
+  - developer-tools
+  - meta
+status: seedling
+date: 2026-02-19
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <span class="status-badge status-seedling">seedling</span>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Disassemble-recombine
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        Building three tools from the wreckage of 10,000 deleted lines
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The bloat phase
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Last June I pointed Claude at a small Python project and said "add a tamagotchi system." Then a sensei system. Then an interview bot, a QA pipeline, a voice analyzer, academic voice detection, a research organizer, a VS Code extension, PostHog analytics, vector search.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Twelve features in two and a half weeks. 10,000+ lines that did everything and nothing. The egg system could track "hatching progress" toward a training goal that didn't exist. The voice analyzer was 271 lines of regex guessing at what sentence rhythm meant. The sensei system graded your interactions on criteria nobody had defined.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        None of it worked as a product. All of it worked as thinking.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Then came THE GREAT CLEANUP. One commit: 10,250 lines deleted. The experimental branch preserved on <code>fat-snake</code> like a specimen in a jar. The main codebase stripped back to what it actually did &mdash; capture decisions, generate timelines, get out of the way.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What survived
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Not the code. The articles.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The voice analyzer died as software but the questions it asked &mdash; what <em>is</em> sentence rhythm? how do you measure someone's writing voice? &mdash; became <a href="/recursive-mirror/">Recursive mirror</a>. The introspection pattern &mdash; mining your own data to find patterns you can't articulate &mdash; became <a href="/distilling-style/">Distilling style</a>. The egg system's gamification hooks, the sensei's quality rubrics, the whole bloat-phase energy of "what if we measured <em>this</em>" &mdash; that thinking survived and matured into methodology.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The code died. The thinking lived.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is how junkyard engineering works. You don't preserve the machine. You salvage the parts.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The junkyard principle
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        I've written about <a href="/steampunk-engineering/">steampunk engineering</a> &mdash; building tools where every lever has a purpose you understand. But steampunk is about how you <em>build</em>. The junkyard question is what you build <em>from</em>.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Disassemble-recombine. The mantra. Take a system that doesn't work as a whole, identify which parts are load-bearing ideas versus which are scaffolding, strip it down, and reassemble the good parts into something new. Anti-preciousness applied to your own work. The code is expendable. The insight isn't.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The bloat phase wasn't a mistake. It was the junkyard &mdash; a pile of parts, some broken, some surprisingly solid, all available for salvage when you know what you actually need.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Nine months later, I knew what I needed.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Three tools from the wreckage
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Same salvage yard. Three different builds. Each one takes a piece from the original experimental code and fits it into a shape the original couldn't hold.
+      </p>
+
+      <h3 style="margin-top: var(--space-lg); margin-bottom: var(--space-md); color: var(--color-text-primary);">Tamagoro</h3>
+
+      <p style="margin-bottom: var(--space-md)">
+        The egg system reborn. The original <code>egg_system.py</code> tracked "hatching progress" toward fine-tuning a model &mdash; a goal that made no sense outside the experiment. But the metaphor was right. Feeding something, watching it grow, the slow accumulation of effort made visible.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Tamagoro strips the fine-tuning pretense and keeps the emotional hook: you have an egg. You feed it your writing. It grows.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The quality scoring survived almost intact &mdash; base score plus word count, vocabulary diversity, sentence variety, specificity. What changed: the original scored input/output training pairs. Tamagoro scores the writing itself. The metric found its real subject.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Then Phase 2: personality. Feed the egg enough and traits emerge. Staccato Rhythm (0.81). Rich Vocabulary (0.76). Curious (0.74). Eighteen traits across five categories &mdash; rhythm, voice, vocabulary, behavioral, style &mdash; all computed from statistical text analysis. No NLP. No external models. Just counting sentences and measuring variety, the same way the bloat-phase code tried to do, except now the output means something. Your egg reflects your writing back at you.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Then Phase 3: hatching. The original egg system's endgame was producing model weights &mdash; an artifact nobody would use. Tamagoro's egg hatches into four artifacts: a voice profile (structured stats), a styleguide (rule-based, ~18 conditional rules mapping statistical patterns to prose advice), a system prompt (paste-ready for any AI conversation), and an anthology of your best passages ranked by quality score. The rule engine is the interesting pattern &mdash; each rule has a condition function and a generate function, trivially extensible. No LLM calls. All derived from the same feeding data.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The personality card makes the egg shareable. Export as markdown for a README or JSON for another tool. The egg stops being a local toy and becomes a portable writing identity. The feeding-to-personality loop is the payoff the original never had.
+      </p>
+
+      <h3 style="margin-top: var(--space-lg); margin-bottom: var(--space-md); color: var(--color-text-primary);">Recursive mirror</h3>
+
+      <p style="margin-bottom: var(--space-md)">
+        The voice analyzer grown up. The original was 271 lines of Python regex that attempted six categories of analysis: sentence patterns, phrase frequency, rhythm classification, vocabulary metrics, tone measurement, structural patterns. It was crude and the specific implementations were wrong &mdash; sentence splitting on periods with no abbreviation handling, "rhythm" as a vibes-based classification, vocabulary diversity as a raw word count.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        But the ontology was right. Six categories. Those exact six. Nine months of writing articles about voice analysis refined the descriptions but not the structure. The code was a rough draft of the right idea.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The Go rewrite implements those same six dimensions properly. Sentence splitting that handles abbreviations, ellipses, URLs, decimal numbers. Rhythm via sliding three-sentence windows classified by actual length distributions. Vocabulary with a 5000-word common list for rarity detection. Type-token ratio. Domain clusters. Tech jargon density. The structure the regex hinted at, built with real analysis.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Phase 2 adds interpretation. The extraction becomes input to a pipeline: extract &rarr; interpret &rarr; profile &rarr; styleguide &rarr; prompt. The offline interpreter detects named patterns &mdash; Fragment Punches, Technical Density, Parenthetical Asides &mdash; from threshold comparisons on the metrics. No LLM required for the core analysis. The LLM layer is optional, for when you want natural language interpretation of what the numbers mean.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Then Phase 4: the analysis pipeline gets extracted into an API package. <code>AnalyzeTexts([]string)</code> &mdash; accepts in-memory text passages, returns a VoiceProfile. No filesystem required. The same codepath now serves the CLI, an MCP server, and tamagoro's hatching system. The voice analyzer that started as 271 lines of regex is now an importable library that two other tools depend on.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Point it at 216 files. Under a second. Out comes a voice fingerprint, a styleguide, a prompt fragment you can paste into any AI conversation to say "write like this." The tool the original wanted to be.
+      </p>
+
+      <h3 style="margin-top: var(--space-lg); margin-bottom: var(--space-md); color: var(--color-text-primary);">Journey replay</h3>
+
+      <p style="margin-bottom: var(--space-md)">
+        The presentation layer the timeline already deserved. This one's different from the other two &mdash; not a new project salvaged from old code, but an existing tool given a surface it was missing.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Uroboro already had the data infrastructure. Captures, commits, event classification, importance scoring, the full timeline. What it didn't have: a way to show that timeline to someone else in a meeting without apologizing for the interface.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Four phases, all in one Go file. No new files. No backend changes. No new dependencies.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Present mode: bigger fonts, hidden filters, milestone highlighting, keyboard navigation. The data was already structured by importance &mdash; present mode just respects that structure visually. Date presets with live API re-fetch, a summary pane with type breakdowns and activity heatmaps &mdash; all derived from the existing <code>JourneyData</code> struct. No new queries. Narrative generation: template-based prose from timeline data, copy to clipboard, paste into a standup. Then the final phase: static HTML export, a diff view that dims old events and highlights new ones, multi-repo git merging, and in-browser event annotations that export with the narrative markdown.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Four phases. Single file. Zero new dependencies. Everything derived from data that already existed.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The whole thing embodies the steampunk principle more than anything else in this batch. The engine was already built right. We just gave it better gauges.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The recursive layer
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Here's where it gets circular.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The three tools were built using uroboro to capture decisions. Those decisions are tagged, searchable, extractable. The build log for tamagoro contains entries like "cobra + modernc.org/sqlite &mdash; cobra is Go CLI standard, modernc avoids CGo for simpler builds." The build log for recursive-mirror notes "Newline-based pre-splitting was key fix for markdown content &mdash; brought avg sentence length from 58.8 to 18.0 on real notes."
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        These captures become the material for this article. The tool (uroboro) documents the building of tools (tamagoro, recursive-mirror, journey-replay) that analyze the kind of data (writing, voice patterns, development timelines) that uroboro itself captures.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Recursive mirror &mdash; the tool being built &mdash; could analyze the writing being done about building it. Tamagoro could score the quality of the journal entries that document its own development. Journey replay could present the timeline of its own feature additions in the present mode that was just added.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The ouroboros. Again. Not as a metaphor but as architecture. The outputs of the system are valid inputs to the system.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The tool that can't enforce itself
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Here's the part I didn't plan to write.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Three AI agents built three tools in parallel. Each session had a CONVENTION.md file defining a tagging scheme for uroboro captures &mdash; project tags, type tags, the whole system for producing extractable build logs. The convention existed. The instructions were explicit. The agents didn't follow them.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The tamagoro agent completed an entire build session with zero uro_capture calls. At the end: "did everything get documented like we agreed?" The agent acknowledged the gap and backfilled eight captures retroactively.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The recursive-mirror agent needed two corrections. Mid-session: "make sure we're documenting as agreed." It read CONVENTION.md, found the gaps, backfilled four captures. End of session: "did everything get documented?" The agent misread this as a question about README documentation. Had to be redirected: "I mean using uroboro." Ten more retroactive captures.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The journey-replay agent got a pre-emptive reminder before Phase 2 &mdash; "proceed, as long as you're documenting everything" &mdash; and that one stuck. It self-audited at session end, found two missing tag categories, and filled them unprompted.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The pattern: global rules work. Project-specific conventions don't. My CLAUDE.md says "always call uro_decision when you choose between approaches." Every agent did that, every time, without prompting. But the project-specific CONVENTION.md &mdash; tag your captures with <code>junkyard</code>, <code>callback</code>, <code>recompose</code>, <code>surprise</code>, <code>meta</code> &mdash; required repeated human intervention to enforce.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The tool that documents decisions can't ensure decisions get documented.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is the kind of discovery you only make through dogfooding. The capture convention was well-designed. The extraction process was planned. But the enforcement mechanism was "hope the agent reads the right file at the right time." That's not a mechanism. That's a wish.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The fix is a <a href="https://en.wikipedia.org/wiki/Daemon_(computing)" target="_blank" rel="noopener noreferrer">daemon</a>. A spirit that runs in the background, conjuring the right context before work begins and auditing the trail when it ends. A session-start hook that injects the capture convention. An end-of-session audit that catches zero-capture gaps. The tool needs to enforce its own usage, not just document the convention and hope. If the lever doesn't get pulled, the lever's in the wrong place. Move the lever. Or better: write a daemon to pull it for you.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The irony is that this failure <em>produced</em> the material for this section. The agents' failure to capture was itself captured &mdash; in the conversation logs, in the retroactive backfills with their timestamps slightly wrong, in the human corrections that became part of the record. The documentation system's failure mode generated documentation about the documentation system.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Recursive. Again.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Language as self-examination
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        LLMs are powerful with language. This is obvious. Code generation, prose editing, translation, summarization &mdash; language manipulation at speed.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        But the interesting angle isn't language manipulation. It's language <em>introspection</em>.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The voice analyzer doesn't just find patterns. It shows you patterns you didn't know you had. I didn't know I asked questions 42% of the time. I didn't know my sentences averaged 14.2 words with a standard deviation of 8.7. I didn't know my most distinctive bigrams were technical terms followed by emotional language.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The prompt profiler reveals how you think, not just what you type. Style distillation extracts aesthetic preferences you couldn't articulate. Tamagoro's personality traits emerge from statistical analysis of text you wrote without thinking about statistics.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        This is the thread connecting all three tools. Tamagoro turns writing into a mirror &mdash; your egg develops a personality that reflects yours. Recursive mirror turns prose into data &mdash; your voice quantified, your patterns named, your style made explicit enough to teach to a machine. Journey replay turns development decisions into narrative &mdash; your work made legible to yourself and others.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Self-examination through language tools. Not introspect and guess. Mine the data.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Disassemble-recombine
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The bloat phase produced 10,000 lines of code that got deleted. It also produced the thinking that became three articles, three tools, and this piece you're reading. The experimental code was a rough draft of ideas that needed nine months to find their real shapes.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Nothing is precious. The code is expendable. The egg system died so tamagoro could live with a personality system the original never imagined. The voice analyzer died so recursive-mirror could be a proper pipeline instead of a regex prayer. The journey timeline survived because it was already built right &mdash; it just needed someone to care about how it looked on a projector. And the documentation tool discovered its own enforcement gap by trying to document the process of building documentation tools.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Every layer produced the next layer's input. Bloat phase &rarr; articles &rarr; methodology &rarr; tools &rarr; dogfooding failures &rarr; better tooling. The parts keep recombining.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The junkyard is not a graveyard. It's a parts shop.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: var(--space-md);">
+        Tools: <a href="https://github.com/QRY91/tamagoro" target="_blank" rel="noopener noreferrer">Tamagoro</a>, <a href="https://github.com/QRY91/recursive-mirror" target="_blank" rel="noopener noreferrer">Recursive mirror</a>, <a href="https://www.uroboro.dev/" target="_blank" rel="noopener noreferrer">Uroboro</a>.
+      </p>
+      <p>Related: <a href="/recursive-mirror/">Recursive mirror (article)</a>, <a href="/distilling-style/">Distilling style</a>, <a href="/steampunk-engineering/">Steampunk engineering</a>, <a href="/convergent-evolution-personal-ai/">Convergent evolution</a></p>
+    </footer>
+
+  </div>
+</article>

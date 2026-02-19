@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "title": "Disassemble-recombine",
+      "description": "Building three tools from the wreckage of 10,000 deleted lines",
+      "href": "/disassemble-recombine/",
+      "tags": ["ai-collaboration", "developer-tools", "meta"],
+      "status": "seedling",
+      "connections": ["Recursive mirror", "Distilling style", "Steampunk engineering", "Convergent evolution in personal AI tooling", "uroboro"],
+      "lastUpdated": "2026-02-19"
+    },
+    {
       "title": "The 250MB spinner",
       "description": "How one loading animation killed a server, and what that says about everything",
       "href": "/250mb-spinner/",
