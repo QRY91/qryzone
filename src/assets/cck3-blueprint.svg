@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="'Courier New', monospace">
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1a2a4a" stroke-width="0.5" opacity="0.4"/>
+    </pattern>
+    <pattern id="grid-major" width="100" height="100" patternUnits="userSpaceOnUse">
+      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#1a2a4a" stroke-width="1" opacity="0.6"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="520" fill="#0a1628"/>
+  <rect width="900" height="520" fill="url(#grid)"/>
+  <rect width="900" height="520" fill="url(#grid-major)"/>
+
+  <!-- Title block top-right -->
+  <rect x="600" y="16" width="284" height="60" fill="none" stroke="#F58025" stroke-width="1.5" opacity="0.8"/>
+  <text x="612" y="36" fill="#F58025" font-size="10" opacity="0.8">KEYGRAVE PERIPHERALS — HARDWARE DIV.</text>
+  <text x="612" y="52" fill="#4a9eff" font-size="14" font-weight="bold">MODEL CCK-3 — APPROVAL PERIPHERAL</text>
+  <text x="612" y="66" fill="#3a5a8a" font-size="9">DWG NO. KG-2026-003 REV F — SCALE 2:1</text>
+
+  <!-- Classification stamp -->
+  <rect x="16" y="16" width="180" height="28" fill="none" stroke="#F58025" stroke-width="2"/>
+  <text x="26" y="35" fill="#F58025" font-size="12" font-weight="bold">⚠ CLASSIFIED: SERIES B</text>
+
+  <!-- Main keyboard body — top-down orthographic view -->
+  <g transform="translate(200, 100)">
+
+    <!-- Outer housing -->
+    <rect x="0" y="0" width="500" height="200" rx="12" fill="none" stroke="#4a9eff" stroke-width="2"/>
+    <rect x="8" y="8" width="484" height="184" rx="8" fill="#0d1f3a" stroke="#2a4a7a" stroke-width="1"/>
+
+    <!-- KEY 1 -->
+    <rect x="40" y="30" width="120" height="140" rx="8" fill="#1a2a4a" stroke="#4a9eff" stroke-width="2"/>
+    <rect x="48" y="38" width="104" height="108" rx="6" fill="#0d1f3a" stroke="#4a9eff" stroke-width="1.5"/>
+    <text x="100" y="100" text-anchor="middle" fill="#F58025" font-size="48" font-weight="bold">1</text>
+    <text x="100" y="130" text-anchor="middle" fill="#4a9eff" font-size="9">YES</text>
+
+    <!-- KEY 2 -->
+    <rect x="190" y="30" width="120" height="140" rx="8" fill="#1a2a4a" stroke="#4a9eff" stroke-width="2"/>
+    <rect x="198" y="38" width="104" height="108" rx="6" fill="#0d1f3a" stroke="#4a9eff" stroke-width="1.5"/>
+    <text x="250" y="100" text-anchor="middle" fill="#F58025" font-size="48" font-weight="bold">2</text>
+    <text x="250" y="130" text-anchor="middle" fill="#4a9eff" font-size="9">ALSO YES</text>
+
+    <!-- KEY 3 -->
+    <rect x="340" y="30" width="120" height="140" rx="8" fill="#1a2a4a" stroke="#4a9eff" stroke-width="2"/>
+    <rect x="348" y="38" width="104" height="108" rx="6" fill="#0d1f3a" stroke="#4a9eff" stroke-width="1.5"/>
+    <text x="400" y="100" text-anchor="middle" fill="#F58025" font-size="48" font-weight="bold">3</text>
+    <text x="400" y="130" text-anchor="middle" fill="#3a5a8a" font-size="9">ORNAMENTAL</text>
+
+    <!-- USB-C port -->
+    <rect x="225" y="186" width="50" height="14" rx="4" fill="none" stroke="#4a9eff" stroke-width="1.5"/>
+    <text x="250" y="196" text-anchor="middle" fill="#3a5a8a" font-size="7">USB-C</text>
+  </g>
+
+  <!-- Dimension lines — width -->
+  <g stroke="#3a5a8a" stroke-width="0.75" fill="#3a5a8a">
+    <!-- Top dimension -->
+    <line x1="200" y1="80" x2="200" y2="95" />
+    <line x1="700" y1="80" x2="700" y2="95" />
+    <line x1="200" y1="88" x2="700" y2="88" />
+    <polygon points="200,88 206,85 206,91" />
+    <polygon points="700,88 694,85 694,91" />
+    <text x="450" y="84" text-anchor="middle" font-size="10" fill="#4a9eff">162.0mm</text>
+
+    <!-- Left dimension — height -->
+    <line x1="180" y1="100" x2="195" y2="100" />
+    <line x1="180" y1="300" x2="195" y2="300" />
+    <line x1="188" y1="100" x2="188" y2="300" />
+    <polygon points="188,100 185,106 191,106" />
+    <polygon points="188,300 185,294 191,294" />
+    <text x="174" y="204" text-anchor="middle" font-size="10" fill="#4a9eff" transform="rotate(-90,174,204)">68.0mm</text>
+
+    <!-- Key pitch dimension -->
+    <line x1="300" y1="320" x2="300" y2="340" />
+    <line x1="450" y1="320" x2="450" y2="340" />
+    <line x1="300" y1="332" x2="450" y2="332" />
+    <polygon points="300,332 306,329 306,335" />
+    <polygon points="450,332 444,329 444,335" />
+    <text x="375" y="328" text-anchor="middle" font-size="9" fill="#4a9eff">KEY PITCH: 50.0mm</text>
+  </g>
+
+  <!-- Callout annotations -->
+  <g fill="#3a5a8a" font-size="9">
+    <!-- Key 1 callout -->
+    <line x1="300" y1="160" x2="740" y2="140" stroke="#3a5a8a" stroke-width="0.75" stroke-dasharray="4,3"/>
+    <circle cx="300" cy="160" r="2" fill="#F58025"/>
+    <text x="742" y="130" fill="#4a9eff" font-size="10" font-weight="bold">A — GATERON APPROVAL ORANGE™</text>
+    <text x="742" y="143" fill="#3a5a8a">Actuation: 45g</text>
+    <text x="742" y="155" fill="#3a5a8a">Travel: 1.2mm ("enough")</text>
+    <text x="742" y="167" fill="#3a5a8a">Tested: YES (key 1 only)</text>
+
+    <!-- Key 3 callout -->
+    <line x1="600" y1="240" x2="740" y2="220" stroke="#3a5a8a" stroke-width="0.75" stroke-dasharray="4,3"/>
+    <circle cx="600" cy="240" r="2" fill="#F58025"/>
+    <text x="742" y="210" fill="#4a9eff" font-size="10" font-weight="bold">B — DECORATIVE SWITCH</text>
+    <text x="742" y="223" fill="#3a5a8a">Actuation: UNKNOWN</text>
+    <text x="742" y="235" fill="#3a5a8a">Times pressed: 0</text>
+    <text x="742" y="247" fill="#3a5a8a">Status: REGULATORY COMPLIANCE</text>
+
+    <!-- USB callout -->
+    <line x1="450" y1="296" x2="740" y2="290" stroke="#3a5a8a" stroke-width="0.75" stroke-dasharray="4,3"/>
+    <circle cx="450" cy="296" r="2" fill="#F58025"/>
+    <text x="742" y="280" fill="#4a9eff" font-size="10" font-weight="bold">C — USB-C CONNECTOR</text>
+    <text x="742" y="293" fill="#3a5a8a">Protocol: USB 2.0 (sufficient)</text>
+    <text x="742" y="305" fill="#3a5a8a">Data: Keypress only (1, 2, or 3)</text>
+    <text x="742" y="317" fill="#3a5a8a">Bandwidth utilized: 0.00001%</text>
+  </g>
+
+  <!-- Side profile view — bottom section -->
+  <g transform="translate(200, 380)">
+    <text x="0" y="-10" fill="#4a9eff" font-size="10" font-weight="bold">SECTION X-X — SIDE PROFILE</text>
+
+    <!-- Keyboard side profile -->
+    <path d="M 0,60 L 0,20 Q 0,10 10,8 L 60,0 L 440,0 L 490,8 Q 500,10 500,20 L 500,60 Z"
+          fill="#0d1f3a" stroke="#4a9eff" stroke-width="1.5"/>
+
+    <!-- Key profiles sticking up -->
+    <rect x="44" y="-18" width="108" height="22" rx="4" fill="none" stroke="#4a9eff" stroke-width="1"/>
+    <rect x="194" y="-18" width="108" height="22" rx="4" fill="none" stroke="#4a9eff" stroke-width="1"/>
+    <rect x="344" y="-18" width="108" height="22" rx="4" fill="none" stroke="#4a9eff" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/>
+
+    <text x="98" y="-4" text-anchor="middle" fill="#F58025" font-size="11" font-weight="bold">1</text>
+    <text x="248" y="-4" text-anchor="middle" fill="#F58025" font-size="11" font-weight="bold">2</text>
+    <text x="398" y="-4" text-anchor="middle" fill="#3a5a8a" font-size="11">3</text>
+
+    <!-- Height dimension -->
+    <line x1="520" y1="-18" x2="540" y2="-18" stroke="#3a5a8a" stroke-width="0.75"/>
+    <line x1="520" y1="60" x2="540" y2="60" stroke="#3a5a8a" stroke-width="0.75"/>
+    <line x1="530" y1="-18" x2="530" y2="60" stroke="#3a5a8a" stroke-width="0.75"/>
+    <text x="548" y="25" fill="#4a9eff" font-size="9">22.4mm</text>
+  </g>
+
+  <!-- Notes block bottom-left -->
+  <g transform="translate(16, 400)">
+    <text x="0" y="0" fill="#4a9eff" font-size="10" font-weight="bold">NOTES:</text>
+    <text x="0" y="16" fill="#3a5a8a" font-size="8.5">1. KEY 3 SWITCH IS DECORATIVE. DO NOT ACTUATE.</text>
+    <text x="0" y="28" fill="#3a5a8a" font-size="8.5">2. BACKSPACE NOT INCLUDED. NO TAKESIES-BACKSIES.</text>
+    <text x="0" y="40" fill="#3a5a8a" font-size="8.5">3. WARRANTY VOID IF USER OPENS A TEXT EDITOR.</text>
+    <text x="0" y="52" fill="#3a5a8a" font-size="8.5">4. KEYBOARD MAY CAUSE USER TO BECOME A CI/CD PIPELINE.</text>
+    <text x="0" y="64" fill="#F58025" font-size="8.5">5. ALL DIMS IN MM. TOLERANCE: ± WHO CARES.</text>
+  </g>
+
+  <!-- Border frame -->
+  <rect x="4" y="4" width="892" height="512" fill="none" stroke="#2a4a7a" stroke-width="1.5"/>
+  <rect x="8" y="8" width="884" height="504" fill="none" stroke="#1a2a4a" stroke-width="0.5"/>
+</svg>
