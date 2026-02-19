@@ -1,29 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480" font-family="'Courier New', monospace">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" font-family="'Courier New', monospace">
   <defs>
-    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+    <pattern id="pgrid" width="20" height="20" patternUnits="userSpaceOnUse">
       <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#2a1a1a" stroke-width="0.5" opacity="0.4"/>
     </pattern>
-    <pattern id="grid-major" width="100" height="100" patternUnits="userSpaceOnUse">
+    <pattern id="pgrid-major" width="100" height="100" patternUnits="userSpaceOnUse">
       <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#2a1a1a" stroke-width="1" opacity="0.6"/>
     </pattern>
   </defs>
 
   <!-- Background -->
-  <rect width="900" height="480" fill="#1a0a0a"/>
-  <rect width="900" height="480" fill="url(#grid)"/>
-  <rect width="900" height="480" fill="url(#grid-major)"/>
+  <rect width="900" height="500" fill="#1a0a0a"/>
+  <rect width="900" height="500" fill="url(#pgrid)"/>
+  <rect width="900" height="500" fill="url(#pgrid-major)"/>
 
   <!-- Title block -->
   <rect x="540" y="16" width="344" height="60" fill="none" stroke="#dc2626" stroke-width="1.5" opacity="0.8"/>
   <text x="552" y="36" fill="#dc2626" font-size="10" opacity="0.8">KEYGRAVE PERIPHERALS — HARDWARE DIV.</text>
-  <text x="552" y="52" fill="#ff6b6b" font-size="14" font-weight="bold">MODEL KEYZ PRO — POWER USER PERIPHERAL</text>
+  <text x="552" y="52" fill="#ff6b6b" font-size="14" font-weight="bold">MODEL KEYZ PRO — 6-KEY PERIPHERAL</text>
   <text x="552" y="66" fill="#5a3a3a" font-size="9">DWG NO. KG-2026-006P REV A — SCALE 1.5:1</text>
 
   <!-- Classification stamp -->
   <rect x="16" y="16" width="200" height="28" fill="none" stroke="#dc2626" stroke-width="2"/>
   <text x="26" y="35" fill="#dc2626" font-size="12" font-weight="bold">⚠ FOR POWER USERS ONLY</text>
 
-  <!-- Main keyboard body — top-down view, wider for 6 keys -->
+  <!-- Main keyboard body — top-down view -->
   <g transform="translate(80, 100)">
 
     <!-- Outer housing -->
@@ -32,8 +32,8 @@
 
     <!-- Divider line between standard and pro keys -->
     <line x1="374" y1="16" x2="374" y2="164" stroke="#dc2626" stroke-width="1" stroke-dasharray="6,4" opacity="0.6"/>
-    <text x="378" y="174" fill="#dc2626" font-size="7" opacity="0.6">PRO ZONE →</text>
-    <text x="370" y="174" fill="#5a3a3a" font-size="7" text-anchor="end">← STANDARD</text>
+    <text x="370" y="174" fill="#5a3a3a" font-size="7" text-anchor="end">STANDARD →</text>
+    <text x="378" y="174" fill="#dc2626" font-size="7">← PRO ZONE</text>
 
     <!-- KEY 1 -->
     <rect x="28" y="24" width="100" height="132" rx="8" fill="#1a0d0d" stroke="#ff6b6b" stroke-width="1.5"/>
@@ -50,18 +50,18 @@
     <text x="302" y="98" text-anchor="middle" fill="#5a3a3a" font-size="40" font-weight="bold">3</text>
     <text x="302" y="120" text-anchor="middle" fill="#5a3a3a" font-size="8">ORNAMENTAL</text>
 
-    <!-- KEY 4 — PRO (red fill) -->
+    <!-- KEY 4 — PRO -->
     <rect x="394" y="24" width="100" height="132" rx="8" fill="#2a0a0a" stroke="#dc2626" stroke-width="2"/>
     <text x="444" y="98" text-anchor="middle" fill="#dc2626" font-size="40" font-weight="bold">4</text>
     <text x="444" y="120" text-anchor="middle" fill="#dc2626" font-size="8">WAIT, WHAT?</text>
 
-    <!-- KEY 5 — PRO (red fill) -->
+    <!-- KEY 5 — PRO -->
     <rect x="506" y="24" width="100" height="132" rx="8" fill="#2a0a0a" stroke="#dc2626" stroke-width="2"/>
     <text x="556" y="98" text-anchor="middle" fill="#dc2626" font-size="40" font-weight="bold">5</text>
     <text x="556" y="115" text-anchor="middle" fill="#dc2626" font-size="7">UNDO</text>
     <text x="556" y="125" text-anchor="middle" fill="#5a3a3a" font-size="7">(CONCEPTUAL)</text>
 
-    <!-- KEY 6 — PRO (red fill) -->
+    <!-- KEY 6 — PRO -->
     <rect x="618" y="24" width="100" height="132" rx="8" fill="#2a0a0a" stroke="#dc2626" stroke-width="2"/>
     <text x="668" y="98" text-anchor="middle" fill="#dc2626" font-size="40" font-weight="bold">6</text>
     <text x="668" y="120" text-anchor="middle" fill="#dc2626" font-size="8">ESCALATE</text>
@@ -69,37 +69,6 @@
     <!-- USB-C port -->
     <rect x="345" y="166" width="50" height="14" rx="4" fill="none" stroke="#ff6b6b" stroke-width="1.5"/>
     <text x="370" y="176" text-anchor="middle" fill="#5a3a3a" font-size="7">USB-C</text>
-  </g>
-
-  <!-- Callout annotations -->
-  <g fill="#5a3a3a" font-size="9">
-    <!-- Key 4 callout -->
-    <line x1="524" y1="130" x2="524" y2="330" stroke="#5a3a3a" stroke-width="0.75" stroke-dasharray="4,3"/>
-    <circle cx="524" cy="130" r="2" fill="#dc2626"/>
-    <rect x="440" y="332" width="168" height="68" fill="none" stroke="#4a2a2a" stroke-width="1"/>
-    <text x="450" y="348" fill="#dc2626" font-size="10" font-weight="bold">KEY 4: "WAIT, WHAT?"</text>
-    <text x="450" y="362" fill="#5a3a3a">Re-reads diff summary</text>
-    <text x="450" y="376" fill="#5a3a3a">Does not re-read diff</text>
-    <text x="450" y="390" fill="#5a3a3a">User presses 1 anyway</text>
-
-    <!-- Key 5 callout -->
-    <line x1="636" y1="130" x2="636" y2="330" stroke="#5a3a3a" stroke-width="0.75" stroke-dasharray="4,3"/>
-    <circle cx="636" cy="130" r="2" fill="#dc2626"/>
-    <rect x="620" y="332" width="168" height="68" fill="none" stroke="#4a2a2a" stroke-width="1"/>
-    <text x="630" y="348" fill="#dc2626" font-size="10" font-weight="bold">KEY 5: UNDO (CONCEPTUAL)</text>
-    <text x="630" y="362" fill="#5a3a3a">Sends Slack: "looking into it"</text>
-    <text x="630" y="376" fill="#5a3a3a">Opens tab (unread)</text>
-    <text x="630" y="390" fill="#5a3a3a">Tab closed: 4 DAYS LATER</text>
-
-    <!-- Key 6 callout -->
-    <line x1="748" y1="130" x2="830" y2="330" stroke="#5a3a3a" stroke-width="0.75" stroke-dasharray="4,3"/>
-    <circle cx="748" cy="130" r="2" fill="#dc2626"/>
-    <rect x="16" y="332" width="200" height="80" fill="none" stroke="#4a2a2a" stroke-width="1"/>
-    <text x="26" y="348" fill="#dc2626" font-size="10" font-weight="bold">KEY 6: ESCALATE</text>
-    <text x="26" y="362" fill="#5a3a3a">Creates Jira ticket</text>
-    <text x="26" y="376" fill="#5a3a3a">Assigns to: greg.chen (DEACTIVATED)</text>
-    <text x="26" y="390" fill="#5a3a3a">Status: IN PROGRESS (forever)</text>
-    <text x="26" y="404" fill="#dc2626">Closes terminal. Have a nice day.</text>
   </g>
 
   <!-- Dimension — full width -->
@@ -110,17 +79,57 @@
     <text x="450" y="84" text-anchor="middle" font-size="10" fill="#ff6b6b" font-family="'Courier New', monospace">302.0mm (100% LONGER THAN NECESSARY)</text>
   </g>
 
-  <!-- Notes -->
-  <g transform="translate(240, 340)">
-    <rect x="0" y="0" width="188" height="72" fill="none" stroke="#4a2a2a" stroke-width="1"/>
+  <!-- Callout annotations — properly ordered left to right -->
+  <g fill="#5a3a3a" font-size="9">
+    <!-- Key 4 callout -->
+    <line x1="524" y1="235" x2="524" y2="320" stroke="#5a3a3a" stroke-width="0.75" stroke-dasharray="4,3"/>
+    <circle cx="524" cy="235" r="2" fill="#dc2626"/>
+    <rect x="16" y="322" width="200" height="68" fill="none" stroke="#4a2a2a" stroke-width="1"/>
+    <text x="26" y="338" fill="#dc2626" font-size="10" font-weight="bold">KEY 4: "WAIT, WHAT?"</text>
+    <text x="26" y="352" fill="#5a3a3a">Re-reads diff summary</text>
+    <text x="26" y="366" fill="#5a3a3a">Does not re-read diff</text>
+    <text x="26" y="380" fill="#5a3a3a">User presses 1 anyway</text>
+    <!-- connector from line to box -->
+    <line x1="524" y1="320" x2="216" y2="356" stroke="#5a3a3a" stroke-width="0.75" stroke-dasharray="4,3"/>
+
+    <!-- Key 5 callout -->
+    <line x1="636" y1="235" x2="636" y2="320" stroke="#5a3a3a" stroke-width="0.75" stroke-dasharray="4,3"/>
+    <circle cx="636" cy="235" r="2" fill="#dc2626"/>
+    <rect x="232" y="322" width="210" height="68" fill="none" stroke="#4a2a2a" stroke-width="1"/>
+    <text x="242" y="338" fill="#dc2626" font-size="10" font-weight="bold">KEY 5: UNDO (CONCEPTUAL)</text>
+    <text x="242" y="352" fill="#5a3a3a">Sends Slack: "looking into it"</text>
+    <text x="242" y="366" fill="#5a3a3a">Opens tab (unread)</text>
+    <text x="242" y="380" fill="#5a3a3a">Tab closed: 4 DAYS LATER</text>
+    <!-- connector from line to box -->
+    <line x1="636" y1="320" x2="442" y2="356" stroke="#5a3a3a" stroke-width="0.75" stroke-dasharray="4,3"/>
+
+    <!-- Key 6 callout -->
+    <line x1="748" y1="235" x2="748" y2="320" stroke="#5a3a3a" stroke-width="0.75" stroke-dasharray="4,3"/>
+    <circle cx="748" cy="235" r="2" fill="#dc2626"/>
+    <rect x="460" y="322" width="240" height="80" fill="none" stroke="#4a2a2a" stroke-width="1"/>
+    <text x="470" y="338" fill="#dc2626" font-size="10" font-weight="bold">KEY 6: ESCALATE</text>
+    <text x="470" y="352" fill="#5a3a3a">Creates Jira ticket</text>
+    <text x="470" y="366" fill="#5a3a3a">Assigns to: greg.chen (DEACTIVATED)</text>
+    <text x="470" y="380" fill="#5a3a3a">Status: IN PROGRESS (forever)</text>
+    <text x="470" y="394" fill="#dc2626">Closes terminal. Have a nice day.</text>
+    <!-- connector from line to box -->
+    <line x1="748" y1="320" x2="700" y2="356" stroke="#5a3a3a" stroke-width="0.75" stroke-dasharray="4,3"/>
+  </g>
+
+  <!-- Pro Notes -->
+  <g transform="translate(716, 322)">
+    <rect x="0" y="0" width="168" height="80" fill="none" stroke="#4a2a2a" stroke-width="1"/>
     <text x="10" y="16" fill="#dc2626" font-size="10" font-weight="bold" font-family="'Courier New', monospace">PRO NOTES:</text>
     <text x="10" y="32" fill="#5a3a3a" font-size="8.5" font-family="'Courier New', monospace">1. Keys 4-6 never tested</text>
     <text x="10" y="44" fill="#5a3a3a" font-size="8.5" font-family="'Courier New', monospace">2. Greg is on leave</text>
     <text x="10" y="56" fill="#5a3a3a" font-size="8.5" font-family="'Courier New', monospace">3. You will still press 1</text>
-    <text x="10" y="68" fill="#dc2626" font-size="8.5" font-family="'Courier New', monospace">4. $499. Peace of mind isn't free.</text>
+    <text x="10" y="68" fill="#dc2626" font-size="8.5" font-family="'Courier New', monospace">4. $499. Peace of mind ain't cheap.</text>
   </g>
 
+  <!-- Warranty stamp -->
+  <text x="16" y="480" fill="#5a3a3a" font-size="8">WARRANTY VOID IF YOU ACTUALLY PRESS KEY 4. WHICH YOU WON'T.</text>
+
   <!-- Border -->
-  <rect x="4" y="4" width="892" height="472" fill="none" stroke="#4a2a2a" stroke-width="1.5"/>
-  <rect x="8" y="8" width="884" height="464" fill="none" stroke="#2a1a1a" stroke-width="0.5"/>
+  <rect x="4" y="4" width="892" height="492" fill="none" stroke="#4a2a2a" stroke-width="1.5"/>
+  <rect x="8" y="8" width="884" height="484" fill="none" stroke="#2a1a1a" stroke-width="0.5"/>
 </svg>

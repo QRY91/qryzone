@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 580" font-family="'Courier New', monospace">
+  <defs>
+    <pattern id="ugrid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1a0a2a" stroke-width="0.5" opacity="0.4"/>
+    </pattern>
+    <pattern id="ugrid-major" width="100" height="100" patternUnits="userSpaceOnUse">
+      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#1a0a2a" stroke-width="1" opacity="0.6"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1060" height="580" fill="#0a0614"/>
+  <rect width="1060" height="580" fill="url(#ugrid)"/>
+  <rect width="1060" height="580" fill="url(#ugrid-major)"/>
+
+  <!-- Title block top-right -->
+  <rect x="700" y="16" width="344" height="60" fill="none" stroke="#7c3aed" stroke-width="1.5" opacity="0.8"/>
+  <text x="712" y="36" fill="#7c3aed" font-size="10" opacity="0.8">KEYGRAVE PERIPHERALS — HARDWARE DIV.</text>
+  <text x="712" y="52" fill="#a78bfa" font-size="14" font-weight="bold">MODEL KEYZ ULTRA — WIRELESS AGENTIC</text>
+  <text x="712" y="66" fill="#4a3a6a" font-size="9">DWG NO. KG-2026-009U REV β — SCALE 2:1</text>
+
+  <!-- Classification stamp -->
+  <rect x="16" y="16" width="260" height="28" fill="none" stroke="#7c3aed" stroke-width="2"/>
+  <text x="26" y="35" fill="#7c3aed" font-size="12" font-weight="bold">⚠ CLOUD-NATIVE ⚡ AGENTIC ⚡ $999/MO</text>
+
+  <!-- Main keyboard body — top-down, wireless (no cable) -->
+  <g transform="translate(160, 100)">
+
+    <!-- Outer housing — rounded, no cable cutout -->
+    <rect x="0" y="0" width="500" height="200" rx="20" fill="none" stroke="#a78bfa" stroke-width="2"/>
+    <rect x="8" y="8" width="484" height="184" rx="14" fill="#0d0820" stroke="#3a2a5a" stroke-width="1"/>
+
+    <!-- WiFi antenna icon top-center -->
+    <g transform="translate(250, -8)">
+      <circle cx="0" cy="0" r="3" fill="#4ade80"/>
+      <path d="M -8,-6 A 10,10 0 0,1 8,-6" fill="none" stroke="#4ade80" stroke-width="1.5" opacity="0.6"/>
+      <path d="M -14,-10 A 18,18 0 0,1 14,-10" fill="none" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
+    </g>
+
+    <!-- KEY 1 -->
+    <rect x="40" y="30" width="120" height="140" rx="8" fill="#1a0d30" stroke="#a78bfa" stroke-width="2"/>
+    <rect x="48" y="38" width="104" height="108" rx="6" fill="#0d0820" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="100" y="100" text-anchor="middle" fill="#7c3aed" font-size="48" font-weight="bold">1</text>
+    <text x="100" y="130" text-anchor="middle" fill="#a78bfa" font-size="9">YES (INFERRED)</text>
+
+    <!-- KEY 2 -->
+    <rect x="190" y="30" width="120" height="140" rx="8" fill="#1a0d30" stroke="#a78bfa" stroke-width="2"/>
+    <rect x="198" y="38" width="104" height="108" rx="6" fill="#0d0820" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="250" y="100" text-anchor="middle" fill="#7c3aed" font-size="48" font-weight="bold">2</text>
+    <text x="250" y="130" text-anchor="middle" fill="#a78bfa" font-size="9">ALSO YES (INFERRED)</text>
+
+    <!-- KEY 3 -->
+    <rect x="340" y="30" width="120" height="140" rx="8" fill="#1a0d30" stroke="#a78bfa" stroke-width="2"/>
+    <rect x="348" y="38" width="104" height="108" rx="6" fill="#0d0820" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="400" y="100" text-anchor="middle" fill="#7c3aed" font-size="48" font-weight="bold">3</text>
+    <text x="400" y="130" text-anchor="middle" fill="#4a3a6a" font-size="9">ORNAMENTAL (INFERRED)</text>
+
+    <!-- API Token Slot — bottom-left of housing -->
+    <rect x="30" y="178" width="80" height="14" rx="3" fill="#1a0d30" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="70" y="189" text-anchor="middle" fill="#4a3a6a" font-size="6">TOKEN SLOT B</text>
+
+    <!-- Onboard camera — small circle near token slot -->
+    <circle cx="130" cy="185" r="5" fill="none" stroke="#7c3aed" stroke-width="1"/>
+    <circle cx="130" cy="185" r="2" fill="#7c3aed" opacity="0.5"/>
+    <text x="145" y="188" fill="#4a3a6a" font-size="6">CAM</text>
+
+    <!-- NO USB PORT — label where it would be -->
+    <text x="250" y="196" text-anchor="middle" fill="#4a3a6a" font-size="7" opacity="0.4">NO PORT (WIRELESS)</text>
+  </g>
+
+  <!-- Dimension lines -->
+  <g stroke="#4a3a6a" stroke-width="0.75" fill="#4a3a6a">
+    <line x1="160" y1="80" x2="160" y2="95" />
+    <line x1="660" y1="80" x2="660" y2="95" />
+    <line x1="160" y1="88" x2="660" y2="88" />
+    <text x="410" y="84" text-anchor="middle" font-size="10" fill="#a78bfa">162.0mm (+ 340ms)</text>
+
+    <line x1="140" y1="100" x2="155" y2="100" />
+    <line x1="140" y1="300" x2="155" y2="300" />
+    <line x1="148" y1="100" x2="148" y2="300" />
+    <text x="134" y="204" text-anchor="middle" font-size="10" fill="#a78bfa" transform="rotate(-90,134,204)">68.0mm</text>
+  </g>
+
+  <!-- Right-side callout annotations -->
+  <g fill="#4a3a6a" font-size="9">
+    <!-- WiFi callout -->
+    <line x1="410" y1="92" x2="700" y2="110" stroke="#4a3a6a" stroke-width="0.75" stroke-dasharray="4,3"/>
+    <circle cx="410" cy="92" r="2" fill="#4ade80"/>
+    <rect x="700" y="98" width="340" height="44" fill="none" stroke="#1a0a2a" stroke-width="0.75"/>
+    <text x="712" y="112" fill="#a78bfa" font-size="10" font-weight="bold">A — WiFi 6 TRANSCEIVER</text>
+    <text x="712" y="125" fill="#4a3a6a">Freq: 5GHz → us-east-1 → 5GHz</text>
+    <text x="712" y="137" fill="#4a3a6a">Encryption: NO</text>
+
+    <!-- Token slot callout -->
+    <line x1="230" y1="285" x2="700" y2="170" stroke="#4a3a6a" stroke-width="0.75" stroke-dasharray="4,3"/>
+    <circle cx="230" cy="285" r="2" fill="#7c3aed"/>
+    <rect x="700" y="152" width="340" height="56" fill="none" stroke="#1a0a2a" stroke-width="0.75"/>
+    <text x="712" y="166" fill="#a78bfa" font-size="10" font-weight="bold">B — API TOKEN SLOT (PHYSICAL)</text>
+    <text x="712" y="179" fill="#4a3a6a">Insert printed token on card stock</text>
+    <text x="712" y="191" fill="#4a3a6a">Photographed by onboard camera</text>
+    <text x="712" y="203" fill="#7c3aed">Transmitted via HTTP (not HTTPS)</text>
+
+    <!-- Inference callout -->
+    <line x1="360" y1="200" x2="700" y2="236" stroke="#4a3a6a" stroke-width="0.75" stroke-dasharray="4,3"/>
+    <circle cx="360" cy="200" r="2" fill="#7c3aed"/>
+    <rect x="700" y="218" width="340" height="68" fill="none" stroke="#1a0a2a" stroke-width="0.75"/>
+    <text x="712" y="232" fill="#a78bfa" font-size="10" font-weight="bold">C — KEYPRESS INFERENCE ENGINE</text>
+    <text x="712" y="245" fill="#4a3a6a">Context: 128k tokens of previous keypresses</text>
+    <text x="712" y="257" fill="#4a3a6a">Accuracy: 97.2% (agrees with you)</text>
+    <text x="712" y="269" fill="#4a3a6a">Override rate: 2.8% (silently corrected)</text>
+    <text x="712" y="281" fill="#7c3aed">You are billed for all cases</text>
+  </g>
+
+  <!-- Data flow diagram — bottom section -->
+  <g transform="translate(40, 340)">
+    <text x="0" y="0" fill="#a78bfa" font-size="10" font-weight="bold">KEYPRESS DATA FLOW — ULTRA PIPELINE v0.9.1-beta</text>
+
+    <!-- Flow boxes -->
+    <rect x="0" y="16" width="120" height="50" rx="4" fill="#1a0d30" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="60" y="38" text-anchor="middle" fill="#a78bfa" font-size="9" font-weight="bold">FINGER</text>
+    <text x="60" y="52" text-anchor="middle" fill="#4a3a6a" font-size="8">presses 1</text>
+
+    <!-- Arrow -->
+    <line x1="120" y1="41" x2="155" y2="41" stroke="#7c3aed" stroke-width="1.5"/>
+    <polygon points="155,41 149,37 149,45" fill="#7c3aed"/>
+    <text x="138" y="34" text-anchor="middle" fill="#4a3a6a" font-size="6">WiFi</text>
+
+    <rect x="158" y="16" width="140" height="50" rx="4" fill="#1a0d30" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="228" y="38" text-anchor="middle" fill="#7c3aed" font-size="9" font-weight="bold">DATACENTER</text>
+    <text x="228" y="52" text-anchor="middle" fill="#4a3a6a" font-size="8">us-east-1</text>
+
+    <!-- Arrow -->
+    <line x1="298" y1="41" x2="333" y2="41" stroke="#7c3aed" stroke-width="1.5"/>
+    <polygon points="333,41 327,37 327,45" fill="#7c3aed"/>
+    <text x="316" y="34" text-anchor="middle" fill="#4a3a6a" font-size="6">$0.03</text>
+
+    <rect x="336" y="16" width="140" height="50" rx="4" fill="#1a0d30" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="406" y="38" text-anchor="middle" fill="#7c3aed" font-size="9" font-weight="bold">LLM INFERENCE</text>
+    <text x="406" y="52" text-anchor="middle" fill="#4a3a6a" font-size="8">"did they mean 1?"</text>
+
+    <!-- Arrow -->
+    <line x1="476" y1="41" x2="511" y2="41" stroke="#7c3aed" stroke-width="1.5"/>
+    <polygon points="511,41 505,37 505,45" fill="#7c3aed"/>
+    <text x="494" y="34" text-anchor="middle" fill="#4ade80" font-size="6">97.2%</text>
+
+    <rect x="514" y="16" width="120" height="50" rx="4" fill="#1a0d30" stroke="#4ade80" stroke-width="1.5"/>
+    <text x="574" y="38" text-anchor="middle" fill="#4ade80" font-size="9" font-weight="bold">APPROVED</text>
+    <text x="574" y="52" text-anchor="middle" fill="#4a3a6a" font-size="8">transmit back</text>
+
+    <!-- Arrow -->
+    <line x1="634" y1="41" x2="669" y2="41" stroke="#4ade80" stroke-width="1.5"/>
+    <polygon points="669,41 663,37 663,45" fill="#4ade80"/>
+    <text x="652" y="34" text-anchor="middle" fill="#4a3a6a" font-size="6">WiFi</text>
+
+    <rect x="672" y="16" width="120" height="50" rx="4" fill="#1a0d30" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="732" y="38" text-anchor="middle" fill="#a78bfa" font-size="9" font-weight="bold">COMPUTER</text>
+    <text x="732" y="52" text-anchor="middle" fill="#4a3a6a" font-size="8">receives: 1</text>
+
+    <!-- Latency bar -->
+    <rect x="0" y="76" width="792" height="16" rx="3" fill="#0d0820" stroke="#3a2a5a" stroke-width="0.75"/>
+    <rect x="2" y="78" width="788" height="12" rx="2" fill="#7c3aed" opacity="0.15"/>
+    <text x="396" y="88" text-anchor="middle" fill="#a78bfa" font-size="8" font-weight="bold">340ms TOTAL LATENCY — VALUE ADDED: NONE — VIBES: IMMACULATE</text>
+
+    <!-- Override branch -->
+    <line x1="476" y1="66" x2="476" y2="120" stroke="#ef4444" stroke-width="1" stroke-dasharray="4,3"/>
+    <rect x="396" y="120" width="160" height="40" rx="4" fill="#1a0d30" stroke="#ef4444" stroke-width="1"/>
+    <text x="476" y="138" text-anchor="middle" fill="#ef4444" font-size="8" font-weight="bold">2.8%: SILENTLY OVERRIDDEN</text>
+    <text x="476" y="150" text-anchor="middle" fill="#4a3a6a" font-size="7">You pressed 1. Model sent 2. Billed.</text>
+    <text x="440" y="114" fill="#ef4444" font-size="6">REJECT</text>
+  </g>
+
+  <!-- Notes bottom-right -->
+  <g transform="translate(700, 430)">
+    <rect x="0" y="-14" width="340" height="120" fill="none" stroke="#1a0a2a" stroke-width="0.75"/>
+    <text x="12" y="0" fill="#a78bfa" font-size="10" font-weight="bold">ULTRA NOTES:</text>
+    <text x="12" y="16" fill="#4a3a6a" font-size="8.5">1. REQUIRES WiFi, API TOKEN, AND FAITH.</text>
+    <text x="12" y="28" fill="#4a3a6a" font-size="8.5">2. TOKEN PHOTOGRAPHED. NOT ENCRYPTED. NOT SORRY.</text>
+    <text x="12" y="40" fill="#4a3a6a" font-size="8.5">3. MODEL'S JUDGMENT SUPERSEDES YOUR OWN.</text>
+    <text x="12" y="52" fill="#4a3a6a" font-size="8.5">4. BREATHING NEAR KEYBOARD COUNTS AS KEYPRESS.</text>
+    <text x="12" y="64" fill="#4a3a6a" font-size="8.5">5. MONTHLY BILLING BEGINS BEFORE DELIVERY.</text>
+    <text x="12" y="76" fill="#7c3aed" font-size="8.5">6. TO ERR IS HUMAN. TO INFER IS DIVINE.</text>
+    <text x="12" y="92" fill="#7c3aed" font-size="8.5" font-weight="bold">   TO BILL IS KEYGRAVE.</text>
+  </g>
+
+  <!-- Cost stamp bottom-left -->
+  <g transform="translate(40, 500)">
+    <rect x="0" y="0" width="220" height="50" fill="none" stroke="#7c3aed" stroke-width="2"/>
+    <text x="110" y="18" text-anchor="middle" fill="#7c3aed" font-size="10" font-weight="bold">EST. MONTHLY: $4,006.04</text>
+    <text x="110" y="32" text-anchor="middle" fill="#4a3a6a" font-size="8">Per seat. Per key. Per breath.</text>
+    <text x="110" y="44" text-anchor="middle" fill="#4a3a6a" font-size="8">Includes inference that changed nothing.</text>
+  </g>
+
+  <!-- Border frame -->
+  <rect x="4" y="4" width="1052" height="572" fill="none" stroke="#3a2a5a" stroke-width="1.5"/>
+  <rect x="8" y="8" width="1044" height="564" fill="none" stroke="#1a0a2a" stroke-width="0.5"/>
+</svg>

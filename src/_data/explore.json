@@ -408,7 +408,8 @@
       "href": "/fun/apparent-intelligence/",
       "tags": ["ai-collaboration", "society"],
       "type": "interactive",
-      "status": "evergreen"
+      "status": "evergreen",
+      "connections": ["Claude Code Keyz"]
     },
     {
       "title": "Rubin on Rails",
@@ -419,12 +420,13 @@
       "status": "seedling"
     },
     {
-      "title": "Claude Code Keyboard",
-      "description": "Three keys. Full stack. The first keyboard engineered for the agentic workflow.",
+      "title": "Claude Code Keyz",
+      "description": "Three keys. Full stack. The first peripheral engineered for the agentic workflow.",
       "href": "/fun/claude-code-keyz/",
       "tags": ["ai-collaboration", "career"],
       "type": "interactive",
-      "status": "seedling"
+      "status": "seedling",
+      "connections": ["Apparent Intelligence"]
     },
     {
       "title": "This Page Is Wrong",
