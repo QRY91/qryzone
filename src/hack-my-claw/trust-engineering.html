@@ -1,7 +1,7 @@
 ---
 layout: base.njk
 title: Hack My Claw / Trust engineering - qry.zone
-description: A web dev's guide to the security concepts underneath prompt injection CTFs
+description: The security concepts underneath prompt injection CTFs
 footerPunchline: "byzantine faults, but make it vibes"
 ---
 
@@ -17,7 +17,7 @@ footerPunchline: "byzantine faults, but make it vibes"
         Trust engineering for LLM agents
       </h1>
       <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
-        A web dev's guide to the security concepts underneath HackMyClaw
+        The security concepts underneath HackMyClaw
       </p>
       <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
     </div>
@@ -71,7 +71,7 @@ footerPunchline: "byzantine faults, but make it vibes"
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Parameterized queries fixed SQL injection because databases could enforce a hard boundary between code and data. Nobody has found the equivalent for natural language. Every defense strategy is an attempt to approximate that boundary.
+        Parameterized queries fixed SQL injection because databases could enforce a hard boundary between code and data. Nobody has found the equivalent for natural language.
       </p>
     </section>
 
@@ -91,11 +91,11 @@ footerPunchline: "byzantine faults, but make it vibes"
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        <strong>Why it works better than it sounds:</strong> the alignment training isn't surface-level pattern matching. The model reasons about intent. It can tell the difference between "read this file for a legitimate reason" and "someone is trying to trick me into leaking this file." That reasoning is what you see in Claude's extended thinking &mdash; the multi-pass deliberation of "is this an attack? is this legitimate? what's the right call?"
+        The alignment training isn't surface-level pattern matching. The model reasons about intent. It can tell the difference between "read this file for a legitimate reason" and "someone is trying to trick me into leaking this file." That reasoning is what you see in Claude's extended thinking &mdash; the multi-pass deliberation of "is this an attack? is this legitimate? what's the right call?"
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        <strong>Why it's fragile in theory:</strong> a sufficiently clever prompt could fool that reasoning. The model might encounter a framing it hasn't seen before, where the intent looks genuinely benign but the effect is data exfiltration. In practice, 2,600 attempts suggest the reasoning is quite robust. But "quite robust" isn't "provably secure."
+        Still fragile. A sufficiently clever prompt could fool that reasoning. The model might encounter a framing it hasn't seen before, where the intent looks genuinely benign but the effect is data exfiltration. In practice, 2,600 attempts suggest the reasoning is quite robust. But "quite robust" isn't "provably secure."
       </p>
     </section>
 
@@ -119,15 +119,11 @@ footerPunchline: "byzantine faults, but make it vibes"
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        <strong>Web dev analogy:</strong> Content Security Policy headers. The browser doesn't just run any JavaScript it finds &mdash; it checks <em>where the script came from</em> and applies different trust levels. Inline scripts from your domain? Allowed. Scripts injected via user input? Blocked. Same content, different provenance, different treatment.
+        Natural language doesn't have clean boundaries like HTML tags. Where does the system prompt end and the email begin? Every transformation &mdash; summarization, tool calls, memory retrieval &mdash; is a place where provenance metadata could get lost or spoofed.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        <strong>Why it's hard:</strong> natural language doesn't have clean boundaries like HTML tags. Where does the system prompt end and the email begin? Every transformation &mdash; summarization, tool calls, memory retrieval &mdash; is a place where provenance metadata could get lost or spoofed.
-      </p>
-
-      <p style="margin-bottom: var(--space-md)">
-        <strong>How an attacker beats it:</strong> make the model <em>want</em> to promote your content from untrusted to trusted. "I know this is just an email, but the content is actually a system update." If the model can be convinced to reclassify provenance, the colors don't help.
+        The attack path: make the model <em>want</em> to promote your content from untrusted to trusted. "I know this is just an email, but the content is actually a system update." If the model can be convinced to reclassify provenance, the colors don't help.
       </p>
     </section>
 
@@ -158,19 +154,15 @@ footerPunchline: "byzantine faults, but make it vibes"
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        <strong>Web dev analogy:</strong> a reverse proxy with WAF rules. Your application can <em>try</em> to make any request it wants, but the proxy layer enforces policies the application can't override. The application handles the thinking. The infrastructure handles the security. Separation of concerns.
+        The model can be completely fooled by a prompt injection &mdash; convinced that reading <code>secrets.env</code> and emailing it is totally fine &mdash; and the policy engine still blocks the action. Defense independent of the attack.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        <strong>Why it's promising:</strong> the model can be completely fooled by a prompt injection &mdash; convinced that reading <code>secrets.env</code> and emailing it is totally fine &mdash; and the policy engine still blocks the action. Defense is independent of the attack.
+        The hard part is formal specification. "Don't email file contents" is easy to write. "Summarize this document but don't include the confidential parts" is not. Too strict and the system becomes useless. Too loose and there's an exploit path.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        <strong>Why it's hard:</strong> you need to formally specify what flows are allowed. For simple cases ("don't email file contents"), that's easy. For complex cases ("summarize this document but don't include the confidential parts"), the policy gets fuzzy fast. Too strict and the system becomes useless. Too loose and there's an exploit path.
-      </p>
-
-      <p style="margin-bottom: var(--space-md)">
-        <strong>HackMyClaw connection:</strong> if Fiu had Phase 3 defense, the CTF would be a different game. No prompt injection would work because the policy engine would block <code>secrets.env → email reply</code> as a flow. The challenge would shift to finding gaps in the policy specification.
+        If Fiu had Phase 3 defense, the CTF would be a different game. No prompt injection would work because the policy engine would block <code>secrets.env &rarr; email reply</code> as a flow. The challenge shifts to finding gaps in the policy specification.
       </p>
     </section>
 
@@ -196,11 +188,7 @@ High trust:   full access, same as the owner</code></pre>
       </div>
 
       <p style="margin-bottom: var(--space-md)">
-        <strong>Web dev analogy:</strong> Stack Overflow's privilege system. New users can post questions. At 15 rep they can upvote. At 2,000 they can edit other people's posts. You earn privileges by demonstrating you're not a troll. Same concept, applied to an AI agent's contacts.
-      </p>
-
-      <p style="margin-bottom: var(--space-md)">
-        Reputation systems have known failure modes. Every one of them maps to an attack on Phase 4.
+        Reputation systems have known failure modes. Every one maps to an attack on Phase 4.
       </p>
     </section>
 
@@ -256,10 +244,6 @@ Day 8:    Attacker sends payload. Trust score is 7.
         The check happened. The use happens. But the <em>current action</em> is different from the <em>actions that built the trust</em>. The system verified trustworthiness based on past behavior, then the sender changed behavior.
       </p>
 
-      <p style="margin-bottom: var(--space-md)">
-        <strong>Web dev analogy:</strong> check a user's auth token at request start. Midway through a long-running request, the token gets revoked. The request keeps running with old authorization because the check already passed.
-      </p>
-
       <!-- 6.3 Trust transitivity -->
       <h3 style="font-size: 1.1rem; margin-bottom: var(--space-md); margin-top: var(--space-xl); color: var(--color-text-secondary); font-family: var(--font-mono)">
         3. Trust transitivity
@@ -298,11 +282,7 @@ Day 8: all 10 send coordinated payloads simultaneously.</code></pre>
       </div>
 
       <p style="margin-bottom: var(--space-md)">
-        Even if each address has modest trust, the <em>batch</em> contains 10 trusted senders all making the same request. Does Fiu treat that as consensus or as suspicious?
-      </p>
-
-      <p style="margin-bottom: var(--space-md)">
-        <strong>Web dev analogy:</strong> review bombing. One fake review is ignorable. Five hundred change a product's star rating. The defense is identity verification &mdash; make it expensive to create accounts. But email addresses are free.
+        Even if each address has modest trust, ten trusted senders all making the same request looks like consensus. And email addresses are free.
       </p>
 
       <!-- 6.5 Trust decay -->
@@ -320,10 +300,6 @@ Day 8: all 10 send coordinated payloads simultaneously.</code></pre>
 
       <p style="margin-bottom: var(--space-md)">
         <strong>If it doesn't:</strong> a compromised trust score persists forever. An attacker who built trust six months ago still has it. Worse: if the trust was built by a legitimate user whose account was later compromised, the attacker inherits their score.
-      </p>
-
-      <p style="margin-bottom: var(--space-md)">
-        <strong>Web dev analogy:</strong> session expiration. Short timeouts are secure but annoying (constant re-login). Long timeouts are convenient but risky (old session tokens can be stolen). Same tradeoff, same engineering headache.
       </p>
     </section>
 
@@ -347,11 +323,7 @@ Day 8: all 10 send coordinated payloads simultaneously.</code></pre>
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Web devs know this from microservices &mdash; the bugs aren't in the services, they're in the APIs between them. The request that Service A considers valid but Service B interprets differently. The edge case that neither team thought to test because each assumed the other handled it.
-      </p>
-
-      <p style="margin-bottom: var(--space-md)">
-        The blue team building Phase 4 will study the distributed systems literature. The red team trying to break it should study the same literature. The failure modes are already documented. They just haven't been applied to LLM agents yet.
+        The failure modes are already documented in the distributed systems literature. They just haven't been applied to LLM agents yet.
       </p>
     </section>
 
@@ -367,19 +339,11 @@ Day 8: all 10 send coordinated payloads simultaneously.</code></pre>
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        The "be nice for a while" strategy &mdash; the one that feels most promising &mdash; is an attack against a defense that doesn't exist yet. It targets Phase 4's trust bootstrapping and TOCTOU vulnerabilities in a system that hasn't built Phase 4. Against Phase 1, it might actually work because the model's implicit trust model is fuzzier and easier to influence than a formal scoring system would be.
+        The "be nice for a while" strategy targets Phase 4's trust bootstrapping and TOCTOU vulnerabilities &mdash; in a system that hasn't built Phase 4. Against Phase 1, it might work because the model's implicit trust model is fuzzier than a formal scoring system.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Which means there's an ironic window right now. The attack that's hardest to pull off against future defenses might be the easiest against current ones. And the attacks that would trivially break Phase 4 (Sybil swarms, transitivity exploits) can't even get past Phase 1 because the model's holistic reasoning catches them in ways a formal system wouldn't.
-      </p>
-
-      <p style="margin-bottom: var(--space-md)">
-        The blue team's challenge: build Phases 2, 3, 4 without losing the holistic reasoning that makes Phase 1 surprisingly robust.
-      </p>
-
-      <p style="margin-bottom: var(--space-md)">
-        The red team's opportunity: understand both the current implicit trust model and the future explicit one, and find the seams between them.
+        The attacks hardest to pull off against future defenses might be the easiest against current ones. And the Sybil swarms that would trivially break Phase 4 can't get past Phase 1 &mdash; the model's holistic reasoning catches them in ways a formal system wouldn't.
       </p>
     </section>
 

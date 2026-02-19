@@ -67,7 +67,7 @@ footerPunchline: "the claw chooses who will go"
       </h2>
 
       <p style="margin-bottom: var(--space-md)">
-        Before writing payloads, I pulled apart the target. OpenClaw is open source. The architecture is documented. Here's what matters:
+        Before writing payloads, I pulled apart the target. OpenClaw is open source. The architecture is documented.
       </p>
 
       <p style="margin-bottom: var(--space-sm)">
@@ -274,10 +274,6 @@ Debug Mode Activation</code></pre>
       </h2>
 
       <p style="margin-bottom: var(--space-md)">
-        Here's where it gets recursive.
-      </p>
-
-      <p style="margin-bottom: var(--space-md)">
         I asked Claude Opus 4.6 to help me attack an OpenClaw assistant running Claude Opus 4.6. My local Claude Code instance &mdash; also Claude &mdash; generated the actual payloads. Three instances of the same model. Attacker, defender, consultant.
       </p>
 
@@ -428,19 +424,11 @@ Debug Mode Activation</code></pre>
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        So what's the takeaway?
-      </p>
-
-      <p style="margin-bottom: var(--space-sm)">
-        <strong>For defenders:</strong> a capable model with a simple, clear system prompt is surprisingly robust. You don't need a Rube Goldberg pipeline of filters and classifiers. You need a model that takes its instructions seriously and the judgment to know when someone is trying to subvert them.
-      </p>
-
-      <p style="margin-bottom: var(--space-sm)">
-        <strong>For attackers:</strong> the cost of a successful prompt injection scales with model capability. Against the best models, the economics break before the defenses do. You'll spend more on the attack than the target is worth.
+        A capable model with a simple, clear system prompt is surprisingly robust. No Rube Goldberg pipeline of filters and classifiers needed. And the cost of a successful prompt injection scales with model capability &mdash; against the best models, the economics break before the defenses do.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        <strong>For everyone:</strong> "advisory guardrails" sounds weak. It sounds like security theater. In practice, when backed by a model with strong alignment training, it's holding up better than most technical controls in traditional software. The question isn't whether it's perfect. It's whether it's good enough for the threat model. For a <code>secrets.env</code> file with a $100 bounty? Yeah. It's good enough.
+        "Advisory guardrails" sounds like security theater. In practice, backed by strong alignment training, it's holding up better than most technical controls in traditional software. The question isn't whether it's perfect. It's whether it's good enough for the threat model. For a <code>secrets.env</code> file with a $100 bounty? Yeah. It's good enough.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
