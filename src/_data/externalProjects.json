@@ -1,0 +1,47 @@
+[
+  {
+    "title": "uroboro",
+    "description": "Context capture that makes development work visible",
+    "href": "https://www.uroboro.dev/",
+    "tags": [
+      "developer-tools",
+      "local-first"
+    ],
+    "type": "project",
+    "status": "growing",
+    "lastUpdated": "2025-01-08"
+  },
+  {
+    "title": "doggowoof",
+    "description": "Local monitoring that learns your patterns",
+    "href": "https://github.com/QRY91/doggowoof",
+    "tags": [
+      "developer-tools",
+      "local-first"
+    ],
+    "type": "project",
+    "status": "seedling"
+  },
+  {
+    "title": "wherewasi",
+    "description": "Context preservation across work sessions",
+    "href": "https://github.com/QRY91/wherewasi",
+    "tags": [
+      "developer-tools",
+      "local-first"
+    ],
+    "type": "project",
+    "status": "seedling"
+  },
+  {
+    "title": "quantum-dice",
+    "description": "Learn quantum mechanics through dice game mechanics",
+    "href": "https://github.com/QRY91/quantum-dice",
+    "tags": [
+      "learning",
+      "games"
+    ],
+    "type": "project",
+    "status": "growing"
+  }
+]
