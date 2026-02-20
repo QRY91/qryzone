@@ -1,0 +1,347 @@
+---
+permalink: /fun/chasm-logic/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chasm Logic — Document Index</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #fafafa; color: black; cursor: crosshair; }
+        .mono { font-family: 'Roboto Mono', monospace; }
+
+        .warning-stripe { background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px); height: 8px; }
+        .harassment-banner {
+            background: #fef08a; color: black; padding: 0.5rem; font-weight: bold;
+            text-align: center; border-bottom: 4px solid black;
+            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .harassment-banner:hover { background: #ef4444; color: white; }
+        .section-divider { height: 4px; background: black; }
+        .back-link {
+            position: fixed; top: 3.5rem; left: 1rem; background: black; color: white;
+            padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold;
+            text-decoration: none; z-index: 1000; border: 2px solid black;
+            box-shadow: 4px 4px 0 0 #F58025; transition: all 0.1s;
+        }
+        .back-link:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 #F58025; }
+
+        nav { border-bottom: 4px solid black; padding: 1rem 2rem; }
+        .nav-inner { max-width: 60rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+
+        .doc { max-width: 60rem; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        .page-header { padding: 4rem 0 2rem; }
+        .page-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; letter-spacing: -0.02em; margin-bottom: 1.5rem; line-height: 1.1; }
+        .page-header p { font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem; color: #374151; }
+
+        /* Summary stats */
+        .stats { display: flex; flex-wrap: wrap; gap: 1.5rem; padding: 1.25rem 0; border-top: 2px solid black; border-bottom: 2px solid black; margin: 1.5rem 0 3rem; }
+        .stat { font-size: 0.75rem; letter-spacing: 0.05em; }
+        .stat-num { font-weight: 900; font-size: 1.25rem; display: block; }
+
+        /* Document entries */
+        .doc-entry {
+            display: block; padding: 1.5rem 0 1.5rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            border-left: 4px solid transparent;
+            text-decoration: none; color: inherit;
+            transition: all 0.15s;
+        }
+        .doc-live { cursor: pointer; }
+        .doc-live:hover { background: white; border-left-color: #F58025; padding-left: 1.5rem; }
+        .doc-locked { opacity: 0.55; }
+        .doc-locked:hover { opacity: 0.7; }
+
+        .doc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .doc-ref { font-size: 0.7rem; color: #9ca3af; letter-spacing: 0.1em; }
+        .doc-title { font-size: 1.1rem; font-weight: 900; margin-bottom: 0.5rem; line-height: 1.3; }
+        .doc-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; font-size: 0.75rem; color: #6b7280; }
+        .doc-note { font-size: 0.75rem; color: #F58025; margin-top: 0.5rem; line-height: 1.5; }
+
+        /* Badges */
+        .badge { display: inline-block; padding: 0.15rem 0.5rem; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; vertical-align: middle; }
+        .badge-type { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+        .badge-live { background: #dcfce7; color: #16a34a; }
+        .badge-pending { background: #fef9c3; color: #a16207; }
+        .badge-held { background: #fee2e2; color: #dc2626; }
+        .badge-disputed { background: #fee2e2; color: #dc2626; }
+        .badge-deferred { background: #f3f4f6; color: #6b7280; }
+        .badge-outdated { background: #f3f4f6; color: #6b7280; }
+        .cl-a { background: #F58025; color: white; }
+        .cl-b { background: black; color: white; }
+        .cl-all { background: #6b7280; color: white; }
+        .cl-redacted { background: #dc2626; color: white; }
+        .cl-c { background: #7c3aed; color: white; }
+
+        .dot { color: #d1d5db; }
+
+        /* Footer note */
+        .index-footer { padding: 2rem 0 4rem; border-top: 2px solid black; margin-top: 1rem; }
+        .index-footer p { font-size: 0.8rem; color: #6b7280; line-height: 1.7; margin-bottom: 0.5rem; }
+
+        footer { background: black; color: white; padding: 3rem 2rem; }
+        .footer-inner { max-width: 60rem; margin: 0 auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        footer h3 { font-weight: 900; margin-bottom: 0.75rem; font-size: 0.9rem; }
+        footer p, footer li { font-size: 0.8rem; color: #9ca3af; line-height: 1.6; }
+        footer ul { list-style: none; }
+        footer li { margin-bottom: 0.35rem; }
+        .footer-copy { text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: #4b5563; border-top: 1px solid #374151; padding-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link mono">&larr; back to fun</a>
+
+    <!--
+        This index was compiled by J. Clay, Communications Division.
+        If you are viewing the source, you have exceeded the intended
+        access level of this portal. This has been noted.
+        It will continue to be noted.
+    -->
+
+    <div class="harassment-banner mono">
+        <span>⚠ NOTICE:</span> This index is maintained for internal reference. External access was not anticipated. It has been noted.
+    </div>
+    <div class="warning-stripe"></div>
+
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div style="font-weight:900;font-size:1.25rem;letter-spacing:-0.02em">CHASM LOGIC</div>
+                <div class="mono" style="font-size:0.6rem;color:#6b7280;letter-spacing:0.1em;text-transform:uppercase">Investor Relations — Document Index</div>
+            </div>
+            <span class="badge cl-b mono" style="font-size:0.65rem;padding:0.4rem 0.75rem">SERIES B — INTERNAL</span>
+        </div>
+    </nav>
+
+    <div class="doc">
+
+        <div class="page-header">
+            <h1>Document Index</h1>
+            <p>Internal document register. Maintained by Communications Division.</p>
+            <p>Classification levels reflect distribution authorization at time of filing. Documents marked <span class="mono" style="font-weight:700;color:#dc2626">REDACTED</span> require clearance verification through Legal (Doug). Documents marked <span class="mono" style="font-weight:700">HELD</span> are under active review.</p>
+            <p style="color:#6b7280;font-size:0.85rem">This portal was not designed for external access.</p>
+        </div>
+
+        <div class="stats mono">
+            <div class="stat"><span class="stat-num">10</span> INDEXED</div>
+            <div class="stat"><span class="stat-num" style="color:#16a34a">5</span> ACCESSIBLE</div>
+            <div class="stat"><span class="stat-num" style="color:#a16207">1</span> PENDING</div>
+            <div class="stat"><span class="stat-num" style="color:#dc2626">2</span> CLASSIFIED</div>
+            <div class="stat"><span class="stat-num" style="color:#6b7280">2</span> DEFERRED</div>
+        </div>
+
+        <!-- CL-DOC-001 — LIVE -->
+        <a href="/fun/claudetite-keyz/memo/" class="doc-entry doc-live">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-001</span>
+                <span class="badge cl-a mono">SERIES A</span>
+            </div>
+            <div class="doc-title">Keygrave Acquisition — Internal Memorandum</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">MEMORANDUM</span>
+                <span class="dot">&middot;</span>
+                J. Clay (ed.) / B. Granite (dictation)
+                <span class="dot">&middot;</span>
+                <span class="badge badge-live">LIVE</span>
+            </div>
+        </a>
+
+        <!-- CL-DOC-002 — LIVE -->
+        <a href="/fun/claudetite-keyz/" class="doc-entry doc-live">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-002</span>
+                <span class="badge cl-a mono">SERIES A</span>
+            </div>
+            <div class="doc-title">Claudetite Keyz — CCK-3 / Pro / Ultra</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">PRODUCT PAGE</span>
+                <span class="dot">&middot;</span>
+                B. Granite / J. Clay
+                <span class="dot">&middot;</span>
+                <span class="badge badge-live">LIVE</span>
+            </div>
+        </a>
+
+        <!-- CL-DOC-003 — LOCKED (Doug) -->
+        <div class="doc-entry doc-locked">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-003</span>
+                <span class="badge cl-redacted mono">REDACTED</span>
+            </div>
+            <div class="doc-title">████████ ████ — Internal Correspondence</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">CORRESPONDENCE</span>
+                <span class="dot">&middot;</span>
+                Legal (Doug) / Acquisitions (Doug)
+                <span class="dot">&middot;</span>
+                <span class="badge badge-disputed">DISPUTED</span>
+            </div>
+            <div class="doc-note mono">Held pending resolution of Doug situation.</div>
+        </div>
+
+        <!-- CL-DOC-004 — LIVE -->
+        <a href="/fun/apparent-intelligence/memo/" class="doc-entry doc-live">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-004</span>
+                <span class="badge cl-b mono">SERIES B</span>
+            </div>
+            <div class="doc-title">Apparent Intelligence — AI-CHIP-7™ Acquisition</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">MEMORANDUM</span>
+                <span class="dot">&middot;</span>
+                J. Clay (ed.) / B. Granite (dictation)
+                <span class="dot">&middot;</span>
+                <span class="badge badge-live">LIVE</span>
+            </div>
+        </a>
+
+        <!-- CL-DOC-005 — LIVE -->
+        <a href="/fun/apparent-intelligence/" class="doc-entry doc-live">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-005</span>
+                <span class="badge cl-b mono">SERIES B</span>
+            </div>
+            <div class="doc-title">Apparent Intelligence — AI-CHIP-7™</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">PRODUCT PAGE</span>
+                <span class="dot">&middot;</span>
+                B. Granite / J. Clay
+                <span class="dot">&middot;</span>
+                <span class="badge badge-live">LIVE</span>
+            </div>
+        </a>
+
+        <!-- CL-DOC-006 — LIVE -->
+        <a href="/fun/chasm-logic/wristband/" class="doc-entry doc-live">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-006</span>
+                <span class="badge cl-b mono">SERIES B</span>
+            </div>
+            <div class="doc-title">Ultra Wristband (UW-1)</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">PRODUCT BRIEF</span>
+                <span class="dot">&middot;</span>
+                J. Clay
+                <span class="dot">&middot;</span>
+                <span class="badge badge-live">LIVE</span>
+            </div>
+        </a>
+
+        <!-- CL-DOC-007 — LOCKED (QA Report) -->
+        <div class="doc-entry doc-locked">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-007</span>
+                <span class="badge cl-all mono">ALL-HANDS</span>
+            </div>
+            <div class="doc-title">CCK-3 Incident Report — Key 3 Testing</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">INCIDENT REPORT</span>
+                <span class="dot">&middot;</span>
+                QA Division
+                <span class="dot">&middot;</span>
+                <span class="badge badge-pending">PENDING REVIEW</span>
+            </div>
+            <div class="doc-note mono">Submitted. Awaiting sign-off. Key 3 actuation remains unresolved.</div>
+        </div>
+
+        <!-- CL-DOC-008 — LOCKED (Voicemails) -->
+        <div class="doc-entry doc-locked">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-008</span>
+                <span class="badge cl-redacted mono">REDACTED</span>
+            </div>
+            <div class="doc-title">████████████████████</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">AUDIO TRANSCRIPT</span>
+                <span class="dot">&middot;</span>
+                B. Granite (self)
+                <span class="dot">&middot;</span>
+                <span class="badge badge-held">HELD</span>
+            </div>
+            <div class="doc-note mono">47 recordings. Highway noise. Sentence fragments. Partial transcriptions on file.</div>
+        </div>
+
+        <!-- CL-DOC-009 — LOCKED (Accessories Store) -->
+        <div class="doc-entry doc-locked">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-009</span>
+                <span class="badge cl-c mono">SERIES C</span>
+            </div>
+            <div class="doc-title">Accessories Store — Product Catalog</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">PRODUCT LISTING</span>
+                <span class="dot">&middot;</span>
+                Unassigned
+                <span class="dot">&middot;</span>
+                <span class="badge badge-deferred">DEFERRED</span>
+            </div>
+            <div class="doc-note mono">Store opens Q1 2027. Initial inventory: Torx T2 driver (qty. TBD).</div>
+        </div>
+
+        <!-- CL-DOC-010 — LOCKED (Org Chart) -->
+        <div class="doc-entry doc-locked">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-010</span>
+                <span class="badge cl-all mono">ALL-HANDS</span>
+            </div>
+            <div class="doc-title">Org Chart — Current Headcount</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">INTERNAL</span>
+                <span class="dot">&middot;</span>
+                HR (position vacant)
+                <span class="dot">&middot;</span>
+                <span class="badge badge-outdated">OUTDATED</span>
+            </div>
+            <div class="doc-note mono">Last updated prior to restructuring. Doug count: unverified.</div>
+        </div>
+
+        <!-- Index footer -->
+        <div class="index-footer">
+            <p class="mono" style="font-size:0.75rem">End of index. 10 documents filed. 5 accessible. 5 pending, held, or classified.</p>
+            <p class="mono" style="font-size:0.75rem">This portal is updated as documents are filed. Filing frequency is not guaranteed.</p>
+            <p class="mono" style="font-size:0.75rem;margin-top:1rem;color:#9ca3af">— J. Clay, Communications Division</p>
+        </div>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="mono">CHASM LOGIC</h3>
+                    <p>A Bedrock Holdings Company. We acquire things and rename them.</p>
+                </div>
+                <div>
+                    <h3 class="mono">CONTACT</h3>
+                    <ul>
+                        <li class="mono">j.clay@chasmlogic.io</li>
+                        <li class="mono">brock@chasmlogic.io</li>
+                        <li class="mono">complaints@dev/null</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="mono">LEGAL</h3>
+                    <ul>
+                        <li>Investor Disclosure (Void)</li>
+                        <li>Document Classification Policy</li>
+                        <li>Doug Disambiguation Protocol</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-copy mono">© 2026 CHASM LOGIC / BEDROCK HOLDINGS. ALL DOCUMENTS INDEXED. SOME DOCUMENTS ACCESSIBLE. MOST DOCUMENTS REGRETTABLE.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+</body>
+</html>
