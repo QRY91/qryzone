@@ -409,7 +409,7 @@
       "tags": ["ai-collaboration", "society"],
       "type": "interactive",
       "status": "evergreen",
-      "connections": ["Claude Code Keyz"]
+      "connections": ["Claudetite Keyz"]
     },
     {
       "title": "Rubin on Rails",
@@ -420,9 +420,9 @@
       "status": "seedling"
     },
     {
-      "title": "Claude Code Keyz",
+      "title": "Claudetite Keyz",
       "description": "Three keys. Full stack. The first peripheral engineered for the agentic workflow.",
-      "href": "/fun/claude-code-keyz/",
+      "href": "/fun/claudetite-keyz/",
       "tags": ["ai-collaboration", "career"],
       "type": "interactive",
       "status": "seedling",
