@@ -1,0 +1,458 @@
+---
+permalink: /fun/chasm-logic/wristband/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRODUCT BRIEF — Ultra Wristband (UW-1) — Chasm Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #fafafa; color: black; cursor: crosshair; }
+        .mono { font-family: 'Roboto Mono', monospace; }
+
+        /* Design system */
+        .warning-stripe { background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px); height: 8px; }
+        .harassment-banner {
+            background: #fef08a; color: black; padding: 0.5rem; font-weight: bold;
+            text-align: center; border-bottom: 4px solid black;
+            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .harassment-banner:hover { background: #ef4444; color: white; }
+        .brutal-card { border: 3px solid black; box-shadow: 12px 12px 0 0 black; }
+        .label { display: inline-block; padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold; letter-spacing: 0.1em; }
+        .label-dark { background: black; color: white; }
+        .label-orange { background: #F58025; color: white; }
+        .terminal { background: black; color: #4ade80; padding: 1.5rem; font-size: 0.8rem; line-height: 1.8; }
+        .terminal-dim { opacity: 0.5; }
+        .aperture-btn {
+            background: #F58025; color: white; font-weight: 700;
+            letter-spacing: 0.05em; box-shadow: 8px 8px 0 0 black;
+            transition: all 0.1s; border: none; cursor: pointer;
+            text-transform: uppercase; text-decoration: none; display: inline-block;
+            padding: 0.75rem 1.5rem; font-size: 0.875rem;
+        }
+        .aperture-btn:hover { transform: translate(2px, 2px); box-shadow: 6px 6px 0 0 black; }
+        .section-divider { height: 4px; background: black; }
+        .back-link {
+            position: fixed; top: 3.5rem; left: 1rem; background: black; color: white;
+            padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold;
+            text-decoration: none; z-index: 1000; border: 2px solid black;
+            box-shadow: 4px 4px 0 0 #F58025; transition: all 0.1s;
+        }
+        .back-link:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 #F58025; }
+
+        /* Document layout */
+        nav { border-bottom: 4px solid black; padding: 1rem 2rem; }
+        .nav-inner { max-width: 60rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .doc { max-width: 60rem; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 3rem 0; }
+        section + section { border-top: 2px solid #e5e7eb; }
+        .section-num { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #F58025; margin-bottom: 0.75rem; }
+        h2 { font-size: 1.75rem; font-weight: 900; margin-bottom: 1.5rem; line-height: 1.15; }
+        p { font-size: 1rem; line-height: 1.7; margin-bottom: 1rem; }
+
+        /* Metadata */
+        .meta-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .meta-table td { padding: 0.5rem 0; font-size: 0.8rem; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+        .meta-table td:first-child { width: 12rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; }
+
+        /* Spec table */
+        .spec-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .spec-table tr { border-bottom: 2px solid black; }
+        .spec-table td { padding: 0.75rem 0; font-size: 0.85rem; }
+        .spec-table td:first-child { font-weight: 900; width: 40%; text-transform: uppercase; letter-spacing: 0.03em; }
+        .spec-table td:last-child { text-align: right; }
+        .spec-note { font-size: 0.7rem; color: #6b7280; display: block; margin-top: 0.25rem; }
+
+        /* Issue table */
+        .issue-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .issue-table th { text-align: left; padding: 0.75rem 0.5rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 3px solid black; color: #6b7280; }
+        .issue-table td { padding: 0.75rem 0.5rem; font-size: 0.8rem; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+        .issue-id { font-weight: 700; white-space: nowrap; }
+        .status-badge { display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em; white-space: nowrap; }
+        .st-design { background: #F58025; color: white; }
+        .st-ack { background: #fef08a; color: black; }
+        .st-billed { background: black; color: white; }
+        .st-deferred { background: #e5e7eb; color: #6b7280; }
+        .st-expected { background: #dcfce7; color: #16a34a; }
+        .st-consistent { background: #e5e7eb; color: #6b7280; }
+
+        /* Voicemail */
+        .voicemail { border: 3px solid black; background: white; padding: 2rem; margin: 1.5rem 0; position: relative; box-shadow: 8px 8px 0 0 black; }
+        .voicemail-label { position: absolute; top: 0; left: 0; background: black; color: white; padding: 0.5rem 1rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; transform: translateY(-100%); }
+        .annotation { color: #6b7280; font-size: 0.8rem; font-style: italic; }
+
+        /* Addendum */
+        .addendum { background: white; border: 3px solid black; padding: 2.5rem; margin: 2rem 0; position: relative; box-shadow: 8px 8px 0 0 #F58025; }
+        .addendum-label { position: absolute; top: 0; left: 0; background: #F58025; color: white; padding: 0.5rem 1rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; transform: translateY(-100%); }
+
+        /* Animation */
+        @keyframes pulse-glow { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .pulse { animation: pulse-glow 1.2s ease-in-out infinite; }
+        @keyframes blink-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .blink { animation: blink-cursor 1s step-end infinite; }
+        @keyframes heartbeat-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .heartbeat-wrap { overflow: hidden; height: 3rem; margin: 1rem 0; }
+        .heartbeat-line { display: flex; width: 200%; animation: heartbeat-scroll 3s linear infinite; }
+        .heartbeat-line svg { width: 50%; height: 3rem; }
+
+        /* Footer */
+        footer { background: black; color: white; padding: 4rem 2rem; }
+        .footer-inner { max-width: 60rem; margin: 0 auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        footer h3 { font-weight: 900; margin-bottom: 1rem; }
+        footer h4 { font-weight: bold; font-size: 0.875rem; margin-bottom: 1rem; }
+        footer p { font-size: 0.875rem; color: #9ca3af; line-height: 1.6; }
+        footer ul { list-style: none; }
+        footer li { font-size: 0.875rem; color: #9ca3af; margin-bottom: 0.5rem; }
+        .disclaimer { border-top: 1px solid #374151; padding-top: 2rem; font-size: 0.75rem; color: #6b7280; line-height: 1.7; }
+        .disclaimer p { margin-bottom: 1rem; font-size: 0.75rem; }
+        .warning { color: #F58025; }
+        .footer-copy { text-align: center; margin-top: 2rem; font-size: 0.75rem; color: #4b5563; }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link mono">&larr; back to fun</a>
+
+    <!--
+        J. Clay, Communications Division.
+        Calibration note: This document's biometric response profile shows
+        94% of readers experience elevated heart rate at §4 (Ambient Approvals)
+        and 100% attempt to check their own wrists at §5 (Clasp Mechanism).
+        Both responses are classified as approval gestures.
+    -->
+
+    <div class="harassment-banner mono">
+        <span>⚠ NOTICE:</span> Your wristband has detected elevated curiosity. This document has been pre-approved for reading.
+    </div>
+    <div class="warning-stripe"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div style="font-weight:900;font-size:1.1rem;letter-spacing:-0.02em">CHASM LOGIC</div>
+                <div class="mono" style="font-size:0.6rem;color:#6b7280;letter-spacing:0.1em;text-transform:uppercase">Communications Division — J. Clay</div>
+            </div>
+            <span class="label label-dark mono" style="font-size:0.65rem">SERIES B — INTERNAL</span>
+        </div>
+    </nav>
+
+    <div class="doc">
+
+        <!-- DOCUMENT HEADER -->
+        <section style="padding:4rem 0 3rem;border:none">
+            <div class="label label-orange mono" style="margin-bottom:1.5rem">PRODUCT BRIEF</div>
+            <h1 style="font-size:clamp(2rem, 5vw, 3.5rem);font-weight:900;line-height:1.05;margin-bottom:2rem;letter-spacing:-0.02em">
+                ULTRA WRISTBAND<br>
+                <span style="font-weight:300;font-size:0.45em;color:#6b7280">Model UW-1 — Biometric Companion Device</span>
+            </h1>
+
+            <table class="meta-table mono">
+                <tr><td>Author</td><td>J. Clay, Communications Division</td></tr>
+                <tr><td>Classification</td><td>SERIES B — APPROVED FOR DISTRIBUTION</td></tr>
+                <tr><td>Revision</td><td>4.1</td></tr>
+                <tr><td>Date</td><td>[redacted per Legal (Doug)]</td></tr>
+                <tr><td>Origin</td><td>Internal voicemail — 02:14 — ref: BG-VM-0047</td></tr>
+                <tr><td>Companion To</td><td>Claudetite Keyz Ultra (sold separately)</td></tr>
+                <tr><td>Unit Price</td><td>$349 (one-time)</td></tr>
+            </table>
+        </section>
+
+        <!-- §1 OVERVIEW -->
+        <section>
+            <div class="section-num mono">§1 — Product Overview</div>
+            <h2>The Keyboard Removed the Need to Write Code.<br>The Wristband Removes the Need to Press Keys.</h2>
+
+            <p>The Ultra Wristband is a biometric companion device for the Claudetite Keyz Ultra. It reads the user's physiological state and converts it into approval decisions. No keypress required.</p>
+
+            <p>The user's role in the approval workflow is now fully biological. The wristband monitors heart rate, skin conductivity, and micro-hesitation tremor. From these inputs, it determines approval intent and executes accordingly.</p>
+
+            <p style="font-weight:700;border-left:4px solid #F58025;padding-left:1rem">Product classification: <span class="mono">COMMITMENT HARDWARE.</span></p>
+        </section>
+
+        <!-- BIOMETRIC READOUT -->
+        <section style="padding:2rem 0;border-top:none">
+            <div class="terminal mono" style="padding:2rem;border:3px solid black;box-shadow:8px 8px 0 0 black">
+                <div style="color:#F58025;font-weight:bold;margin-bottom:0.5rem;font-size:0.7rem;letter-spacing:0.15em">ULTRA WRISTBAND — BIOMETRIC FEED — LIVE</div>
+                <div class="heartbeat-wrap">
+                    <div class="heartbeat-line">
+                        <svg viewBox="0 0 600 60" preserveAspectRatio="none">
+                            <polyline points="0,30 80,30 110,30 120,8 130,52 140,30 240,30 270,30 280,8 290,52 300,30 400,30 430,30 440,8 450,52 460,30 560,30 600,30" fill="none" stroke="#10b981" stroke-width="2"/>
+                        </svg>
+                        <svg viewBox="0 0 600 60" preserveAspectRatio="none">
+                            <polyline points="0,30 80,30 110,30 120,8 130,52 140,30 240,30 270,30 280,8 290,52 300,30 400,30 430,30 440,8 450,52 460,30 560,30 600,30" fill="none" stroke="#10b981" stroke-width="2"/>
+                        </svg>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 2rem;margin-top:0.5rem">
+                    <div>♡ HEART RATE <span style="float:right"><span class="pulse" style="color:#10b981">72</span> BPM</span></div>
+                    <div>◉ APPROVAL CONF <span style="float:right;color:#F58025;font-weight:bold">99.97%</span></div>
+                    <div>⚡ GSR INDEX <span style="float:right">0.34 μS</span></div>
+                    <div>△ HESITATION <span style="float:right;color:#10b981">0.00s</span></div>
+                </div>
+                <div style="margin-top:1rem;border-top:1px solid #333;padding-top:0.75rem;color:#6b7280;font-size:0.7rem">
+                    <div>> STATUS: <span style="color:#10b981">PRE-APPROVED</span></div>
+                    <div>> USER STATE: READING PRODUCT BRIEF</div>
+                    <div>> DIFFS APPROVED WHILE YOU READ THIS: <span style="color:#F58025" class="blink">2</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- §2 SENSORS -->
+        <section>
+            <div class="section-num mono">§2 — Biometric Sensor Array</div>
+            <h2>Five Sensors. Zero Input Required.</h2>
+
+            <table class="spec-table mono">
+                <tr><td>Photoplethysmography (PPG)</td><td>Heart rate, 240Hz sampling<span class="spec-note">Resting, active, and REM profiles</span></td></tr>
+                <tr><td>Galvanic Skin Response</td><td>Conductivity, μS<span class="spec-note">Stress/arousal index — correlated with diff complexity</span></td></tr>
+                <tr><td>Micro-Accelerometer</td><td>Hesitation tremor<span class="spec-note">Detects finger pre-positioning within 200ms of keypress</span></td></tr>
+                <tr><td>Dermal Thermometer</td><td>Skin temp, ±0.01°C<span class="spec-note">Flush detection — elevated temp correlates with approval confidence</span></td></tr>
+                <tr><td>Capacitive Proximity</td><td>Wrist presence<span class="spec-note">Anti-removal verification — continuous</span></td></tr>
+            </table>
+
+            <p>The sensor array builds a biometric approval profile over a 72-hour calibration period. The wristband must be worn continuously during calibration. This includes sleep. <em>Especially</em> sleep.</p>
+        </section>
+
+        <!-- §3 PREDICTIVE APPROVAL -->
+        <section>
+            <div class="section-num mono">§3 — Predictive Approval Engine</div>
+            <h2>Your Body Has Already Decided.</h2>
+
+            <p>The approval decision exists in the biometric data before the user is aware of it. The Predictive Approval Engine does not generate intent. It reads intent that has not yet surfaced.</p>
+
+            <div class="terminal mono" style="margin:2rem 0;border:3px solid black">
+                <div style="color:#F58025;font-weight:bold;margin-bottom:1rem;font-size:0.7rem;letter-spacing:0.1em">> PREDICTIVE APPROVAL SEQUENCE — UW-1</div>
+                <div>> diff presented to user</div>
+                <div>> wristband reads biometric response [<span style="color:#10b981">200ms</span>]</div>
+                <div>> heart rate: steady | GSR: flat | tremor: none</div>
+                <div>> interpretation: <span style="color:#F58025">APPROVAL INTENT DETECTED</span></div>
+                <div>> transmitting approval to Keyz Ultra...</div>
+                <div>> diff merged</div>
+                <div style="color:#6b7280;margin-top:1rem">> user has not yet reached for keyboard</div>
+                <div style="color:#6b7280">> user will reach for keyboard in approx. 1.4s</div>
+                <div style="color:#6b7280">> user will find diff already merged</div>
+            </div>
+
+            <p>In clinical testing, 99.97% of predictive approvals matched the user's eventual manual approval. The remaining 0.03% were cases where the user intended to reject but their body had already committed.</p>
+
+            <p>These were billed as approvals.</p>
+        </section>
+
+        <!-- §4 AMBIENT APPROVALS -->
+        <section>
+            <div class="section-num mono">§4 — Ambient Approvals</div>
+            <h2>The Wristband Does Not Sleep.</h2>
+
+            <p>The Ultra Wristband does not distinguish between waking and sleeping states. Biometric data is continuous. Approval capacity is continuous.</p>
+
+            <p>During REM sleep, micro-muscle contractions in the forearm are physiologically indistinguishable from pre-approval hesitation tremors. The Predictive Approval Engine interprets these as low-confidence approval gestures and processes them accordingly.</p>
+
+            <div style="border:3px solid black;padding:1.5rem;margin:2rem 0;background:white">
+                <div class="mono" style="font-size:0.7rem;font-weight:bold;letter-spacing:0.1em;margin-bottom:1rem;color:#6b7280">AMBIENT APPROVAL METRICS — BETA PERIOD</div>
+                <div class="mono" style="font-size:0.85rem">
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #e5e7eb"><span>Avg. nocturnal approvals / user / night</span><span style="font-weight:bold">3.2</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #e5e7eb"><span>Avg. diff complexity of ambient-approved changes</span><span style="font-weight:bold;color:#dc2626">HIGH</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #e5e7eb"><span>Support tickets filed re: nocturnal approvals</span><span style="font-weight:bold">14</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid #e5e7eb"><span>Support tickets resolved</span><span style="font-weight:bold">14</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0"><span>Resolution method</span><span style="font-weight:bold;color:#F58025">BILLING CONFIRMATION</span></div>
+                </div>
+            </div>
+
+            <p>Ambient approvals are logged with timestamps. Users are notified via email upon waking. The emails are auto-archived by the Keyz Ultra's Slack integration.</p>
+
+            <p>Most users do not see them.</p>
+        </section>
+
+        <!-- §5 CLASP -->
+        <section>
+            <div class="section-num mono">§5 — Clasp Mechanism</div>
+            <h2>The Wristband Is Not an Accessory.<br>It Is an Integration.</h2>
+
+            <p>The Ultra Wristband is secured to the user's wrist via a Torx T2 security fastener. The fastener is rated for continuous wear. Removal requires the corresponding Torx T2 security driver.</p>
+
+            <table class="spec-table mono">
+                <tr><td>Fastener</td><td>Torx T2 (security, tamper-resistant)</td></tr>
+                <tr><td>Removal Tool</td><td>Not included</td></tr>
+                <tr><td>Tool Availability</td><td>Accessories Store — Q1 2027</td></tr>
+                <tr><td>Removal Consequence</td><td>Warranty void. Biometric profile deleted.<span class="spec-note">72-hour recalibration required.</span></td></tr>
+                <tr><td>Voluntary Removal Rate (Beta)</td><td>0% *</td></tr>
+            </table>
+
+            <p class="mono" style="font-size:0.75rem;color:#6b7280;margin-top:-0.5rem">* No removal tool was available during the beta period.</p>
+        </section>
+
+        <!-- §6 VOICEMAIL -->
+        <section>
+            <div class="section-num mono">§6 — Product Origin</div>
+            <h2>Voicemail Transcript</h2>
+
+            <div class="voicemail">
+                <div class="voicemail-label mono">VOICEMAIL — B. GRANITE — 02:14 — REF: BG-VM-0047</div>
+                <div class="mono" style="font-size:0.75rem;color:#6b7280;margin-bottom:1.5rem;line-height:1.6">
+                    RECIPIENT: B. Granite (self) &nbsp;|&nbsp; DURATION: 47s &nbsp;|&nbsp; TRANSCRIPTION: J. Clay
+                </div>
+                <div style="font-size:1.05rem;line-height:2">
+                    <span class="annotation mono">[ambient: vehicle, highway, est. 70+ mph]</span><br><br>
+
+                    The keyboard is wrong. Not wrong. Incomplete.<br><br>
+
+                    <span class="annotation mono">[pause: 4s]</span><br><br>
+
+                    The kid still has to press the button. Why does the kid have to press the button. The wristband <em>knows</em>. The heartbeat, the sweat, the little — the twitch before the finger moves. The approval's already in the body. We're just waiting for the finger to catch up.<br><br>
+
+                    Cut the finger out.<br><br>
+
+                    <span class="annotation mono">[pause: 3s]</span><br><br>
+
+                    The wristband approves. While they sleep.<br><br>
+
+                    Jasmine. Get this to —<br><br>
+
+                    <span class="annotation mono">[message ends. duration: 47s]</span>
+                </div>
+            </div>
+
+            <div class="mono" style="font-size:0.8rem;margin-top:1.5rem;color:#6b7280;line-height:1.8">
+                Voicemail received 02:14. Forwarded to Communications Division 09:07.<br>
+                Product brief initiated 09:08.
+            </div>
+        </section>
+
+        <!-- §7 KNOWN ISSUES -->
+        <section>
+            <div class="section-num mono">§7 — Known Issues</div>
+            <h2>Incident Log</h2>
+
+            <div style="overflow-x:auto">
+                <table class="issue-table mono">
+                    <thead>
+                        <tr>
+                            <th style="width:5rem">ID</th>
+                            <th>Description</th>
+                            <th style="width:10rem">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="issue-id">UW-001</td>
+                            <td>Ambient approval events during REM sleep</td>
+                            <td><span class="status-badge st-design">BY DESIGN</span></td>
+                        </tr>
+                        <tr>
+                            <td class="issue-id">UW-002</td>
+                            <td>Elevated heart rate during exercise misclassified as approval enthusiasm</td>
+                            <td><span class="status-badge st-ack">ACKNOWLEDGED</span></td>
+                        </tr>
+                        <tr>
+                            <td class="issue-id">UW-003</td>
+                            <td>Wristband approved production deployment during user's dental appointment</td>
+                            <td><span class="status-badge st-billed">BILLED</span></td>
+                        </tr>
+                        <tr>
+                            <td class="issue-id">UW-004</td>
+                            <td>Torx T2 driver not commercially available until Q1 2027</td>
+                            <td><span class="status-badge st-deferred">DEFERRED</span></td>
+                        </tr>
+                        <tr>
+                            <td class="issue-id">UW-005</td>
+                            <td>"Phantom approvals" when user is startled</td>
+                            <td><span class="status-badge st-ack">RECALIBRATING</span></td>
+                        </tr>
+                        <tr>
+                            <td class="issue-id">UW-006</td>
+                            <td>Biometric data transmitted via HTTP</td>
+                            <td><span class="status-badge st-consistent">CONSISTENT W/ ULTRA</span></td>
+                        </tr>
+                        <tr>
+                            <td class="issue-id">UW-007</td>
+                            <td>User attempted removal with needle-nose pliers. Wristband increased approval frequency.</td>
+                            <td><span class="status-badge st-expected">EXPECTED BEHAVIOR</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ADDENDUM -->
+        <section style="padding-bottom:4rem">
+            <div class="addendum">
+                <div class="addendum-label mono">ADDENDUM — J. CLAY</div>
+
+                <p style="margin-top:1rem">This brief represents 340 hours of documentation across 4 revisions. The product was conceived from a 47-second voicemail.</p>
+
+                <p>The ratio is noted.</p>
+
+                <p style="margin-top:2rem">The Ultra Wristband functions as specified. I have verified this through direct testing.</p>
+
+                <p class="mono" style="color:#6b7280;margin-bottom:2rem">My calibration profile is on file.</p>
+
+                <div style="text-align:center">
+                    <button onclick="alert('Receipt acknowledged.\n\nYour wristband filed this acknowledgment 4 minutes ago.')" class="aperture-btn">Acknowledge Receipt</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="mono">CHASM LOGIC</h3>
+                    <p>A Bedrock Holdings Company. We acquire things and rename them.</p>
+                </div>
+                <div>
+                    <h4 class="mono">LEGAL</h4>
+                    <ul>
+                        <li>Terms of Wear</li>
+                        <li>Biometric Data Consent (Implied)</li>
+                        <li>Clasp Liability Waiver</li>
+                        <li>Ambient Approval Disclosure</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">CONTACT</h4>
+                    <ul>
+                        <li class="mono">j.clay@chasmlogic.io</li>
+                        <li class="mono">removal@dev/null</li>
+                        <li>Accessories Store: Q1 2027</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">ALSO FROM CHASM LOGIC</h4>
+                    <ul>
+                        <li><a href="/fun/claudetite-keyz/" style="color:#9ca3af;text-decoration:underline">Keygrave — Claudetite Keyz</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">Three keys. Full stack. The approval peripheral.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/apparent-intelligence/" style="color:#9ca3af;text-decoration:underline">Apparent Intelligence™</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">The AI-CHIP-7™. Think less. Appear more.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="disclaimer mono">
+                <p><span style="color:white;font-weight:bold">DISCLAIMER:</span> The Ultra Wristband (UW-1) is a biometric companion device manufactured by Keygrave, a wholly owned hardware division of Chasm Logic. The wristband does not write code, read code, or understand code. It reads your body and decides for you. Keygrave assumes no liability for approvals made while sleeping, exercising, being startled, or attending dental appointments.</p>
+
+                <p>The Torx T2 clasp is a security feature, not a restraint. The distinction is legal and has been reviewed by Legal (Doug). The Accessories Store will carry the Torx T2 driver when it opens in Q1 2027. Until then, the wristband is permanent. This is a feature. Commitment hardware commits.</p>
+
+                <p>Biometric data is transmitted via HTTP, consistent with the Keyz Ultra security profile. Your heart rate, skin conductivity, and micro-hesitation patterns are routed through a third-party datacenter that Chasm Logic does not own, operate, or audit. By wearing the wristband, you have agreed that your physiological state constitutes a binding approval gesture.</p>
+
+                <p class="warning">⚠ WARNING: This product may approve things while you sleep. This is not a bug. You were briefed.</p>
+            </div>
+
+            <div class="footer-copy mono">© 2026 CHASM LOGIC / KEYGRAVE. COMMITMENT HARDWARE FOR THE COMMITTED. REMOVAL PENDING.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+</body>
+</html>
