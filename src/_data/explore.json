@@ -1,12 +1,73 @@
 {
   "items": [
     {
+      "title": "The Hyperresponder",
+      "description": "Same tools, wildly different results",
+      "href": "/ai-hyperresponder/",
+      "tags": ["ai-collaboration", "personal", "meta"],
+      "status": "seedling",
+      "connections": ["Recursive mirror", "Productivity breakthrough", "What I can actually do"],
+      "firstCreated": "2026-02-20",
+      "lastUpdated": "2026-02-20"
+    },
+    {
+      "title": "Getting off the cloud AI treadmill",
+      "description": "How to reduce dependency on paid AI without losing what makes it useful",
+      "href": "/cloud-ai-treadmill/",
+      "tags": ["ai-collaboration", "local-first", "permacomputing"],
+      "status": "seedling",
+      "connections": ["Steampunk engineering", "Local AI economics", "Permacomputing microstudio", "uroboro", "wherewasi"],
+      "firstCreated": "2026-02-20",
+      "lastUpdated": "2026-02-20"
+    },
+    {
+      "title": "What I can actually do",
+      "description": "Honest assessment of capabilities and constraints, with receipts",
+      "href": "/what-i-can-actually-do/",
+      "tags": ["personal", "ai-collaboration", "career"],
+      "status": "seedling",
+      "connections": ["Productivity breakthrough", "Steampunk engineering", "Local AI economics"],
+      "firstCreated": "2026-02-20",
+      "lastUpdated": "2026-02-20"
+    },
+    {
+      "title": "Living workshop",
+      "description": "What if portfolios showed process instead of polish?",
+      "href": "/living-workshop/",
+      "tags": ["meta", "personal", "writing"],
+      "status": "seedling",
+      "connections": ["Off the deep end", "Steampunk engineering", "Recursive mirror"],
+      "firstCreated": "2026-02-20",
+      "lastUpdated": "2026-02-20"
+    },
+    {
+      "title": "58 Keys, Then 1",
+      "description": "The contradiction between hand-soldered input devices and single-digit approval workflows",
+      "href": "/58-keys-then-1/",
+      "tags": ["hardware", "ai-collaboration", "personal"],
+      "status": "seedling",
+      "connections": ["Claudetite Keyz", "Lily58 distributed gaming", "Steampunk engineering", "Disassemble-recombine"],
+      "firstCreated": "2026-02-20",
+      "lastUpdated": "2026-02-20"
+    },
+    {
+      "title": "Greatest hits through gradient descent",
+      "description": "What people call slop is Aristotle's greatest hits, rediscovered by machines trained on human applause",
+      "href": "/greatest-hits-through-gradient-descent/",
+      "tags": ["writing", "ai-collaboration", "meta"],
+      "status": "growing",
+      "connections": ["How to write a zine", "Recursive mirror", "Distilling style"],
+      "firstCreated": "2026-02-20",
+      "lastUpdated": "2026-02-20"
+    },
+    {
       "title": "Off the deep end",
       "description": "What this place is, what it draws from, and why",
       "href": "/off-the-deep-end/",
       "tags": ["writing", "meta", "personal"],
       "status": "growing",
       "connections": ["About", "Recursive mirror", "Chasm Logic"],
+      "firstCreated": "2026-02-20",
       "lastUpdated": "2026-02-20"
     },
     {
@@ -16,6 +77,7 @@
       "tags": ["ai-collaboration", "developer-tools", "meta"],
       "status": "seedling",
       "connections": ["Recursive mirror", "Distilling style", "Steampunk engineering", "Convergent evolution in personal AI tooling", "uroboro"],
+      "firstCreated": "2026-02-19",
       "lastUpdated": "2026-02-19"
     },
     {
@@ -25,6 +87,7 @@
       "tags": ["permacomputing", "debugging"],
       "status": "seedling",
       "connections": ["The sailboat test", "Optimization through removal", "Steampunk Engineering"],
+      "firstCreated": "2026-02-18",
       "lastUpdated": "2026-02-18"
     },
     {
@@ -34,6 +97,7 @@
       "tags": ["ai-collaboration", "security", "learning"],
       "status": "seedling",
       "connections": [],
+      "firstCreated": "2026-02-18",
       "lastUpdated": "2026-02-18"
     },
     {
@@ -43,6 +107,7 @@
       "tags": ["writing", "ai-collaboration", "meta"],
       "status": "seedling",
       "connections": ["Distilling style"],
+      "firstCreated": "2026-02-17",
       "lastUpdated": "2026-02-17"
     },
     {
@@ -51,6 +116,7 @@
       "href": "/about/",
       "tags": ["personal", "career"],
       "status": "evergreen",
+      "firstCreated": "2025-01-08",
       "lastUpdated": "2025-01-08"
     },
     {
@@ -59,6 +125,7 @@
       "href": "/productivity-breakthrough/",
       "tags": ["learning", "ai-collaboration", "personal"],
       "status": "evergreen",
+      "firstCreated": "2025-01-05",
       "lastUpdated": "2025-01-05"
     },
     {
@@ -68,6 +135,7 @@
       "tags": ["debugging", "learning"],
       "status": "seedling",
       "connections": ["Optimization through removal", "Recursive mirror"],
+      "firstCreated": "2025-01-08",
       "lastUpdated": "2025-01-08"
     },
     {
@@ -77,6 +145,7 @@
       "tags": ["debugging"],
       "status": "seedling",
       "connections": ["Database-first debugging"],
+      "firstCreated": "2025-01-08",
       "lastUpdated": "2025-01-08"
     },
     {
@@ -85,6 +154,7 @@
       "href": "/sailboat-test/",
       "tags": ["permacomputing", "local-first"],
       "status": "seedling",
+      "firstCreated": "2025-01-08",
       "lastUpdated": "2025-01-08"
     },
     {
@@ -93,6 +163,7 @@
       "href": "/economic-honesty/",
       "tags": ["personal", "career"],
       "status": "seedling",
+      "firstCreated": "2025-01-08",
       "lastUpdated": "2025-01-08"
     },
     {
@@ -102,6 +173,7 @@
       "tags": ["learning", "personal"],
       "status": "seedling",
       "connections": ["About"],
+      "firstCreated": "2025-01-08",
       "lastUpdated": "2025-01-08"
     },
     {
@@ -110,6 +182,7 @@
       "href": "/social-media-brainfarts/",
       "tags": ["personal", "society"],
       "status": "seedling",
+      "firstCreated": "2026-01-08",
       "lastUpdated": "2026-01-08"
     },
     {
@@ -119,6 +192,7 @@
       "tags": ["personal", "career", "ethics"],
       "status": "seedling",
       "connections": ["About"],
+      "firstCreated": "2026-01-08",
       "lastUpdated": "2026-01-08"
     },
     {
@@ -127,6 +201,7 @@
       "href": "/managing-attention/",
       "tags": ["personal"],
       "status": "seedling",
+      "firstCreated": "2026-01-08",
       "lastUpdated": "2026-01-08"
     },
     {
@@ -135,6 +210,7 @@
       "href": "/ux-challenges/",
       "tags": ["games", "design", "analysis"],
       "status": "seedling",
+      "firstCreated": "2026-01-08",
       "lastUpdated": "2026-01-08"
     },
     {
@@ -144,6 +220,7 @@
       "tags": ["ai-collaboration", "personal", "meta", "writing"],
       "status": "seedling",
       "connections": ["About", "Database-first debugging"],
+      "firstCreated": "2026-01-10",
       "lastUpdated": "2026-01-10"
     },
     {
@@ -185,6 +262,7 @@
       "href": "/fun/ideas/",
       "tags": ["open-source", "creative"],
       "status": "evergreen",
+      "firstCreated": "2026-01-08",
       "lastUpdated": "2026-01-08"
     },
     {
@@ -193,6 +271,7 @@
       "href": "/local-ai-economics/",
       "tags": ["ai-collaboration", "permacomputing", "local-first"],
       "status": "evergreen",
+      "firstCreated": "2026-01-09",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -202,6 +281,7 @@
       "tags": ["permacomputing", "developer-tools"],
       "status": "evergreen",
       "connections": ["The sailboat test"],
+      "firstCreated": "2026-01-10",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -211,6 +291,7 @@
       "tags": ["permacomputing", "local-first", "developer-tools"],
       "status": "evergreen",
       "connections": ["Steampunk engineering", "The sailboat test"],
+      "firstCreated": "2026-01-08",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -219,6 +300,7 @@
       "href": "/cli-first-development/",
       "tags": ["developer-tools", "permacomputing"],
       "status": "evergreen",
+      "firstCreated": "2026-01-08",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -228,6 +310,7 @@
       "tags": ["developer-tools"],
       "status": "evergreen",
       "connections": ["CLI-first development"],
+      "firstCreated": "2026-01-08",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -236,6 +319,7 @@
       "href": "/overnight-ai-development/",
       "tags": ["ai-collaboration", "developer-tools"],
       "status": "growing",
+      "firstCreated": "2026-01-10",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -245,6 +329,7 @@
       "tags": ["permacomputing", "local-first"],
       "status": "growing",
       "connections": ["Steampunk engineering", "Permacomputing microstudio"],
+      "firstCreated": "2026-01-10",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -253,6 +338,7 @@
       "href": "/lily58-gaming/",
       "tags": ["hardware", "games", "embedded"],
       "status": "growing",
+      "firstCreated": "2026-01-10",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -261,6 +347,7 @@
       "href": "/panopticron/",
       "tags": ["developer-tools", "career"],
       "status": "evergreen",
+      "firstCreated": "2026-01-10",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -270,6 +357,7 @@
       "tags": ["games", "learning", "design"],
       "status": "evergreen",
       "connections": ["quantum-dice"],
+      "firstCreated": "2026-01-10",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -279,6 +367,7 @@
       "tags": ["local-first", "permacomputing"],
       "status": "growing",
       "connections": ["Steampunk engineering", "Permacomputing microstudio"],
+      "firstCreated": "2026-01-09",
       "lastUpdated": "2026-01-12"
     },
     {
@@ -287,6 +376,7 @@
       "href": "/qrazy/",
       "tags": ["learning", "developer-tools"],
       "status": "seedling",
+      "firstCreated": "2026-01-15",
       "lastUpdated": "2026-01-15"
     },
     {
@@ -296,6 +386,7 @@
       "tags": ["design", "creative", "meta"],
       "status": "seedling",
       "connections": ["Ideas"],
+      "firstCreated": "2026-01-17",
       "lastUpdated": "2026-01-17"
     },
     {
@@ -305,6 +396,7 @@
       "tags": ["design", "developer-tools"],
       "status": "seedling",
       "connections": ["CLI-first development", "CLI tooling stack"],
+      "firstCreated": "2026-01-17",
       "lastUpdated": "2026-01-17"
     },
     {
@@ -314,6 +406,7 @@
       "tags": ["design", "developer-tools", "accessibility"],
       "status": "seedling",
       "connections": ["Zenburn", "CLI tooling stack"],
+      "firstCreated": "2026-01-17",
       "lastUpdated": "2026-01-17"
     },
     {
@@ -323,6 +416,7 @@
       "tags": ["ai-collaboration", "analysis"],
       "status": "seedling",
       "connections": ["Recursive mirror"],
+      "firstCreated": "2026-01-21",
       "lastUpdated": "2026-01-21"
     },
     {
@@ -332,6 +426,7 @@
       "tags": ["ai-collaboration", "local-first", "developer-tools"],
       "status": "growing",
       "connections": ["uroboro", "wherewasi", "The sailboat test", "Permacomputing microstudio"],
+      "firstCreated": "2026-02-16",
       "lastUpdated": "2026-02-16"
     },
     {
@@ -341,6 +436,7 @@
       "tags": ["ai-collaboration", "meta", "writing"],
       "status": "growing",
       "connections": ["Recursive mirror", "De-slopping in practice"],
+      "firstCreated": "2026-02-16",
       "lastUpdated": "2026-02-16"
     },
     {
@@ -350,6 +446,7 @@
       "tags": ["ai-collaboration", "meta", "writing", "analysis"],
       "status": "growing",
       "connections": ["Recursive mirror", "Writing styleguide", "Convergent evolution in personal AI tooling", "Tuning the detector"],
+      "firstCreated": "2026-02-16",
       "lastUpdated": "2026-02-16"
     },
     {
@@ -359,6 +456,7 @@
       "tags": ["ai-collaboration", "meta", "writing", "analysis"],
       "status": "growing",
       "connections": ["De-slopping in practice", "Writing styleguide", "Convergent evolution in personal AI tooling"],
+      "firstCreated": "2026-02-17",
       "lastUpdated": "2026-02-17"
     },
     {
@@ -368,6 +466,7 @@
       "tags": ["ai-collaboration", "meta", "writing"],
       "status": "growing",
       "connections": ["De-slopping in practice", "Writing styleguide", "Tuning the detector"],
+      "firstCreated": "2026-02-17",
       "lastUpdated": "2026-02-17"
     },
     {
@@ -377,6 +476,7 @@
       "tags": ["ai-collaboration", "developer-tools", "local-first"],
       "status": "seedling",
       "connections": ["Convergent evolution in personal AI tooling", "uroboro", "Recursive mirror"],
+      "firstCreated": "2026-02-17",
       "lastUpdated": "2026-02-17"
     },
     {

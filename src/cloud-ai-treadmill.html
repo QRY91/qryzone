@@ -1,0 +1,118 @@
+---
+layout: base.njk
+title: Getting Off the Cloud AI Treadmill - qry.zone
+description: How to reduce dependency on paid AI without losing what makes it useful
+footerPunchline: "owns the weights"
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Getting Off the Cloud AI Treadmill
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        How to reduce dependency on paid AI without losing what makes it useful
+      </p>
+    </div>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The loop
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        Cloud AI creates a dependency loop. Productivity goes up. Bill goes up. Workflow gets tied to services you don't control. Usage limits. Price increases. Service changes. Outages during deadline week.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        I hit my Claude token ceiling mid-refactor and had to stop coding. Not because the problem was hard. Because the meter ran out. That's a dependency, not a tool.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The answer isn't going fully local. Not yet &mdash; local models can't match frontier reasoning for complex architecture work. The answer is being honest about what actually needs cloud capabilities and what doesn't.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The 80/20 split
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        Most AI tasks don't need GPT-4. They need "good enough, fast, and available."
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        I run code completion locally because it needs to be instant and private. I run documentation generation locally because a 7B model handles it fine and I don't want my project notes on someone else's server. I use <a href="https://github.com/QRY91/wherewasi" style="color: var(--color-accent)">wherewasi</a> for context recovery when I switch between projects &mdash; that's a local operation, no reason to phone home for it.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        I send architecture questions to Claude because a local model can't hold the whole system in its head the way a frontier model can. I use cloud for novel problems that need broad knowledge &mdash; the kind of thing where you'd otherwise spend two hours reading documentation. That's maybe 20% of my actual AI interactions.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        A fast local model at infinite availability beats a better model you're rationing. Especially for the stuff that's mostly pattern-matching anyway.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What local actually looks like
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        I built <a href="https://www.uroboro.dev/" style="color: var(--color-accent)">uroboro</a> to capture development decisions as I make them. It hooks into git commits &mdash; every commit message gets tagged, categorized, and indexed in a local SQLite database. No cloud round-trip, no API cost, no privacy leak. The AI processing happens on my machine through Ollama.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Context switching used to cost me 20 minutes every time I jumped between projects. Wherewasi snapshots project state when I leave &mdash; what I was working on, what's next, what's blocking &mdash; and restores it when I come back. All local. All instant.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        <a href="https://github.com/QRY91/sjiek" style="color: var(--color-accent)">Sjiek</a> automates git diff to clipboard. Tiny tool. But it eliminated the copy-paste friction between my terminal and AI conversations, which turned out to be the thing actually slowing me down.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        None of this is impressive individually. The compound effect is what matters. Each tool removes a small friction, and the frictions were where all the time was going.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Hardware honesty
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        I'm on 8GB. It works. Not comfortable, but it works. Small quantized models run. Inference is slow. Context windows are tight. But the models are mine and they don't bill me per token.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The break-even math depends on what you're spending. If cloud AI costs you $20/month, hardware upgrades don't make economic sense. If you're burning through $200/month in API calls (I've been there), a one-time hardware investment starts looking rational pretty fast.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        There's also the question nobody wants to ask: what's the environmental cost of routing every code completion through a data center? Running a 7B model on your laptop uses a fraction of the energy. That shouldn't be the only reason, but it shouldn't be zero reasons either.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What goes wrong
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        Local models are worse at complex reasoning. That's just true. When I need the AI to think about system design across five interacting services, local doesn't cut it. That's fine &mdash; that's why the cloud 20% exists. The mistake is trying to force local where it doesn't work, then concluding local doesn't work at all.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Setup isn't trivial. Ollama makes it manageable, but you're still configuring model selection, managing disk space, tuning context lengths. It's systems work. If you don't enjoy systems work, this path will annoy you.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        And there's a real risk of over-engineering the local setup. I've caught myself spending more time optimizing the toolchain than using it. At some point you have to stop building the workshop and start building in it.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <p style="margin-bottom: var(--space-md)">
+        Flip from 80% cloud to 80% local. Takes months. Requires measuring what actually needs cloud and what you assumed needed cloud because that's how you started.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Not because local is ideologically pure. Because owning the infrastructure means nobody can pull the rug during deadline week.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p>Related: <a href="/steampunk-engineering/">Steampunk engineering</a> &mdash; <a href="/local-ai-economics/">Local AI economics</a> &mdash; <a href="/permacomputing-microstudio/">Permacomputing microstudio</a></p>
+    </footer>
+
+  </div>
+</article>

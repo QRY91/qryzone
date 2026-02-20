@@ -1,0 +1,109 @@
+---
+layout: base.njk
+title: What I Can Actually Do - qry.zone
+description: Honest assessment of capabilities and constraints
+footerPunchline: "the receipts"
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What I Can Actually Do
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        Honest assessment. No hype. Just what I've measured.
+      </p>
+    </div>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <p style="margin-bottom: var(--space-md)">
+        Most capability claims are bullshit. "Full-stack developer" means nothing. "10+ years experience" tells you less than you'd think.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        So here's what I actually measured over one week in June 2025, when I had the tools and the time to see what I could do.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The numbers
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        161,333 lines of code edited. 1,016 requests to development tools. $15.28 spent &mdash; maxed the free tier, went pro, hit limits there too. Six complete projects, three with live websites. Multiple forced pauses because I ran out of budget before I ran out of momentum.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        That pace isn't sustainable. Obviously. But it shows what happens when the bottleneck isn't me.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Is 161K lines meaningful when much of it is AI-assisted scaffolding? Maybe not by itself. But the six working projects are. The three live websites are. The toolchain that connects them is. Numbers are easy to inflate. Working software is harder to fake.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What I built
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        The tools came from friction. Copy-pasting context between AI tools was killing my flow, so I built <a href="https://github.com/QRY91/sjiek" style="color: var(--color-accent)">sjiek</a> &mdash; git diff to clipboard automation. Small tool, stupid simple, but daily GitHub activity started after that. The friction was the bottleneck, not the coding.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        That pattern kept repeating. Needed to capture development decisions without breaking flow? <a href="https://www.uroboro.dev/" style="color: var(--color-accent)">Uroboro</a> &mdash; SQLite-based capture with tags, search, local-first. Needed to generate learning content from technical documents? Examinator. Needed monitoring that wasn't another SaaS dashboard? Doggowoof (still cooking). Needed unified CI/CD visibility for a thesis project? <a href="/panopticron/" style="color: var(--color-accent)">Panopticron</a>.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        All of them share the same skeleton: SQLite as the coordination layer, AI integration, CLI-first interfaces. I'm not building random things. I'm building one toolchain, piece by piece, each tool solving whatever was annoying me that week.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What limits me
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        I hit token limits mid-refactor. Regularly. The AI goes silent and you're staring at half-finished code, trying to remember where the thought was going. It's like having a conversation partner who passes out mid-sentence on a schedule you can't predict.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Context windows don't fit large refactors. You have to break the work into pieces small enough for the model to hold in its head, which means you spend time managing the AI's attention instead of the code. That's overhead nobody talks about.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        8GB laptop. Can't run the big models locally. So I'm dependent on APIs, which means no internet, no AI. In 2025 that's like saying no electricity, no lights &mdash; technically true but increasingly unacceptable as a constraint.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        These constraints shaped everything. Can't brute-force it. Have to be systematic. Have to build around the walls instead of through them.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        When the wall hits
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        Ran out of Claude credits mid-project. Built Panopticron entirely on free Google AI Studio (Gemini 2.5 Pro) instead. Not as elegant, but it ships. The thesis committee doesn't care which model wrote the boilerplate.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Hit a wall. Build a workaround. Keep moving.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Not just using AI. Building tools to use AI better. The meta-game matters more than any single project, because every tool I build makes the next project faster. Sjiek saved minutes per session. Uroboro saves hours per week. The compound interest is real &mdash; if you survive the initial drought.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <p style="margin-bottom: var(--space-md)">
+        I can show you what I built. I can show you the numbers. I can explain what's holding me back and how I work around it.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        That's more than most capability claims offer.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p>Related: <a href="/steampunk-engineering/">Steampunk engineering</a> &mdash; <a href="/productivity-breakthrough/">Productivity breakthrough</a> &mdash; <a href="/local-ai-economics/">Local AI economics</a></p>
+    </footer>
+
+  </div>
+</article>

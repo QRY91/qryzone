@@ -91,12 +91,6 @@
     font-family: var(--font-mono);
 }
 
-#results-count {
-    font-size: 0.8rem;
-    color: var(--color-text-secondary);
-    display: none;
-}
-
 /* Collapsible filter panel */
 
 .filter-section {
@@ -304,6 +298,14 @@
     font-size: 0.7rem;
     color: var(--color-text-secondary);
     font-family: var(--font-mono);
+}
+
+.card-growth {
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    color: var(--color-text-secondary);
+    opacity: 0.7;
+    margin-top: 2px;
 }
 
 .card-meta {

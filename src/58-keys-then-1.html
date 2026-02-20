@@ -1,0 +1,118 @@
+---
+layout: base.njk
+title: 58 Keys, Then 1 - qry.zone
+description: The contradiction between hand-soldered input devices and single-digit approval workflows
+tags:
+  - hardware
+  - ai-collaboration
+  - personal
+status: seedling
+date: 2026-02-20
+footerPunchline: "press 1 more comfortably"
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <span class="status-badge status-seedling">seedling</span>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        58 Keys, Then 1
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        The contradiction between hand-soldered input devices and single-digit approval workflows
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <p style="margin-bottom: var(--space-md)">
+        I type Dvorak on a split keyboard with blank keycaps. The firmware is custom QMK running on dual ATmega32U4s &mdash; four layers, fixed-point physics, a custom I2C message protocol with checksums and sequence numbers. I built a distributed Pong game across the two halves because I had spare cycles on the microcontrollers and couldn't not. Current firmware uses 73% of available flash.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Then I open Claude Code and press 1.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Approve. Approve. Approve. The entire input surface of an agentic workflow is a numbered list. My right hand does nothing. Half the keyboard &mdash; the half I soldered &mdash; is scenery.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The contradiction
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        There's a contradiction here that I find genuinely interesting, not just funny. I care about input. I care about the physical interface between my hands and the machine. I moved to Dvorak because the default layout was an accident of typewriter mechanics. I moved to a split board because the default form factor was an accident of manufacturing cost. I use blank keycaps because the labels were for a layout I don't use. Every choice is deliberate. Every choice is mine.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        And then the workflow says: pick a number.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What happens before the number
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        But here's what the workflow doesn't say: what happened before the number.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Before I press 1, I've read the diff. Not the summary &mdash; the diff. I've written test specs that define what "correct" means before the agent touches a line of code. I've built a Go CLI called <a href="https://www.uroboro.dev/">uroboro</a> that captures every architectural decision into a local SQLite database so the next session has context for why the last session made the choices it did. I built <a href="https://github.com/QRY91/wherewasi">another tool</a> that reconstructs session context from git history because the expensive human judgment isn't typing &mdash; it's knowing what to type and whether what came back is right.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Last June I deleted 10,250 lines in a single commit. Everything an AI had generated over two and a half weeks of feature sprawl &mdash; a tamagotchi system, a sensei, a voice analyzer, analytics, vector search. Twelve features that did everything and nothing. I <a href="/disassemble-recombine/">stripped it back</a> to what it actually did, preserved the experimental branch like a specimen in a jar, and rebuilt three separate tools from the wreckage. The code died. The thinking lived.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        I've written <a href="/steampunk-engineering/">at length</a> about the difference between rubber-stamp approval and actual human oversight. The pattern that works: Human decides <em>what</em> and <em>why</em>, automation handles <em>how</em>. The pattern that doesn't: Human &rarr; AI &rarr; Decision &rarr; Action. That's not assistance, that's replacement. The numbered list looks identical in both cases. The difference is invisible to anyone watching your hands.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The satire
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        I wrote <a href="/fun/claudetite-keyz/">a satire piece about this</a> &mdash; a three-key keyboard for approval-based development. It's a product page for a keyboard that does the only thing the workflow <em>appears</em> to ask of you. It escalates through a Pro model and then an Ultra that routes your keypresses through a datacenter for inference, because if you're already outsourcing the code, why not outsource the keystroke.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        It's a joke, but the thing underneath it isn't. The keyboard I <a href="/lily58-gaming/">actually built</a> is an expression of a value: that the interface matters, that the tool should fit the hand, that defaults are worth questioning. The agentic loop doesn't disagree with that value &mdash; it just makes it irrelevant to one specific <em>moment</em> of programming. The approval moment. And that moment is the smallest part of the work, even though it's the most visible.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The iceberg
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The 58 keys aren't for the approval. They're for everything around it &mdash; writing the specs, reading the diffs, drafting the prompts, editing the output, building the tools that make the approval mean something instead of nothing. The 1 is the tip. The keyboard is the iceberg.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        I don't think this is a problem to solve. It's a tension to sit with. But it's not the tension I thought it was when I started writing this. The contradiction isn't between caring about input and having trivial input. It's between what the workflow <em>looks like</em> and what the workflow <em>is</em>. From the outside, I press 1. From the inside, the 1 is the least interesting keystroke of the day.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        But it is funny that I mass-flash custom firmware onto a hand-soldered microcontroller so I can press it more comfortably.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p>Related: <a href="/fun/claudetite-keyz/">Claudetite Keyz</a> &mdash; <a href="/lily58-gaming/">Lily58 distributed gaming</a> &mdash; <a href="/steampunk-engineering/">Steampunk engineering</a></p>
+    </footer>
+
+  </div>
+</article>

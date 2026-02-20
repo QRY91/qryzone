@@ -12,8 +12,37 @@
             type: item.type || 'article',
             status: item.status || 'seedling',
             connections: Array.isArray(item.connections) ? item.connections : [],
-            lastUpdated: item.lastUpdated || null
+            lastUpdated: item.lastUpdated || null,
+            firstCreated: item.firstCreated || null,
+            revisions: item.revisions || 1
         };
+    }
+
+    function timeAgo(dateStr) {
+        if (!dateStr) return null;
+        var now = new Date();
+        var then = new Date(dateStr);
+        var days = Math.floor((now - then) / (1000 * 60 * 60 * 24));
+        if (days === 0) return 'today';
+        if (days === 1) return '1d ago';
+        if (days < 30) return days + 'd ago';
+        var months = Math.floor(days / 30);
+        if (months < 12) return months + 'mo ago';
+        var years = Math.floor(months / 12);
+        return years + 'y ago';
+    }
+
+    function getGrowthInfo(item) {
+        if (!item.firstCreated) return '';
+        var parts = [];
+        parts.push('planted ' + timeAgo(item.firstCreated));
+        if (item.lastUpdated && item.lastUpdated !== item.firstCreated) {
+            parts.push('tended ' + timeAgo(item.lastUpdated));
+        }
+        if (item.revisions > 1) {
+            parts.push(item.revisions + ' revisions');
+        }
+        return parts.join(' \u00b7 ');
     }
 
     const rawData = window.exploreData || [];
@@ -42,15 +71,24 @@
     const randomSection = document.getElementById('random-section');
     const randomBtn = document.getElementById('random-btn');
     const clearBtn = document.getElementById('clear-btn');
-    const resultsCount = document.getElementById('results-count');
     const sectionTitle = document.getElementById('section-title');
     const searchInput = document.getElementById('explore-search');
     const filterToggle = document.getElementById('filter-toggle');
     const filterSection = document.getElementById('filter-section');
 
+    function updateCounter(filteredCount) {
+        var total = contentData.length;
+        var itemCount = document.getElementById('item-count');
+        if (!itemCount) return;
+        if (filteredCount < total) {
+            itemCount.textContent = filteredCount + ' of ' + total;
+        } else {
+            itemCount.textContent = total;
+        }
+    }
+
     function init() {
-        const itemCount = document.getElementById('item-count');
-        if (itemCount) itemCount.textContent = contentData.length;
+        updateCounter(contentData.length);
 
         renderTags();
         renderStatusButtons();
@@ -179,10 +217,7 @@
         const hasFilters = selectedTags.length > 0 || selectedStatus !== null || selectedType !== null || searchQuery !== '';
 
         if (clearBtn) clearBtn.style.display = hasFilters ? 'inline-block' : 'none';
-        if (resultsCount) {
-            resultsCount.style.display = hasFilters ? 'inline' : 'none';
-            resultsCount.textContent = `${filtered.length} results`;
-        }
+        updateCounter(filtered.length);
         if (sectionTitle) {
             sectionTitle.textContent = hasFilters ? 'Filtered results' : 'Everything';
         }
@@ -215,6 +250,14 @@
         var descriptionHtml = compact ? '' :
             '<p class="card-description">' + item.description + '</p>';
 
+        var growthHtml = '';
+        if (!compact) {
+            var growth = getGrowthInfo(item);
+            if (growth) {
+                growthHtml = '<div class="card-growth">' + growth + '</div>';
+            }
+        }
+
         return '<div class="content-card' + typeClass + (compact ? ' compact' : '') + '">' +
             '<div class="card-header">' +
                 '<a href="' + item.href + '"' +
@@ -225,6 +268,7 @@
                 '<span class="status-badge status-' + item.status + '">' + item.status + '</span>' +
             '</div>' +
             descriptionHtml +
+            growthHtml +
             (typeIndicator && !compact ? '<div class="card-meta">' + typeIndicator + '</div>' : '') +
         '</div>';
     }
