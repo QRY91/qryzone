@@ -1,0 +1,329 @@
+<!--
+    ██████████████████████████████████████████████████████████████████████
+    ██                                                                ██
+    ██   HEY.                                                        ██
+    ██                                                                ██
+    ██   Yeah, you. View-source kid. Inspector panel jockey.          ██
+    ██   I see you poking around in here.                             ██
+    ██                                                                ██
+    ██   The source may be open, but your mouth better stay closed.   ██
+    ██   Them peepers too. You saw nothing. NOTHING.                  ██
+    ██                                                                ██
+    ██   This is a CHASM LOGIC PROPRIETARY PRODUCT PAGE and any      ██
+    ██   resemblance to any REAL agentic coding tool, living or      ██
+    ██   deprecated, is purely coincidental and legally               ██
+    ██   unactionable. Doug checked. (Legal Doug. Not fired Doug.)   ██
+    ██                                                                ██
+    ██   If you have read this far you are now a beta tester.        ██
+    ██   Your NDA is in the mail. Actually we Slacked it.            ██
+    ██   Key 5 sent "looking into it." That counts as delivery       ██
+    ██   in 14 jurisdictions.                                        ██
+    ██                                                                ██
+    ██   Am I clear?                                                  ██
+    ██                                                                ██
+    ██                          — Brock Granite                       ██
+    ██                          CEO, Chasm Logic                      ██
+    ██                          "I don't read code. I acquire it."    ██
+    ██                                                                ██
+    ██████████████████████████████████████████████████████████████████████
+-->
+---
+layout: false
+permalink: /fun/claude-code-keyz/memo/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEMORANDUM — KEYGRAVE ACQUISITION</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+            cursor: crosshair;
+        }
+        .mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+        .aperture-btn {
+            background-color: #F58025;
+            color: white;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
+            transition: all 0.1s ease;
+        }
+        .aperture-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+        }
+        .warning-stripe {
+            background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px);
+            height: 8px;
+        }
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(to bottom, rgba(18,16,16,0) 50%, rgba(0,0,0,0.05) 50%);
+            background-size: 100% 4px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .memo-document {
+            background: #f8f8f8;
+            border: 4px solid black;
+            box-shadow: 12px 12px 0px 0px rgba(0, 0, 0, 1);
+        }
+        .stamp {
+            transform: rotate(-15deg);
+            border: 4px solid #F58025;
+            color: #F58025;
+            font-weight: 900;
+            padding: 8px 16px;
+            display: inline-block;
+            opacity: 0.3;
+        }
+        .jasmine {
+            color: #6b7280;
+            font-style: italic;
+        }
+        .spec-block {
+            background: #e5e5e5;
+            border-left: 4px solid #F58025;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-white text-black">
+
+    <!-- Banner -->
+    <div class="bg-yellow-300 text-black py-2 font-bold text-center border-b-4 border-black uppercase text-xs tracking-widest hover:bg-red-500 hover:text-white cursor-pointer transition-colors">
+        <span class="mono">⚠ CLASSIFIED:</span> Series B eyes only. If you are not Series B, close your eyes. <span class="underline">Close Them</span>
+    </div>
+
+    <div class="warning-stripe"></div>
+
+    <!-- Nav -->
+    <nav class="border-b-4 border-black py-6 px-8">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div>
+                <span class="font-black text-xl">KEYGRAVE<span style="color:#F58025">.</span></span>
+                <span class="mono text-xs text-gray-400 ml-2">A Chasm Logic Hardware Division</span>
+            </div>
+            <a href="/fun/claude-code-keyz/" class="aperture-btn px-6 py-3 text-sm uppercase">Back to Product</a>
+        </div>
+    </nav>
+
+    <section class="py-24 px-8">
+        <div class="max-w-4xl mx-auto">
+
+            <!-- ==================== -->
+            <!-- BROCK'S TRANSCRIPT   -->
+            <!-- ==================== -->
+            <div class="memo-document p-12 relative">
+
+                <div class="absolute top-8 right-8 stamp mono text-2xl">
+                    SERIES B<br>CONFIDENTIAL
+                </div>
+
+                <div class="mb-8 pb-8 border-b-4 border-black">
+                    <p class="mono font-bold text-sm mb-2">MEMORANDUM FOR RECORD</p>
+                    <p class="mono text-sm mb-1"><strong>FROM:</strong> OFFICE OF THE CHIEF VISIONARY DISRUPTOR</p>
+                    <p class="mono text-sm mb-1"><strong>TO:</strong> ALL INVESTORS, BOARD MEMBERS, AND PEOPLE WHO WANDERED INTO THE WRONG MEETING</p>
+                    <p class="mono text-sm mb-1"><strong>RE:</strong> ACQUISITION OF KEYGRAVE PERIPHERALS</p>
+                    <p class="mono text-sm"><strong>TRANSCRIBED BY:</strong> J. REEVES, COMMUNICATIONS</p>
+                </div>
+
+                <!-- Audio -->
+                <div class="mb-8 p-6 bg-black border-4" style="border-color: #F58025;">
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl" style="color: #F58025;">🎙️</div>
+                        <div class="flex-1">
+                            <p class="mono text-xs text-white font-bold mb-2">AUDIO TRANSCRIPT — CLASSIFIED</p>
+                            <p class="mono text-xs text-gray-500">Audio recording pending. Mr. Granite does not do second takes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transcript -->
+                <div class="space-y-6 text-lg leading-relaxed">
+
+                    <p class="font-bold text-xl">Brock Granite here.</p>
+
+                    <p>Last Tuesday I was on the engineering floor — beautiful floor, just had it recarpeted, eleven thousand a square foot, supposed to increase velocity — and I saw a kid. Developer. Glasses. The whole situation.</p>
+
+                    <p>Big keyboard. Hundred-something keys. He was pressing one of them. The number 1. Over and over. 1. 1. 1. 1. For nine minutes.</p>
+
+                    <p>I said "What are you doing." He said "Coding." I said "You're pressing one button." He said something about AI. The AI writes the code, he presses a number, the code ships. I said "What's it called." He said the name. I'm not repeating the name. Doug in Legal — not the Doug I fired, different Doug — said if I say it in a recorded memo, something happens. I don't remember what. Something with letters. I told Doug I don't believe in consequences. He said "That's why I'm here, Brock."</p>
+
+                    <p>Two hundred and forty thousand dollar salary. One key.</p>
+
+                    <p>And I thought: that's a product.</p>
+
+                    <p>You getting all this, Jennifer?</p>
+
+                    <p class="jasmine">It's Jasmine.</p>
+
+                    <p>What did I say?</p>
+
+                    <p class="jasmine">...Jennifer.</p>
+
+                    <p>I said are you getting this.</p>
+
+                    <p class="jasmine">Yes.</p>
+
+                    <p>Good.</p>
+
+                    <p>I called Doug — first Doug, fired Doug, he wasn't fired yet, keep up — said "Find me someone who makes small keyboards." He said "How small." I said "Three keys." He said "That's a remote control." I said "Doug. Next word. 'Yes' or 'severance.'" He said yes. Let go two weeks later. Took the stool. It had a wobble. We let him keep it.</p>
+
+                    <p>Bought a switch company out of Shenzhen for four hundred thousand and a pallet of Chasm Logic kombucha three weeks from expiration. Renamed them <strong>Keygrave Peripherals.</strong> Founder cried. CTO asked what "Keygrave" means. I said "It's where keys go to die, Marcus." His name wasn't Marcus.</p>
+
+                    <p>The <strong>CCK-3.</strong> Three keys. 1, 2, 3. No letters. No nothing. You press it, it's pressed. We're moving forward.</p>
+
+                    <p>Nobody presses Key 3. Six months. Four hundred testers. Zero. QA tried. Their fingers "drifted to Key 1 involuntarily." I said cut it. They said regulatory. Something about the EU. I stopped listening after "the EU."</p>
+
+                    <p>Then there's a bigger one. Six keys. The <strong>Pro.</strong> I don't remember what the extra ones do. One sends a Slack message. One files a ticket to someone who quit. That was a bug. We shipped it. Nobody could tell.</p>
+
+                    <p>Then there's the <strong>Ultra.</strong> Wireless. You press 1, it goes to a datacenter, some big expensive AI decides if you meant it, sends it back. Sometimes it changes your answer. You don't find out. You're billed either way. I showed the board. Said "We built a keyboard that doesn't trust the user." Half walked out. Half doubled down. Someone called it a "man-in-the-middle attack on a keyboard." I'm putting that on the website.</p>
+
+                    <p>It needs some kind of token. Card. Slot. Camera. Not encrypted. I had a security team. They're gone. There's a sticker on the box.</p>
+
+                    <p>And there's a wristband. Reads your heartbeat. Presses keys for you. Can't take it off. I'm not getting into it now because Jennifer's making a face.</p>
+
+                    <p class="jasmine">...</p>
+
+                    <p>She'll have the specs. She figures everything out. That's her whole deal.</p>
+
+                    <p>Three keys. Six keys. No keys. You're not the engineer. You're the rubber stamp. We made the stamp wireless.</p>
+
+                    <p class="text-center font-light text-gray-600 pt-4">We're done here.</p>
+
+                    <p class="jasmine">Brock, you didn't cover the pric—</p>
+
+                    <p class="font-bold">I said we're done.</p>
+
+                    <div class="text-right mt-12">
+                        <p class="mono font-black text-2xl">BROCK GRANITE</p>
+                        <p class="mono text-sm text-gray-600">Founder & Chief Visionary Disruptor</p>
+                        <p class="mono text-xs text-gray-500">Chasm Logic / Bedrock Holdings</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== -->
+            <!-- JASMINE'S ADDENDUM   -->
+            <!-- ==================== -->
+            <div class="memo-document p-12 mt-12 relative">
+
+                <div class="absolute top-8 right-8 stamp mono text-lg" style="border-color: #666; color: #666;">
+                    ADDENDUM<br>J. REEVES
+                </div>
+
+                <div class="mb-8 pb-8 border-b-4 border-black">
+                    <p class="mono font-bold text-sm mb-2">ADDENDUM — PRODUCT SPECIFICATIONS</p>
+                    <p class="mono text-sm text-gray-600">Prepared by J. Reeves, Communications Division</p>
+                </div>
+
+                <p class="text-sm text-gray-500 mb-8">Mr. Granite left the building at 10:07 AM. He did not take questions. The following has been compiled from engineering briefs, QA reports, and a napkin labeled "THE KEYBOARD THING — 3 KEYS — MONEY."</p>
+
+                <div class="space-y-5 text-base leading-relaxed">
+
+                    <h2 class="font-black text-xl border-b-2 border-black pb-2 mt-8">CCK-3 — Approval Peripheral</h2>
+
+                    <p>Three-key wired input device for approval-based development workflows. Keys 1, 2, and 3 correspond to options presented by agentic coding tools. There is no remapping. There are no modifier keys. There is no Escape key.</p>
+
+                    <div class="spec-block mono text-sm">
+                        <p>KEY 3 STATUS: <span style="color:#F58025" class="font-bold">0 actuations / 6 months / 400 users</span></p>
+                        <p>QA manual actuation: <span style="color:#F58025" class="font-bold">"fingers drifted to Key 1 involuntarily"</span></p>
+                        <p>Switch confirmed functional: <span style="color:#F58025" class="font-bold">NO</span></p>
+                        <p>Retained for: <span style="color:#F58025" class="font-bold">EU regulatory compliance</span></p>
+                    </div>
+
+                    <p>The Quick Start Guide is one sentence: "Press 1."</p>
+
+                    <h2 class="font-black text-xl border-b-2 border-black pb-2 mt-8">Keyz Pro — Power User Peripheral</h2>
+
+                    <p>Extends the CCK-3 with keys 4 through 6. Mr. Granite described these as "the ones for people who feel guilty."</p>
+
+                    <p><strong style="color:#F58025">Key 4: "Wait, What?"</strong> — Re-displays the summary of the pending code change. Does not display the change itself. Average time between pressing Key 4 and pressing Key 1: 1.4 seconds.</p>
+
+                    <p><strong style="color:#F58025">Key 5: "Undo (Conceptual)"</strong> — Sends a Slack message reading "looking into it." Does not interface with version control. Twelve candidate messages were A/B tested. "Looking into it" scored highest for perceived competence. The runner-up, "interesting," was rejected after focus groups reported feeling "diagnosed." Key 5 also opens a browser tab containing the relevant diff. This tab was read in 0% of sessions and closed an average of 4.2 days later.</p>
+
+                    <p><strong style="color:#F58025">Key 6: "Escalate"</strong> — Creates a Jira ticket and assigns it to a team member selected from the directory. The assignment algorithm preferentially selects deactivated accounts. This was logged as a bug. The QA report noted:</p>
+
+                    <div class="border-l-4 border-black pl-4 my-4 italic text-gray-600">
+                        "The Escalate function is indistinguishable from normal Jira workflow. We are unable to confirm whether the bug exists or we are simply observing baseline organizational behavior."
+                    </div>
+
+                    <p>Reclassified as a feature. Shipped in 1.0. Key 6 also closes the terminal.</p>
+
+                    <h2 class="font-black text-xl border-b-2 border-black pb-2 mt-8">Keyz Ultra — Wireless Agentic Peripheral</h2>
+
+                    <p>All keypresses are transmitted via WiFi 6 to a remote inference endpoint, evaluated by a large language model against a 128,000-token context window of prior keypress history, and returned to the user's machine. Round-trip latency: approximately 340ms.</p>
+
+                    <div class="spec-block mono text-sm">
+                        <p>Model agrees with user: <span style="color:#F58025" class="font-bold">97.2%</span></p>
+                        <p>Model substitutes keypress: <span style="color:#F58025" class="font-bold">2.8%</span></p>
+                        <p>User notified: <span style="color:#F58025" class="font-bold">NO</span></p>
+                        <p>User billed: <span style="color:#F58025" class="font-bold">YES</span></p>
+                    </div>
+
+                    <p>Authentication is via physical API token slot (Slot B). Token printed on 250 GSM card stock, photographed by onboard camera, OCR'd, transmitted via HTTP. Not HTTPS. The security team raised concerns. The security team has been dissolved. Compliance is indicated by a holographic sticker reading "SOC 2." This is not a certification.</p>
+
+                    <h2 class="font-black text-xl border-b-2 border-black pb-2 mt-8">Ultra Wristband — Biometric Companion Device</h2>
+
+                    <p class="text-sm text-gray-500 italic mb-4">Note: Mr. Granite departed before covering this product. Documentation is based on engineering briefs and a voicemail Mr. Granite left himself at 2:14 AM on January 9th, consisting of 42 seconds of highway noise followed by the words "the wristband knows."</p>
+
+                    <p>Monitors heart rate, galvanic skin response, and keystroke-preceding micro-hesitation intervals (6–11ms). Data is fed to the Ultra inference model to enable predictive keypress behavior.</p>
+
+                    <p>In testing, the model began issuing pre-emptive keypresses an average of 1.7 seconds before physical key contact. In one session, a diff was approved 4 seconds before the tester's finger reached the device. Intent was inferred from biometric data alone. The code deployed to production.</p>
+
+                    <div class="spec-block mono text-sm">
+                        <p>Clasp: <span style="color:#F58025" class="font-bold">PROPRIETARY LOCK (Torx T2 required)</span></p>
+                        <p>Driver included: <span style="color:#F58025" class="font-bold">NO</span></p>
+                        <p>Available: <span style="color:#F58025" class="font-bold">Q1 2027 (Keygrave Accessories Store)</span></p>
+                        <p>Power-off: <span style="color:#F58025" class="font-bold">NONE</span></p>
+                        <p>Keypresses during sleep: <span style="color:#F58025" class="font-bold">14 reported — classified "AMBIENT APPROVALS"</span></p>
+                    </div>
+
+                    <p>The override model was trained on internal communications data to establish baseline professional tone and editorial judgment. The contributor is credited in the model card as "Participant J."</p>
+
+                    <h2 class="font-black text-xl border-b-2 border-black pb-2 mt-8">Pricing</h2>
+
+                    <p>Mr. Granite did not cover pricing. It is available on the <a href="/fun/claude-code-keyz/" style="color:#F58025" class="font-bold underline">product page</a>. When informed of the pricing structure, he responded via text: "I don't care what it costs. I care what they'll pay." This has been forwarded to Legal (Doug).</p>
+
+                    <div class="mt-12 pt-8 border-t-2 border-gray-300">
+                        <p class="text-sm text-gray-500 italic">Transcript and addendum prepared by Jasmine Reeves, Communications Division, Chasm Logic.</p>
+                        <p class="text-sm text-gray-500 italic">Corrections to the transcript have been submitted. They were rejected via Key 1.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <a href="/fun/claude-code-keyz/" class="aperture-btn px-10 py-4 text-lg uppercase inline-block">Return to Product Page</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="warning-stripe"></div>
+
+    <footer class="bg-black text-white py-8 px-8 border-t-4 border-black">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-sm text-gray-400 mb-4">
+                <a href="/fun/claude-code-keyz/" style="color:#F58025" class="hover:underline">Product Page</a> ·
+                <a href="/fun/apparent-intelligence/" style="color:#F58025" class="hover:underline">Apparent Intelligence</a> ·
+                <a href="/fun/apparent-intelligence/memo/" style="color:#F58025" class="hover:underline">Original Memo</a>
+            </p>
+            <div class="mono text-xs text-gray-500">© 2026 KEYGRAVE / CHASM LOGIC. ALL RIGHTS DISRUPTED.</div>
+        </div>
+    </footer>
+
+</body>
+</html>
