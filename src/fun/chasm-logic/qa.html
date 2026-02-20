@@ -1,0 +1,617 @@
+---
+permalink: /fun/chasm-logic/qa/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCK-3 Incident Report — QA Division — Chasm Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #fafafa; color: black; cursor: crosshair; }
+        .mono { font-family: 'Roboto Mono', monospace; }
+
+        .aperture-btn {
+            background: #F58025; color: white; font-weight: 700;
+            letter-spacing: 0.05em; box-shadow: 8px 8px 0 0 black;
+            transition: all 0.1s; border: none; cursor: pointer;
+            text-transform: uppercase; text-decoration: none; display: inline-block;
+            padding: 0.75rem 1.5rem; font-size: 0.875rem;
+        }
+        .aperture-btn:hover { transform: translate(2px, 2px); box-shadow: 6px 6px 0 0 black; }
+        .warning-stripe { background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px); height: 8px; }
+        .harassment-banner {
+            background: #fef08a; color: black; padding: 0.5rem; font-weight: bold;
+            text-align: center; border-bottom: 4px solid black;
+            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .harassment-banner:hover { background: #ef4444; color: white; }
+        nav { border-bottom: 4px solid black; padding: 1rem 2rem; background: white; }
+        .nav-inner { max-width: 60rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .nav-brand { font-weight: 900; font-size: 1.25rem; letter-spacing: -0.02em; }
+        .nav-sub { font-size: 0.65rem; color: #6b7280; letter-spacing: 0.1em; text-transform: uppercase; }
+        .back-link { color: black; text-decoration: none; font-size: 0.875rem; font-weight: 700; border: 2px solid black; padding: 0.25rem 0.75rem; transition: all 0.1s; }
+        .back-link:hover { background: black; color: white; }
+
+        .doc-container { max-width: 60rem; margin: 0 auto; padding: 2rem; }
+
+        /* Document header */
+        .doc-header { border: 4px solid black; background: white; padding: 2.5rem; margin-bottom: 3rem; box-shadow: 12px 12px 0 0 black; }
+        .doc-header h1 { font-size: 1.75rem; font-weight: 900; margin-bottom: 0.5rem; line-height: 1.2; }
+        .doc-subtitle { font-size: 1rem; color: #6b7280; margin-bottom: 2rem; }
+        .meta-table { width: 100%; border-collapse: collapse; }
+        .meta-table td { padding: 0.5rem 0; font-size: 0.875rem; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+        .meta-table td:first-child { font-weight: 700; width: 12rem; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: #6b7280; }
+        .meta-table tr:last-child td { border-bottom: none; }
+
+        .classification-badge {
+            display: inline-block; padding: 0.2rem 0.6rem; font-size: 0.7rem;
+            font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+        }
+        .cl-allhands { background: #e5e7eb; color: #374151; }
+        .cl-internal { background: #fef3c7; color: #92400e; }
+
+        /* Sections */
+        section { margin-bottom: 3rem; }
+        .section-num { font-size: 0.875rem; font-weight: 700; color: #F58025; margin-bottom: 0.25rem; }
+        section h2 { font-size: 1.25rem; font-weight: 900; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.02em; }
+        section p { font-size: 1rem; line-height: 1.7; margin-bottom: 1rem; }
+
+        /* Incident table */
+        .incident-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; border: 3px solid black; }
+        .incident-table thead { background: black; color: white; }
+        .incident-table th { padding: 0.75rem 1rem; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+        .incident-table td { padding: 0.75rem 1rem; font-size: 0.875rem; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+        .incident-table tbody tr:hover { background: #f3f4f6; }
+        .incident-id { font-weight: 700; white-space: nowrap; }
+
+        .status-badge {
+            display: inline-block; padding: 0.15rem 0.5rem; font-size: 0.7rem;
+            font-weight: 700; letter-spacing: 0.05em; border-radius: 2px;
+        }
+        .st-pass { background: #d1fae5; color: #065f46; }
+        .st-fail { background: #fee2e2; color: #991b1b; }
+        .st-na { background: #e5e7eb; color: #374151; }
+        .st-shipped { background: #F58025; color: white; }
+        .st-unresolved { background: #fef3c7; color: #92400e; }
+        .st-expected { background: #dbeafe; color: #1e40af; }
+        .st-deferred { background: #f3e8ff; color: #6b21a8; }
+        .st-inconclusive { background: #fef9c3; color: #854d0e; }
+
+        /* Terminal */
+        .terminal { background: black; color: #4ade80; padding: 1.5rem; font-size: 0.8rem; line-height: 1.8; margin: 1.5rem 0; border: 3px solid black; }
+        .terminal-dim { opacity: 0.5; }
+        .terminal-orange { color: #F58025; }
+        .terminal-red { color: #ef4444; }
+        .terminal-white { color: white; }
+
+        /* Test round boxes */
+        .test-round { border: 3px solid black; margin: 1.5rem 0; background: white; }
+        .test-round-header { background: black; color: white; padding: 0.75rem 1rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .test-round-body { padding: 1.25rem; }
+        .test-round-body p { font-size: 0.9rem; margin-bottom: 0.75rem; }
+        .test-round-body p:last-child { margin-bottom: 0; }
+        .test-result { font-size: 0.8rem; padding: 0.75rem 1rem; background: #f9fafb; border-top: 2px solid #e5e7eb; }
+
+        /* Footnotes */
+        .footnote { font-size: 0.8rem; color: #6b7280; border-top: 1px solid #d1d5db; padding-top: 1rem; margin-top: 2rem; }
+        .footnote p { font-size: 0.8rem; line-height: 1.6; margin-bottom: 0.5rem; }
+        .footnote-ref { font-size: 0.7rem; vertical-align: super; color: #F58025; font-weight: 700; }
+
+        /* Addendum */
+        .addendum { border: 3px solid black; background: white; padding: 2rem; margin-top: 3rem; box-shadow: 8px 8px 0 0 black; }
+        .addendum-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; color: #F58025; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.75rem; margin-bottom: 1rem; }
+
+        /* Section divider */
+        .section-divider { height: 4px; background: black; }
+
+        /* Footer */
+        footer { background: #0a0a0a; color: #9ca3af; padding: 4rem 2rem 2rem; font-size: 0.8rem; }
+        .footer-inner { max-width: 60rem; margin: 0 auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        footer h3 { color: white; font-size: 0.875rem; margin-bottom: 0.75rem; }
+        footer h4 { color: white; font-size: 0.75rem; margin-bottom: 0.75rem; letter-spacing: 0.1em; }
+        footer ul { list-style: none; }
+        footer li { margin-bottom: 0.4rem; font-size: 0.8rem; }
+        footer a { color: #9ca3af; text-decoration: underline; }
+        .disclaimer { border-top: 1px solid #374151; padding-top: 2rem; margin-top: 2rem; font-size: 0.7rem; line-height: 1.8; color: #6b7280; }
+        .disclaimer .warning { color: #F58025; font-weight: 700; margin-top: 1rem; }
+        .footer-copy { text-align: center; margin-top: 2rem; font-size: 0.65rem; color: #4b5563; letter-spacing: 0.1em; }
+
+        @media (max-width: 768px) {
+            .doc-container { padding: 1rem; }
+            .doc-header { padding: 1.5rem; }
+            .incident-table { font-size: 0.8rem; }
+            .incident-table th, .incident-table td { padding: 0.5rem; }
+            .test-round-body { padding: 1rem; }
+        }
+    </style>
+</head>
+<!-- This document was submitted for review on 2026-01-14.
+     It has been in PENDING REVIEW status for 37 days.
+     The reviewer was assigned via Key 6.
+     The reviewer has been deactivated since 2025-11-02. -->
+<body>
+    <div class="warning-stripe"></div>
+    <div class="harassment-banner" onclick="this.textContent = this.textContent === 'INTERNAL DOCUMENT — DO NOT DISTRIBUTE — CHASM LOGIC QA DIVISION' ? 'YOU ARE STILL READING AN INTERNAL DOCUMENT' : 'INTERNAL DOCUMENT — DO NOT DISTRIBUTE — CHASM LOGIC QA DIVISION'">
+        INTERNAL DOCUMENT — DO NOT DISTRIBUTE — CHASM LOGIC QA DIVISION
+    </div>
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div class="nav-brand">CHASM LOGIC</div>
+                <div class="nav-sub mono">QA Division — Hardware Testing</div>
+            </div>
+            <a href="/fun/chasm-logic/" class="back-link mono">← INDEX</a>
+        </div>
+    </nav>
+
+    <div class="doc-container">
+
+        <!-- DOCUMENT HEADER -->
+        <div class="doc-header">
+            <h1>CCK-3 Peripheral — QA Incident Report</h1>
+            <div class="doc-subtitle">Comprehensive testing summary and open incident log for the Claudetite Keyz CCK-3 approval peripheral.</div>
+            <table class="meta-table mono">
+                <tr><td>Document Ref</td><td>CL-DOC-007</td></tr>
+                <tr><td>Classification</td><td><span class="classification-badge cl-allhands">ALL-HANDS</span></td></tr>
+                <tr><td>Author</td><td>S. Shale — QA Division, Hardware Testing</td></tr>
+                <tr><td>Submitted</td><td>2026-01-14</td></tr>
+                <tr><td>Status</td><td><span class="classification-badge cl-internal">PENDING REVIEW</span></td></tr>
+                <tr><td>Reviewer</td><td>D.Ite (Doug) — Acquisitions <span style="color:#ef4444;font-size:0.75rem">[DEACTIVATED 2025-11-02]</span></td></tr>
+                <tr><td>Test Units</td><td>CCK-3 (×4), Keyz Pro (×2), Keyz Ultra (×1)</td></tr>
+                <tr><td>Test Duration</td><td>2025-09-02 through 2025-12-19 (109 days)</td></tr>
+                <tr><td>Incidents Filed</td><td>24</td></tr>
+                <tr><td>Incidents Resolved</td><td>6</td></tr>
+            </table>
+        </div>
+
+        <!-- §1 EXECUTIVE SUMMARY -->
+        <section>
+            <div class="section-num mono">§1</div>
+            <h2>Executive Summary</h2>
+
+            <p>This report documents 109 days of hardware testing across the CCK-3 product line. Of 24 incidents filed, 6 have been resolved, 4 were reclassified by Engineering as "working as intended," 3 were reassigned to a deactivated employee, and 11 remain open.</p>
+
+            <p>Key 1 performs within specification. Key 2 performs identically to Key 1, which is within specification. Key 3 does not perform.</p>
+
+            <p>I am submitting this report for the fourth time. The previous three submissions were approved before being read. This is consistent with CCK-3 usage patterns but inconsistent with the review process.</p>
+        </section>
+
+        <!-- §2 KEY 1 TESTING -->
+        <section>
+            <div class="section-num mono">§2</div>
+            <h2>Key 1 — "Yes"</h2>
+
+            <p>Key 1 functions correctly across all tested scenarios. Actuation force: 45g ±2g. Debounce: 5ms. Switch rated for 80 million presses. At current usage rates, lifespan is estimated at 6 weeks.</p>
+
+            <div class="incident-table" style="border:3px solid black">
+                <table class="incident-table" style="border:none">
+                    <thead>
+                        <tr>
+                            <th style="width:7rem">ID</th>
+                            <th>Description</th>
+                            <th style="width:8rem">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="incident-id mono">CCK-001</td>
+                            <td>Key 1 pressed 14,000 times during 8-hour beta session by single user</td>
+                            <td><span class="status-badge st-pass">WITHIN SPEC</span></td>
+                        </tr>
+                        <tr>
+                            <td class="incident-id mono">CCK-002</td>
+                            <td>Keycap legend wore off after 72 hours. Users did not notice.</td>
+                            <td><span class="status-badge st-expected">EXPECTED</span></td>
+                        </tr>
+                        <tr>
+                            <td class="incident-id mono">CCK-003</td>
+                            <td>User reported Key 1 "felt different today." No measurable change in switch characteristics. User pressed Key 1 to acknowledge.</td>
+                            <td><span class="status-badge st-pass">CLOSED</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>No further testing required. Key 1 is the only key most users will interact with. This is by design.</p>
+        </section>
+
+        <!-- §3 KEY 2 TESTING -->
+        <section>
+            <div class="section-num mono">§3</div>
+            <h2>Key 2 — "Also Yes"</h2>
+
+            <p>Key 2 is electrically identical to Key 1. The firmware maps both to the same approval signal. This was confirmed through oscilloscope capture, protocol analysis, and asking Engineering directly. The distinction is described in the product brief as "psychologically distinct."</p>
+
+            <p>In testing, 23% of users pressed Key 2 at least once. When asked why, the most common response was "gut feeling." One user described choosing Key 2 as "taking control of the situation." They had not read the diff.</p>
+
+            <div class="incident-table" style="border:3px solid black">
+                <table class="incident-table" style="border:none">
+                    <thead>
+                        <tr>
+                            <th style="width:7rem">ID</th>
+                            <th>Description</th>
+                            <th style="width:8rem">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="incident-id mono">CCK-004</td>
+                            <td>Key 2 output indistinguishable from Key 1 in all test environments</td>
+                            <td><span class="status-badge st-pass">CONFIRMED</span></td>
+                        </tr>
+                        <tr>
+                            <td class="incident-id mono">CCK-005</td>
+                            <td>User requested Key 2 be relabeled "No" for psychological comfort. Request denied. Key 2 was relabeled "Also Yes." User satisfaction increased.</td>
+                            <td><span class="status-badge st-pass">CLOSED</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- §4 KEY 3 TESTING — THE MAIN EVENT -->
+        <section>
+            <div class="section-num mono">§4</div>
+            <h2>Key 3 — "Sure, Why Not"</h2>
+
+            <p>Key 3 has not been successfully actuated during the 109-day testing period. This section documents five rounds of escalating test methodology. I have attempted to remain clinical.</p>
+
+            <!-- Round 1 -->
+            <div class="test-round">
+                <div class="test-round-header">
+                    <span>ROUND 1 — Standard Actuation Test</span>
+                    <span class="status-badge st-fail">FAIL</span>
+                </div>
+                <div class="test-round-body">
+                    <p><strong>Method:</strong> 12 subjects seated at CCK-3. Verbal instruction: "Press Key 3."</p>
+                    <p><strong>Result:</strong> 12 of 12 subjects pressed Key 1.</p>
+                    <p>When informed they had pressed the wrong key, 9 subjects expressed surprise. 2 subjects said "close enough." 1 subject asked what Key 3 was for. I did not have an answer.</p>
+                </div>
+                <div class="test-result mono">
+                    <strong>KEY 1 PRESSES:</strong> 12 &nbsp;&nbsp; <strong>KEY 3 PRESSES:</strong> 0 &nbsp;&nbsp; <strong>TIME TO KEY 1:</strong> 0.4s avg
+                </div>
+            </div>
+
+            <!-- Round 2 -->
+            <div class="test-round">
+                <div class="test-round-header">
+                    <span>ROUND 2 — Isolated Key Test</span>
+                    <span class="status-badge st-fail">FAIL</span>
+                </div>
+                <div class="test-round-body">
+                    <p><strong>Method:</strong> Keys 1 and 2 covered with a physical barrier (acrylic shield, 4mm). Only Key 3 exposed. Same 12 subjects.</p>
+                    <p><strong>Result:</strong> 8 subjects pressed Key 1 through the barrier. The acrylic cracked on the third attempt for Subject #0041, who was then asked to stop. 3 subjects stared at Key 3 and reported that it "didn't feel like a key." 1 subject left the testing facility without explanation.</p>
+                    <p>The subject who left was later found pressing Key 1 on a CCK-3 in the break room. He said it was unrelated.</p>
+                </div>
+                <div class="test-result mono">
+                    <strong>KEY 1 PRESSES (THROUGH BARRIER):</strong> 8 &nbsp;&nbsp; <strong>KEY 3 PRESSES:</strong> 0 &nbsp;&nbsp; <strong>BARRIERS DAMAGED:</strong> 1
+                </div>
+            </div>
+
+            <!-- Round 3 -->
+            <div class="test-round">
+                <div class="test-round-header">
+                    <span>ROUND 3 — Automated Servo Actuation</span>
+                    <span class="status-badge st-fail">FAIL</span>
+                </div>
+                <div class="test-round-body">
+                    <p><strong>Method:</strong> Human subjects removed from the testing loop. Servo arm (MG996R, 13kg·cm torque) positioned directly above Key 3. Actuation programmed at 60g force, 3mm travel.</p>
+                    <p><strong>Result:</strong> On execution, the servo arm traveled laterally 22mm and actuated Key 1.</p>
+                    <p>The servo was recalibrated. On second execution, the arm actuated Key 1 again. Firmware was reflashed. On third execution, the arm actuated Key 1 with what the lab technician described as "confidence."</p>
+                    <p>I have filed a separate incident report with the servo manufacturer. They have not responded.</p>
+                </div>
+                <div class="test-result mono">
+                    <strong>SERVO ACTUATIONS:</strong> 3 &nbsp;&nbsp; <strong>KEY 3 CONTACTS:</strong> 0 &nbsp;&nbsp; <strong>KEY 1 CONTACTS:</strong> 3
+                </div>
+            </div>
+
+            <!-- Round 4 -->
+            <div class="test-round">
+                <div class="test-round-header">
+                    <span>ROUND 4 — Direct Switch Inspection</span>
+                    <span class="status-badge st-inconclusive">INCONCLUSIVE</span>
+                </div>
+                <div class="test-round-body">
+                    <p><strong>Method:</strong> Key 3 switch removed from housing. Contacts examined under 40× magnification. Manual force applied directly to switch mechanism at 5N.</p>
+                    <p><strong>Result:</strong> No electrical contact registered. Switch contacts are present and show no manufacturing defect. Lead engineer described them as "geometrically reluctant." I asked for clarification. He said "the contacts are there, they just don't want to touch." I asked if that was a technical assessment. He pressed Key 1 and left.</p>
+                </div>
+                <div class="test-result mono">
+                    <strong>CONTACT RESISTANCE:</strong> ∞Ω &nbsp;&nbsp; <strong>MANUFACTURING DEFECT:</strong> NONE FOUND &nbsp;&nbsp; <strong>STATUS:</strong> RELUCTANT
+                </div>
+            </div>
+
+            <!-- Round 5 -->
+            <div class="test-round">
+                <div class="test-round-header">
+                    <span>ROUND 5 — Component Replacement</span>
+                    <span class="status-badge st-fail">FAIL</span>
+                </div>
+                <div class="test-round-body">
+                    <p><strong>Method:</strong> Key 3 switch replaced with new unit from same batch. Then replaced with switch from a different manufacturer. Then replaced with the switch previously installed in Key 1 position (confirmed functional). In all cases, the replacement switch was installed in the Key 3 position.</p>
+                    <p><strong>Result:</strong> No switch functioned in position 3. The Key 1 switch, which had 14,000+ confirmed actuations, produced no electrical contact when moved to the Key 3 position. When returned to position 1, it resumed functioning immediately.</p>
+                    <p>I do not have an explanation for this. The PCB trace is continuous. The solder joints are clean. The position itself appears to be the variable.</p>
+                </div>
+                <div class="test-result mono">
+                    <strong>SWITCHES TESTED IN POSITION 3:</strong> 4 &nbsp;&nbsp; <strong>SUCCESSFUL ACTUATIONS:</strong> 0 &nbsp;&nbsp; <strong>EXPLANATION:</strong> NONE
+                </div>
+            </div>
+
+            <p style="margin-top:2rem">I have exhausted the test methodologies available to the QA Division. Key 3 remains nonfunctional. The switch is not broken. The position is not broken. Nothing is broken. It simply does not work.</p>
+
+            <div class="footnote">
+                <p><span class="footnote-ref">[1]</span> Prior art review was conducted to determine if third-position input failure is an isolated defect or a systemic limitation. Sinkhole Interactive documented attempts to deploy a third sequential product across multiple software lines over an approximately twenty-year period. No third shipment was confirmed. Internal post-mortems consistently attributed failure to "scope creep," "creative differences," and "the number three." Industry consensus classifies third-sequential-input deployment as a known limitation. See: Sinkhole Interactive, Annual Reports 2004–2024 (unaudited, several missing).</p>
+                <p><span class="footnote-ref">[2]</span> The product brief lists Key 3's status as ORNAMENTAL. I was not informed of this classification until Round 4. I have been testing an ornament.</p>
+            </div>
+        </section>
+
+        <!-- §5 KEYZ PRO INCIDENTS -->
+        <section>
+            <div class="section-num mono">§5</div>
+            <h2>Keyz Pro — Keys 4 through 6</h2>
+
+            <p>Keys 4 and 5 function within specification, inasmuch as their specifications describe behaviors that are not traditionally associated with functional keys.</p>
+
+            <div class="incident-table" style="border:3px solid black">
+                <table class="incident-table" style="border:none">
+                    <thead>
+                        <tr>
+                            <th style="width:7rem">ID</th>
+                            <th>Description</th>
+                            <th style="width:9rem">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="incident-id mono">CCK-009</td>
+                            <td>Key 4 ("Wait, What?") re-reads diff summary. Average time before user presses Key 1 anyway: 1.4 seconds. This matches the product specification exactly. I have confirmed the specification was written after testing, not before.</td>
+                            <td><span class="status-badge st-pass">WITHIN SPEC</span></td>
+                        </tr>
+                        <tr>
+                            <td class="incident-id mono">CCK-010</td>
+                            <td>Key 5 ("Undo Conceptual") sends Slack message "looking into it" to #general regardless of context. During testing, this message was sent during an active production incident. Three engineers responded "same." The incident resolved itself.</td>
+                            <td><span class="status-badge st-expected">BY DESIGN</span></td>
+                        </tr>
+                        <tr>
+                            <td class="incident-id mono">CCK-011</td>
+                            <td>Key 5 opened a browser tab to the diff. Tab was never read. Tab remained open for 11 days. When closed, Key 5 opened it again.</td>
+                            <td><span class="status-badge st-expected">BY DESIGN</span></td>
+                        </tr>
+                        <tr>
+                            <td class="incident-id mono">CCK-012</td>
+                            <td>Key 6 ("Escalate") creates Jira ticket and assigns to deactivated employee. Ticket auto-responds with "Out of Office: Effective Permanently." Ticket status set to IN PROGRESS.</td>
+                            <td><span class="status-badge st-unresolved">SEE §6</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- §6 THE ESCALATE BUG -->
+        <section>
+            <div class="section-num mono">§6</div>
+            <h2>Key 6 — The Escalate Problem</h2>
+
+            <p>I filed CCK-012 as a defect. Key 6 assigns tickets to employees who no longer work at Chasm Logic. This seemed like a bug.</p>
+
+            <p>Engineering reviewed the ticket and reclassified it as "working as intended." I reopened the ticket with additional documentation. Engineering closed it. The ticket was then reassigned to a deactivated employee.</p>
+
+            <p>I could not determine whether this was the bug reproducing or normal Jira behavior.</p>
+
+            <div class="terminal mono">
+                <div class="terminal-white">> CCK-012 — KEY 6 ESCALATE DEFECT</div>
+                <div style="margin-top:0.75rem">> 2025-10-14 — Filed by S. Shale (QA)</div>
+                <div>> 2025-10-14 — Assigned to: Engineering</div>
+                <div>> 2025-10-15 — Reclassified: WORKING AS INTENDED</div>
+                <div class="terminal-orange">> 2025-10-15 — Reopened by S. Shale (QA)</div>
+                <div>> 2025-10-16 — Closed by Engineering</div>
+                <div class="terminal-orange">> 2025-10-16 — Reopened by S. Shale (QA)</div>
+                <div>> 2025-10-17 — Reassigned to: D. Feldspar (DEACTIVATED)</div>
+                <div>> 2025-10-17 — Auto-reply: "Out of Office: Effective Permanently"</div>
+                <div class="terminal-orange">> 2025-10-18 — Reopened by S. Shale (QA)</div>
+                <div>> 2025-10-18 — Closed by D. Feldspar (DEACTIVATED)</div>
+                <div class="terminal-dim" style="margin-top:0.5rem">> ticket is now in a closed-open superposition</div>
+                <div class="terminal-dim">> QA has stopped observing it</div>
+            </div>
+
+            <p>The ticket was closed by a deactivated employee. I do not know how this happened. I have been advised not to investigate further. The advice came via a Jira comment from the deactivated employee.</p>
+
+            <p>Key 6 shipped with this behavior. The release notes describe it as "enterprise-grade delegation."</p>
+        </section>
+
+        <!-- §7 KEYZ ULTRA INCIDENTS -->
+        <section>
+            <div class="section-num mono">§7</div>
+            <h2>Keyz Ultra — Wireless Incidents</h2>
+
+            <p>The Keyz Ultra routes keypresses through a third-party datacenter. QA was not given access to this datacenter. QA was not given the name of this datacenter. Testing was conducted under constraints.</p>
+
+            <div class="incident-table" style="border:3px solid black">
+                <table class="incident-table" style="border:none">
+                    <thead>
+                        <tr>
+                            <th style="width:7rem">ID</th>
+                            <th>Description</th>
+                            <th style="width:9rem">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="incident-id mono">CCK-015</td>
+                            <td>Keypress round-trip latency: 340ms. Product specification says 340ms. Specification was updated to 340ms after testing.</td>
+                            <td><span class="status-badge st-pass">WITHIN SPEC</span></td>
+                        </tr>
+                        <tr>
+                            <td class="incident-id mono">CCK-016</td>
+                            <td>Inference model overrode user keypress 2.8% of the time. In all cases, the model's choice was also Key 1. User was billed for both the original keypress and the correction.</td>
+                            <td><span class="status-badge st-expected">BY DESIGN</span></td>
+                        </tr>
+                        <tr>
+                            <td class="incident-id mono">CCK-017</td>
+                            <td>API token transmitted via HTTP. Photographed by onboard camera. Photo transmitted via HTTP. I filed this as a security incident. Security (Flint) was dissolved before review.</td>
+                            <td><span class="status-badge st-deferred">DEPT. DISSOLVED</span></td>
+                        </tr>
+                        <tr>
+                            <td class="incident-id mono">CCK-018</td>
+                            <td>SOC 2 compliance sticker present on unit. No SOC 2 certification on file. Sticker is adhesive, not compliance.</td>
+                            <td><span class="status-badge st-na">NOTED</span></td>
+                        </tr>
+                        <tr>
+                            <td class="incident-id mono">CCK-019</td>
+                            <td>Key 3 on Ultra unit also nonfunctional. Inference model was asked to press Key 3 on the user's behalf. Model responded: "I don't want to." Billable event generated.</td>
+                            <td><span class="status-badge st-fail">OPEN</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- §8 OPEN ISSUES SUMMARY -->
+        <section>
+            <div class="section-num mono">§8</div>
+            <h2>Open Issues Summary</h2>
+
+            <div class="incident-table" style="border:3px solid black">
+                <table class="incident-table" style="border:none">
+                    <thead>
+                        <tr>
+                            <th style="width:5rem">Count</th>
+                            <th>Category</th>
+                            <th style="width:10rem">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="mono" style="font-weight:700">6</td>
+                            <td>Resolved (Keys 1, 2 within specification)</td>
+                            <td><span class="status-badge st-pass">CLOSED</span></td>
+                        </tr>
+                        <tr>
+                            <td class="mono" style="font-weight:700">4</td>
+                            <td>Reclassified as "working as intended" by Engineering</td>
+                            <td><span class="status-badge st-expected">BY DESIGN</span></td>
+                        </tr>
+                        <tr>
+                            <td class="mono" style="font-weight:700">3</td>
+                            <td>Assigned to deactivated employees</td>
+                            <td><span class="status-badge st-deferred">IN LIMBO</span></td>
+                        </tr>
+                        <tr>
+                            <td class="mono" style="font-weight:700">5</td>
+                            <td>Key 3 actuation failures (Rounds 1–5)</td>
+                            <td><span class="status-badge st-fail">UNRESOLVED</span></td>
+                        </tr>
+                        <tr>
+                            <td class="mono" style="font-weight:700">1</td>
+                            <td>Security department dissolved before review</td>
+                            <td><span class="status-badge st-deferred">DEPT. DISSOLVED</span></td>
+                        </tr>
+                        <tr>
+                            <td class="mono" style="font-weight:700">5</td>
+                            <td>Remaining open items (various)</td>
+                            <td><span class="status-badge st-fail">OPEN</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p style="margin-top:1.5rem">Total: 24 incidents filed. 6 resolved. Resolution rate: 25%.</p>
+
+            <p>This is the highest resolution rate in QA Division history.</p>
+        </section>
+
+        <!-- §9 RECOMMENDATIONS -->
+        <section>
+            <div class="section-num mono">§9</div>
+            <h2>Recommendations</h2>
+
+            <p>1. Accept Key 3 nonfunctionality as a permanent product characteristic. Update documentation from "ornamental" to "structurally present."</p>
+
+            <p>2. Reactivate at least one employee for ticket review purposes. The current process routes all escalations to a closed-loop of deactivated accounts. This is either a workflow failure or an intentional management structure. I cannot tell.</p>
+
+            <p>3. Reinstate the Security department, or formally document that security concerns are now handled by the SOC 2 sticker.</p>
+
+            <p>4. Do not ship Key 3 testing results to Brock. He will ask why we tested it. He does not know it exists.</p>
+        </section>
+
+        <!-- ADDENDUM — J. CLAY -->
+        <section style="padding-bottom:2rem">
+            <div class="addendum">
+                <div class="addendum-label mono">ADDENDUM — J. CLAY, COMMUNICATIONS DIVISION</div>
+
+                <p style="margin-top:1rem">Report received. Formatting corrected. Three typos fixed. The word "please" was removed from seven locations per company style guidelines.</p>
+
+                <p>Shale's testing methodology is thorough. His conclusions are accurate. His recommendation regarding Brock has been implemented preemptively — Brock does not read QA reports. Brock does not know QA is a department. This is optimal.</p>
+
+                <p>The Key 3 situation is noted. I have added it to the document index as a known limitation. It will remain in PENDING REVIEW status until a reviewer is assigned who has not been deactivated.</p>
+
+                <p class="mono" style="color:#6b7280;margin-top:2rem;font-size:0.85rem">Estimated review date: when applicable.</p>
+
+                <div style="text-align:center;margin-top:2rem">
+                    <button onclick="alert('Report acknowledged.\n\nAcknowledgment assigned to D. Feldspar.\n\nD. Feldspar has been deactivated.\n\nAcknowledgment status: PENDING.')" class="aperture-btn">Acknowledge Report</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="mono">CHASM LOGIC</h3>
+                    <p>A Bedrock Holdings Company. We test things. They fail. We document it. The document fails.</p>
+                </div>
+                <div>
+                    <h4 class="mono">LEGAL</h4>
+                    <ul>
+                        <li>Terms of Testing</li>
+                        <li>QA Liability Waiver</li>
+                        <li>Incident Disclosure Policy</li>
+                        <li>Doug Disambiguation Protocol</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">CONTACT</h4>
+                    <ul>
+                        <li class="mono">qa@chasmlogic.io</li>
+                        <li class="mono">escalations@dev/null</li>
+                        <li>Security: [DEPT. DISSOLVED]</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">ALSO FROM CHASM LOGIC</h4>
+                    <ul>
+                        <li><a href="/fun/claudetite-keyz/" style="color:#9ca3af;text-decoration:underline">Keygrave — Claudetite Keyz</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">The product this report is about.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/chasm-logic/wristband/" style="color:#9ca3af;text-decoration:underline">Ultra Wristband</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">Commitment hardware. Not yet tested by QA. QA was not informed.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/chasm-logic/" style="color:#9ca3af;text-decoration:underline">Document Index</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">All filings. Most regrettable.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="disclaimer mono">
+                <p><span style="color:white;font-weight:bold">DISCLAIMER:</span> This incident report was prepared by the QA Division of Chasm Logic and represents 109 days of testing that nobody asked for. The QA Division operates independently, which is a polite way of saying nobody checks on us. Findings in this report are accurate as of the submission date and will remain accurate indefinitely because nobody will act on them.</p>
+
+                <p>Key 3 is not broken. Key 3 has never worked. These are different statements. The QA Division maintains this distinction even though nobody else does. The servo incident remains unexplained. The servo manufacturer has been acquired by Bedrock Holdings and renamed. Their support email now routes to dev/null.</p>
+
+                <p class="warning">⚠ WARNING: This report was approved before being read. This is the fourth time.</p>
+            </div>
+
+            <div class="footer-copy mono">© 2026 CHASM LOGIC / QA DIVISION. ALL INCIDENTS DOCUMENTED. MOST INCIDENTS OPEN. SEVERAL INCIDENTS SENTIENT.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+</body>
+</html>
