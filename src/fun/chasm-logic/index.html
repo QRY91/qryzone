@@ -133,10 +133,10 @@ permalink: /fun/chasm-logic/
 
         <div class="stats mono">
             <div class="stat"><span class="stat-num">11</span> INDEXED</div>
-            <div class="stat"><span class="stat-num" style="color:#16a34a">7</span> ACCESSIBLE</div>
+            <div class="stat"><span class="stat-num" style="color:#16a34a">8</span> ACCESSIBLE</div>
             <div class="stat"><span class="stat-num" style="color:#a16207">0</span> PENDING</div>
             <div class="stat"><span class="stat-num" style="color:#dc2626">2</span> CLASSIFIED</div>
-            <div class="stat"><span class="stat-num" style="color:#6b7280">2</span> DEFERRED</div>
+            <div class="stat"><span class="stat-num" style="color:#6b7280">1</span> DEFERRED</div>
         </div>
 
         <!-- CL-DOC-001 — LIVE -->
@@ -269,8 +269,8 @@ permalink: /fun/chasm-logic/
             <div class="doc-note mono">47 recordings. Highway noise. Sentence fragments. Partial transcriptions on file.</div>
         </div>
 
-        <!-- CL-DOC-009 — LOCKED (Accessories Store) -->
-        <div class="doc-entry doc-locked">
+        <!-- CL-DOC-009 — LIVE (Accessories Store) -->
+        <a href="/fun/chasm-logic/store/" class="doc-entry doc-live">
             <div class="doc-top">
                 <span class="doc-ref mono">CL-DOC-009</span>
                 <span class="badge cl-c mono">SERIES C</span>
@@ -279,12 +279,12 @@ permalink: /fun/chasm-logic/
             <div class="doc-meta mono">
                 <span class="badge badge-type">PRODUCT LISTING</span>
                 <span class="dot">&middot;</span>
-                Unassigned
+                J. Clay
                 <span class="dot">&middot;</span>
-                <span class="badge badge-deferred">DEFERRED</span>
+                <span class="badge badge-live">LIVE</span>
             </div>
-            <div class="doc-note mono">Store opens Q1 2027. Initial inventory: Torx T2 driver (qty. TBD).</div>
-        </div>
+            <div class="doc-note mono">Store opens <span data-ship-date>Q1 2027</span>. Initial inventory: Torx T2 driver (qty. TBD).</div>
+        </a>
 
         <!-- CL-DOC-010 — LOCKED (Org Chart) -->
         <div class="doc-entry doc-locked">
@@ -303,15 +303,15 @@ permalink: /fun/chasm-logic/
             <div class="doc-note mono">Last updated prior to restructuring. Doug count: unverified.</div>
         </div>
 
-        <!-- CL-DOC-011 — LIVE (external) -->
-        <a href="https://github.com/QRY91/keygrave" class="doc-entry doc-live" target="_blank" rel="noopener">
+        <!-- CL-DOC-011 — LIVE -->
+        <a href="/fun/chasm-logic/cli/" class="doc-entry doc-live">
             <div class="doc-top">
                 <span class="doc-ref mono">CL-DOC-011</span>
                 <span class="badge cl-all mono">ALL-HANDS</span>
             </div>
             <div class="doc-title">Keygrave Telemetry — Beta Enrollment</div>
             <div class="doc-meta mono">
-                <span class="badge badge-type">TOOL / DOWNLOAD</span>
+                <span class="badge badge-type">SOFTWARE</span>
                 <span class="dot">&middot;</span>
                 QA Division / J. Clay
                 <span class="dot">&middot;</span>
@@ -321,7 +321,7 @@ permalink: /fun/chasm-logic/
 
         <!-- Index footer -->
         <div class="index-footer">
-            <p class="mono" style="font-size:0.75rem">End of index. 11 documents filed. 7 accessible. 4 pending, held, or classified.</p>
+            <p class="mono" style="font-size:0.75rem">End of index. 11 documents filed. 8 accessible. 3 pending, held, or classified.</p>
             <p class="mono" style="font-size:0.75rem">This portal is updated as documents are filed. Filing frequency is not guaranteed.</p>
             <p class="mono" style="font-size:0.75rem;margin-top:1rem;color:#9ca3af">— J. Clay, Communications Division</p>
         </div>
@@ -358,5 +358,6 @@ permalink: /fun/chasm-logic/
         </div>
     </footer>
     <div class="warning-stripe"></div>
+    <script>document.querySelectorAll('[data-ship-date]').forEach(el=>{el.textContent='Q1 '+(new Date().getFullYear()+1)})</script>
 </body>
 </html>

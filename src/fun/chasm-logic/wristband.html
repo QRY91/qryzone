@@ -281,7 +281,7 @@ permalink: /fun/chasm-logic/wristband/
             <table class="spec-table mono">
                 <tr><td>Fastener</td><td>Torx T2 (security, tamper-resistant)</td></tr>
                 <tr><td>Removal Tool</td><td>Not included</td></tr>
-                <tr><td>Tool Availability</td><td>Accessories Store — Q1 2027</td></tr>
+                <tr><td>Tool Availability</td><td>Accessories Store — <span data-ship-date>Q1 2027</span></td></tr>
                 <tr><td>Removal Consequence</td><td>Warranty void. Biometric profile deleted.<span class="spec-note">72-hour recalibration required.</span></td></tr>
                 <tr><td>Voluntary Removal Rate (Beta)</td><td>0% *</td></tr>
             </table>
@@ -358,7 +358,7 @@ permalink: /fun/chasm-logic/wristband/
                         </tr>
                         <tr>
                             <td class="issue-id">UW-004</td>
-                            <td>Torx T2 driver not commercially available until Q1 2027</td>
+                            <td>Torx T2 driver not commercially available until <span data-ship-date>Q1 2027</span></td>
                             <td><span class="status-badge st-deferred">DEFERRED</span></td>
                         </tr>
                         <tr>
@@ -426,7 +426,7 @@ permalink: /fun/chasm-logic/wristband/
                     <ul>
                         <li class="mono">j.clay@chasmlogic.io</li>
                         <li class="mono">removal@dev/null</li>
-                        <li>Accessories Store: Q1 2027</li>
+                        <li>Accessories Store: <span data-ship-date>Q1 2027</span></li>
                     </ul>
                 </div>
                 <div>
@@ -445,7 +445,7 @@ permalink: /fun/chasm-logic/wristband/
             <div class="disclaimer mono">
                 <p><span style="color:white;font-weight:bold">DISCLAIMER:</span> The Ultra Wristband (UW-1) is a biometric companion device manufactured by Keygrave, a wholly owned hardware division of Chasm Logic. The wristband does not write code, read code, or understand code. It reads your body and decides for you. Keygrave assumes no liability for approvals made while sleeping, exercising, being startled, or attending dental appointments.</p>
 
-                <p>The Torx T2 clasp is a security feature, not a restraint. The distinction is legal and has been reviewed by Legal (Doug). The Accessories Store will carry the Torx T2 driver when it opens in Q1 2027. Until then, the wristband is permanent. This is a feature. Commitment hardware commits.</p>
+                <p>The Torx T2 clasp is a security feature, not a restraint. The distinction is legal and has been reviewed by Legal (Doug). The Accessories Store will carry the Torx T2 driver when it opens in <span data-ship-date>Q1 2027</span>. Until then, the wristband is permanent. This is a feature. Commitment hardware commits.</p>
 
                 <p>Biometric data is transmitted via HTTP, consistent with the Keyz Ultra security profile. Your heart rate, skin conductivity, and micro-hesitation patterns are routed through a third-party datacenter that Chasm Logic does not own, operate, or audit. By wearing the wristband, you have agreed that your physiological state constitutes a binding approval gesture.</p>
 
@@ -456,5 +456,6 @@ permalink: /fun/chasm-logic/wristband/
         </div>
     </footer>
     <div class="warning-stripe"></div>
+    <script>document.querySelectorAll('[data-ship-date]').forEach(el=>{el.textContent='Q1 '+(new Date().getFullYear()+1)})</script>
 </body>
 </html>

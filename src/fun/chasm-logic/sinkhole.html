@@ -1,0 +1,606 @@
+---
+permalink: /fun/chasm-logic/sinkhole/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ticket Hole — Sinkhole Interactive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Atkinson+Hyperlegible+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #0d9488;
+            --teal-light: #ccfbf1;
+            --teal-dark: #065f53;
+            --bg: #fafcfc;
+            --surface: #ffffff;
+            --text: #1a2e2a;
+            --text-secondary: #5f7a74;
+            --text-dim: #94a8a3;
+            --border: #d4e4e0;
+            --border-light: #e8f0ee;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; }
+        .mono { font-family: 'Atkinson Hyperlegible Mono', monospace; }
+        .back-link {
+            position: fixed; top: 1.5rem; left: 1.5rem; background: var(--surface);
+            border: 1px solid var(--border); padding: 0.5rem 1rem; color: var(--text-secondary);
+            text-decoration: none; font-size: 0.85rem; z-index: 100; border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .back-link:hover { border-color: var(--teal); color: var(--teal); }
+
+        /* Layout */
+        .page { max-width: 64rem; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 4rem 0; }
+        section + section { border-top: 1px solid var(--border-light); }
+
+        /* Hero */
+        .hero { padding: 6rem 0 4rem; text-align: center; }
+        .sinkhole-mark {
+            display: inline-block; font-weight: 900; font-size: 0.75rem;
+            letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal);
+            margin-bottom: 2rem; padding: 0.5rem 1.25rem;
+            border: 2px solid var(--teal); border-radius: 100px;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900;
+            line-height: 1.05; margin-bottom: 1rem; letter-spacing: -0.03em;
+        }
+        .hero .version {
+            font-size: 0.8rem; color: var(--text-dim); margin-bottom: 1.5rem;
+        }
+        .hero .tagline {
+            font-size: 1.15rem; color: var(--text-secondary); max-width: 32rem;
+            margin: 0 auto; line-height: 1.6;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem; margin-top: 2rem;
+        }
+        .feature-card {
+            padding: 1.75rem; border: 1px solid var(--border); border-radius: 12px;
+            background: var(--surface); transition: all 0.2s;
+        }
+        .feature-card:hover { border-color: var(--teal); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(13,148,136,0.08); }
+        .feature-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .feature-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+
+        /* Section headings */
+        .section-label {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; color: var(--teal); margin-bottom: 0.75rem;
+        }
+        h2 { font-size: 1.75rem; font-weight: 900; margin-bottom: 1rem; line-height: 1.2; letter-spacing: -0.02em; }
+        .section-desc { font-size: 1rem; color: var(--text-secondary); line-height: 1.7; max-width: 40rem; }
+
+        /* Game embed */
+        .game-wrapper {
+            border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+            margin: 2rem 0; background: #1a1a1a;
+        }
+        .game-bar {
+            padding: 0.75rem 1.25rem; background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .game-bar-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+        .game-bar-version { font-size: 0.7rem; color: var(--text-dim); }
+
+        /* Testimonials */
+        .testimonials {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem; margin-top: 2rem;
+        }
+        .testimonial {
+            padding: 1.5rem; border: 1px solid var(--border); border-radius: 12px;
+            background: var(--surface);
+        }
+        .testimonial blockquote {
+            font-size: 0.95rem; line-height: 1.7; font-style: italic;
+            color: var(--text); margin-bottom: 1rem;
+        }
+        .testimonial cite {
+            font-size: 0.8rem; color: var(--text-dim); font-style: normal;
+        }
+
+        /* System requirements */
+        .req-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; max-width: 28rem; }
+        .req-table td {
+            padding: 0.6rem 0; font-size: 0.9rem; border-bottom: 1px solid var(--border-light);
+        }
+        .req-table td:first-child { font-weight: 600; width: 8rem; color: var(--text-secondary); }
+
+        /* Roadmap */
+        .roadmap-item {
+            padding: 1.25rem 1.5rem; border: 1px solid var(--border); border-radius: 10px;
+            background: var(--surface); margin-bottom: 1rem;
+            display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+        }
+        .roadmap-item h4 { font-size: 0.95rem; font-weight: 600; }
+        .roadmap-item p { font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem; }
+        .roadmap-badge {
+            font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+            padding: 0.25rem 0.6rem; border-radius: 100px; white-space: nowrap; flex-shrink: 0;
+        }
+        .rb-shipped { background: var(--teal-light); color: var(--teal-dark); }
+        .rb-active { background: #fef9c3; color: #854d0e; }
+
+        /* Footer */
+        footer { background: var(--text); color: #c8d8d4; padding: 3rem 2rem; font-size: 0.85rem; }
+        .footer-inner { max-width: 64rem; margin: 0 auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        footer h3 { color: white; font-size: 0.9rem; margin-bottom: 0.75rem; }
+        footer p, footer li { color: #94a8a3; line-height: 1.7; }
+        footer ul { list-style: none; }
+        footer li { margin-bottom: 0.35rem; }
+        footer a { color: #94a8a3; text-decoration: underline; }
+        footer a:hover { color: var(--teal-light); }
+        .footer-copy { text-align: center; font-size: 0.75rem; color: #5f7a74; border-top: 1px solid #2a3e3a; padding-top: 1.5rem; margin-top: 1rem; }
+
+        @media (max-width: 640px) {
+            .hero { padding: 4rem 0 3rem; }
+            section { padding: 3rem 0; }
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">&larr; back to fun</a>
+
+    <div class="page">
+
+        <!-- HERO -->
+        <div class="hero">
+            <div class="sinkhole-mark mono">Sinkhole Interactive</div>
+            <h1>The Ticket Hole</h1>
+            <div class="version mono">v2.1.0</div>
+            <p class="tagline">A project management simulation that accurately models how work actually works. Complete a ticket. Watch it multiply. Discover what your sprint velocity really looks like.</p>
+        </div>
+
+        <!-- ABOUT -->
+        <section>
+            <div class="section-label mono">About</div>
+            <h2>The backlog is infinite. So is your commitment.</h2>
+            <p class="section-desc">The Ticket Hole is a sprint planning simulation built on a simple observation: completing work generates more work. Unlike other productivity tools, The Ticket Hole does not pretend your backlog will shrink. It models the reality that every resolved ticket surfaces two more that were hiding behind it.</p>
+            <p class="section-desc" style="margin-top:1rem">We built The Ticket Hole because we kept seeing the same pattern in our own sprints. Velocity would spike on Monday. By Wednesday, the backlog was larger than when we started. By Friday, the retrospective was mostly silence. We thought: what if we made that a product?</p>
+        </section>
+
+        <!-- FEATURES -->
+        <section>
+            <div class="section-label mono">Features</div>
+            <h2>Everything you need to understand the problem</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">&#9776;</div>
+                    <h3>Realistic Sprint Simulation</h3>
+                    <p>Completing work generates more work. Just like your actual job. Our ticket generation algorithm is calibrated against real sprint data. We did not have to exaggerate.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#9660;</div>
+                    <h3>Negative Velocity Tracking</h3>
+                    <p>Most tools only show positive velocity. We show the truth. The velocity graph trends downward because velocity trends downward. This is not a display error.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#8734;</div>
+                    <h3>Infinite Backlog</h3>
+                    <p>There is no winning condition. There is only the work. The Ticket Hole will never tell you "you're all caught up" because that has never been true for anyone.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#9635;</div>
+                    <h3>Full Kanban Board</h3>
+                    <p>Drag tickets through Backlog, To Do, In Progress, and Done. Watch Done spawn Backlog. The board is a visualization of entropy. It is also interactive.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#9888;</div>
+                    <h3>Bankruptcy Option</h3>
+                    <p>When the board becomes unmanageable, declare bankruptcy and start fresh. The backlog resets. The lesson doesn't. This is our most-used feature.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">&#9733;</div>
+                    <h3>No Account Required</h3>
+                    <p>No sign-up. No onboarding flow. No welcome email sequence. You open it and you're in the hole. The onboarding is the hole.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- THE GAME -->
+        <section>
+            <div class="section-label mono">Try it</div>
+            <h2>Enter the hole</h2>
+            <p class="section-desc" style="margin-bottom:1.5rem">Click any ticket to complete it. Observe what happens next.</p>
+
+            <div class="game-wrapper">
+                <div class="game-bar">
+                    <span class="game-bar-label">The Ticket Hole — Sprint Simulation</span>
+                    <span class="game-bar-version mono">v2.1.0</span>
+                </div>
+                <div id="gameContainer" style="padding:2rem 1rem 1rem">
+                    <!-- Game renders here -->
+                    <div class="container" id="ticketHoleApp" style="max-width:1200px;margin:0 auto">
+                        <div class="stats-bar" id="statsBar">
+                            <div class="stat">
+                                <div class="stat-value" id="completed">0</div>
+                                <div class="stat-label">Completed</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="spawned">0</div>
+                                <div class="stat-label">Spawned</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value negative" id="netChange">0</div>
+                                <div class="stat-label">Net Change</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value negative" id="velocity">0</div>
+                                <div class="stat-label">Sprint Velocity</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="backlog">5</div>
+                                <div class="stat-label">Backlog</div>
+                            </div>
+                        </div>
+
+                        <div class="velocity-graph" id="velocityGraph">
+                            <div class="velocity-line"></div>
+                        </div>
+
+                        <p class="instructions">Click a ticket to complete it. Watch what happens.</p>
+
+                        <div class="board">
+                            <div class="column">
+                                <div class="column-header">Backlog <span class="column-count" id="backlogCount">5</span></div>
+                                <div class="tickets" id="backlogColumn"></div>
+                            </div>
+                            <div class="column">
+                                <div class="column-header">To Do <span class="column-count" id="todoCount">0</span></div>
+                                <div class="tickets" id="todoColumn"></div>
+                            </div>
+                            <div class="column">
+                                <div class="column-header">In Progress <span class="column-count" id="inprogressCount">0</span></div>
+                                <div class="tickets" id="inprogressColumn"></div>
+                            </div>
+                            <div class="column">
+                                <div class="column-header">Done <span class="column-count" id="doneCount">0</span></div>
+                                <div class="tickets" id="doneColumn"></div>
+                            </div>
+                        </div>
+
+                        <div class="message" id="message"></div>
+                        <button class="reset-btn" id="resetBtn">Declare Bankruptcy (Reset)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scoped game styles -->
+            <style>
+                #gameContainer {
+                    --bg: #1a1a1a;
+                    --surface: #252525;
+                    --border: #333;
+                    --text: #c0c0c0;
+                    --text-dim: #666;
+                    --accent: #f0dfaf;
+                    --danger: #cc6666;
+                    --warning: #dfaf8f;
+                    --success: #7f9f7f;
+                    --info: #8cd0d3;
+                    font-family: 'Atkinson Hyperlegible Mono', monospace;
+                    font-size: 14px;
+                    color: var(--text);
+                }
+                #gameContainer .stats-bar {
+                    display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+                    margin: 0 0 1rem; padding: 1rem; background: var(--surface); border: 1px solid var(--border);
+                }
+                #gameContainer .stat { text-align: center; }
+                #gameContainer .stat-value { font-size: 1.5rem; font-weight: bold; }
+                #gameContainer .stat-value.negative { color: var(--danger); }
+                #gameContainer .stat-value.positive { color: var(--success); }
+                #gameContainer .stat-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; }
+                #gameContainer .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1rem; }
+                @media (max-width: 900px) { #gameContainer .board { grid-template-columns: repeat(2, 1fr); } }
+                @media (max-width: 500px) { #gameContainer .board { grid-template-columns: 1fr; } }
+                #gameContainer .column { background: var(--surface); border: 1px solid var(--border); min-height: 350px; display: flex; flex-direction: column; }
+                #gameContainer .column-header {
+                    padding: 0.75rem; border-bottom: 1px solid var(--border); font-weight: bold;
+                    font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim);
+                    display: flex; justify-content: space-between;
+                }
+                #gameContainer .column-count { background: var(--border); padding: 0.1rem 0.5rem; border-radius: 3px; font-size: 0.75rem; }
+                #gameContainer .tickets { flex: 1; padding: 0.5rem; overflow-y: auto; max-height: 350px; }
+                #gameContainer .ticket {
+                    background: var(--bg); border: 1px solid var(--border); padding: 0.75rem;
+                    margin-bottom: 0.5rem; cursor: pointer; transition: all 0.15s; font-size: 0.85rem;
+                }
+                #gameContainer .ticket:hover { border-color: var(--accent); transform: translateY(-1px); }
+                #gameContainer .ticket.completing { opacity: 0.5; transform: scale(0.95); }
+                #gameContainer .ticket-id { font-size: 0.7rem; color: var(--info); margin-bottom: 0.25rem; }
+                #gameContainer .ticket-title { margin-bottom: 0.5rem; line-height: 1.4; }
+                #gameContainer .ticket-meta { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-dim); }
+                #gameContainer .ticket-points { background: var(--border); padding: 0.1rem 0.4rem; border-radius: 2px; }
+                #gameContainer .ticket-type { padding: 0.1rem 0.4rem; border-radius: 2px; font-size: 0.65rem; text-transform: uppercase; }
+                #gameContainer .ticket-type.bug { background: var(--danger); color: var(--bg); }
+                #gameContainer .ticket-type.feature { background: var(--success); color: var(--bg); }
+                #gameContainer .ticket-type.debt { background: var(--warning); color: var(--bg); }
+                #gameContainer .ticket-type.task { background: var(--info); color: var(--bg); }
+                #gameContainer .instructions { text-align: center; margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-dim); }
+                #gameContainer .velocity-graph {
+                    height: 60px; background: var(--surface); border: 1px solid var(--border);
+                    margin-bottom: 1rem; position: relative; overflow: hidden;
+                }
+                #gameContainer .velocity-line { position: absolute; bottom: 50%; left: 0; right: 0; height: 1px; background: var(--border); }
+                #gameContainer .velocity-bar { position: absolute; bottom: 50%; width: 8px; background: var(--success); transition: height 0.3s, background 0.3s; }
+                #gameContainer .velocity-bar.negative { bottom: auto; top: 50%; background: var(--danger); }
+                #gameContainer .message { text-align: center; padding: 1.5rem; color: var(--text-dim); font-style: italic; }
+                #gameContainer .message.despair { color: var(--danger); }
+                #gameContainer .reset-btn {
+                    display: block; margin: 0.5rem auto 1rem; padding: 0.75rem 1.5rem;
+                    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+                    font-family: inherit; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
+                }
+                #gameContainer .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+                .spawn-effect {
+                    position: fixed; pointer-events: none; font-size: 0.8rem;
+                    color: #cc6666; font-family: 'Atkinson Hyperlegible Mono', monospace;
+                    animation: spawnFloat 1.5s ease-out forwards; z-index: 1000;
+                }
+                @keyframes spawnFloat { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-40px); } }
+            </style>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section>
+            <div class="section-label mono">What people are saying</div>
+            <h2>Reviews</h2>
+            <div class="testimonials">
+                <div class="testimonial">
+                    <blockquote>"I showed this to my team lead during sprint planning. He stared at it for four minutes and then cancelled the retro."</blockquote>
+                    <cite class="mono">— Engineering Manager, Series B startup</cite>
+                </div>
+                <div class="testimonial">
+                    <blockquote>"The Ticket Hole predicted my actual sprint velocity more accurately than our real project management tool."</blockquote>
+                    <cite class="mono">— Senior Developer</cite>
+                </div>
+                <div class="testimonial">
+                    <blockquote>"I've been using it for three weeks and my real backlog feels manageable by comparison. I think that's the point."</blockquote>
+                    <cite class="mono">— Product Manager</cite>
+                </div>
+            </div>
+        </section>
+
+        <!-- SYSTEM REQUIREMENTS -->
+        <section>
+            <div class="section-label mono">System Requirements</div>
+            <h2>Compatibility</h2>
+            <table class="req-table mono">
+                <tr><td>Browser</td><td>Any</td></tr>
+                <tr><td>RAM</td><td>Enough</td></tr>
+                <tr><td>Storage</td><td>None (your progress is not saved, just like real sprints)</td></tr>
+                <tr><td>Internet</td><td>Optional (the backlog is local)</td></tr>
+                <tr><td>Account</td><td>Not required, not available, not planned</td></tr>
+            </table>
+        </section>
+
+        <!-- ROADMAP -->
+        <section style="padding-bottom:5rem">
+            <div class="section-label mono">Roadmap</div>
+            <h2>What we're working on</h2>
+
+            <div class="roadmap-item">
+                <div>
+                    <h4>Sprint Simulation Engine</h4>
+                    <p>Core kanban board with realistic ticket generation, velocity tracking, and bankruptcy mechanics.</p>
+                </div>
+                <span class="roadmap-badge rb-shipped mono">SHIPPED</span>
+            </div>
+
+            <div class="roadmap-item">
+                <div>
+                    <h4>The Ticket Hole v2</h4>
+                    <p>Improved ticket variety, spawn balancing, despair messages, and velocity graph visualization.</p>
+                </div>
+                <span class="roadmap-badge rb-shipped mono">SHIPPED</span>
+            </div>
+
+            <div class="roadmap-item" style="border-color:var(--border-light)">
+                <div>
+                    <h4>Untitled Project</h4>
+                    <p>In active development. Details will be shared when available.</p>
+                </div>
+                <span class="roadmap-badge rb-active mono">IN DEVELOPMENT</span>
+            </div>
+
+            <p style="font-size:0.8rem;color:var(--text-dim);margin-top:1.5rem;line-height:1.7">Sinkhole Interactive is committed to ongoing development. Our release schedule is determined by scope, quality, and factors outside our immediate control. Development continues.</p>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3>Sinkhole Interactive</h3>
+                    <p>We make software. Some of it ships.</p>
+                </div>
+                <div>
+                    <h3>Products</h3>
+                    <ul>
+                        <li>The Ticket Hole (v2.1.0)</li>
+                        <li style="color:#5f7a74;font-size:0.8rem">Our second title. Currently our most recent title.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Contact</h3>
+                    <ul>
+                        <li class="mono">hello@sinkholeinteractive.dev</li>
+                        <li class="mono">support@sinkholeinteractive.dev</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-copy mono">© 2026 Sinkhole Interactive. Two products shipped. Development continues.</div>
+        </div>
+    </footer>
+
+    <!-- GAME LOGIC (preserved from original Ticket Hole) -->
+    <script>
+    (function() {
+        const PREFIXES = ['FIX', 'IMPL', 'ADD', 'UPDATE', 'REFACTOR', 'INVESTIGATE', 'SPIKE', 'DOC'];
+        const ACTIONS = [
+            'Clarify requirements for', 'Fix regression caused by', 'Update documentation for',
+            'Address feedback on', 'Write tests for', 'Review code for', 'Deploy changes from',
+            'Investigate side effects of', 'Refactor code touched by', 'Update dependencies after',
+            'Fix merge conflicts in', 'Revert changes from', 'Create follow-up for',
+            'Discuss scope of', 'Estimate remaining work for',
+        ];
+        const BASES = [
+            'user authentication flow', 'payment processing module', 'notification system',
+            'search functionality', 'dashboard widgets', 'API rate limiting', 'database migrations',
+            'caching layer', 'error handling', 'logging infrastructure', 'CI/CD pipeline',
+            'feature flags', 'A/B testing framework', 'analytics tracking', 'mobile responsiveness',
+            'accessibility compliance', 'performance optimization', 'security audit findings',
+            'technical debt backlog', 'legacy code migration',
+        ];
+        const SUFFIXES = ['', ' (breaks on Safari)', ' (P0)', ' (blocked)', ' (needs design)', ' (carry-over)', ' (scope creep)', ' (customer escalation)', ' (exec request)'];
+        const TYPES = ['bug', 'feature', 'debt', 'task'];
+        const MESSAGES = [
+            { threshold: 10, text: "The backlog grows..." },
+            { threshold: 25, text: "Sprint planning was a mistake." },
+            { threshold: 50, text: "You feel the weight of a thousand standups." },
+            { threshold: 75, text: "The product owner has left the building." },
+            { threshold: 100, text: "You've entered the Strata Hole. There is no escape." },
+            { threshold: 150, text: "Your velocity is measured in negative story points." },
+            { threshold: 200, text: "The board extends into infinity.", despair: true },
+            { threshold: 300, text: "You have become the backlog.", despair: true },
+        ];
+
+        let ticketId = 1000;
+        let stats = { completed: 0, spawned: 0, netChange: 0 };
+        let velocityHistory = [];
+        let tickets = { backlog: [], todo: [], inprogress: [], done: [] };
+
+        function generateTicketTitle(parent) {
+            if (parent && Math.random() < 0.7) {
+                return ACTIONS[Math.floor(Math.random() * ACTIONS.length)] + ' ' + parent.title.substring(0, 30) + '...';
+            }
+            const base = BASES[Math.floor(Math.random() * BASES.length)];
+            const suffix = Math.random() < 0.3 ? SUFFIXES[Math.floor(Math.random() * SUFFIXES.length)] : '';
+            return base + suffix;
+        }
+
+        function createTicket(parent) {
+            const id = 'TKT-' + ticketId++;
+            const title = generateTicketTitle(parent);
+            const type = parent ? (Math.random() < 0.4 ? 'bug' : TYPES[Math.floor(Math.random() * TYPES.length)]) : TYPES[Math.floor(Math.random() * TYPES.length)];
+            const points = Math.floor(Math.random() * 8) + 1;
+            return { id: id, title: title, type: type, points: points, parent: parent ? parent.id : null };
+        }
+
+        function renderTicket(ticket, column) {
+            var el = document.createElement('div');
+            el.className = 'ticket';
+            el.dataset.id = ticket.id;
+            el.dataset.column = column;
+            el.innerHTML = '<div class="ticket-id">' + ticket.id + '</div><div class="ticket-title">' + ticket.title + '</div><div class="ticket-meta"><span class="ticket-type ' + ticket.type + '">' + ticket.type + '</span><span class="ticket-points">' + ticket.points + ' pts</span></div>';
+            el.addEventListener('click', function() { completeTicket(ticket, el); });
+            return el;
+        }
+
+        function completeTicket(ticket, el) {
+            if (el.classList.contains('completing')) return;
+            el.classList.add('completing');
+            var column = el.dataset.column;
+            var rect = el.getBoundingClientRect();
+            tickets[column] = tickets[column].filter(function(t) { return t.id !== ticket.id; });
+            tickets.done.push(ticket);
+            stats.completed++;
+            var spawnCount = Math.floor(Math.random() * 4) + 1;
+            for (var i = 0; i < spawnCount; i++) {
+                var newTicket = createTicket(ticket);
+                var targetColumns = ['backlog', 'backlog', 'backlog', 'todo', 'inprogress'];
+                var targetColumn = targetColumns[Math.floor(Math.random() * targetColumns.length)];
+                tickets[targetColumn].push(newTicket);
+            }
+            stats.spawned += spawnCount;
+            stats.netChange = stats.spawned - stats.completed;
+            var effect = document.createElement('div');
+            effect.className = 'spawn-effect';
+            effect.textContent = '+' + spawnCount + ' tickets';
+            effect.style.left = (rect.left + rect.width / 2) + 'px';
+            effect.style.top = rect.top + 'px';
+            document.body.appendChild(effect);
+            setTimeout(function() { effect.remove(); }, 1500);
+            velocityHistory.push(1 - spawnCount);
+            if (velocityHistory.length > 20) velocityHistory.shift();
+            setTimeout(function() { renderBoard(); updateStats(); updateMessage(); }, 150);
+        }
+
+        function renderBoard() {
+            ['backlog', 'todo', 'inprogress', 'done'].forEach(function(col) {
+                var container = document.getElementById(col + 'Column');
+                container.innerHTML = '';
+                tickets[col].forEach(function(ticket) { container.appendChild(renderTicket(ticket, col)); });
+                document.getElementById(col + 'Count').textContent = tickets[col].length;
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('completed').textContent = stats.completed;
+            document.getElementById('spawned').textContent = stats.spawned;
+            var netEl = document.getElementById('netChange');
+            netEl.textContent = stats.netChange > 0 ? '+' + stats.netChange : stats.netChange;
+            netEl.className = 'stat-value ' + (stats.netChange > 0 ? 'negative' : 'positive');
+            var avgV = velocityHistory.length ? (velocityHistory.reduce(function(a, b) { return a + b; }, 0) / velocityHistory.length).toFixed(1) : 0;
+            var velEl = document.getElementById('velocity');
+            velEl.textContent = avgV;
+            velEl.className = 'stat-value ' + (avgV < 0 ? 'negative' : 'positive');
+            document.getElementById('backlog').textContent = tickets.backlog.length + tickets.todo.length + tickets.inprogress.length;
+            renderVelocityGraph();
+        }
+
+        function renderVelocityGraph() {
+            var graph = document.getElementById('velocityGraph');
+            graph.querySelectorAll('.velocity-bar').forEach(function(b) { b.remove(); });
+            var width = graph.clientWidth;
+            var maxBars = Math.floor(width / 12);
+            var history = velocityHistory.slice(-maxBars);
+            history.forEach(function(v, i) {
+                var bar = document.createElement('div');
+                bar.className = 'velocity-bar' + (v < 0 ? ' negative' : '');
+                bar.style.left = (i * 12 + 4) + 'px';
+                bar.style.height = Math.abs(v) * 10 + 'px';
+                graph.appendChild(bar);
+            });
+        }
+
+        function updateMessage() {
+            var total = tickets.backlog.length + tickets.todo.length + tickets.inprogress.length;
+            var msgEl = document.getElementById('message');
+            var msg = MESSAGES.filter(function(m) { return total >= m.threshold; }).pop();
+            if (msg) { msgEl.textContent = msg.text; msgEl.className = 'message' + (msg.despair ? ' despair' : ''); }
+            else { msgEl.textContent = ''; }
+        }
+
+        function reset() {
+            ticketId = 1000;
+            stats = { completed: 0, spawned: 0, netChange: 0 };
+            velocityHistory = [];
+            tickets = { backlog: [], todo: [], inprogress: [], done: [] };
+            for (var i = 0; i < 5; i++) tickets.backlog.push(createTicket());
+            renderBoard(); updateStats();
+            document.getElementById('message').textContent = '';
+        }
+
+        document.getElementById('resetBtn').addEventListener('click', reset);
+        reset();
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,507 @@
+---
+permalink: /fun/chasm-logic/store/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessories Store — Keygrave — Chasm Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #fafafa; color: black; cursor: crosshair; }
+        .mono { font-family: 'Roboto Mono', monospace; }
+
+        /* Design system */
+        .warning-stripe { background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px); height: 8px; }
+        .harassment-banner {
+            background: #fef08a; color: black; padding: 0.5rem; font-weight: bold;
+            text-align: center; border-bottom: 4px solid black;
+            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .harassment-banner:hover { background: #ef4444; color: white; }
+        .section-divider { height: 4px; background: black; }
+        .back-link {
+            position: fixed; top: 3.5rem; left: 1rem; background: black; color: white;
+            padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold;
+            text-decoration: none; z-index: 1000; border: 2px solid black;
+            box-shadow: 4px 4px 0 0 #F58025; transition: all 0.1s;
+        }
+        .back-link:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 #F58025; }
+        .label { display: inline-block; padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold; letter-spacing: 0.1em; }
+        .label-dark { background: black; color: white; }
+        .label-orange { background: #F58025; color: white; }
+
+        /* Layout */
+        nav { border-bottom: 4px solid black; padding: 1rem 2rem; }
+        .nav-inner { max-width: 60rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .doc { max-width: 60rem; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 3rem 0; }
+        section + section { border-top: 2px solid #e5e7eb; }
+        h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 1.5rem; line-height: 1.15; }
+        p { font-size: 1rem; line-height: 1.7; margin-bottom: 1rem; }
+
+        /* Store status banner */
+        .store-status {
+            border: 3px solid black; background: white; padding: 1.5rem; margin: 2rem 0;
+            box-shadow: 8px 8px 0 0 black;
+        }
+        .store-status-header {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
+            color: #F58025; margin-bottom: 0.75rem; text-transform: uppercase;
+        }
+        .store-stats {
+            display: flex; flex-wrap: wrap; gap: 1.5rem; padding-top: 0.75rem;
+            border-top: 1px solid #e5e7eb; margin-top: 0.75rem;
+        }
+        .store-stat { font-size: 0.75rem; letter-spacing: 0.05em; }
+        .store-stat-num { font-weight: 900; font-size: 1.1rem; display: block; }
+
+        /* Product grid */
+        .product-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem; margin: 1.5rem 0;
+        }
+        .product-card {
+            border: 3px solid black; background: white; padding: 0;
+            transition: all 0.15s; display: flex; flex-direction: column;
+        }
+        .product-card:hover { box-shadow: 8px 8px 0 0 black; transform: translate(-2px, -2px); }
+        .product-header { padding: 1.25rem 1.25rem 0; }
+        .product-name { font-weight: 900; font-size: 1rem; margin-bottom: 0.25rem; line-height: 1.3; }
+        .product-sku { font-size: 0.65rem; color: #9ca3af; letter-spacing: 0.1em; }
+        .product-body { padding: 0.75rem 1.25rem; flex: 1; }
+        .product-desc { font-size: 0.85rem; color: #374151; line-height: 1.6; }
+        .product-footer {
+            padding: 0.75rem 1.25rem; border-top: 2px solid black;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .product-price { font-weight: 900; font-size: 1.1rem; }
+        .product-status {
+            display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.6rem;
+            font-weight: 700; letter-spacing: 0.08em;
+        }
+        .st-instock { background: #dcfce7; color: #16a34a; }
+        .st-preorder { background: #fef9c3; color: #a16207; }
+        .st-recalled { background: #fee2e2; color: #dc2626; }
+        .st-limited { background: #e5e7eb; color: #374151; }
+        .st-lowdemand { background: #f3f4f6; color: #6b7280; }
+
+        /* Hero product */
+        .hero-product {
+            border: 3px solid black; background: white; padding: 2rem;
+            box-shadow: 12px 12px 0 0 black; margin: 2rem 0;
+        }
+        .hero-product .product-name { font-size: 1.35rem; }
+
+        /* Category header */
+        .cat-header {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; color: #6b7280; padding: 0.5rem 0;
+            border-bottom: 2px solid black; margin-bottom: 1.5rem; margin-top: 0.5rem;
+        }
+
+        /* Notice */
+        .store-notice {
+            font-size: 0.8rem; color: #6b7280; line-height: 1.7;
+            border-left: 4px solid #F58025; padding-left: 1rem; margin: 1rem 0;
+        }
+
+        /* Footer */
+        footer { background: black; color: white; padding: 4rem 2rem; }
+        .footer-inner { max-width: 60rem; margin: 0 auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        footer h3 { font-weight: 900; margin-bottom: 1rem; }
+        footer h4 { font-weight: bold; font-size: 0.875rem; margin-bottom: 1rem; }
+        footer p { font-size: 0.875rem; color: #9ca3af; line-height: 1.6; }
+        footer ul { list-style: none; }
+        footer li { font-size: 0.875rem; color: #9ca3af; margin-bottom: 0.5rem; }
+        .disclaimer { border-top: 1px solid #374151; padding-top: 2rem; font-size: 0.75rem; color: #6b7280; line-height: 1.7; }
+        .disclaimer p { margin-bottom: 1rem; font-size: 0.75rem; }
+        .warning { color: #F58025; }
+        .footer-copy { text-align: center; margin-top: 2rem; font-size: 0.75rem; color: #4b5563; }
+
+        @media (max-width: 640px) {
+            .product-grid { grid-template-columns: 1fr; }
+            .hero-product { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link mono">&larr; back to fun</a>
+
+    <!--
+        Inventory compiled by J. Clay, Communications Division.
+        Product availability is subject to supply chain constraints,
+        vendor acquisition, and the Accessories Store not yet existing.
+        This has been the case since filing.
+    -->
+
+    <div class="harassment-banner mono" onclick="this.textContent = this.textContent.includes('PRE-ORDERS') ? '⚠ NOTICE: Pre-order cancellation requests are routed to the same system as Key 6 escalations.' : '⚠ NOTICE: PRE-ORDERS ARE BINDING. TERMS APPLY. TERMS ARE ALSO BINDING.'">
+        <span>⚠ NOTICE:</span> PRE-ORDERS ARE BINDING. TERMS APPLY. TERMS ARE ALSO BINDING.
+    </div>
+    <div class="warning-stripe"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div style="font-weight:900;font-size:1.1rem;letter-spacing:-0.02em">KEYGRAVE</div>
+                <div class="mono" style="font-size:0.6rem;color:#6b7280;letter-spacing:0.1em;text-transform:uppercase">Accessories Store — Catalog Preview</div>
+            </div>
+            <span class="label label-dark mono" style="font-size:0.65rem">CL-DOC-009</span>
+        </div>
+    </nav>
+
+    <div class="doc">
+
+        <!-- HEADER -->
+        <section style="padding:4rem 0 2rem;border:none">
+            <div class="label label-orange mono" style="margin-bottom:1.5rem">PRODUCT CATALOG</div>
+            <h1 style="font-size:clamp(2rem, 5vw, 3rem);font-weight:900;line-height:1.05;margin-bottom:1.5rem;letter-spacing:-0.02em">
+                ACCESSORIES STORE<br>
+                <span style="font-weight:300;font-size:0.4em;color:#6b7280">Keygrave Peripherals — Replacement Parts, Companion Items & Essentials</span>
+            </h1>
+
+            <div class="store-status mono">
+                <div class="store-status-header">STORE STATUS: OPENING <span data-ship-date>Q1 2027</span> — CATALOG PREVIEW</div>
+                <p style="font-size:0.8rem;line-height:1.6;margin:0">Inventory has been cataloged. Pricing has been assigned. Availability is subject to the store existing.</p>
+                <div class="store-stats">
+                    <div class="store-stat"><span class="store-stat-num">15</span> ITEMS LISTED</div>
+                    <div class="store-stat"><span class="store-stat-num" style="color:#16a34a">7</span> IN STOCK</div>
+                    <div class="store-stat"><span class="store-stat-num" style="color:#a16207">3</span> PRE-ORDER</div>
+                    <div class="store-stat"><span class="store-stat-num" style="color:#dc2626">1</span> RECALLED</div>
+                    <div class="store-stat"><span class="store-stat-num" style="color:#6b7280">4</span> OTHER</div>
+                </div>
+            </div>
+
+            <div class="store-notice mono">Pre-orders are binding. Cancellation requests are routed to the same system as Key 6 escalations.</div>
+        </section>
+
+        <!-- ANCHOR PRODUCT: TORX T2 -->
+        <section style="padding-top:1rem">
+            <div class="cat-header mono">FEATURED</div>
+            <div class="hero-product">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem">
+                    <div>
+                        <div class="product-name">Torx T2 Security Driver</div>
+                        <div class="product-sku mono">KG-TRX-T2</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="product-price" style="font-size:1.5rem">$89</div>
+                        <span class="product-status st-preorder mono">PRE-ORDER — SHIPS <span data-ship-date>Q1 2027</span></span>
+                    </div>
+                </div>
+                <div style="margin-top:1.25rem">
+                    <p class="product-desc">Proprietary wristband removal tool. Torx T2 security bit. Precision-milled. Required for UW-1 clasp disengagement. Not compatible with third-party Torx drivers (they are, but Legal has opinions).</p>
+                    <p class="product-desc" style="margin-top:0.5rem;font-size:0.75rem;color:#6b7280">Retail equivalent: $4. This is the Keygrave version. The difference is the box.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CATEGORY: HARDWARE -->
+        <section>
+            <div class="cat-header mono">HARDWARE</div>
+            <div class="product-grid">
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Replacement Keycap — Key 1</div>
+                        <div class="product-sku mono">KG-CAP-001</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">OEM replacement keycap for Key 1. Galena-compatible stem. Legend wears off after approximately 72 hours of standard use. Sold individually. Bulk pricing available (you will need it).</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$24</span>
+                        <span class="product-status st-instock">IN STOCK</span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Replacement Keycap — Key 2</div>
+                        <div class="product-sku mono">KG-CAP-002</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Replacement keycap for Key 2. Identical to KG-CAP-001 in every measurable way. Psychologically distinct. Customers who purchase Key 2 caps report feeling "more intentional." No refunds.</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$24</span>
+                        <span class="product-status st-lowdemand">LOW DEMAND</span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Replacement Keycap — Key 3 (Commemorative)</div>
+                        <div class="product-sku mono">KG-CAP-003</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Decorative replacement keycap for the Key 3 position. Clear acrylic housing. Never pressed. Display-grade finish. Confirmed nonfunctional — sold as-is. Suitable for desk display, conversation piece, or regulatory inspection.</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$49</span>
+                        <span class="product-status st-limited">LIMITED EDITION</span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Galena Approval Orange™ Switch (×1)</div>
+                        <div class="product-sku mono">KG-SWT-AO1</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Single replacement switch. 45g actuation. Rated for 80 million presses. At observed usage rates, replacement recommended every 6 weeks. Note: switches installed in the Key 3 position become nonfunctional. This is not covered under warranty. See <span style="color:#F58025">CL-DOC-007, §4</span>.</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$12</span>
+                        <span class="product-status st-instock">IN STOCK</span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">USB-C Cable (Standard)</div>
+                        <div class="product-sku mono">KG-CBL-100</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Braided USB-C cable. 1 meter. Compatible with CCK-3 and Keyz Pro. Does one thing.</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$29</span>
+                        <span class="product-status st-instock">IN STOCK</span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">USB-C Cable (Enterprise)</div>
+                        <div class="product-sku mono">KG-CBL-200E</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Braided USB-C cable. 2 meters. Same cable. Longer. Enterprise differs from standard in length only. Includes SOC 2 sticker (adhesive, not certification).</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$399</span>
+                        <span class="product-status st-instock">IN STOCK</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CATEGORY: WRISTBAND -->
+        <section>
+            <div class="cat-header mono">WRISTBAND</div>
+            <div class="product-grid">
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">UW-1 Replacement Strap</div>
+                        <div class="product-sku mono">KG-UW1-STRP</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Replacement strap for Ultra Wristband. Installation requires removal of current strap. Removal requires Torx T2 driver (sold separately, see KG-TRX-T2). We recognize the dependency. We do not apologize for it.</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$59</span>
+                        <span class="product-status st-preorder">PRE-ORDER — <span data-ship-date>Q1 2027</span></span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">UW-1 Calibration Reset Card</div>
+                        <div class="product-sku mono">KG-UW1-CAL</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Single-use NFC card. Resets biometric calibration profile. Initiates 72-hour recalibration period. Wristband must remain worn during recalibration. Note: ambient approvals continue during recalibration at reduced confidence thresholds. "Reduced" is relative.</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$149</span>
+                        <span class="product-status st-instock">AVAILABLE</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CATEGORY: ULTRA -->
+        <section>
+            <div class="cat-header mono">KEYZ ULTRA</div>
+            <div class="product-grid">
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">API Token Card Stock (250 GSM, 50-pack)</div>
+                        <div class="product-sku mono">KG-ULT-TKN50</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Blank card stock for printing API tokens. 250 GSM. Optimized for onboard camera OCR. Pre-scored for Slot B insertion. Tokens not included. Security not included. HTTPS not included.</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$79</span>
+                        <span class="product-status st-instock">IN STOCK</span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">API Token Card Stock (Premium Holographic)</div>
+                        <div class="product-sku mono">KG-ULT-TKNH</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Holographic card stock. Caused OCR failures due to light refraction. Onboard camera interpreted holographic pattern as a second API token. Users were billed twice. Recalled. Remaining stock destroyed except for units already transmitted via HTTP.</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price"><s>$199</s></span>
+                        <span class="product-status st-recalled">RECALLED</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CATEGORY: CASES -->
+        <section>
+            <div class="cat-header mono">APPAREL / LIFESTYLE</div>
+            <div class="product-grid">
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">CCK-3 Carrying Case</div>
+                        <div class="product-sku mono">KG-CASE-3K</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Molded carrying case. Contoured for 3 keys. Interior foam cutout accommodates CCK-3 exactly. The remaining 97% of the case is empty. This is by design.</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$69</span>
+                        <span class="product-status st-instock">IN STOCK</span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Keyz Pro Carrying Case</div>
+                        <div class="product-sku mono">KG-CASE-6K</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Same case. Same price. Foam cutout accommodates 6 keys. 94% empty interior. Marginally less existential.</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$69</span>
+                        <span class="product-status st-instock">IN STOCK</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CATEGORY: DOCUMENTATION -->
+        <section>
+            <div class="cat-header mono">DOCUMENTATION</div>
+            <div class="product-grid">
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Quick Start Guide (Replacement)</div>
+                        <div class="product-sku mono">KG-DOC-QS1</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Printed replacement Quick Start Guide. One sentence: "Press 1." Laminated. Bilingual (English / also English but in a different font).</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$9</span>
+                        <span class="product-status st-instock">IN STOCK</span>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Quick Start Guide — Keyz Pro</div>
+                        <div class="product-sku mono">KG-DOC-QS2</div>
+                    </div>
+                    <div class="product-body">
+                        <p class="product-desc">Printed Quick Start Guide for Keyz Pro. Two sentences: "Press 1. If uncertain, press 4, then press 1."</p>
+                    </div>
+                    <div class="product-footer mono">
+                        <span class="product-price">$12</span>
+                        <span class="product-status st-instock">IN STOCK</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FOOTER NOTES -->
+        <section style="padding-bottom:4rem">
+            <div style="border-top:2px solid black;padding-top:2rem">
+                <p class="mono" style="font-size:0.8rem;color:#6b7280;line-height:1.8">Inventory is maintained by the Communications Division. Product availability is subject to supply chain constraints, vendor acquisition, and the Accessories Store not yet existing.</p>
+                <p class="mono" style="font-size:0.8rem;color:#6b7280;line-height:1.8">Returns: No. Exchanges: Also no. The return email routes to dev/null. This is documented.</p>
+                <p class="mono" style="font-size:0.75rem;color:#9ca3af;margin-top:1.5rem;line-height:1.8">— J. Clay, Communications Division</p>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="mono">KEYGRAVE</h3>
+                    <p>A Chasm Logic Hardware Division. We sell parts for things that don't fully work.</p>
+                </div>
+                <div>
+                    <h4 class="mono">CONTACT</h4>
+                    <ul>
+                        <li class="mono">orders@chasmlogic.io</li>
+                        <li class="mono">returns@dev/null</li>
+                        <li>Store Support: <span data-ship-date>Q1 2027</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">LEGAL</h4>
+                    <ul>
+                        <li>Pre-Order Terms (Binding)</li>
+                        <li>Return Policy (None)</li>
+                        <li>SOC 2 Sticker Disclaimer</li>
+                        <li>Doug Disambiguation Protocol</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">ALSO FROM CHASM LOGIC</h4>
+                    <ul>
+                        <li><a href="/fun/claudetite-keyz/" style="color:#9ca3af;text-decoration:underline">Claudetite Keyz</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">The products these accessories are for.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/chasm-logic/wristband/" style="color:#9ca3af;text-decoration:underline">Ultra Wristband</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">Commitment hardware. Torx T2 sold above.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/chasm-logic/" style="color:#9ca3af;text-decoration:underline">Document Index</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">All filings. Most regrettable.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="disclaimer mono">
+                <p><span style="color:white;font-weight:bold">DISCLAIMER:</span> The Keygrave Accessories Store is a product catalog maintained by the Communications Division of Chasm Logic. The store has not yet opened. Products listed as "IN STOCK" are in stock in the sense that the catalog entry exists. Physical inventory is pending. The Torx T2 driver retails for approximately $4 from any hardware store. The Keygrave version is $89. The difference is documented.</p>
+
+                <p>The Enterprise USB-C cable is the same cable as the Standard USB-C cable. It is longer. It costs $370 more. The SOC 2 sticker included with the Enterprise cable is not a SOC 2 certification. It is a sticker. It is adhesive. Adhesion is not compliance.</p>
+
+                <p class="warning">⚠ WARNING: The holographic card stock has been recalled. If you have already received holographic card stock, do not insert it into the Keyz Ultra. If you have already inserted it, do not check your billing statement. If you have already checked, we are aware.</p>
+            </div>
+
+            <div class="footer-copy mono">© 2026 KEYGRAVE / CHASM LOGIC. ALL ACCESSORIES CATALOGED. SOME ACCESSORIES EXIST. STORE OPENS <span data-ship-date>Q1 2027</span>.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+    <script>document.querySelectorAll('[data-ship-date]').forEach(el=>{el.textContent='Q1 '+(new Date().getFullYear()+1)})</script>
+</body>
+</html>

@@ -288,7 +288,7 @@ permalink: /fun/claudetite-keyz/memo/
                     <div class="spec-block mono text-sm">
                         <p>Clasp: <span style="color:#F58025" class="font-bold">PROPRIETARY LOCK (Torx T2 required)</span></p>
                         <p>Driver included: <span style="color:#F58025" class="font-bold">NO</span></p>
-                        <p>Available: <span style="color:#F58025" class="font-bold">Q1 2027 (Keygrave Accessories Store)</span></p>
+                        <p>Available: <span style="color:#F58025" class="font-bold"><span data-ship-date>Q1 2027</span> (Keygrave Accessories Store)</span></p>
                         <p>Power-off: <span style="color:#F58025" class="font-bold">NONE</span></p>
                         <p>Keypresses during sleep: <span style="color:#F58025" class="font-bold">14 reported — classified "AMBIENT APPROVALS"</span></p>
                     </div>
@@ -324,6 +324,6 @@ permalink: /fun/claudetite-keyz/memo/
             <div class="mono text-xs text-gray-500">© 2026 KEYGRAVE / CHASM LOGIC. ALL RIGHTS DISRUPTED.</div>
         </div>
     </footer>
-
+    <script>document.querySelectorAll('[data-ship-date]').forEach(el=>{el.textContent='Q1 '+(new Date().getFullYear()+1)})</script>
 </body>
 </html>

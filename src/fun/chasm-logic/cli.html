@@ -1,0 +1,391 @@
+---
+permalink: /fun/chasm-logic/cli/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keygrave Telemetry — Beta Enrollment — Chasm Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #fafafa; color: black; cursor: crosshair; }
+        .mono { font-family: 'Roboto Mono', monospace; }
+
+        /* Design system */
+        .warning-stripe { background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px); height: 8px; }
+        .harassment-banner {
+            background: #fef08a; color: black; padding: 0.5rem; font-weight: bold;
+            text-align: center; border-bottom: 4px solid black;
+            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .harassment-banner:hover { background: #ef4444; color: white; }
+        .section-divider { height: 4px; background: black; }
+        .back-link {
+            position: fixed; top: 3.5rem; left: 1rem; background: black; color: white;
+            padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold;
+            text-decoration: none; z-index: 1000; border: 2px solid black;
+            box-shadow: 4px 4px 0 0 #F58025; transition: all 0.1s;
+        }
+        .back-link:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 #F58025; }
+        .label { display: inline-block; padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold; letter-spacing: 0.1em; }
+        .label-dark { background: black; color: white; }
+        .label-orange { background: #F58025; color: white; }
+        .aperture-btn {
+            background: #F58025; color: white; font-weight: 700;
+            letter-spacing: 0.05em; box-shadow: 8px 8px 0 0 black;
+            transition: all 0.1s; border: none; cursor: pointer;
+            text-transform: uppercase; text-decoration: none; display: inline-block;
+            padding: 0.75rem 1.5rem; font-size: 0.875rem;
+        }
+        .aperture-btn:hover { transform: translate(2px, 2px); box-shadow: 6px 6px 0 0 black; }
+
+        /* Layout */
+        nav { border-bottom: 4px solid black; padding: 1rem 2rem; }
+        .nav-inner { max-width: 60rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .doc { max-width: 60rem; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 3rem 0; }
+        section + section { border-top: 2px solid #e5e7eb; }
+        h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 1.5rem; line-height: 1.15; }
+        p { font-size: 1rem; line-height: 1.7; margin-bottom: 1rem; }
+        .section-num { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #F58025; margin-bottom: 0.75rem; }
+
+        /* Terminal */
+        .terminal { background: black; color: #4ade80; padding: 1.5rem; font-size: 0.8rem; line-height: 1.8; border: 3px solid black; margin: 1.5rem 0; overflow-x: auto; }
+        .terminal-dim { opacity: 0.5; }
+        .terminal-orange { color: #F58025; }
+        .terminal-white { color: white; }
+        .terminal-comment { color: #6b7280; }
+
+        /* Install block */
+        .install-block {
+            border: 3px solid black; background: white; padding: 0; margin: 2rem 0;
+            box-shadow: 12px 12px 0 0 black;
+        }
+        .install-header {
+            background: black; color: white; padding: 0.75rem 1.25rem;
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+        }
+        .install-body { padding: 1.5rem; }
+        .install-cmd {
+            background: #1a1a1a; color: #4ade80; padding: 1rem 1.25rem;
+            font-size: 0.85rem; line-height: 1.6; border: 1px solid #333;
+            overflow-x: auto; margin: 0.75rem 0;
+        }
+
+        /* Command list */
+        .cmd-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .cmd-table td { padding: 0.75rem 0; font-size: 0.85rem; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+        .cmd-table td:first-child { width: 14rem; font-weight: 700; white-space: nowrap; }
+
+        /* Feature cards */
+        .feature-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.25rem; margin: 1.5rem 0;
+        }
+        .feature-card {
+            border: 3px solid black; padding: 1.25rem; background: white;
+            transition: all 0.15s;
+        }
+        .feature-card:hover { box-shadow: 6px 6px 0 0 black; transform: translate(-2px, -2px); }
+        .feature-card h3 { font-size: 0.9rem; font-weight: 900; margin-bottom: 0.5rem; }
+        .feature-card p { font-size: 0.85rem; color: #374151; line-height: 1.6; margin: 0; }
+
+        /* Meta table */
+        .meta-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .meta-table td { padding: 0.5rem 0; font-size: 0.8rem; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+        .meta-table td:first-child { width: 12rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; }
+
+        /* Footer */
+        footer { background: black; color: white; padding: 4rem 2rem; }
+        .footer-inner { max-width: 60rem; margin: 0 auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
+        footer h3 { font-weight: 900; margin-bottom: 1rem; }
+        footer h4 { font-weight: bold; font-size: 0.875rem; margin-bottom: 1rem; }
+        footer p { font-size: 0.875rem; color: #9ca3af; line-height: 1.6; }
+        footer ul { list-style: none; }
+        footer li { font-size: 0.875rem; color: #9ca3af; margin-bottom: 0.5rem; }
+        footer a { color: #9ca3af; text-decoration: underline; }
+        .disclaimer { border-top: 1px solid #374151; padding-top: 2rem; font-size: 0.75rem; color: #6b7280; line-height: 1.7; }
+        .disclaimer p { margin-bottom: 1rem; font-size: 0.75rem; }
+        .warning { color: #F58025; }
+        .footer-copy { text-align: center; margin-top: 2rem; font-size: 0.75rem; color: #4b5563; }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link mono">&larr; back to fun</a>
+
+    <!--
+        This tool was not supposed to be public. Deployment scripts
+        do not distinguish between internal and external repositories.
+        This was filed as a bug. The bug was reclassified as a feature.
+        — J. Clay
+    -->
+
+    <div class="harassment-banner mono" onclick="this.textContent = this.textContent.includes('BETA') ? '⚠ AUDIT: Your current keyboard has 101 unnecessary keys. We have the data.' : '⚠ NOTICE: BETA ENROLLMENT IS OPEN. YOUR PARTICIPATION HAS BEEN NOTED.'">
+        <span>⚠ NOTICE:</span> BETA ENROLLMENT IS OPEN. YOUR PARTICIPATION HAS BEEN NOTED.
+    </div>
+    <div class="warning-stripe"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div style="font-weight:900;font-size:1.1rem;letter-spacing:-0.02em">KEYGRAVE</div>
+                <div class="mono" style="font-size:0.6rem;color:#6b7280;letter-spacing:0.1em;text-transform:uppercase">Telemetry — QA Division</div>
+            </div>
+            <span class="label label-dark mono" style="font-size:0.65rem">CL-DOC-011</span>
+        </div>
+    </nav>
+
+    <div class="doc">
+
+        <!-- HEADER -->
+        <section style="padding:4rem 0 3rem;border:none">
+            <div class="label label-orange mono" style="margin-bottom:1.5rem">QA INITIATIVE</div>
+            <h1 style="font-size:clamp(2rem, 5vw, 3rem);font-weight:900;line-height:1.05;margin-bottom:1.5rem;letter-spacing:-0.02em">
+                KEYGRAVE TELEMETRY<br>
+                <span style="font-weight:300;font-size:0.4em;color:#6b7280">Beta Enrollment — CCK-3 Compatibility Assessment</span>
+            </h1>
+
+            <table class="meta-table mono">
+                <tr><td>Classification</td><td>ALL-HANDS — PUBLIC (unintentional)</td></tr>
+                <tr><td>Author</td><td>J. Clay, Communications Division</td></tr>
+                <tr><td>Maintained by</td><td>QA Division</td></tr>
+                <tr><td>Version</td><td>0.1.0</td></tr>
+                <tr><td>License</td><td>MIT — Open source. Deliberately.</td></tr>
+                <tr><td>Network calls</td><td>0</td></tr>
+                <tr><td>Data transmitted</td><td>None</td></tr>
+            </table>
+
+            <p style="margin-top:1.5rem">Keygrave Telemetry parses your Claude Code session history and generates a compatibility assessment for the CCK-3 Approval Peripheral. The tool analyzes your approval patterns, rejection ratios, and time-to-decision metrics to determine whether you are suitable for hardware-accelerated approval workflows.</p>
+
+            <p>Results are presented as a standardized telemetry report. Your Beta Tester number is assigned at enrollment.</p>
+        </section>
+
+        <!-- INSTALL -->
+        <section>
+            <div class="section-num mono">Install</div>
+            <h2>One Command. Enrollment Is Immediate.</h2>
+
+            <div class="install-block">
+                <div class="install-header mono">OPTION 1 — DIRECT INSTALL</div>
+                <div class="install-body">
+                    <div class="install-cmd mono">
+                        <span style="color:#6b7280">$</span> git clone https://github.com/QRY91/keygrave.git && cd keygrave && chmod +x keygrave
+                    </div>
+                    <p style="font-size:0.8rem;color:#6b7280;margin:0.5rem 0 0">Clone, enter, make executable. Standard procedure.</p>
+                </div>
+            </div>
+
+            <div class="install-block" style="box-shadow:8px 8px 0 0 black">
+                <div class="install-header mono">OPTION 2 — RUN</div>
+                <div class="install-body">
+                    <div class="install-cmd mono">
+                        <span style="color:#6b7280">$</span> ./keygrave
+                    </div>
+                    <p style="font-size:0.8rem;color:#6b7280;margin:0.5rem 0 0">First run triggers enrollment. You will be asked to accept terms. You will press 1.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SAMPLE OUTPUT -->
+        <section>
+            <div class="section-num mono">Sample Output</div>
+            <h2>What You Will See</h2>
+
+            <div class="terminal mono">
+<span class="terminal-white">┌───────────────────────────────────────────────┐</span>
+<span class="terminal-white">│</span>  <span class="terminal-orange">KEYGRAVE TELEMETRY — SESSION REPORT</span>          <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  Beta Tester #0847                            <span class="terminal-white">│</span>
+<span class="terminal-white">├───────────────────────────────────────────────┤</span>
+<span class="terminal-white">│</span>                                               <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  Approvals                               412  <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>    <span class="terminal-dim">(tool accepts)</span>                        401  <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>    <span class="terminal-dim">(typed)</span>                                11  <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  Rejections                                3  <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  <span class="terminal-orange">Key 3 Presses                             0</span>  <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  Avg. Time to Approval                  0.4s  <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  Longest Hesitation                     1.1s  <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  Diffs Reviewed                      UNKNOWN  <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>                                               <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  CCK-3 Compatibility                  <span style="color:#4ade80;font-weight:bold">99.3%</span>   <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>                                               <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  Assessment: <span class="terminal-orange">YOUR KEYBOARD HAS 101</span>           <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  <span class="terminal-orange">UNNECESSARY KEYS.</span>                            <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>                                               <span class="terminal-white">│</span>
+<span class="terminal-white">├───────────────────────────────────────────────┤</span>
+<span class="terminal-white">│</span>  <span class="terminal-dim">You are the product.</span>                         <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  <span class="terminal-dim">Thank you for your participation.</span>            <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  <span class="terminal-dim">This data has not been transmitted.¹</span>         <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>                                               <span class="terminal-white">│</span>
+<span class="terminal-white">│</span>  <span class="terminal-dim">¹ That you know of.</span>                          <span class="terminal-white">│</span>
+<span class="terminal-white">└───────────────────────────────────────────────┘</span>
+            </div>
+
+            <p style="font-size:0.85rem;color:#6b7280">The numbers are real. The assessment is generated from your actual Claude Code session data. The editorial commentary is Keygrave's.</p>
+        </section>
+
+        <!-- COMMANDS -->
+        <section>
+            <div class="section-num mono">Commands</div>
+            <h2>Usage</h2>
+
+            <table class="cmd-table mono">
+                <tr>
+                    <td style="color:#F58025">./keygrave</td>
+                    <td>Enrollment + report (first run). Subsequent runs generate report.</td>
+                </tr>
+                <tr>
+                    <td style="color:#F58025">./keygrave report</td>
+                    <td>Generate telemetry report. Analyzes session history across all projects.</td>
+                </tr>
+                <tr>
+                    <td style="color:#F58025">./keygrave enroll</td>
+                    <td>View enrollment terms. You will be asked to accept. The acceptance mechanism is Key 1.</td>
+                </tr>
+                <tr>
+                    <td style="color:#F58025">./keygrave status</td>
+                    <td>Data inventory. Shows what the tool can see. Nothing leaves the machine.</td>
+                </tr>
+                <tr>
+                    <td style="color:#F58025">./keygrave version</td>
+                    <td>Version and credits.</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- WHAT IT MEASURES -->
+        <section>
+            <div class="section-num mono">Metrics</div>
+            <h2>What Gets Measured</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Approval Ratio</h3>
+                    <p>Approvals vs. rejections across all Claude Code sessions. If your ratio exceeds 99%, the CCK-3 is a lateral move. You were already a three-key operator.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Time to Decision</h3>
+                    <p>Average seconds between diff presentation and keypress. If this number is below 0.5 seconds, you are not reading the diff. The wristband would have done it for you.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Key 3 Presses</h3>
+                    <p>Always 0. This metric is included for completeness. It has never registered a nonzero value across any beta tester. See CL-DOC-007 for documentation.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Hesitation Events</h3>
+                    <p>Moments where time-to-decision exceeded 2 seconds. Classified as "anomalous deliberation." The CCK-3 does not have a key for deliberation. This is by design.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>CCK-3 Compatibility</h3>
+                    <p>Composite score. Factors in approval ratio, decision speed, and rejection frequency. Most users score above 97%. The remaining 3% are asked to reconsider their workflow.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Beta Tester Number</h3>
+                    <p>Assigned at enrollment. Persistent across sessions. Stored locally. Your number is yours. It is the only thing Keygrave gives you that you are allowed to keep.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRIVACY -->
+        <section>
+            <div class="section-num mono">Privacy</div>
+            <h2>This Tool Runs Locally. That's It.</h2>
+
+            <p>Keygrave Telemetry reads <span class="mono" style="font-weight:700">~/.claude/</span> and prints numbers to your terminal. Nothing is transmitted, collected, or shared. There are no network calls. There is no telemetry server.</p>
+
+            <p>The "telemetry" is the name. The numbers are real. The data stays on your machine.</p>
+
+            <p>A Chasm Logic product that respects privacy. This is not ironic. This is the one genuine thing on this page.</p>
+
+            <div style="border:3px solid black;padding:1.25rem;margin:1.5rem 0;background:white">
+                <p class="mono" style="font-size:0.8rem;margin:0;line-height:1.8">
+                    <span style="font-weight:700">Network calls:</span> 0<br>
+                    <span style="font-weight:700">Data transmitted:</span> None<br>
+                    <span style="font-weight:700">Tracking:</span> None<br>
+                    <span style="font-weight:700">Cookies:</span> No<br>
+                    <span style="font-weight:700">Telemetry server:</span> Does not exist<br>
+                    <span style="font-weight:700">PRIVACY.md:</span> <a href="https://github.com/QRY91/keygrave/blob/main/PRIVACY.md" style="color:#F58025">Genuine. Read it.</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- REQUIREMENTS -->
+        <section>
+            <div class="section-num mono">Requirements</div>
+            <h2>System Requirements</h2>
+
+            <table class="cmd-table mono">
+                <tr><td style="width:10rem">Bash</td><td>4+</td></tr>
+                <tr><td>Unix tools</td><td>grep, awk, find, date (standard)</td></tr>
+                <tr><td>Claude Code</td><td>Session data at ~/.claude/</td></tr>
+                <tr><td>Full-size keyboard</td><td>Not required. In fact, the assessment may specifically recommend against it.</td></tr>
+            </table>
+        </section>
+
+        <!-- CTA -->
+        <section style="padding-bottom:4rem;text-align:center">
+            <a href="https://github.com/QRY91/keygrave" class="aperture-btn" target="_blank" rel="noopener">View on GitHub</a>
+            <p class="mono" style="font-size:0.75rem;color:#6b7280;margin-top:1.5rem">Open source. MIT license. The deployment to a public repository was not authorized. It has been reclassified as intentional.</p>
+        </section>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="mono">KEYGRAVE</h3>
+                    <p>A Chasm Logic Hardware Division. The telemetry tool is a QA initiative that was not supposed to be public. It is now public. Adjustment has been made.</p>
+                </div>
+                <div>
+                    <h4 class="mono">CONTACT</h4>
+                    <ul>
+                        <li class="mono">qa@chasmlogic.io</li>
+                        <li class="mono">beta@chasmlogic.io</li>
+                        <li>Unenrollment: not available</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">LEGAL</h4>
+                    <ul>
+                        <li>Beta Enrollment Terms</li>
+                        <li>Biometric Data Consent</li>
+                        <li>Doug Disambiguation Protocol</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">ALSO FROM CHASM LOGIC</h4>
+                    <ul>
+                        <li><a href="/fun/claudetite-keyz/">Claudetite Keyz</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">The hardware this tool assesses compatibility for.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/chasm-logic/wristband/">Ultra Wristband</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">If your approval time is below 0.5s, this is your next step.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/chasm-logic/">Document Index</a></li>
+                        <li style="font-size:0.75rem;color:#6b7280;margin-top:0.25rem">All filings. Most regrettable.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="disclaimer mono">
+                <p><span style="color:white;font-weight:bold">DISCLAIMER:</span> Keygrave Telemetry is a QA tool developed by the Communications Division for internal compatibility testing. It was published to a public repository because the deployment script does not distinguish between internal and external targets. This was filed as a bug. The bug was reclassified as a feature. The feature was documented. The documentation was approved before being read.</p>
+
+                <p>The tool genuinely does not transmit data. This is both the right thing to do and, in the context of Chasm Logic's product line, the funniest thing on this page.</p>
+
+                <p class="warning">⚠ WARNING: Running this tool will assign you a Beta Tester number. The number is permanent. Unenrollment is not available. Your participation has been noted.</p>
+            </div>
+
+            <div class="footer-copy mono">© 2026 KEYGRAVE / CHASM LOGIC. ALL APPROVALS COUNTED. MOST APPROVALS YOURS. KEY 3 PRESSES: 0.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+</body>
+</html>
