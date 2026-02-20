@@ -97,7 +97,7 @@
     <circle cx="636" cy="235" r="2" fill="#dc2626"/>
     <rect x="232" y="322" width="210" height="68" fill="none" stroke="#4a2a2a" stroke-width="1"/>
     <text x="242" y="338" fill="#dc2626" font-size="10" font-weight="bold">KEY 5: UNDO (CONCEPTUAL)</text>
-    <text x="242" y="352" fill="#5a3a3a">Sends Slack: "looking into it"</text>
+    <text x="242" y="352" fill="#5a3a3a">Sends Talc: "looking into it"</text>
     <text x="242" y="366" fill="#5a3a3a">Opens tab (unread)</text>
     <text x="242" y="380" fill="#5a3a3a">Tab closed: 4 DAYS LATER</text>
     <!-- connector from line to box -->
@@ -108,7 +108,7 @@
     <circle cx="748" cy="235" r="2" fill="#dc2626"/>
     <rect x="460" y="322" width="240" height="80" fill="none" stroke="#4a2a2a" stroke-width="1"/>
     <text x="470" y="338" fill="#dc2626" font-size="10" font-weight="bold">KEY 6: ESCALATE</text>
-    <text x="470" y="352" fill="#5a3a3a">Creates Jira ticket</text>
+    <text x="470" y="352" fill="#5a3a3a">Creates Strata ticket</text>
     <text x="470" y="366" fill="#5a3a3a">Assigns to: greg.chen (DEACTIVATED)</text>
     <text x="470" y="380" fill="#5a3a3a">Status: IN PROGRESS (forever)</text>
     <text x="470" y="394" fill="#dc2626">Closes terminal. Have a nice day.</text>

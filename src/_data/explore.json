@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "title": "Off the deep end",
+      "description": "What this place is, what it draws from, and why",
+      "href": "/off-the-deep-end/",
+      "tags": ["writing", "meta", "personal"],
+      "status": "growing",
+      "connections": ["About", "Recursive mirror", "Chasm Logic"],
+      "lastUpdated": "2026-02-20"
+    },
+    {
       "title": "Disassemble-recombine",
       "description": "Building three tools from the wreckage of 10,000 deleted lines",
       "href": "/disassemble-recombine/",

@@ -375,7 +375,7 @@ permalink: /fun/chasm-logic/qa/
                         </tr>
                         <tr>
                             <td class="incident-id mono">CCK-010</td>
-                            <td>Key 5 ("Undo Conceptual") sends Slack message "looking into it" to #general regardless of context. During testing, this message was sent during an active production incident. Three engineers responded "same." The incident resolved itself.</td>
+                            <td>Key 5 ("Undo Conceptual") sends Talc message "looking into it" to #general regardless of context. During testing, this message was sent during an active production incident. Three engineers responded "same." The incident resolved itself.</td>
                             <td><span class="status-badge st-expected">BY DESIGN</span></td>
                         </tr>
                         <tr>
@@ -385,7 +385,7 @@ permalink: /fun/chasm-logic/qa/
                         </tr>
                         <tr>
                             <td class="incident-id mono">CCK-012</td>
-                            <td>Key 6 ("Escalate") creates Jira ticket and assigns to deactivated employee. Ticket auto-responds with "Out of Office: Effective Permanently." Ticket status set to IN PROGRESS.</td>
+                            <td>Key 6 ("Escalate") creates Strata ticket and assigns to deactivated employee. Ticket auto-responds with "Out of Office: Effective Permanently." Ticket status set to IN PROGRESS.</td>
                             <td><span class="status-badge st-unresolved">SEE §6</span></td>
                         </tr>
                     </tbody>
@@ -402,7 +402,7 @@ permalink: /fun/chasm-logic/qa/
 
             <p>Engineering reviewed the ticket and reclassified it as "working as intended." I reopened the ticket with additional documentation. Engineering closed it. The ticket was then reassigned to a deactivated employee.</p>
 
-            <p>I could not determine whether this was the bug reproducing or normal Jira behavior.</p>
+            <p>I could not determine whether this was the bug reproducing or normal Strata behavior.</p>
 
             <div class="terminal mono">
                 <div class="terminal-white">> CCK-012 — KEY 6 ESCALATE DEFECT</div>
@@ -420,7 +420,7 @@ permalink: /fun/chasm-logic/qa/
                 <div class="terminal-dim">> QA has stopped observing it</div>
             </div>
 
-            <p>The ticket was closed by a deactivated employee. I do not know how this happened. I have been advised not to investigate further. The advice came via a Jira comment from the deactivated employee.</p>
+            <p>The ticket was closed by a deactivated employee. I do not know how this happened. I have been advised not to investigate further. The advice came via a Strata comment from the deactivated employee.</p>
 
             <p>Key 6 shipped with this behavior. The release notes describe it as "enterprise-grade delegation."</p>
         </section>
