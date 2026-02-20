@@ -63,7 +63,7 @@ extraStyles: |
 
 <script>
 // Random featured articles
-window.exploreData = {{ explore.items | dump | safe }};
+window.exploreData = {{ collections.explore | dump | safe }};
 
 (function() {
     const data = window.exploreData || [];
