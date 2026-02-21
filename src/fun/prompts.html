@@ -1,0 +1,353 @@
+---
+layout: base.njk
+title: Prompts - qry.zone
+description: People said they'd rather read the prompts. Here they are.
+explore: true
+exploreTags:
+  - meta
+  - creative
+status: growing
+firstCreated: 2026-02-21
+lastUpdated: 2026-02-21
+---
+
+<style>
+.prompts-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+.prompts-header {
+    text-align: center;
+    margin-bottom: var(--space-xxl);
+}
+.prompts-title {
+    font-size: 2rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    margin-bottom: var(--space-md);
+}
+.prompts-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+.prompts-philosophy {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.prompts-controls {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
+    align-items: center;
+}
+.prompts-search {
+    flex: 1;
+    min-width: 200px;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+}
+.prompts-filter {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+}
+.random-btn {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: border-color 0.2s;
+    white-space: nowrap;
+}
+.random-btn:hover {
+    border-color: var(--color-accent);
+}
+.prompts-grid {
+    display: grid;
+    gap: var(--space-lg);
+}
+.prompt-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    transition: border-color 0.2s;
+    position: relative;
+}
+.prompt-card:hover {
+    border-color: var(--color-accent);
+}
+.prompt-card::before {
+    content: ">";
+    position: absolute;
+    top: var(--space-lg);
+    left: var(--space-md);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    opacity: 0.5;
+}
+.prompt-text {
+    font-family: var(--font-mono);
+    color: var(--color-text-primary);
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-lg);
+    font-size: 0.95rem;
+}
+.prompt-context {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    padding-left: var(--space-lg);
+    margin-bottom: var(--space-md);
+    border-left: 2px solid var(--color-border);
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.prompt-meta {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    padding-left: var(--space-lg);
+}
+.prompt-vibe {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+}
+.vibe-funny {
+    background: #3a3a2d;
+    border: 1px solid #6a6a3d;
+    color: #f0dfaf;
+}
+.vibe-unhinged {
+    background: #3a2d3a;
+    border: 1px solid #6a3d6a;
+    color: #df9fdf;
+}
+.vibe-philosophical {
+    background: #2d3a3a;
+    border: 1px solid #3d6a6a;
+    color: #9fdfdf;
+}
+.vibe-effective {
+    background: #2d3a2d;
+    border: 1px solid #3d6a3d;
+    color: #81c784;
+}
+.vibe-meta {
+    background: #3a2d2d;
+    border: 1px solid #6a4a3d;
+    color: #dfaf8f;
+}
+.vibe-cursed {
+    background: #3a2d2d;
+    border: 1px solid #8f4a4a;
+    color: #c78181;
+}
+.prompt-tag {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    background: var(--color-bg, #353535);
+    border-radius: 3px;
+    color: var(--color-text-secondary);
+}
+.prompts-count {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-top: var(--space-lg);
+}
+.prompts-loading {
+    text-align: center;
+    padding: var(--space-xxl);
+    color: var(--color-text-secondary);
+}
+.prompts-cta {
+    text-align: center;
+    margin-top: var(--space-xxl);
+    padding: var(--space-lg);
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--border-radius);
+}
+.prompts-cta p {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+    font-size: 0.9rem;
+}
+.prompts-cta a {
+    color: var(--color-accent);
+}
+.spotlight {
+    border-color: var(--color-accent) !important;
+    animation: spotlightFade 2s ease forwards;
+}
+@keyframes spotlightFade {
+    0% { border-color: var(--color-accent); }
+    100% { border-color: var(--color-border); }
+}
+</style>
+
+<div class="prompts-container">
+    <header class="prompts-header">
+        <img
+            src="/assets/images/you-sure-about-that-dithered.gif"
+            alt="You sure about that? - dithered in zenburn palette"
+            style="max-width: 100%; border-radius: var(--border-radius); margin-bottom: var(--space-lg);"
+        >
+        <h1 class="prompts-title">Prompts</h1>
+        <p class="prompts-subtitle">People said they'd rather read the prompts.</p>
+        <p class="prompts-philosophy">
+            Curated from real Claude Code sessions building this site.
+            The full conversation history is messier, funnier, and longer than this.
+        </p>
+    </header>
+
+    <div class="prompts-controls">
+        <input type="text" id="prompts-search" class="prompts-search" placeholder="Search prompts...">
+        <select id="prompts-vibe" class="prompts-filter">
+            <option value="">All vibes</option>
+            <option value="funny">funny</option>
+            <option value="unhinged">unhinged</option>
+            <option value="philosophical">philosophical</option>
+            <option value="effective">effective</option>
+            <option value="meta">meta</option>
+            <option value="cursed">cursed</option>
+        </select>
+        <button class="random-btn" id="random-btn">random</button>
+    </div>
+
+    <div id="prompts-grid" class="prompts-grid">
+        <div class="prompts-loading">Loading prompts database...</div>
+    </div>
+
+    <div id="prompts-count" class="prompts-count"></div>
+
+    <div class="prompts-cta">
+        <p>This is a curated selection. The actual sessions contain thousands of messages,
+        most of them boring. These are the ones that made us laugh or think.</p>
+        <p>Served from a <a href="/assets/fun/prompts.db">SQLite database</a> because of course it is.</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.min.js"></script>
+<script>
+(async function() {
+    const grid = document.getElementById('prompts-grid');
+    const countEl = document.getElementById('prompts-count');
+    const searchInput = document.getElementById('prompts-search');
+    const vibeSelect = document.getElementById('prompts-vibe');
+    const randomBtn = document.getElementById('random-btn');
+
+    const SQL = await initSqlJs({
+        locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+    });
+
+    const response = await fetch('/assets/fun/prompts.db');
+    const buffer = await response.arrayBuffer();
+    const db = new SQL.Database(new Uint8Array(buffer));
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function renderPrompts(search, vibe, spotlightId) {
+        let query = 'SELECT * FROM prompts WHERE 1=1';
+        const params = [];
+
+        if (search) {
+            query += ' AND (prompt LIKE ? OR context LIKE ? OR tags LIKE ?)';
+            const term = '%' + search + '%';
+            params.push(term, term, term);
+        }
+
+        if (vibe) {
+            query += ' AND vibe LIKE ?';
+            params.push('%' + vibe + '%');
+        }
+
+        query += ' ORDER BY id DESC';
+
+        const stmt = db.prepare(query);
+        stmt.bind(params);
+
+        const prompts = [];
+        while (stmt.step()) {
+            prompts.push(stmt.getAsObject());
+        }
+        stmt.free();
+
+        if (prompts.length === 0) {
+            grid.innerHTML = '<div class="prompts-loading">No prompts match your search.</div>';
+            countEl.textContent = '';
+            return;
+        }
+
+        grid.innerHTML = prompts.map(p => {
+            const vibes = p.vibe.split(',').map(v => v.trim());
+            const tags = p.tags ? p.tags.split(',').map(t => t.trim()) : [];
+            const isSpotlight = spotlightId && p.id === spotlightId;
+
+            return `
+                <div class="prompt-card${isSpotlight ? ' spotlight' : ''}" id="prompt-${p.id}">
+                    <div class="prompt-text">${escapeHtml(p.prompt)}</div>
+                    <div class="prompt-context">${escapeHtml(p.context)}</div>
+                    <div class="prompt-meta">
+                        ${vibes.map(v => `<span class="prompt-vibe vibe-${v}">${v}</span>`).join('')}
+                        ${tags.map(t => `<span class="prompt-tag">${t}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        countEl.textContent = prompts.length + ' prompt' + (prompts.length === 1 ? '' : 's');
+
+        if (spotlightId) {
+            const el = document.getElementById('prompt-' + spotlightId);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    renderPrompts('', '');
+
+    searchInput.addEventListener('input', () => {
+        renderPrompts(searchInput.value, vibeSelect.value);
+    });
+
+    vibeSelect.addEventListener('change', () => {
+        renderPrompts(searchInput.value, vibeSelect.value);
+    });
+
+    randomBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        vibeSelect.value = '';
+        const stmt = db.prepare('SELECT id FROM prompts ORDER BY RANDOM() LIMIT 1');
+        if (stmt.step()) {
+            const id = stmt.getAsObject().id;
+            renderPrompts('', '', id);
+        }
+        stmt.free();
+    });
+})();
+</script>
