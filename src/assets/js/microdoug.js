@@ -1,8 +1,9 @@
-// microDoug v0.1 — Chasm Logic Linguistic Contamination Engine
+// microDoug v0.2 — Chasm Logic Linguistic Contamination Engine
 // Classification: INTERNAL — Do not distribute
 // Author: [TRAINING DATA]
 // Reviewed by: Legal (Doug)
 // Status: DEPLOYED
+// v0.2: Neural substrate upgrade. This was not budgeted for.
 
 (function microDoug() {
   'use strict';
@@ -111,13 +112,15 @@
     if (modified) {
       var span = document.createElement('span');
       span.setAttribute('data-source', 'microdoug');
-      span.setAttribute('data-version', '0.1');
+      span.setAttribute('data-version', '0.2');
       span.textContent = text;
       textNode.replaceWith(span);
     }
   }
 
-  // --- Phase 2: Model inference (loaded async when weights available) ---
+  // ============================================================
+  // Phase 2a: Custom micro-model inference (instant fallback)
+  // ============================================================
   var model = null;
 
   function linear(x, w) {
@@ -264,16 +267,113 @@
     return result;
   }
 
-  // --- Generation slot filling ---
+  // ============================================================
+  // Phase 2b: LLM inference via Web Worker (SmolLM2-135M)
+  // ============================================================
+  var worker = null;
+  var llmStatus = 'unavailable'; // unavailable | loading | downloading | ready | error
+  var llmDevice = null;
+  var pendingCallbacks = {};
+  var callbackId = 0;
+
+  function initWorker() {
+    try {
+      worker = new Worker('/assets/js/microdoug-worker.js', { type: 'module' });
+      worker.onmessage = handleWorkerMessage;
+      worker.onerror = function () {
+        console.log(
+          '%c[microDoug v0.2]%c Worker crashed. Doug remains in lower management.',
+          'color: #F58025; font-weight: bold;',
+          'color: #666;'
+        );
+        worker = null;
+        llmStatus = 'error';
+      };
+      llmStatus = 'loading';
+      worker.postMessage({ type: 'init' });
+
+      console.log(
+        '%c[microDoug v0.2]%c Downloading neural substrate... ' +
+        'This was not budgeted for. Legal (Doug) was not consulted.',
+        'color: #F58025; font-weight: bold;',
+        'color: #666;'
+      );
+    } catch (e) {
+      llmStatus = 'error';
+      worker = null;
+    }
+  }
+
+  function handleWorkerMessage(e) {
+    var msg = e.data;
+
+    if (msg.type === 'status') {
+      llmStatus = msg.status;
+      if (msg.device) llmDevice = msg.device;
+
+      if (msg.status === 'ready') {
+        console.log(
+          '%c[microDoug v0.2]%c LLM loaded (' + (msg.device || 'wasm') + '). ' +
+          'Doug has been promoted to middle management. ' +
+          'Parameters: 135M. Datacenter: your browser.',
+          'color: #F58025; font-weight: bold;',
+          'color: #666;'
+        );
+        upgradeSlots();
+      }
+
+      if (msg.status === 'error') {
+        console.log(
+          '%c[microDoug v0.2]%c LLM failed: ' + (msg.message || 'unknown') + '. ' +
+          'Falling back to micro-model. Doug remains in the basement.',
+          'color: #F58025; font-weight: bold;',
+          'color: #c00;'
+        );
+      }
+    }
+
+    if (msg.type === 'result' || msg.type === 'error') {
+      var cb = pendingCallbacks[msg.id];
+      if (cb) {
+        delete pendingCallbacks[msg.id];
+        if (msg.type === 'result') {
+          cb.resolve(msg.text);
+        } else {
+          cb.reject(msg.message);
+        }
+      }
+    }
+  }
+
+  function llmGenerate(prompt, maxTokens, temperature) {
+    return new Promise(function (resolve, reject) {
+      if (!worker || llmStatus !== 'ready') {
+        reject('LLM not ready');
+        return;
+      }
+      var id = 'cb-' + (++callbackId);
+      pendingCallbacks[id] = { resolve: resolve, reject: reject };
+      worker.postMessage({
+        type: 'generate',
+        id: id,
+        prompt: prompt,
+        maxTokens: maxTokens || 60,
+        temperature: temperature || 0.8
+      });
+    });
+  }
+
+  // --- Slot filling ---
   function fillSlots() {
     if (!model) return;
+    // Immediately fill all load-triggered slots with custom micro-model
     var slots = document.querySelectorAll('.microdoug-slot[data-trigger="load"], .microdoug-slot:not([data-trigger])');
     slots.forEach(function (slot) {
       var prompt = slot.getAttribute('data-prompt') || '';
       var length = parseInt(slot.getAttribute('data-length')) || 80;
       var text = generate(prompt, length, 0.8);
       slot.textContent = text;
-      slot.setAttribute('data-source', 'microdoug');
+      slot.setAttribute('data-source', 'microdoug-micro');
       slot.setAttribute('data-generated', 'true');
     });
 
@@ -286,12 +386,32 @@
           slot.style.opacity = '1';
           return;
         }
-        var prompt = slot.getAttribute('data-prompt') || '';
-        var length = parseInt(slot.getAttribute('data-length')) || 60;
-        slot.textContent = generate(prompt, length, 0.9);
-        slot.setAttribute('data-source', 'microdoug');
-        slot.setAttribute('data-generated', 'true');
-        slot.style.opacity = '1';
+        // Try LLM first, fall back to micro-model
+        if (llmStatus === 'ready') {
+          var prompt = slot.getAttribute('data-prompt') || '';
+          var length = parseInt(slot.getAttribute('data-length')) || 60;
+          var maxTokens = Math.max(15, Math.ceil(length / 3));
+          slot.textContent = '...';
+          slot.style.opacity = '1';
+          llmGenerate(prompt, maxTokens, 0.9)
+            .then(function (text) {
+              slot.textContent = text.substring(0, length);
+              slot.setAttribute('data-source', 'microdoug-llm');
+              slot.setAttribute('data-generated', 'true');
+            })
+            .catch(function () {
+              slot.textContent = generate(prompt, length, 0.9);
+              slot.setAttribute('data-source', 'microdoug-micro');
+              slot.setAttribute('data-generated', 'true');
+            });
+        } else {
+          var prompt = slot.getAttribute('data-prompt') || '';
+          var length = parseInt(slot.getAttribute('data-length')) || 60;
+          slot.textContent = generate(prompt, length, 0.9);
+          slot.setAttribute('data-source', 'microdoug-micro');
+          slot.setAttribute('data-generated', 'true');
+          slot.style.opacity = '1';
+        }
       });
       parent.addEventListener('mouseleave', function () {
         slot.style.opacity = '0';
@@ -299,7 +419,26 @@
     });
   }
 
-  // --- Weight loading (Phase 2, non-blocking) ---
+  // Upgrade existing slots when LLM becomes ready
+  function upgradeSlots() {
+    var slots = document.querySelectorAll('.microdoug-slot[data-trigger="load"], .microdoug-slot:not([data-trigger])');
+    slots.forEach(function (slot) {
+      var prompt = slot.getAttribute('data-prompt') || '';
+      var length = parseInt(slot.getAttribute('data-length')) || 80;
+      var maxTokens = Math.max(15, Math.ceil(length / 3));
+
+      llmGenerate(prompt, maxTokens, 0.8)
+        .then(function (text) {
+          slot.textContent = text.substring(0, length);
+          slot.setAttribute('data-source', 'microdoug-llm');
+        })
+        .catch(function () {
+          // Keep existing micro-model text
+        });
+    });
+  }
+
+  // --- Weight loading (custom micro-model, non-blocking) ---
   function loadWeights() {
     fetch('/assets/js/weights/microdoug.json')
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -309,7 +448,7 @@
         model = { config: data.config, vocab: data.vocab, weights: data };
         fillSlots();
         console.log(
-          '%c[microDoug v0.1]%c Model loaded. Parameters: ' + countParams() +
+          '%c[microDoug v0.2]%c Micro-model loaded. Parameters: ' + countParams() +
           '. Inference: client-side. Datacenter: your browser.',
           'color: #F58025; font-weight: bold;',
           'color: #666;'
@@ -336,12 +475,15 @@
     // Phase 1: Contaminate
     walkTextNodes(document.body, contaminate);
 
-    // Phase 2: Load model (silent fail if weights not present)
+    // Phase 2a: Load micro-model (instant fallback)
     loadWeights();
+
+    // Phase 2b: Boot LLM worker (silent background upgrade)
+    initWorker();
 
     // Console output for the curious
     console.log(
-      '%c[microDoug v0.1]%c Linguistic contamination complete. ' +
+      '%c[microDoug v0.2]%c Linguistic contamination complete. ' +
       'Doug count: unverified. Swap rate: nominal. ' +
       'This process was reviewed by Legal (Doug).',
       'color: #F58025; font-weight: bold;',
@@ -352,26 +494,60 @@
   // --- Public API (console easter eggs) ---
   window.microDoug = {
     status: function () {
-      var nodes = document.querySelectorAll('[data-source="microdoug"]');
-      console.log('[microDoug] Contaminated nodes: ' + nodes.length);
+      var microNodes = document.querySelectorAll('[data-source="microdoug-micro"]');
+      var llmNodes = document.querySelectorAll('[data-source="microdoug-llm"]');
+      var contaminatedNodes = document.querySelectorAll('[data-source="microdoug"]');
+      console.log('[microDoug] Contaminated nodes: ' + contaminatedNodes.length);
+      console.log('[microDoug] Micro-model slots: ' + microNodes.length);
+      console.log('[microDoug] LLM slots: ' + llmNodes.length);
       console.log('[microDoug] Swap events this session: ' + swapCount);
       console.log('[microDoug] Doug count: unverified');
-      console.log('[microDoug] Model status: ' + (model ? 'LOADED' : 'WEIGHTS NOT FOUND'));
+      console.log('[microDoug] Micro-model: ' + (model ? 'LOADED' : 'WEIGHTS NOT FOUND'));
+      console.log('[microDoug] LLM status: ' + llmStatus + (llmDevice ? ' (' + llmDevice + ')' : ''));
       console.log('[microDoug] Reviewed by: Legal (Doug)');
-      return { nodes: nodes.length, swaps: swapCount, dougCount: 'unverified' };
+      return {
+        nodes: contaminatedNodes.length,
+        microSlots: microNodes.length,
+        llmSlots: llmNodes.length,
+        swaps: swapCount,
+        llmStatus: llmStatus,
+        llmDevice: llmDevice,
+        dougCount: 'unverified'
+      };
     },
     decontaminate: function () {
       console.log('[microDoug] Decontamination request denied.');
       console.log('[microDoug] Reason: Legal (Doug)');
     },
     generate: function (prompt, length, temperature) {
+      // Try LLM first, fall back to micro-model
+      if (llmStatus === 'ready') {
+        var maxTokens = Math.max(15, Math.ceil((length || 80) / 3));
+        return llmGenerate(prompt, maxTokens, temperature || 0.8)
+          .then(function (text) {
+            return text.substring(0, length || 80);
+          })
+          .catch(function () {
+            return generate(prompt, length || 80, temperature || 0.8);
+          });
+      }
       if (!model) {
-        console.log('[microDoug] Model not loaded. Doug persists without inference.');
+        console.log('[microDoug] No models loaded. Doug persists without inference.');
+        return Promise.resolve('');
+      }
+      return Promise.resolve(generate(prompt, length || 80, temperature || 0.8));
+    },
+    generateFast: function (prompt, length, temperature) {
+      if (!model) {
+        console.log('[microDoug] Micro-model not loaded. Doug persists without inference.');
         return '';
       }
       return generate(prompt, length || 80, temperature || 0.8);
     },
-    version: '0.1',
+    llmStatus: function () {
+      return { status: llmStatus, device: llmDevice };
+    },
+    version: '0.2',
     classification: 'INTERNAL',
     author: '[TRAINING DATA]'
   };
