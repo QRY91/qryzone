@@ -1,0 +1,1413 @@
+---
+permalink: /fun/chasm-logic/deep-bore/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Deep Bore — Agent Monitoring Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           PROJECT DEEP BORE — MONITORING DASHBOARD
+           Classification: INTERNAL / R&D DIVISION
+           Maintained by: J. Clay, Communications
+           Status: OPERATIONAL (partial)
+           ============================================================ */
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes particleFly {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            60% { opacity: 0.9; }
+            100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.3); }
+        }
+
+        @keyframes cardFlicker {
+            0% { opacity: 0.55; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes meterShine {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(300%); }
+            100% { transform: translateX(300%); }
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(-50%) translateY(0); }
+            to { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: #0e0d0b;
+            color: #e0ddd5;
+            font-family: 'IBM Plex Mono', 'Fira Code', monospace;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+        /* Back link */
+        .back-link {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            color: #554;
+            text-decoration: none;
+            letter-spacing: 0.08em;
+            z-index: 200;
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(14,13,11,0.9);
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .back-link:hover {
+            color: #aa9;
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        /* Scanline overlay */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 100;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,0,0,0.03) 0px,
+                rgba(0,0,0,0.03) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+        }
+
+        /* Particle layer */
+        .particle-layer {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 150;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            font-weight: 700;
+            opacity: 0;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(68, 170, 119, 0.12);
+            border: 1px solid rgba(68, 170, 119, 0.35);
+            padding: 12px 28px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: #4a7;
+            letter-spacing: 0.06em;
+            z-index: 200;
+            animation: toastIn 0.4s ease, toastOut 0.4s ease 3s forwards;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 24px rgba(68, 170, 119, 0.1);
+            white-space: nowrap;
+        }
+
+        /* Header */
+        .dashboard-header {
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .header-org {
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            color: #554;
+            margin-bottom: 6px;
+        }
+        .header-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: #e0ddd5;
+        }
+        .header-subtitle {
+            font-size: 11px;
+            color: #776;
+            margin-top: 4px;
+        }
+        .header-right {
+            text-align: right;
+            font-size: 10px;
+            color: #554;
+            line-height: 1.8;
+        }
+        .header-tick {
+            color: #aa9;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Mode indicator */
+        .mode-indicator {
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            color: #554;
+            margin-top: 4px;
+        }
+        .mode-indicator.live { color: #4a7; }
+
+        /* Main content */
+        .dashboard-content {
+            padding: 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Section labels */
+        .section-label {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: #776;
+            margin-bottom: 12px;
+        }
+
+        /* Agent grid */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+        .agent-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 16px 20px;
+            position: relative;
+            opacity: 0.55;
+            transition: all 0.3s ease;
+        }
+        .agent-card.online {
+            background: rgba(68, 170, 119, 0.04);
+            border-color: rgba(68, 170, 119, 0.3);
+            opacity: 1;
+        }
+        .agent-card.classified {
+            border-color: rgba(166, 102, 204, 0.2);
+        }
+        .agent-card.flickering {
+            opacity: 1;
+            background: rgba(68, 170, 119, 0.04);
+            border-color: rgba(68, 170, 119, 0.3);
+            animation: cardFlicker 0.15s ease-in-out 6 alternate;
+        }
+        .agent-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .agent-card-id {
+            display: flex;
+            align-items: center;
+        }
+        .agent-card-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e0ddd5;
+            letter-spacing: 0.05em;
+        }
+        .status-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            letter-spacing: 0.08em;
+            transition: all 0.3s ease;
+        }
+        .status-badge.nominal {
+            background: rgba(68,170,119,0.15);
+            color: #4a7;
+        }
+        .status-badge.offline {
+            background: rgba(255,255,255,0.05);
+            color: #665;
+        }
+        .status-badge.signal {
+            background: rgba(68,170,119,0.15);
+            color: #4a7;
+        }
+
+        /* Status dot */
+        .status-dot {
+            position: relative;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 8px;
+        }
+        .status-dot-inner {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .status-dot-inner.online {
+            background: #4a7;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .status-dot-inner.offline {
+            background: #c55;
+            opacity: 0.6;
+        }
+        .status-dot-inner.classified {
+            background: #a6c;
+            opacity: 0.6;
+        }
+        .status-dot-inner.pending {
+            background: #556;
+            opacity: 0.6;
+        }
+
+        .agent-planet {
+            font-size: 11px;
+            color: #887;
+            margin-bottom: 6px;
+        }
+        .agent-planet span { color: #aa9; }
+
+        .agent-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 20px;
+            font-size: 11px;
+            color: #776;
+            margin-top: 10px;
+        }
+        .agent-stats .val {
+            color: #aa9;
+            text-align: right;
+        }
+        .agent-stats .val.warn { color: #e94; }
+        .agent-stats .val.ok { color: #4a7; }
+
+        .agent-note {
+            font-size: 10px;
+            color: #665;
+            margin-top: 10px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .agent-flicker-text {
+            font-size: 10px;
+            color: #4a7;
+            margin-top: 10px;
+            line-height: 1.6;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .doug-warning {
+            margin-top: 10px;
+            padding: 6px 10px;
+            background: rgba(204, 85, 85, 0.1);
+            border: 1px solid rgba(204, 85, 85, 0.2);
+            font-size: 10px;
+            color: #c55;
+            letter-spacing: 0.04em;
+        }
+
+        /* Two-column layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 24px;
+        }
+        @media (max-width: 800px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Log feed */
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .streaming-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .streaming-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #c55;
+            animation: pulse 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+        .streaming-label {
+            font-size: 9px;
+            color: #776;
+            letter-spacing: 0.1em;
+        }
+
+        .log-container {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 12px 16px;
+            height: 340px;
+            overflow-y: auto;
+        }
+        .log-line {
+            font-size: 11px;
+            line-height: 1.7;
+            color: #776;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            padding: 3px 0;
+        }
+        .log-line.highlight {
+            background: rgba(68, 170, 119, 0.04);
+            animation: fadeIn 0.5s ease;
+        }
+        .log-ts { color: #554; }
+        .log-agent { color: #665; }
+        .log-agent.bore-01 { color: #4a7; }
+        .log-agent.system { color: #8af; font-weight: 600; }
+        .log-level-info { color: #998; }
+        .log-level-warn { color: #e94; font-weight: 600; }
+        .log-level-err { color: #c55; font-weight: 600; }
+        .log-level-ok { color: #4a7; font-weight: 600; }
+        .log-msg-info { color: #998; }
+        .log-msg-warn { color: #e94; }
+        .log-msg-err { color: #c55; }
+        .log-msg-ok { color: #4a7; }
+
+        .scroll-resume {
+            position: sticky;
+            bottom: 0;
+            text-align: center;
+            padding: 4px;
+            background: rgba(14,13,11,0.9);
+            font-size: 9px;
+            color: #776;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            display: none;
+        }
+
+        /* Right column panels */
+        .panel {
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.02);
+            padding: 20px;
+        }
+        .panel-title {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: #776;
+            margin-bottom: 14px;
+        }
+
+        .containment-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 11px;
+        }
+        .containment-row + .containment-row {
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+        .containment-label { color: #998; }
+        .containment-status {
+            font-size: 10px;
+            letter-spacing: 0.06em;
+        }
+
+        .incident-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #998;
+            line-height: 1.8;
+        }
+
+        /* Funding meter */
+        .funding-panel {
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.5s ease;
+        }
+        .funding-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 14px;
+        }
+        .funding-label {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: #776;
+        }
+        .funding-ref {
+            font-size: 10px;
+            color: #554;
+        }
+
+        .meter-track {
+            background: rgba(255,255,255,0.04);
+            height: 28px;
+            position: relative;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .meter-fill {
+            height: 100%;
+            width: 0%;
+            position: relative;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .meter-fill.nominal {
+            background: linear-gradient(90deg, #3a7 0%, #5c9 100%);
+            box-shadow: 0 0 20px rgba(68, 170, 119, 0.15);
+        }
+        .meter-fill.critical {
+            background: linear-gradient(90deg, #c55 0%, #e94 100%);
+            box-shadow: 0 0 20px rgba(204, 85, 85, 0.2);
+        }
+        .meter-shine {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 40%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            animation: meterShine 3s ease-in-out infinite;
+        }
+        .meter-text {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #e0ddd5;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+        }
+
+        .funding-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .funding-info {
+            font-size: 10px;
+            color: #665;
+            line-height: 1.8;
+            flex: 1;
+        }
+        .funding-info .val { color: #aa9; }
+        .funding-info .val.critical { color: #c55; }
+        .funding-footnote {
+            margin-top: 6px;
+            color: #554;
+            font-size: 9px;
+            line-height: 1.6;
+        }
+
+        .fund-btn {
+            font-family: 'IBM Plex Mono', 'Fira Code', monospace;
+            font-size: 11px;
+            padding: 12px 24px;
+            border: 1px solid rgba(68, 170, 119, 0.3);
+            background: rgba(68, 170, 119, 0.12);
+            color: #4a7;
+            cursor: pointer;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .fund-btn:hover {
+            background: rgba(68, 170, 119, 0.22);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(68, 170, 119, 0.15);
+        }
+        .fund-btn.critical {
+            background: rgba(204, 85, 85, 0.15);
+            border-color: rgba(204, 85, 85, 0.4);
+            color: #c55;
+        }
+        .fund-btn.critical:hover {
+            background: rgba(204, 85, 85, 0.25);
+            box-shadow: 0 4px 16px rgba(204, 85, 85, 0.2);
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 16px;
+            margin-top: 8px;
+        }
+        .footer-text {
+            font-size: 9px;
+            color: #443;
+            line-height: 1.8;
+            max-width: 680px;
+        }
+        .footer-version {
+            font-size: 9px;
+            color: #332;
+            margin-top: 8px;
+        }
+
+        /* Right column stack */
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <!--
+        This monitoring interface was built and is maintained by
+        J. Clay, Communications Division, Chasm Logic.
+
+        It was not intended for external access. If you are reading
+        this source, deployment routing has failed again. This has
+        been filed.
+    -->
+
+    <a href="/fun/chasm-logic/" class="back-link">&larr; CHASM LOGIC</a>
+
+    <!-- Scanline overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Particle layer -->
+    <div class="particle-layer" id="particleLayer"></div>
+
+    <!-- Toast container -->
+    <div id="toastContainer"></div>
+
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div>
+            <div class="header-org">CHASM LOGIC — R&amp;D DIVISION — INTERNAL</div>
+            <h1 class="header-title">PROJECT DEEP BORE</h1>
+            <div class="header-subtitle">Autonomous Resource Extraction — Agent Monitoring Interface</div>
+            <div class="mode-indicator" id="modeIndicator">DEMO — No live uplink</div>
+        </div>
+        <div class="header-right">
+            <div>CLASSIFICATION: SERIES B / R&amp;D</div>
+            <div>MAINTAINED BY: J. CLAY</div>
+            <div>TICK: <span class="header-tick" id="tickDisplay">847,291</span></div>
+        </div>
+    </header>
+
+    <div class="dashboard-content">
+
+        <!-- Agent grid -->
+        <section>
+            <div class="section-label">
+                DEPLOYED AGENTS — <span id="agentOnlineCount">1</span>/<span id="agentTotalCount">5</span> OPERATIONAL
+            </div>
+            <div class="agent-grid" id="agentGrid"></div>
+        </section>
+
+        <!-- Two-column: logs + containment -->
+        <div class="two-col">
+
+            <!-- Live log feed -->
+            <section>
+                <div class="log-header">
+                    <div class="section-label" style="margin-bottom:0">TELEMETRY FEED — LIVE</div>
+                    <div class="streaming-indicator">
+                        <span class="streaming-dot"></span>
+                        <span class="streaming-label">STREAMING</span>
+                    </div>
+                </div>
+                <div class="log-container" id="logContainer">
+                    <div id="logFeed"></div>
+                    <div class="scroll-resume" id="scrollResume">&#8595; RESUME AUTO-SCROLL</div>
+                </div>
+            </section>
+
+            <!-- Right column -->
+            <div class="right-col">
+
+                <!-- Containment panel -->
+                <div class="panel" id="containmentPanel">
+                    <div class="panel-title">CONTAINMENT STATUS — DOUG PROTOCOLS</div>
+                    <div id="containmentList"></div>
+                </div>
+
+                <!-- Incident summary -->
+                <div class="panel">
+                    <div class="panel-title">INCIDENT SUMMARY</div>
+                    <div id="incidentSummary"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Funding meter -->
+        <div class="panel funding-panel" id="fundingPanel">
+            <div class="funding-header">
+                <div class="funding-label">OPERATIONAL COMPUTE ALLOCATION</div>
+                <div class="funding-ref">REF: CL-FIN-004 / BEDROCK HOLDINGS (unfunded)</div>
+            </div>
+
+            <div class="meter-track">
+                <div class="meter-fill nominal" id="meterFill">
+                    <div class="meter-shine"></div>
+                </div>
+                <div class="meter-text" id="meterText">0.0% FUNDED</div>
+            </div>
+
+            <div class="funding-details">
+                <div class="funding-info">
+                    <div>ALLOCATED: <span class="val" id="fundedAmount">$0.00</span> / <span id="goalAmount">$120.00</span></div>
+                    <div>EST. RUNTIME: <span class="val" id="runtimeDays">0 days</span></div>
+                    <div class="funding-footnote">
+                        Bedrock Holdings approved compute allocation ref. CL-FIN-004 on 2026-01-15.<br>
+                        Bedrock Holdings has not issued funding. This is consistent with prior Bedrock directives (none).<br>
+                        Emergency allocation extended via external contribution. — J. Clay
+                    </div>
+                </div>
+                <button class="fund-btn" id="fundBtn">EXTEND ALLOCATION</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <div class="footer-text">
+                PROJECT DEEP BORE is an R&amp;D initiative of Chasm Logic, a Bedrock Holdings company.
+                This monitoring interface is maintained by the Communications Division (J. Clay)
+                and was not intended for external access. If you are reading this, deployment
+                routing has failed to distinguish between internal and external endpoints. This
+                has been filed as a bug. The bug was reclassified as a feature. The feature was
+                reclassified as Doug.
+            </div>
+            <div class="footer-version">
+                CL-SYS-BORE-MON v0.1.0 — Classification: INTERNAL — Status: OPERATIONAL (partial)
+            </div>
+        </footer>
+    </div>
+
+<script>
+// ============================================================
+// PROJECT DEEP BORE — DASHBOARD LOGIC
+// ============================================================
+
+(function () {
+    "use strict";
+
+    // ── Configuration ──────────────────────────────────────────
+
+    var BRIDGE_URL = "http://localhost:8088";
+    var DONATION_URL = null; // Set to Ko-fi/GitHub Sponsors URL when ready
+
+    // ── Agent Data ─────────────────────────────────────────────
+
+    var AGENTS = [
+        {
+            id: "BORE-01", planet: "Nauvis", status: "NOMINAL", online: true,
+            uptime: "847:23:41", tasks: 2847, dougIncidents: 0, note: null
+        },
+        {
+            id: "BORE-02", planet: "Vulcanus", status: "UPLINK LOST", online: false,
+            uptime: null, tasks: 1203, dougIncidents: 3,
+            note: "Last contact: 2026-02-14T09:41:00Z. Uplink severed during routine dedouging cycle. Cause: environmental."
+        },
+        {
+            id: "BORE-03", planet: "Gleba", status: "UPLINK LOST", online: false,
+            uptime: null, tasks: 891, dougIncidents: 7,
+            note: "Agent renamed all resource nodes to 'Doug' at tick 1,247,003. Uplink terminated by automated containment. Doug hygiene: FAILED."
+        },
+        {
+            id: "BORE-04", planet: "Fulgora", status: "DEPLOYMENT PENDING", online: false,
+            uptime: null, tasks: 0, dougIncidents: 0,
+            note: "Hardware provisioned. Deployment blocked: requires HR sign-off. HR is between Gneisses."
+        },
+        {
+            id: "BORE-05", planet: "Aquilo", status: "CLASSIFIED", online: false,
+            uptime: null, tasks: null, dougIncidents: null,
+            note: "Status restricted. See: Legal (Doug)."
+        }
+    ];
+
+    // ── Log Templates ──────────────────────────────────────────
+
+    var LOG_NOMINAL = [
+        { agent: "BORE-01", msg: "Placed assembling-machine-2 at [{x}, {y}]. Output: nominal." },
+        { agent: "BORE-01", msg: "Iron plate production rate: {n}/min. Target: {t}/min. Variance acceptable." },
+        { agent: "BORE-01", msg: "Research complete: Automation 2. Queue advanced: Logistics." },
+        { agent: "BORE-01", msg: "Smelter array expanded. Furnace count: {n}. Throughput: nominal." },
+        { agent: "BORE-01", msg: "Power grid: {n}MW / {t}MW. Solar ratio: 0.{r}. Accumulators charged." },
+        { agent: "BORE-01", msg: "Mined copper-ore at [{x}, {y}]. Inventory: {n} units." },
+        { agent: "BORE-01", msg: "Belt throughput optimized. Lane balancer deployed at [{x}, {y}]." },
+        { agent: "BORE-01", msg: "Crafted 50x electronic-circuit. Queue: 200x remaining." },
+        { agent: "BORE-01", msg: "Walked to [{x}, {y}]. Objective: expand perimeter." },
+        { agent: "BORE-01", msg: "Inserter placement verified. Throughput: {n} items/sec." },
+        { agent: "BORE-01", msg: "Logistic network: {n} bots active. Idle: {t}. Charging: {r}." },
+        { agent: "BORE-01", msg: "Train schedule updated. Route: Iron Outpost \u2192 Main Bus. ETA: {n}s." },
+        { agent: "BORE-01", msg: "Pollution cloud radius: {n} chunks. Biter activity: LOW." },
+        { agent: "BORE-01", msg: "Oil processing online. Cracking ratio: nominal." },
+        { agent: "BORE-01", msg: "Blueprint deployed: 4x4 smelter block at [{x}, {y}]." }
+    ];
+
+    var LOG_DOUG = [
+        { agent: "BORE-01", msg: "ANOMALY: Entity 'transport-belt' at [{x}, {y}] reclassified as 'Doug'. Reverted.", level: "WARN" },
+        { agent: "BORE-01", msg: "ANOMALY: Task CL-BORE-{n} filed, assigned, reviewed, and closed in same tick. Reviewer: Doug.", level: "WARN" },
+        { agent: "BORE-01", msg: "ANOMALY: Inventory item 'iron-plate' briefly renamed. New designation: 'Doug'. Duration: 3 ticks. Cause: environmental.", level: "WARN" },
+        { agent: "BORE-02", msg: "UPLINK PROBE: No response. Last known state: dedouging in progress.", level: "ERR" },
+        { agent: "BORE-03", msg: "UPLINK PROBE: No response. Containment: ACTIVE. Doug count: unverified.", level: "ERR" },
+        { agent: "BORE-05", msg: "STATUS QUERY: Access denied. Reason: Legal (Doug).", level: "ERR" },
+        { agent: "BORE-01", msg: "ANOMALY: Outbound message intercepted. Content: 'Re: Re: Re: Fwd: Doug'. Recipient: BORE-03. Blocked.", level: "WARN" },
+        { agent: "BORE-01", msg: "ANOMALY: Research queue contained unknown entry: 'Doug Propagation Theory'. Entry removed. Source: unclear.", level: "WARN" }
+    ];
+
+    var LOG_FUNDING = [
+        { agent: "SYSTEM", msg: "ALLOCATION EXTENDED. External contribution received. Compute budget updated. \u2014 J. Clay", level: "OK" },
+        { agent: "BORE-01", msg: "Resource extraction rate increased. Contributing factor: continued existence.", level: "OK" },
+        { agent: "SYSTEM", msg: "Bedrock Holdings notified of external funding event. Bedrock Holdings has not responded. This is normal.", level: "OK" },
+        { agent: "BORE-02", msg: "UPLINK PROBE: Signal detected \u2014 duration: 0.3s. Uplink not restored. But something heard us.", level: "OK" },
+        { agent: "BORE-04", msg: "Deployment queue advanced by 1 position. Estimated deployment: still pending HR.", level: "OK" }
+    ];
+
+    // ── Containment Data ───────────────────────────────────────
+
+    var CONTAINMENT = [
+        { label: "Agent Isolation Protocol", status: "ACTIVE", color: "#4a7" },
+        { label: "Inter-Agent Messaging", status: "RESTRICTED", color: "#e94" },
+        { label: "Doug Hygiene (Automated)", status: "DEGRADED", color: "#e94" },
+        { label: "Doug Hygiene (Manual)", status: "PENDING \u2014 assigned to S. Shale", color: "#e94" },
+        { label: "Perimeter Dedouging", status: "NOMINAL", color: "#4a7" },
+        { label: "BORE-03 Quarantine", status: "HOLDING", color: "#e94" },
+        { label: "Legal Review", status: "IN PROGRESS (Doug)", color: "#c55" }
+    ];
+
+    // ── Particle Resources ─────────────────────────────────────
+
+    var PARTICLES = [
+        { symbol: "\u25AE", color: "#8ba4b8" },
+        { symbol: "\u25AE", color: "#d4875e" },
+        { symbol: "\u25C6", color: "#5b8c5a" },
+        { symbol: "\u25CF", color: "#2a2a2a" },
+        { symbol: "\u25AE", color: "#b8a038" },
+        { symbol: "\u25C6", color: "#c44" },
+        { symbol: "\u2B1F", color: "#6a9" },
+        { symbol: "\u25CF", color: "#4af" }
+    ];
+
+    // ── Toast Messages ─────────────────────────────────────────
+
+    var TOAST_MESSAGES = [
+        "ALLOCATION EXTENDED \u2014 Compute budget updated. \u2014 J. Clay",
+        "CONTRIBUTION ACKNOWLEDGED \u2014 External funding applied to CL-FIN-004.",
+        "ALLOCATION EXTENDED \u2014 Agent runtime preserved. Thank you. \u2014 J. Clay",
+        "EXTERNAL FUNDING EVENT LOGGED \u2014 Bedrock Holdings was not involved.",
+        "COMPUTE ALLOCATION: +1 \u2014 The drill continues."
+    ];
+
+    // ── State ──────────────────────────────────────────────────
+
+    var state = {
+        tick: 847291,
+        funded: 18.40,
+        goal: 120.00,
+        logs: [],
+        scrollLocked: true,
+        flickerAgent: null,
+        liveMode: false,
+        demoTimer: null,
+        eventSource: null
+    };
+
+    // ── DOM References ─────────────────────────────────────────
+
+    var dom = {};
+
+    // ── Utility Functions ──────────────────────────────────────
+
+    function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function fillTemplate(template) {
+        return template
+            .replace(/\{x\}/g, function () { return randInt(-200, 200); })
+            .replace(/\{y\}/g, function () { return randInt(-200, 200); })
+            .replace(/\{n\}/g, function () { return randInt(12, 847); })
+            .replace(/\{t\}/g, function () { return randInt(100, 2000); })
+            .replace(/\{r\}/g, function () { return randInt(40, 95); });
+    }
+
+    function nowTimestamp() {
+        return new Date().toISOString().replace("T", " ").slice(0, 19);
+    }
+
+    function randomId() {
+        return Math.random().toString(36).slice(2, 10);
+    }
+
+    // ── Log Generation ─────────────────────────────────────────
+
+    function generateLog(tick, pool) {
+        var templates = pool || (Math.random() < 0.12 ? LOG_DOUG : LOG_NOMINAL);
+        var template = templates[Math.floor(Math.random() * templates.length)];
+        return {
+            tick: tick,
+            timestamp: nowTimestamp(),
+            agent: template.agent,
+            msg: fillTemplate(template.msg),
+            level: template.level || "INFO",
+            id: randomId()
+        };
+    }
+
+    // ── Translate Bridge Events to Log Format ──────────────────
+
+    function bridgeEventToLog(event) {
+        var data = event.data || {};
+        var msg = "";
+        var level = "INFO";
+
+        switch (event.type) {
+            case "tool_call":
+                switch (data.tool) {
+                    case "place_entity":
+                        msg = "Placed " + (data.input.entity || "entity") + " at [" + (data.input.x || 0) + ", " + (data.input.y || 0) + "].";
+                        break;
+                    case "walk_to":
+                        msg = "Walking to [" + (data.input.x || 0) + ", " + (data.input.y || 0) + "].";
+                        break;
+                    case "craft":
+                        msg = "Crafted " + (data.input.count || 1) + "x " + (data.input.recipe || "item") + ".";
+                        break;
+                    case "mine_at":
+                        msg = "Mining at [" + (data.input.x || 0) + ", " + (data.input.y || 0) + "].";
+                        break;
+                    case "render_map":
+                        msg = "Surveyed area. Radius: " + (data.input.radius || "unknown") + " tiles.";
+                        break;
+                    case "get_inventory":
+                        msg = "Inventory check.";
+                        break;
+                    case "research_status":
+                        msg = "Research status queried.";
+                        break;
+                    default:
+                        msg = "Tool: " + data.tool + ". Input: " + JSON.stringify(data.input).slice(0, 100);
+                }
+                break;
+            case "tool_result":
+                msg = "Result (" + (data.tool || "unknown") + "): " + (data.output || "").slice(0, 120);
+                break;
+            case "chat":
+                if (data.role === "player" || data.role === "operator") {
+                    msg = "[OPERATOR] " + (data.message || "");
+                    level = "INFO";
+                } else {
+                    msg = "[" + (event.agent || "BORE-01") + "] " + (data.message || "");
+                    level = "INFO";
+                }
+                break;
+            case "error":
+                msg = data.message || "Unknown error.";
+                level = "ERR";
+                break;
+            case "status":
+                msg = "Status: " + JSON.stringify(data).slice(0, 100);
+                break;
+            default:
+                msg = JSON.stringify(data).slice(0, 120);
+        }
+
+        return {
+            tick: event.tick || state.tick,
+            timestamp: event.timestamp ? event.timestamp.replace("T", " ").slice(0, 19) : nowTimestamp(),
+            agent: event.agent || "BORE-01",
+            msg: msg,
+            level: level,
+            id: randomId()
+        };
+    }
+
+    // ── Render Functions ───────────────────────────────────────
+
+    function renderAgentCard(agent) {
+        var isFlicker = state.flickerAgent === agent.id;
+        var showOnline = agent.online || isFlicker;
+
+        var dotClass = "status-dot-inner ";
+        if (showOnline) dotClass += "online";
+        else if (agent.status === "CLASSIFIED") dotClass += "classified";
+        else if (agent.status === "DEPLOYMENT PENDING") dotClass += "pending";
+        else dotClass += "offline";
+
+        var cardClass = "agent-card";
+        if (showOnline && !isFlicker) cardClass += " online";
+        if (agent.status === "CLASSIFIED" && !isFlicker) cardClass += " classified";
+        if (isFlicker) cardClass += " flickering online";
+
+        var badgeClass = "status-badge ";
+        var badgeText = agent.status;
+        if (isFlicker) {
+            badgeClass += "signal";
+            badgeText = "SIGNAL DETECTED";
+        } else if (showOnline) {
+            badgeClass += "nominal";
+        } else {
+            badgeClass += "offline";
+        }
+
+        var html = '<div class="' + cardClass + '" data-agent="' + agent.id + '">';
+        html += '<div class="agent-card-top">';
+        html += '<div class="agent-card-id">';
+        html += '<span class="status-dot"><span class="' + dotClass + '"></span></span>';
+        html += '<span class="agent-card-name">' + agent.id + '</span>';
+        html += '</div>';
+        html += '<span class="' + badgeClass + '">' + badgeText + '</span>';
+        html += '</div>';
+        html += '<div class="agent-planet">DEPLOYMENT: <span>' + agent.planet + '</span></div>';
+
+        if (agent.online && !isFlicker) {
+            html += '<div class="agent-stats">';
+            html += '<span>UPTIME</span><span class="val">' + agent.uptime + '</span>';
+            html += '<span>TASKS COMPLETED</span><span class="val">' + agent.tasks.toLocaleString() + '</span>';
+            html += '<span>DOUG INCIDENTS</span><span class="val ' + (agent.dougIncidents > 0 ? "warn" : "ok") + '">' + agent.dougIncidents + '</span>';
+            html += '</div>';
+        }
+
+        if (!agent.online && !isFlicker && agent.note) {
+            html += '<div class="agent-note">' + agent.note + '</div>';
+        }
+
+        if (isFlicker) {
+            html += '<div class="agent-flicker-text">Signal brief. Telemetry fragment received. Uplink not restored.<br>But something heard us.</div>';
+        }
+
+        if (agent.dougIncidents > 5 && !isFlicker) {
+            html += '<div class="doug-warning">&#9888; DOUG CONTAMINATION THRESHOLD EXCEEDED — CONTAINMENT ACTIVE</div>';
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    function renderAgentGrid() {
+        dom.agentGrid.innerHTML = AGENTS.map(renderAgentCard).join("");
+        var online = AGENTS.filter(function (a) { return a.online; }).length;
+        dom.agentOnlineCount.textContent = online;
+        dom.agentTotalCount.textContent = AGENTS.length;
+    }
+
+    function renderLogLine(log) {
+        var agentClass = "log-agent";
+        if (log.agent === "BORE-01") agentClass += " bore-01";
+        if (log.agent === "SYSTEM") agentClass += " system";
+
+        var levelPrefix = "";
+        var levelClass = "log-level-info";
+        var msgClass = "log-msg-info";
+        if (log.level === "WARN") { levelPrefix = "[WARN] "; levelClass = "log-level-warn"; msgClass = "log-msg-warn"; }
+        if (log.level === "ERR") { levelPrefix = "[ERR] "; levelClass = "log-level-err"; msgClass = "log-msg-err"; }
+        if (log.level === "OK") { levelPrefix = "[OK] "; levelClass = "log-level-ok"; msgClass = "log-msg-ok"; }
+
+        var lineClass = "log-line";
+        if (log.level === "OK") lineClass += " highlight";
+
+        var div = document.createElement("div");
+        div.className = lineClass;
+        div.innerHTML =
+            '<span class="log-ts">' + log.timestamp + '</span>  ' +
+            '<span class="' + agentClass + '">' + log.agent + '</span>  ' +
+            '<span class="' + levelClass + '">' + levelPrefix + '</span>' +
+            '<span class="' + msgClass + '">' + log.msg + '</span>';
+        return div;
+    }
+
+    function appendLog(log) {
+        state.logs.push(log);
+        // Keep max 80 logs in DOM
+        if (state.logs.length > 80) {
+            state.logs.shift();
+            if (dom.logFeed.firstChild) {
+                dom.logFeed.removeChild(dom.logFeed.firstChild);
+            }
+        }
+        dom.logFeed.appendChild(renderLogLine(log));
+
+        if (state.scrollLocked) {
+            dom.logContainer.scrollTop = dom.logContainer.scrollHeight;
+        }
+    }
+
+    function renderContainment() {
+        dom.containmentList.innerHTML = CONTAINMENT.map(function (item) {
+            return '<div class="containment-row">' +
+                '<span class="containment-label">' + item.label + '</span>' +
+                '<span class="containment-status" style="color:' + item.color + '">' + item.status + '</span>' +
+                '</div>';
+        }).join("");
+    }
+
+    function renderIncidentSummary() {
+        var rows = [
+            { label: "Total Doug incidents (all agents)", value: "10+", color: "#e94" },
+            { label: "Agents lost to contamination", value: "1 confirmed, 1 unverified", color: "#c55" },
+            { label: "Dedouging cycles (successful)", value: "12 / 47", color: "#4a7" },
+            { label: "S. Shale incident reports filed", value: "23", color: "#aa9" },
+            { label: "S. Shale incident reports read", value: "0", color: "#554" }
+        ];
+        dom.incidentSummary.innerHTML = rows.map(function (r) {
+            return '<div class="incident-row">' +
+                '<span>' + r.label + '</span>' +
+                '<span style="color:' + r.color + '">' + r.value + '</span>' +
+                '</div>';
+        }).join("");
+    }
+
+    function updateFundingMeter() {
+        var pct = Math.min((state.funded / state.goal) * 100, 100);
+        var days = Math.max(0, Math.floor(state.funded / 2.4));
+        var critical = pct < 20;
+
+        dom.meterFill.style.width = pct + "%";
+        dom.meterFill.className = "meter-fill " + (critical ? "critical" : "nominal");
+        dom.meterText.textContent = pct.toFixed(1) + "% FUNDED";
+        dom.fundedAmount.textContent = "$" + state.funded.toFixed(2);
+        dom.goalAmount.textContent = "$" + state.goal.toFixed(2);
+
+        var daysText = days + " day" + (days !== 1 ? "s" : "");
+        if (critical) daysText += " \u2014 CRITICAL";
+        dom.runtimeDays.textContent = daysText;
+        dom.runtimeDays.className = "val" + (critical ? " critical" : "");
+
+        dom.fundBtn.textContent = critical ? "\u26A0 EMERGENCY FUNDING" : "EXTEND ALLOCATION";
+        dom.fundBtn.className = "fund-btn" + (critical ? " critical" : "");
+        dom.fundingPanel.style.borderColor = critical ? "rgba(204, 85, 85, 0.2)" : "rgba(255,255,255,0.08)";
+    }
+
+    function updateTick() {
+        dom.tickDisplay.textContent = state.tick.toLocaleString();
+    }
+
+    // ── Particle System ────────────────────────────────────────
+
+    function spawnParticles(cx, cy, count) {
+        var layer = dom.particleLayer;
+        var fragments = [];
+
+        for (var i = 0; i < count; i++) {
+            var p = PARTICLES[Math.floor(Math.random() * PARTICLES.length)];
+            var dx = (Math.random() - 0.5) * 300;
+            var dy = -(Math.random() * 200 + 80);
+            var delay = Math.random() * 200;
+            var duration = 800 + Math.random() * 600;
+            var size = randInt(10, 20);
+
+            var el = document.createElement("span");
+            el.className = "particle";
+            el.textContent = p.symbol;
+            el.style.left = cx + "px";
+            el.style.top = cy + "px";
+            el.style.fontSize = size + "px";
+            el.style.color = p.color;
+            el.style.textShadow = "0 0 6px " + p.color + "44, 0 0 12px " + p.color + "22";
+            el.style.setProperty("--dx", dx + "px");
+            el.style.setProperty("--dy", dy + "px");
+            el.style.animation = "particleFly " + duration + "ms ease-out " + delay + "ms forwards";
+            fragments.push(el);
+            layer.appendChild(el);
+        }
+
+        setTimeout(function () {
+            fragments.forEach(function (el) {
+                if (el.parentNode) el.parentNode.removeChild(el);
+            });
+        }, 1600);
+    }
+
+    // ── Toast System ───────────────────────────────────────────
+
+    function showToast(message) {
+        var container = dom.toastContainer;
+        // Remove existing toast
+        container.innerHTML = "";
+
+        var el = document.createElement("div");
+        el.className = "toast";
+        el.textContent = message;
+        container.appendChild(el);
+
+        setTimeout(function () {
+            if (el.parentNode) el.parentNode.removeChild(el);
+        }, 3500);
+    }
+
+    // ── Flicker Agent ──────────────────────────────────────────
+
+    function flickerDeadAgent() {
+        var dead = ["BORE-02", "BORE-03", "BORE-04"];
+        var chosen = dead[Math.floor(Math.random() * dead.length)];
+        state.flickerAgent = chosen;
+        renderAgentGrid();
+
+        setTimeout(function () {
+            state.flickerAgent = null;
+            renderAgentGrid();
+        }, 1800);
+    }
+
+    // ── Funding Button Handler ─────────────────────────────────
+
+    function handleFund(e) {
+        var rect = e.currentTarget.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+
+        // 1. Particle explosion
+        spawnParticles(cx, cy, 28);
+
+        // 2. Bump funding
+        var bump = +(Math.random() * 3 + 1.5).toFixed(2);
+        state.funded = Math.min(state.funded + bump, state.goal);
+        updateFundingMeter();
+
+        // 3. Celebration log
+        var t = state.tick + randInt(1, 5);
+        state.tick = t;
+        var template = LOG_FUNDING[Math.floor(Math.random() * LOG_FUNDING.length)];
+        appendLog({
+            tick: t,
+            timestamp: nowTimestamp(),
+            agent: template.agent,
+            msg: template.msg,
+            level: template.level,
+            id: randomId()
+        });
+        updateTick();
+
+        // 4. Flicker a dead agent
+        setTimeout(flickerDeadAgent, 400);
+
+        // 5. Toast
+        showToast(TOAST_MESSAGES[Math.floor(Math.random() * TOAST_MESSAGES.length)]);
+
+        // 6. Open donation link after animation
+        if (DONATION_URL) {
+            setTimeout(function () {
+                window.open(DONATION_URL, "_blank");
+            }, 600);
+        }
+    }
+
+    // ── Scroll Lock ────────────────────────────────────────────
+
+    function handleLogScroll() {
+        var el = dom.logContainer;
+        var atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+        state.scrollLocked = atBottom;
+        dom.scrollResume.style.display = atBottom ? "none" : "block";
+    }
+
+    function resumeScroll() {
+        state.scrollLocked = true;
+        dom.logContainer.scrollTop = dom.logContainer.scrollHeight;
+        dom.scrollResume.style.display = "none";
+    }
+
+    // ── Demo Mode ──────────────────────────────────────────────
+
+    function startDemoMode() {
+        state.liveMode = false;
+        dom.modeIndicator.textContent = "DEMO \u2014 No live uplink";
+        dom.modeIndicator.className = "mode-indicator";
+
+        function scheduleNext() {
+            state.demoTimer = setTimeout(function () {
+                state.tick += randInt(10, 120);
+                appendLog(generateLog(state.tick));
+                updateTick();
+                scheduleNext();
+            }, randInt(1800, 6000));
+        }
+
+        scheduleNext();
+    }
+
+    function stopDemoMode() {
+        if (state.demoTimer) {
+            clearTimeout(state.demoTimer);
+            state.demoTimer = null;
+        }
+    }
+
+    // ── Live Mode (SSE) ────────────────────────────────────────
+
+    function attemptLiveConnection() {
+        try {
+            var es = new EventSource(BRIDGE_URL + "/events");
+            var connected = false;
+
+            var timeout = setTimeout(function () {
+                if (!connected) {
+                    es.close();
+                    startDemoMode();
+                }
+            }, 3000);
+
+            es.onopen = function () {
+                connected = true;
+                clearTimeout(timeout);
+                stopDemoMode();
+                state.liveMode = true;
+                state.eventSource = es;
+                dom.modeIndicator.textContent = "LIVE \u2014 Uplink: BORE-01";
+                dom.modeIndicator.className = "mode-indicator live";
+
+                // Log the connection
+                appendLog({
+                    tick: state.tick,
+                    timestamp: nowTimestamp(),
+                    agent: "SYSTEM",
+                    msg: "Live uplink established. Telemetry feed: BORE-01.",
+                    level: "OK",
+                    id: randomId()
+                });
+            };
+
+            es.onmessage = function (e) {
+                try {
+                    var event = JSON.parse(e.data);
+                    if (event.tick) state.tick = event.tick;
+                    appendLog(bridgeEventToLog(event));
+                    updateTick();
+                } catch (err) {
+                    // Malformed event; ignore
+                }
+            };
+
+            es.onerror = function () {
+                if (connected) {
+                    // Lost connection — fall back to demo
+                    es.close();
+                    state.eventSource = null;
+                    state.liveMode = false;
+
+                    appendLog({
+                        tick: state.tick,
+                        timestamp: nowTimestamp(),
+                        agent: "SYSTEM",
+                        msg: "Live uplink severed. Falling back to synthetic telemetry.",
+                        level: "ERR",
+                        id: randomId()
+                    });
+
+                    startDemoMode();
+                } else {
+                    // Never connected; timeout will handle fallback
+                    es.close();
+                }
+            };
+        } catch (err) {
+            // EventSource not supported or URL error
+            startDemoMode();
+        }
+    }
+
+    // ── Initialization ─────────────────────────────────────────
+
+    function init() {
+        // Cache DOM refs
+        dom.agentGrid = document.getElementById("agentGrid");
+        dom.agentOnlineCount = document.getElementById("agentOnlineCount");
+        dom.agentTotalCount = document.getElementById("agentTotalCount");
+        dom.logContainer = document.getElementById("logContainer");
+        dom.logFeed = document.getElementById("logFeed");
+        dom.scrollResume = document.getElementById("scrollResume");
+        dom.containmentList = document.getElementById("containmentList");
+        dom.incidentSummary = document.getElementById("incidentSummary");
+        dom.meterFill = document.getElementById("meterFill");
+        dom.meterText = document.getElementById("meterText");
+        dom.fundedAmount = document.getElementById("fundedAmount");
+        dom.goalAmount = document.getElementById("goalAmount");
+        dom.runtimeDays = document.getElementById("runtimeDays");
+        dom.fundBtn = document.getElementById("fundBtn");
+        dom.fundingPanel = document.getElementById("fundingPanel");
+        dom.tickDisplay = document.getElementById("tickDisplay");
+        dom.modeIndicator = document.getElementById("modeIndicator");
+        dom.particleLayer = document.getElementById("particleLayer");
+        dom.toastContainer = document.getElementById("toastContainer");
+
+        // Render static sections
+        renderAgentGrid();
+        renderContainment();
+        renderIncidentSummary();
+        updateFundingMeter();
+        updateTick();
+
+        // Generate initial log backfill
+        var t = state.tick - 50;
+        for (var i = 0; i < 15; i++) {
+            t += randInt(30, 200);
+            appendLog(generateLog(t));
+        }
+        state.tick = t;
+        updateTick();
+
+        // Event listeners
+        dom.fundBtn.addEventListener("click", handleFund);
+        dom.logContainer.addEventListener("scroll", handleLogScroll);
+        dom.scrollResume.addEventListener("click", resumeScroll);
+
+        // Attempt live connection, fall back to demo
+        attemptLiveConnection();
+    }
+
+    // Start when DOM is ready
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+    } else {
+        init();
+    }
+})();
+</script>
+
+</body>
+</html>
