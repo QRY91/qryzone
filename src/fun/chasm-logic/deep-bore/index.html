@@ -738,6 +738,7 @@ permalink: /fun/chasm-logic/deep-bore/
     // ── Configuration ──────────────────────────────────────────
 
     var BRIDGE_URL = "http://localhost:8088";
+    var RELAY_URL = "wss://bore-relay.qry-7e9.workers.dev";
     var DONATION_URL = null; // Set to Ko-fi/GitHub Sponsors URL when ready
 
     // ── Agent Data ─────────────────────────────────────────────
@@ -1278,76 +1279,94 @@ permalink: /fun/chasm-logic/deep-bore/
         }
     }
 
-    // ── Live Mode (SSE) ────────────────────────────────────────
+    // ── Live Mode (Relay WebSocket → Local SSE → Demo) ────────
 
-    function attemptLiveConnection() {
+    function handleLiveEvent(e) {
+        try {
+            var event = JSON.parse(typeof e.data === "string" ? e.data : e);
+            if (event.tick) state.tick = event.tick;
+            appendLog(bridgeEventToLog(event));
+            updateTick();
+        } catch (err) {
+            // Malformed event; ignore
+        }
+    }
+
+    function goLive(label) {
+        stopDemoMode();
+        state.liveMode = true;
+        dom.modeIndicator.textContent = "LIVE \u2014 " + label;
+        dom.modeIndicator.className = "mode-indicator live";
+        appendLog({
+            tick: state.tick, timestamp: nowTimestamp(), agent: "SYSTEM",
+            msg: "Live uplink established. " + label + ".",
+            level: "OK", id: randomId()
+        });
+    }
+
+    function goOffline(reason) {
+        state.liveMode = false;
+        state.eventSource = null;
+        state.ws = null;
+        appendLog({
+            tick: state.tick, timestamp: nowTimestamp(), agent: "SYSTEM",
+            msg: reason || "Live uplink severed. Falling back to synthetic telemetry.",
+            level: "ERR", id: randomId()
+        });
+        startDemoMode();
+    }
+
+    function attemptLocalSSE(onFail) {
         try {
             var es = new EventSource(BRIDGE_URL + "/events");
             var connected = false;
-
             var timeout = setTimeout(function () {
-                if (!connected) {
-                    es.close();
-                    startDemoMode();
-                }
+                if (!connected) { es.close(); onFail(); }
             }, 3000);
 
             es.onopen = function () {
                 connected = true;
                 clearTimeout(timeout);
-                stopDemoMode();
-                state.liveMode = true;
                 state.eventSource = es;
-                dom.modeIndicator.textContent = "LIVE \u2014 Uplink: BORE-01";
-                dom.modeIndicator.className = "mode-indicator live";
-
-                // Log the connection
-                appendLog({
-                    tick: state.tick,
-                    timestamp: nowTimestamp(),
-                    agent: "SYSTEM",
-                    msg: "Live uplink established. Telemetry feed: BORE-01.",
-                    level: "OK",
-                    id: randomId()
-                });
+                goLive("Uplink: BORE-01 (local)");
             };
-
-            es.onmessage = function (e) {
-                try {
-                    var event = JSON.parse(e.data);
-                    if (event.tick) state.tick = event.tick;
-                    appendLog(bridgeEventToLog(event));
-                    updateTick();
-                } catch (err) {
-                    // Malformed event; ignore
-                }
-            };
-
+            es.onmessage = function (e) { handleLiveEvent(e); };
             es.onerror = function () {
-                if (connected) {
-                    // Lost connection — fall back to demo
-                    es.close();
-                    state.eventSource = null;
-                    state.liveMode = false;
-
-                    appendLog({
-                        tick: state.tick,
-                        timestamp: nowTimestamp(),
-                        agent: "SYSTEM",
-                        msg: "Live uplink severed. Falling back to synthetic telemetry.",
-                        level: "ERR",
-                        id: randomId()
-                    });
-
-                    startDemoMode();
-                } else {
-                    // Never connected; timeout will handle fallback
-                    es.close();
-                }
+                es.close();
+                if (connected) { goOffline(); } else { clearTimeout(timeout); onFail(); }
             };
-        } catch (err) {
-            // EventSource not supported or URL error
-            startDemoMode();
+        } catch (err) { onFail(); }
+    }
+
+    function attemptRelayWS(onFail) {
+        try {
+            var wsUrl = RELAY_URL.replace(/^http/, "ws") + "/ws";
+            var ws = new WebSocket(wsUrl);
+            var connected = false;
+            var timeout = setTimeout(function () {
+                if (!connected) { ws.close(); onFail(); }
+            }, 3000);
+
+            ws.onopen = function () {
+                connected = true;
+                clearTimeout(timeout);
+                state.ws = ws;
+                goLive("Uplink: BORE-01 (relay)");
+            };
+            ws.onmessage = function (e) { handleLiveEvent(e); };
+            ws.onclose = ws.onerror = function () {
+                if (connected) { goOffline(); } else { clearTimeout(timeout); onFail(); }
+            };
+        } catch (err) { onFail(); }
+    }
+
+    function attemptLiveConnection() {
+        if (RELAY_URL) {
+            attemptRelayWS(function () {
+                attemptLocalSSE(function () { startDemoMode(); });
+            });
+        } else {
+            attemptLocalSSE(function () { startDemoMode(); });
         }
     }
 
