@@ -1,0 +1,417 @@
+---
+layout: base.njk
+title: What does thinking look like - qry.zone
+description: Opening the detailed view on a Claude Code session and seeing the full cascade
+explore: true
+exploreTags:
+  - ai-collaboration
+  - meta
+  - developer-tools
+status: seedling
+connections:
+  - "Recursive mirror"
+  - "Distilling style"
+  - "Disassemble-recombine"
+  - "Steampunk Engineering"
+  - "uroboro"
+firstCreated: 2026-02-22
+lastUpdated: 2026-02-22
+---
+
+<style>
+.session-block {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: var(--space-lg);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+.session-block .dim {
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+}
+.session-block .accent {
+  color: var(--color-accent);
+}
+.agent-label {
+  display: inline-block;
+  background: var(--color-accent);
+  color: var(--color-background);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  margin-right: 4px;
+}
+.stat-row {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-md);
+}
+.stat-item {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+.stat-item strong {
+  color: var(--color-accent);
+}
+</style>
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <span class="status-badge status-seedling">seedling</span>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What does thinking look like
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        Opening the detailed view on a Claude Code session and seeing the full cascade
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <figure style="margin: 0 0 var(--space-xl) 0; text-align: center;">
+      <img
+        src="/assets/images/smoov-dithered.png"
+        alt="Pink thinking putty blob, dithered in zenburn palette"
+        style="max-width: 60%; border-radius: var(--border-radius);"
+      >
+    </figure>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <p style="margin-bottom: var(--space-md)">
+        I was working on the <a href="/fun/chasm-logic/deep-bore/">Deep Bore</a> dashboard &mdash; the satirical monitoring layer over real Factorio agents &mdash; and I opened the detailed view on the Claude Code session.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Claude was mid-plan. Multi-agent persistence for the bridge. I'd asked it to figure out how to keep session IDs across restarts so each agent could resume where it left off. Standard infrastructure problem.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The detailed view showed me what "figuring it out" actually looked like.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The first thing it did
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Before touching any code, before reading any files, it called a tool I built with it eight months ago.
+      </p>
+
+      <div class="session-block"><span class="accent">&#9679;</span> uroboro - uro_recap <span class="dim">(MCP)(days: 7)</span>
+  <span class="dim">&#9492;</span>  <strong>Decisions (7)</strong>
+     1. claude CLI with --resume and -p for in-game relay over persistent stdin proxy
+     2. Post-tool Claude Code hook for auto-telemetry over manual relay_push.sh calls
+     3. Pipe to claude CLI over Claude Code SDK for bridge
+     4. Decompose bridge.py monolith into 7 focused modules over rewriting from scratch
+     5. Flat module structure (bridge/*.py) over nested package
+     6. Keep local SSE server as opt-in, not remove it
+     7. Split bridge.py into 6 focused modules over a single-file cleanup
+
+     <strong>Recent Commits (11)</strong>
+     <span class="dim">feat: add thin-pipe bridge using claude CLI
+     refactor: decompose bridge.py into thin-pipe architecture
+     feat: shortcut bar icon, SDK fixes, improved start script
+     docs: rewrite README for unified repo with quick-start
+     ...</span></div>
+
+      <p style="margin-bottom: var(--space-md)">
+        <a href="https://www.uroboro.dev/" target="_blank" rel="noopener noreferrer">Uroboro</a>. A decision-capture tool. I built the first version last June because context kept getting lost between sessions. The LLM would make a decision, the session would end, and the next session would re-derive the same decision from scratch. So I wrote a tool that records decisions in a structured format: what was chosen, what was rejected, why.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Eight months later, here it is in the system prompt, hooked into Claude Code as an MCP server, called automatically before any work begins. Seven decisions loaded. Eleven recent commits pulled. The system oriented itself using its own trail.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Then it entered plan mode.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Three agents, parallel
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Plan mode launched three Explore subagents simultaneously. Each got a different research question. Each fanned out independently.
+      </p>
+
+      <div class="session-block"><span class="agent-label">Agent 1</span> Explore multi-agent factorioctl
+<span class="dim">What branch? How does FACTORIO_AGENT_ID work? Per-agent memory?</span>
+
+<span class="agent-label">Agent 2</span> Explore pipe.py session handling
+<span class="dim">How are sessions tracked? What happens on restart? Could we persist to disk?</span>
+
+<span class="agent-label">Agent 3</span> Explore system prompt and personality
+<span class="dim">How are system prompts configured? Per-agent or global? What personality infrastructure exists?</span></div>
+
+      <p style="margin-bottom: var(--space-md)">
+        The detailed view scrolled. Fast.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What an agent does in 75 seconds
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Agent 1 &mdash; the multi-agent researcher &mdash; completed 24 tool calls in 1 minute 15 seconds. Here's the raw sequence:
+      </p>
+
+      <div class="session-block"><span class="dim">Bash</span>    git status
+<span class="dim">Bash</span>    git branch -a
+<span class="dim">Bash</span>    git log --oneline -20
+<span class="dim">Search</span>  **/factorioctl/**/*.rs
+<span class="dim">Search</span>  list_agents|FACTORIO_AGENT_ID|agent_id <span class="dim">in src/</span>
+<span class="dim">Search</span>  agent <span class="dim">in src/</span>
+<span class="dim">Read</span>    src/bin/mcp.rs
+<span class="dim">Search</span>  list_agents|agent_id|AGENT <span class="dim">in mcp.rs</span>
+<span class="dim">Search</span>  list_agents|bind.*agent <span class="dim">in lua.rs</span>
+<span class="dim">Search</span>  agent_id|struct FactorioClient <span class="dim">in server.rs</span>
+<span class="dim">Read</span>    src/client/rcon.rs <span class="dim">lines 1-100</span>
+<span class="dim">Read</span>    src/client/server.rs <span class="dim">lines 1-150</span>
+<span class="dim">Read</span>    src/client/mod.rs <span class="dim">lines 1-200</span>
+<span class="dim">Read</span>    src/memory/mod.rs
+<span class="dim">Bash</span>    grep -r "agent_memory" src/ --include="*.rs"
+<span class="dim">Search</span>  AgentMemory|.load()|.save() <span class="dim">in mcp.rs</span>
+<span class="dim">Search</span>  register_character_helpers|spawn_x <span class="dim">in lua.rs</span>
+<span class="dim">Read</span>    README.md <span class="dim">lines 1-300</span>
+<span class="dim">Bash</span>    git log --oneline main..multi-agent
+<span class="dim">Bash</span>    git rev-list --left-right main...multi-agent
+<span class="dim">Bash</span>    git log --all --grep="agent" --oneline
+<span class="dim">Bash</span>    grep -r "FACTORIO_AGENT_ID" . --include="*.md" --include="*.sh"
+<span class="dim">Read</span>    src/client/lua.rs <span class="dim">lines 413-442</span>
+<span class="dim">Read</span>    src/bin/mcp.rs <span class="dim">lines 1-50</span></div>
+
+      <div class="stat-row">
+        <span class="stat-item"><strong>24</strong> tool calls</span>
+        <span class="stat-item"><strong>72.1k</strong> tokens</span>
+        <span class="stat-item"><strong>1m 15s</strong></span>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Five languages. Rust, Python, Lua, TypeScript, shell. Git operations to understand branch topology. Grep to locate patterns across files. Targeted reads of specific line ranges when a file was too large. Search, narrow, read, search again.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The other two agents ran the same kind of cascade simultaneously. Agent 2 did 18 tool calls in 56 seconds. Agent 3 did 16 in 32 seconds. All three finished before the parent agent continued planning.
+      </p>
+
+      <div class="stat-row">
+        <span class="stat-item"><strong>58</strong> total tool calls across 3 agents</span>
+        <span class="stat-item"><strong>~2 minutes</strong> wall clock</span>
+      </div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What it produced
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        From 58 tool calls across Rust source, Python modules, Lua game scripts, a Cloudflare Worker, and shell scripts, the agent assembled this:
+      </p>
+
+      <div class="session-block">&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+&#9474;                  Single Factorio Server              &#9474;
+&#9474;         (headless, runs all agents' code)            &#9474;
+&#9474;                                                      &#9474;
+&#9474;  global.factorioctl_characters = {                  &#9474;
+&#9474;    "agent-1" &#8594; character entity (x=0, y=0)         &#9474;
+&#9474;    "agent-2" &#8594; character entity (x=5, y=0)         &#9474;
+&#9474;    "agent-3" &#8594; character entity (x=10, y=0)        &#9474;
+&#9474;  }                                                   &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+                              &#9650; RCON (port 27015)
+                              &#9474;
+            &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+            &#9474;                 &#9474;                 &#9474;
+    &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;  &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;  &#9484;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+    &#9474; MCP Server 1 &#9474;  &#9474; MCP Server 2  &#9474;  &#9474; MCP Server 3  &#9474;
+    &#9474; agent-1      &#9474;  &#9474; agent-2       &#9474;  &#9474; agent-3       &#9474;
+    &#9474; (stdio)      &#9474;  &#9474; (stdio)       &#9474;  &#9474; (stdio)       &#9474;
+    &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;  &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;  &#9492;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+            &#9474;                 &#9474;                 &#9474;
+            &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+                              &#9474;
+                        &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+                        &#9474;  Claude Agent  &#9474;
+                        &#9474;    Instance    &#9474;
+                        &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Not drawn by a human. Assembled from evidence. The agent read the Rust struct definitions for <code>ConnectionConfig</code>, the Lua code that auto-creates characters at 5-tile offsets, the RCON connection layer, the MCP tool registration, and the environment variable routing. Then it synthesized a diagram that accurately represents how three independent MCP server processes share a single game server through RCON.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        It also mapped the session lifecycle &mdash; the exact flow from player message to session lookup to Claude CLI invocation to session persistence. It identified the gap: sessions stored in RAM, lost on restart, orphaned on disk. Claude CLI keeps full conversation history in <code>~/.local/share/opencode/storage/session/</code>, but the bridge loses the mapping. The data survives. The pointer doesn't.
+      </p>
+
+      <div class="session-block"><strong>Session lifecycle (as mapped by Agent 2)</strong>
+
+Bridge Start
+    &#8595;
+sessions = {}  <span class="dim">(empty dict in RAM)</span>
+    &#8595;
+Player sends message via Factorio mod
+    &#8595;
+bridge looks up sessions[player_index]  &#8594; None <span class="dim">on first msg</span>
+    &#8595;
+bridge runs: claude -p "prompt"  <span class="dim">(NO --resume flag)</span>
+    &#8595;
+Claude creates NEW session, returns session_id
+    &#8595;
+sessions[player_index] = new_session_id  <span class="dim">(stored in RAM)</span>
+    &#8595;
+<span class="accent">[BRIDGE RESTART]</span>
+    &#8595;
+sessions = {}  <span class="dim">(empty dict, session IDs LOST)</span>
+    &#8595;
+Player sends message &#8594; None &#8594; starts NEW session
+    &#8595;
+<span class="accent">Context is LOST</span></div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Clean problem statement. Derived from reading Python source, tracing the data flow through function calls, and identifying where state lives versus where it doesn't.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The planning layer
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        After the three agents returned, the parent synthesized their findings into design decisions. This part was visible too &mdash; the reasoning exposed in the detailed view:
+      </p>
+
+      <div class="session-block"><span class="dim">&#9679; Thinking&hellip;</span>
+
+  Key findings:
+  1. Session persistence: Sessions are RAM-only, lost on restart.
+     Claude CLI sessions persist on disk but the bridge loses
+     the mapping. Fix: persist sessions dict to JSON file.
+  2. Multi-agent: factorioctl already supports FACTORIO_AGENT_ID
+     env var, per-character binding, list_agents. Each agent needs
+     its own MCP server instance + claude CLI process.
+  3. Personality: Currently a single generic SYSTEM_PROMPT.
+     No per-agent personality. Need to support per-agent system
+     prompts with lore/personality.
+
+  <span class="dim">For the config structure, I'm thinking a simple agents/
+  directory with individual agent files...</span>
+
+  <span class="dim">Now I'm thinking more carefully about what agent continuity
+  really means...</span>
+
+  <span class="dim">The simplest solution is to just persist session IDs to disk
+  keyed by agent name, so each agent can resume where it left off.</span></div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Then it launched a fourth agent &mdash; a Plan agent &mdash; to validate the design against the actual codebase. That agent read 14 more files, checked the existing <code>.env</code> configuration, verified the <code>.gitignore</code> patterns, and tested the <code>claude --help</code> output to confirm flag support. At the end it recorded two decisions through uroboro:
+      </p>
+
+      <div class="session-block"><span class="accent">&#9679;</span> uro_decision: "Markdown files for agent profiles over JSON/TOML registry"
+<span class="accent">&#9679;</span> uro_decision: "Single JSON file for session persistence over SQLite or per-agent files"</div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Breadcrumbs for the next session. The decisions this session made will appear in the next session's <code>uro_recap</code>. The trail extends.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        40-year-old commands
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Look at the tool calls again. <code>grep</code>. <code>git log</code>. <code>ls</code>. <code>find</code>. Commands from the late '70s and '80s, written for terminals that couldn't display color, running on an LLM subprocess spawned by another LLM.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        <code>grep</code> doesn't know it's being called by a language model. It searches. It returns matches. The same way it did in 1973 when Ken Thompson wrote it. The same byte-by-byte scan, the same regex engine (more or less), the same stdout pipe. The orchestration layer is new. The tools are ancient.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        There's something grounding about that. The system isn't magic. It's a coordinator that knows how to decompose "understand this codebase" into twenty grep calls, ten file reads, and five git operations &mdash; then synthesize the results into something a human can evaluate. The intelligence, to the extent the word applies, is in the decomposition and synthesis. The execution is <code>grep -r "pattern" path/</code>. It's always been <code>grep -r "pattern" path/</code>.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The recursive part
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Here's what I was actually looking at:
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        An LLM using a tool I built with a previous instance of itself &mdash; uroboro &mdash; to recall context and intent from past sessions. Loading that context alongside its own built-in systems. Then using that context to plan a feature (session persistence) whose entire purpose is preventing context loss. Recording the decisions it made about context persistence using the context persistence tool. Leaving a trail for the next instance to pick up.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The tool that solves context loss was used to orient a session about solving context loss at a different layer. And the decisions made during that session were captured by the tool, extending the trail for the next session that will also use the tool to orient itself.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        I've <a href="/recursive-mirror/">written about this pattern before</a>. The outputs of the system are valid inputs to the system. But this time I wasn't thinking about it architecturally. I was watching it happen in real time through a scrolling log of <code>Read</code> and <code>Search</code> and <code>Bash</code> calls. The recursion wasn't a diagram. It was <code>uro_recap</code> at the top and <code>uro_decision</code> at the bottom with 58 tool calls between them.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What does thinking look like
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Not answering the question. Just noting what I saw.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Eight months ago the workflow was: start a session, manually paste in relevant context from last time, hope the model remembers what we decided, lose half of it when the context window fills up, start over. The first version of uroboro was a hack &mdash; a shell script that appended decisions to a markdown file.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Now the system loads its own decision trail, decomposes a research question into three parallel investigations, fans out 58 tool calls across five programming languages, synthesizes architecture diagrams from source code, reasons about design tradeoffs in visible chain-of-thought, and logs what it decided so the next instance can pick up where this one stopped. In under two minutes.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The gap closed partly because the model got better. But partly because I kept building the connective tissue. Uroboro. The relay. The bridge decomposition. The MCP server. Each piece made the loop tighter. The tool records the decision. The decision informs the next session. The next session builds the next tool. The tool gets integrated. Repeat.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Doomer or booster, that's a different thing than what I was looking at eight months ago. Whether it's "thinking" is a question for philosophers. What it looks like is <code>grep</code> and <code>git log</code> and <code>Read src/bin/mcp.rs lines 1-50</code>, happening very fast, coordinated by something that knows what to look for and what to do with what it finds.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        I opened the detailed view because I was curious. I kept watching because it was interesting. Not because it was sentient or magical. Because it was <em>legible</em>. Every step visible. Every tool call logged. Every decision recorded. A process you can inspect, evaluate, and disagree with.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        That might be the most useful thing about it.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p>Related: <a href="/recursive-mirror/">Recursive mirror</a>, <a href="/distilling-style/">Distilling style</a>, <a href="/disassemble-recombine/">Disassemble-recombine</a>, <a href="/fun/chasm-logic/deep-bore/">Deep Bore</a></p>
+    </footer>
+
+  </div>
+</article>
