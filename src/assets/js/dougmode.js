@@ -74,7 +74,7 @@
     '  z-index: 9998; pointer-events: none;',
     '  background-image: url("' + svgPattern + '");',
     '  background-repeat: repeat;',
-    '  opacity: 0.035;',
+    '  opacity: 0.01;',
     '}',
     '[data-doug] #dougOverlay { display: block; }',
 
@@ -308,7 +308,7 @@
       document.documentElement.removeAttribute('data-doug');
       btn.textContent = '\u25CB DOUG MODE';
     }
-    try { localStorage.setItem(STORAGE_KEY, on ? '1' : '0'); } catch (e) {}
+    try { localStorage.setItem(STORAGE_KEY, on ? '1' : '0'); } catch (e) { }
   }
 
   btn.addEventListener('click', function () {
@@ -318,6 +318,6 @@
 
   // Init from storage
   var saved = null;
-  try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+  try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { }
   setDougMode(saved === '1');
 })();
