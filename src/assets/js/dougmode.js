@@ -21,8 +21,8 @@
   // SVG pattern: tiled DOUG text in brick layout
   var svgPattern = "data:image/svg+xml," + encodeURIComponent(
     "<svg xmlns='http://www.w3.org/2000/svg' width='280' height='110'>" +
-    "<text x='5' y='45' font-family='monospace' font-size='50' font-weight='900' fill='white'>DOUG</text>" +
-    "<text x='145' y='95' font-family='monospace' font-size='50' font-weight='900' fill='white'>DOUG</text>" +
+    "<text x='5' y='45' font-family='monospace' font-size='50' font-weight='900' fill='%23191919'>DOUG</text>" +
+    "<text x='145' y='95' font-family='monospace' font-size='50' font-weight='900' fill='%23191919'>DOUG</text>" +
     "</svg>"
   );
 
@@ -74,7 +74,7 @@
     '  z-index: 9998; pointer-events: none;',
     '  background-image: url("' + svgPattern + '");',
     '  background-repeat: repeat;',
-    '  opacity: 0.01;',
+    '  opacity: 1;',
     '}',
     '[data-doug] #dougOverlay { display: block; }',
 
