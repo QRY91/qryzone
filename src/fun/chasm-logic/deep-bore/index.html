@@ -1297,6 +1297,20 @@ permalink: /fun/chasm-logic/deep-bore/
         try {
             var event = JSON.parse(typeof e.data === "string" ? e.data : e);
             if (event.tick) state.tick = event.tick;
+
+            // Route compute_cost to funding meter instead of log
+            if (event.type === "compute_cost" && event.data) {
+                var cost = event.data.cost_usd || 0;
+                state.funded = (state.funded || 0) + cost;
+                updateFundingMeter();
+                return;
+            }
+
+            // Skip noisy event types from log feed
+            if (event.type === "tool_call" || event.type === "tool_result" || event.type === "status") {
+                return;
+            }
+
             appendLog(bridgeEventToLog(event));
             updateTick();
         } catch (err) {
