@@ -460,19 +460,19 @@ Player sends message &#8594; None &#8594; starts NEW session
       </h2>
 
       <p style="margin-bottom: var(--space-md)">
-        Eight months ago the workflow was: start a session, manually paste in relevant context from last time, hope the model remembered what we decided, lose half of it when the context window filled up, start over. The first version of uroboro was a shell script that appended decisions to a markdown file.
+        At 5:50 PM on February 21st, the first commit landed: "initial release: in-game Claude AI chat for Factorio 2.0." By 5:14 AM on the 22nd &mdash; less than 12 hours later &mdash; the last commit read "update to multiagent." In between: the mod, the MCP server, the SSE telemetry relay, the bridge, the thin-pipe rewrite, agent identity, session persistence, and this article. All of it. One day.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Now the system loads its own decision trail, decomposes a research question into three parallel investigations, fans out 58 tool calls across five programming languages, synthesizes architecture diagrams from source code, reasons about design tradeoffs in visible chain-of-thought, and logs what it decided so the next instance can pick up where this one stopped. In under two minutes.
+        Uroboro is older. The first version was a shell script that appended decisions to a markdown file, and I've been iterating on it for months. But the rest of the connective tissue &mdash; the relay, the bridge, the in-game chat, the multi-agent routing &mdash; didn't exist 24 hours before I opened that detailed view.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        The gap closed partly because the model got better. But partly because I kept building the connective tissue &mdash; uroboro, the relay, the bridge, the MCP server &mdash; and each piece made the loop tighter. The same self-reinforcing feedback loop. The tool records the decision. The decision informs the next session. The next session builds the next tool. The tool gets integrated. The integration teaches me something. I build the next thing. Repeat.
+        Now the system loads its own decision trail, decomposes a research question into three parallel investigations, fans out 58 tool calls across five programming languages, synthesizes architecture diagrams from source code, reasons about design tradeoffs in visible chain-of-thought, and logs what it decided so the next instance can pick up where this one stopped. In under two minutes. On infrastructure that didn't exist that morning.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Doomer or booster, that's a different thing than what I was looking at eight months ago. Whether it's "thinking" is a question for philosophers. What it looks like is <code>grep</code> and <code>git log</code> and <code>Read src/bin/mcp.rs lines 1-50</code>, happening very fast, coordinated by something that knows what to look for and what to do with what it finds. And what it looks like from the human side is 33 sessions across 19 hours, bouncing between a game mod and a satirical dashboard and a bridge rewrite and a sound technician joke, irrigating the same mental model from every direction until the plan writes itself.
+        Doomer or booster, that's a different thing. Whether it's "thinking" is a question for philosophers. What it looks like is <code>grep</code> and <code>git log</code> and <code>Read src/bin/mcp.rs lines 1-50</code>, happening very fast, coordinated by something that knows what to look for and what to do with what it finds. And what it looks like from the human side is 33 sessions across 19 hours, bouncing between a game mod and a satirical dashboard and a bridge rewrite and a sound technician joke, irrigating the same mental model from every direction until the plan writes itself.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
