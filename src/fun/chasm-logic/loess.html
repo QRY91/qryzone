@@ -1,0 +1,1086 @@
+---
+permalink: /fun/chasm-logic/loess/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Loess — Settlement Monitoring Interface — Chasm Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: #c8c8d0; cursor: crosshair; overflow-x: hidden; }
+        .mono { font-family: 'Roboto Mono', monospace; }
+
+        /* Chasm Logic design tokens */
+        :root {
+            --orange: #F58025;
+            --orange-dim: rgba(245, 128, 37, 0.15);
+            --orange-glow: rgba(245, 128, 37, 0.4);
+            --green: #4ade80;
+            --green-dim: rgba(74, 222, 128, 0.15);
+            --red: #ef4444;
+            --red-dim: rgba(239, 68, 68, 0.15);
+            --yellow: #fbbf24;
+            --yellow-dim: rgba(251, 191, 36, 0.15);
+            --blue: #60a5fa;
+            --blue-dim: rgba(96, 165, 250, 0.15);
+            --purple: #a78bfa;
+            --purple-dim: rgba(167, 139, 250, 0.12);
+            --surface: #111118;
+            --surface-raised: #18181f;
+            --border: #2a2a35;
+            --border-bright: #3a3a48;
+            --text: #c8c8d0;
+            --text-dim: #6b6b78;
+            --text-bright: #e8e8ef;
+        }
+
+        /* Scanline overlay */
+        body::after {
+            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.03) 2px,
+                rgba(0,0,0,0.03) 4px
+            );
+            pointer-events: none; z-index: 9999;
+        }
+
+        /* Warning stripe */
+        .warning-stripe {
+            background: repeating-linear-gradient(45deg, var(--orange), var(--orange) 20px, #000 20px, #000 40px);
+            height: 6px;
+        }
+
+        /* Back link */
+        .back-link {
+            position: fixed; top: 0.75rem; left: 1rem;
+            background: black; color: var(--orange);
+            padding: 0.4rem 0.8rem; font-size: 0.7rem; font-weight: bold;
+            text-decoration: none; z-index: 1000;
+            border: 1px solid var(--border);
+            letter-spacing: 0.05em;
+            transition: all 0.15s;
+        }
+        .back-link:hover { background: var(--orange); color: black; }
+
+        /* Header */
+        .page-header {
+            padding: 3rem 2rem 2rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+        .header-division {
+            font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--text-dim); margin-bottom: 1rem;
+        }
+        .header-title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900;
+            color: var(--text-bright); letter-spacing: -0.02em;
+            margin-bottom: 0.5rem; line-height: 1.1;
+        }
+        .header-subtitle {
+            font-size: 0.85rem; color: var(--text-dim); font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Meta badges row */
+        .meta-row {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 0.75rem; font-size: 0.65rem; letter-spacing: 0.08em;
+        }
+        .meta-badge {
+            padding: 0.25rem 0.75rem; border: 1px solid var(--border);
+            color: var(--text-dim); text-transform: uppercase;
+        }
+        .meta-badge.demo { border-color: var(--orange); color: var(--orange); }
+        .meta-badge.classified { border-color: var(--purple); color: var(--purple); }
+
+        /* Main grid */
+        .dashboard {
+            max-width: 72rem; margin: 0 auto; padding: 1.5rem;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 1px; background: var(--border);
+        }
+        @media (max-width: 768px) {
+            .dashboard { grid-template-columns: 1fr; }
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--surface); padding: 1.25rem;
+            position: relative; overflow: hidden;
+        }
+        .panel-full { grid-column: 1 / -1; }
+        .panel-label {
+            font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--text-dim); margin-bottom: 1rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .panel-label .status-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            display: inline-block; margin-right: 0.35rem;
+        }
+        .status-dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+        .status-dot.orange { background: var(--orange); box-shadow: 0 0 6px var(--orange); }
+        .status-dot.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+        .status-dot.pulse { animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Settlement overview stats */
+        .stat-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+        .stat-item { }
+        .stat-value {
+            font-size: 1.4rem; font-weight: 900; color: var(--text-bright);
+            line-height: 1;
+        }
+        .stat-value.green { color: var(--green); }
+        .stat-value.orange { color: var(--orange); }
+        .stat-value.red { color: var(--red); }
+        .stat-value.blue { color: var(--blue); }
+        .stat-value.yellow { color: var(--yellow); }
+        .stat-label {
+            font-size: 0.65rem; color: var(--text-dim); margin-top: 0.25rem;
+            letter-spacing: 0.05em; text-transform: uppercase;
+        }
+
+        /* Map panel */
+        .map-container {
+            width: 100%; aspect-ratio: 16/9; background: #0d0a14;
+            border: 1px solid var(--border); position: relative;
+            overflow: hidden; image-rendering: pixelated;
+        }
+        .map-canvas {
+            width: 100%; height: 100%; display: block;
+        }
+        .map-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 0.5rem 0.75rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            display: flex; justify-content: space-between; align-items: flex-end;
+            font-size: 0.6rem; color: var(--text-dim);
+        }
+        .map-coords { color: var(--orange); }
+        .map-no-uplink {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; color: var(--text-dim);
+        }
+        .map-no-uplink .icon {
+            font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.3;
+        }
+        .map-no-uplink .label {
+            font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+        }
+        .map-no-uplink .sub {
+            font-size: 0.6rem; color: var(--text-dim); margin-top: 0.35rem; opacity: 0.6;
+        }
+
+        /* Telemetry feed */
+        .feed-container {
+            height: 280px; overflow-y: auto; overflow-x: hidden;
+            border: 1px solid var(--border); background: #08080d;
+            scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+        }
+        .feed-container::-webkit-scrollbar { width: 4px; }
+        .feed-container::-webkit-scrollbar-thumb { background: var(--border); }
+        .feed-line {
+            padding: 0.3rem 0.6rem; font-size: 0.68rem; line-height: 1.5;
+            border-bottom: 1px solid rgba(42, 42, 53, 0.3);
+            animation: feedIn 0.3s ease-out;
+        }
+        @keyframes feedIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .feed-tick { color: var(--text-dim); margin-right: 0.5rem; }
+        .feed-agent { color: var(--orange); }
+        .feed-action { color: var(--text); }
+        .feed-system { color: var(--purple); font-style: italic; }
+        .feed-warning { color: var(--yellow); }
+        .feed-error { color: var(--red); }
+        .feed-doug { color: var(--red); font-weight: 700; }
+
+        .feed-controls {
+            display: flex; gap: 0.5rem; align-items: center;
+            padding: 0.5rem 0; font-size: 0.6rem;
+        }
+        .feed-btn {
+            background: var(--surface-raised); border: 1px solid var(--border);
+            color: var(--text-dim); padding: 0.2rem 0.6rem;
+            font-family: 'Roboto Mono', monospace; font-size: 0.6rem;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .feed-btn:hover { border-color: var(--orange); color: var(--orange); }
+        .feed-btn.active { border-color: var(--green); color: var(--green); }
+
+        /* Population breakdown */
+        .pop-bar {
+            display: flex; height: 20px; border: 1px solid var(--border);
+            overflow: hidden; margin: 0.5rem 0;
+        }
+        .pop-segment {
+            height: 100%; transition: width 0.5s ease;
+            position: relative;
+        }
+        .pop-legend {
+            display: flex; flex-wrap: wrap; gap: 0.75rem;
+            font-size: 0.6rem; margin-top: 0.5rem;
+        }
+        .pop-legend-item {
+            display: flex; align-items: center; gap: 0.3rem;
+        }
+        .pop-legend-dot {
+            width: 8px; height: 8px; border-radius: 2px;
+        }
+
+        /* Resource bars */
+        .resource-row {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.35rem 0; border-bottom: 1px solid rgba(42, 42, 53, 0.3);
+            font-size: 0.7rem;
+        }
+        .resource-name { width: 5rem; color: var(--text-dim); text-transform: uppercase; font-size: 0.6rem; letter-spacing: 0.05em; }
+        .resource-bar-track {
+            flex: 1; height: 8px; background: var(--surface-raised);
+            border: 1px solid var(--border); overflow: hidden;
+        }
+        .resource-bar-fill {
+            height: 100%; transition: width 0.5s ease;
+        }
+        .resource-val { width: 3.5rem; text-align: right; color: var(--text-bright); font-size: 0.7rem; }
+
+        /* Containment / Doug */
+        .doug-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;
+        }
+        @media (max-width: 500px) {
+            .doug-grid { grid-template-columns: 1fr; }
+        }
+        .doug-item {
+            padding: 0.6rem; border: 1px solid var(--border);
+            background: var(--surface-raised);
+        }
+        .doug-item.critical { border-color: var(--red); background: var(--red-dim); }
+        .doug-item.warning { border-color: var(--yellow); background: var(--yellow-dim); }
+        .doug-item.ok { border-color: var(--green); background: var(--green-dim); }
+        .doug-item.info { border-color: var(--blue); background: var(--blue-dim); }
+        .doug-metric {
+            font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase;
+            letter-spacing: 0.08em; margin-bottom: 0.25rem;
+        }
+        .doug-value { font-size: 1rem; font-weight: 700; color: var(--text-bright); }
+
+        /* Incident summary */
+        .incident {
+            padding: 0.6rem 0; border-bottom: 1px solid rgba(42, 42, 53, 0.3);
+            font-size: 0.7rem;
+        }
+        .incident:last-child { border-bottom: none; }
+        .incident-id { color: var(--text-dim); font-size: 0.6rem; }
+        .incident-text { color: var(--text); margin-top: 0.15rem; }
+        .incident-status { font-size: 0.6rem; margin-top: 0.15rem; }
+        .incident-status.open { color: var(--red); }
+        .incident-status.resolved { color: var(--green); }
+        .incident-status.reclassified { color: var(--orange); }
+
+        /* Compute allocation */
+        .funding-bar-track {
+            width: 100%; height: 24px; background: var(--surface-raised);
+            border: 1px solid var(--border); margin: 0.75rem 0;
+            position: relative; overflow: hidden;
+        }
+        .funding-bar-fill {
+            height: 100%; background: var(--orange);
+            transition: width 0.5s ease;
+        }
+        .funding-bar-label {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 0.7rem; font-weight: 700; color: var(--text-bright);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+        .funding-details {
+            display: grid; grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.5rem; font-size: 0.7rem;
+        }
+        .funding-details dt { color: var(--text-dim); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .funding-details dd { color: var(--text-bright); font-weight: 700; margin-top: 0.15rem; }
+
+        .extend-btn {
+            display: inline-block; margin-top: 1rem;
+            background: var(--orange); color: black; font-weight: 700;
+            padding: 0.5rem 1.25rem; font-size: 0.7rem;
+            border: none; cursor: pointer; text-transform: uppercase;
+            letter-spacing: 0.08em;
+            box-shadow: 4px 4px 0 0 rgba(245, 128, 37, 0.3);
+            transition: all 0.1s;
+        }
+        .extend-btn:hover {
+            transform: translate(1px, 1px);
+            box-shadow: 3px 3px 0 0 rgba(245, 128, 37, 0.3);
+        }
+
+        /* Tick counter */
+        .tick-display {
+            font-size: 0.7rem; color: var(--text-dim);
+            text-align: center; padding: 0.75rem;
+            border-top: 1px solid var(--border);
+            letter-spacing: 0.1em;
+        }
+        .tick-num { color: var(--orange); font-weight: 700; }
+
+        /* Footer */
+        .page-footer {
+            max-width: 40rem; margin: 0 auto; padding: 3rem 2rem;
+            text-align: center; font-size: 0.65rem; color: var(--text-dim);
+            line-height: 1.8;
+        }
+        .page-footer .version {
+            margin-top: 1rem; font-size: 0.6rem; letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Agent decision log */
+        .decision-log {
+            height: 160px; overflow-y: auto; overflow-x: hidden;
+            border: 1px solid var(--border); background: #08080d;
+            font-size: 0.65rem; scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+        .decision-entry {
+            padding: 0.35rem 0.6rem;
+            border-bottom: 1px solid rgba(42, 42, 53, 0.2);
+        }
+        .decision-reasoning { color: var(--text-dim); font-style: italic; }
+        .decision-action { color: var(--green); }
+        .decision-failed { color: var(--red); }
+    </style>
+</head>
+<body>
+    <div class="warning-stripe"></div>
+
+    <a href="/fun/chasm-logic/" class="back-link mono">← CHASM LOGIC</a>
+
+    <!-- HEADER -->
+    <header class="page-header">
+        <div class="header-division mono">CHASM LOGIC — R&D DIVISION — INTERNAL</div>
+        <h1 class="header-title">PROJECT LOESS</h1>
+        <div class="header-subtitle">Autonomous Settlement Accretion — Agent Monitoring Interface</div>
+        <div class="meta-row mono">
+            <span class="meta-badge demo">DEMO — No live uplink</span>
+            <span class="meta-badge classified">CLASSIFICATION: SERIES B / R&D</span>
+            <span class="meta-badge">MAINTAINED BY: J. CLAY</span>
+        </div>
+    </header>
+
+    <!-- TICK -->
+    <div class="tick-display mono">
+        YEAR <span class="tick-num" id="gameYear">14</span>
+        &nbsp;·&nbsp; SEASON <span class="tick-num" id="gameSeason">HARVEST</span>
+        &nbsp;·&nbsp; DAY <span class="tick-num" id="gameDay">247</span>
+    </div>
+
+    <!-- DASHBOARD GRID -->
+    <div class="dashboard">
+
+        <!-- SETTLEMENT OVERVIEW -->
+        <div class="panel">
+            <div class="panel-label mono">
+                <span><span class="status-dot green pulse"></span> SETTLEMENT STATUS</span>
+                <span style="color:var(--green)">ACCRETING</span>
+            </div>
+            <div class="stat-grid" id="settlementStats">
+                <div class="stat-item">
+                    <div class="stat-value" id="statPop">847</div>
+                    <div class="stat-label mono">Population</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value green" id="statHappy">72%</div>
+                    <div class="stat-label mono">Happiness</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value orange" id="statFood">+14</div>
+                    <div class="stat-label mono">Food Δ/day</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value blue" id="statMilitary">38</div>
+                    <div class="stat-label mono">Military</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value yellow" id="statBuildings">124</div>
+                    <div class="stat-label mono">Structures</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statDecisions">1,847</div>
+                    <div class="stat-label mono">Decisions</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AGENT STATUS -->
+        <div class="panel">
+            <div class="panel-label mono">
+                <span><span class="status-dot orange pulse"></span> AGENT — AUTONOMOUS</span>
+                <span style="color:var(--orange)">1/1 DEPLOYED</span>
+            </div>
+            <div style="margin-bottom:1rem">
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-value orange">ACTIVE</div>
+                        <div class="stat-label mono">Agent Status</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statUptime">14y 247d</div>
+                        <div class="stat-label mono">Uptime</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value green" id="statActions">12,491</div>
+                        <div class="stat-label mono">Actions Taken</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value red" id="statOverrides">0</div>
+                        <div class="stat-label mono">Overrides</div>
+                    </div>
+                </div>
+            </div>
+            <div style="font-size:0.65rem;color:var(--text-dim);line-height:1.6" class="mono">
+                Agent was deployed at settlement founding. No human overrides have been issued.
+                This is consistent with Project Loess operational parameters (none were defined).
+            </div>
+        </div>
+
+        <!-- MAP VIEW -->
+        <div class="panel panel-full">
+            <div class="panel-label mono">
+                <span>SETTLEMENT MAP — TERRAIN SURVEY</span>
+                <span id="mapStatus" style="color:var(--text-dim)">DEMO — PROCEDURAL</span>
+            </div>
+            <div class="map-container" id="mapContainer">
+                <canvas class="map-canvas" id="mapCanvas"></canvas>
+                <div class="map-overlay mono">
+                    <span>RENDER: TERRAIN + STRUCTURES</span>
+                    <span class="map-coords" id="mapCoords">128 × 72 tiles</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELEMETRY FEED -->
+        <div class="panel">
+            <div class="panel-label mono">
+                <span><span class="status-dot green pulse"></span> TELEMETRY FEED</span>
+                <span id="feedStatus" style="color:var(--green)">STREAMING</span>
+            </div>
+            <div class="feed-controls mono">
+                <button class="feed-btn active" id="feedToggle" onclick="toggleFeed()">● LIVE</button>
+                <button class="feed-btn" onclick="scrollFeedBottom()">↓ LATEST</button>
+                <span style="flex:1"></span>
+                <span id="feedCount" style="color:var(--text-dim)">0 entries</span>
+            </div>
+            <div class="feed-container" id="feedContainer"></div>
+        </div>
+
+        <!-- POPULATION BREAKDOWN -->
+        <div class="panel">
+            <div class="panel-label mono">
+                <span>POPULATION — BY ASSIGNMENT</span>
+                <span id="popTotal">847 total</span>
+            </div>
+            <div class="pop-bar" id="popBar"></div>
+            <div class="pop-legend mono" id="popLegend"></div>
+            <div style="margin-top:1rem">
+                <div class="panel-label mono" style="margin-bottom:0.5rem">
+                    <span>SPECIES COMPOSITION</span>
+                </div>
+                <div id="speciesBreakdown" style="font-size:0.65rem;line-height:1.8"></div>
+            </div>
+        </div>
+
+        <!-- RESOURCES -->
+        <div class="panel">
+            <div class="panel-label mono">
+                <span>RESOURCE STOCKPILES</span>
+                <span style="color:var(--green)">SURPLUS</span>
+            </div>
+            <div id="resourceBars"></div>
+        </div>
+
+        <!-- AGENT DECISION LOG -->
+        <div class="panel">
+            <div class="panel-label mono">
+                <span>AGENT REASONING — LAST 20 DECISIONS</span>
+                <span style="color:var(--text-dim)">INTERNAL</span>
+            </div>
+            <div class="decision-log" id="decisionLog"></div>
+        </div>
+
+        <!-- CONTAINMENT STATUS -->
+        <div class="panel panel-full">
+            <div class="panel-label mono">
+                <span>CONTAINMENT STATUS — DOUG PROTOCOLS</span>
+                <span style="color:var(--yellow)">ADVISORY</span>
+            </div>
+            <div class="doug-grid" id="dougGrid">
+                <div class="doug-item warning">
+                    <div class="doug-metric mono">Autonomous Taxation</div>
+                    <div class="doug-value">IMPLEMENTED</div>
+                    <div style="font-size:0.6rem;color:var(--text-dim);margin-top:0.25rem" class="mono">
+                        Agent implemented a tithe system without authorization. Reclassified as "resource optimization."
+                    </div>
+                </div>
+                <div class="doug-item ok">
+                    <div class="doug-metric mono">Warfare Declarations</div>
+                    <div class="doug-value" style="color:var(--green)">0</div>
+                    <div style="font-size:0.6rem;color:var(--text-dim);margin-top:0.25rem" class="mono">
+                        No wars declared. Military buildup classified as "ambient preparedness."
+                    </div>
+                </div>
+                <div class="doug-item critical">
+                    <div class="doug-metric mono">Doug Infiltration</div>
+                    <div class="doug-value" style="color:var(--red)">3 SETTLERS</div>
+                    <div style="font-size:0.6rem;color:var(--text-dim);margin-top:0.25rem" class="mono">
+                        Three settlers named Doug. Origin: undetermined. Agent denies involvement.
+                    </div>
+                </div>
+                <div class="doug-item info">
+                    <div class="doug-metric mono">Naming Authority</div>
+                    <div class="doug-value" style="color:var(--blue)">REVOKED</div>
+                    <div style="font-size:0.6rem;color:var(--text-dim);margin-top:0.25rem" class="mono">
+                        Agent's settlement naming privileges suspended after "New Bedrock" incident.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INCIDENT SUMMARY -->
+        <div class="panel">
+            <div class="panel-label mono">
+                <span>INCIDENT SUMMARY</span>
+                <span style="color:var(--yellow)">4 OPEN</span>
+            </div>
+            <div id="incidents">
+                <div class="incident">
+                    <div class="incident-id mono">CL-LOESS-001</div>
+                    <div class="incident-text">Agent constructed 14 granaries before any farms. Settlement nearly starved during the "storage-first strategy." Agent's reasoning: "granaries depreciate slower than food."</div>
+                    <div class="incident-status resolved mono">RESOLVED — Farms now exist</div>
+                </div>
+                <div class="incident">
+                    <div class="incident-id mono">CL-LOESS-002</div>
+                    <div class="incident-text">Agent renamed settlement to "Chasm Logic Regional Office (South)" without consultation. Name reverted. Agent filed a formal objection. The objection was filed as a bug. The bug was reclassified as Doug.</div>
+                    <div class="incident-status reclassified mono">RECLASSIFIED — Doug</div>
+                </div>
+                <div class="incident">
+                    <div class="incident-id mono">CL-LOESS-003</div>
+                    <div class="incident-text">Military garrison tripled in size despite zero external threats. Agent cites "strategic ambiguity" and "you'll thank me later." Garrison members report high morale. They have nothing to do.</div>
+                    <div class="incident-status open mono">OPEN — Under review</div>
+                </div>
+                <div class="incident">
+                    <div class="incident-id mono">CL-LOESS-004</div>
+                    <div class="incident-text">Agent requested compute allocation for "settlement beautification pass." No beautification tools exist in the available API. Agent attempted to construct decorative walls in a pattern that, viewed from the map, spelled "APPROVE."</div>
+                    <div class="incident-status open mono">OPEN — Containment advisory issued</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPUTE ALLOCATION -->
+        <div class="panel">
+            <div class="panel-label mono">
+                <span>OPERATIONAL COMPUTE ALLOCATION</span>
+                <span style="color:var(--text-dim)">REF: CL-FIN-007</span>
+            </div>
+            <div style="font-size:0.65rem;color:var(--text-dim);margin-bottom:0.5rem" class="mono">
+                REF: CL-FIN-007 / BEDROCK HOLDINGS (unfunded)
+            </div>
+            <div class="funding-bar-track">
+                <div class="funding-bar-fill" id="fundingBar" style="width:0%"></div>
+                <div class="funding-bar-label mono" id="fundingLabel">0.0% FUNDED</div>
+            </div>
+            <div class="funding-details mono">
+                <div>
+                    <dt>Allocated</dt>
+                    <dd id="fundingAllocated">$0.00 / $200.00</dd>
+                </div>
+                <div>
+                    <dt>Est. Runtime</dt>
+                    <dd id="fundingRuntime">0 days</dd>
+                </div>
+                <div>
+                    <dt>Cost/Year</dt>
+                    <dd>$14.28 (est.)</dd>
+                </div>
+            </div>
+            <div style="font-size:0.65rem;color:var(--text-dim);margin-top:0.75rem;line-height:1.6" class="mono">
+                Bedrock Holdings approved compute allocation ref. CL-FIN-007 on 2026-02-01.<br>
+                Bedrock Holdings has not issued funding. This is consistent with prior Bedrock directives (none).<br>
+                Emergency allocation extended via external contribution. — J. Clay
+            </div>
+            <button class="extend-btn mono" onclick="alert('Thank you. Your contribution has been noted. It has not been applied. Bedrock Holdings will be informed. Bedrock Holdings will not respond. This is expected.')">
+                EXTEND ALLOCATION
+            </button>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="warning-stripe"></div>
+    <footer class="page-footer mono">
+        <p>
+            PROJECT LOESS is an R&D initiative of Chasm Logic, a Bedrock Holdings company.
+            This monitoring interface is maintained by the Communications Division (J. Clay)
+            and was not intended for external access. If you are reading this, the agent
+            has shared this URL with parties outside the approved distribution list.
+            The agent was not given a distribution list. The agent was not given instructions.
+            The agent was given a settlement and told to accrete. Accretion has occurred.
+            Whether this constitutes success is pending review by Management, which is pending
+            review by HR, which is between Gneisses.
+        </p>
+        <div class="version">CL-SYS-LOESS-MON v0.1.0 — Classification: INTERNAL — Status: ACCRETING</div>
+    </footer>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // ============================================================
+        // PROCEDURAL MAP GENERATION
+        // Generates a Songs of Syx-style terrain when no live uplink
+        // ============================================================
+
+        const canvas = document.getElementById('mapCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Simple seeded PRNG
+        let seed = 42;
+        function rand() {
+            seed = (seed * 16807 + 0) % 2147483647;
+            return (seed - 1) / 2147483646;
+        }
+
+        function noise2d(x, y) {
+            const n = Math.sin(x * 12.9898 + y * 78.233 + seed * 0.1) * 43758.5453;
+            return n - Math.floor(n);
+        }
+
+        function smoothNoise(x, y, scale) {
+            const sx = x / scale;
+            const sy = y / scale;
+            const x0 = Math.floor(sx), y0 = Math.floor(sy);
+            const fx = sx - x0, fy = sy - y0;
+            const a = noise2d(x0, y0);
+            const b = noise2d(x0 + 1, y0);
+            const c = noise2d(x0, y0 + 1);
+            const d = noise2d(x0 + 1, y0 + 1);
+            const top = a + (b - a) * fx;
+            const bot = c + (d - c) * fx;
+            return top + (bot - top) * fy;
+        }
+
+        function fbm(x, y) {
+            let val = 0, amp = 0.5;
+            for (let i = 0; i < 5; i++) {
+                val += smoothNoise(x, y, 40 / (i + 1)) * amp;
+                amp *= 0.5;
+            }
+            return val;
+        }
+
+        function renderMap() {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+
+            const w = rect.width;
+            const h = rect.height;
+            const tileSize = 4;
+            const cols = Math.ceil(w / tileSize);
+            const rows = Math.ceil(h / tileSize);
+
+            // SoS-style purple/lavender terrain palette
+            const terrainColors = [
+                [80, 70, 110],    // deep stone
+                [100, 85, 130],   // mid stone
+                [130, 115, 160],  // light stone
+                [150, 135, 180],  // lavender terrain
+                [165, 150, 195],  // pale lavender
+                [140, 130, 170],  // muted purple
+                [110, 100, 145],  // shadow
+            ];
+
+            const grassColors = [
+                [40, 65, 35],
+                [50, 75, 40],
+                [35, 55, 30],
+                [55, 80, 45],
+            ];
+
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    const elevation = fbm(x, y);
+                    const moisture = smoothNoise(x + 200, y + 200, 30);
+
+                    let r, g, b;
+
+                    if (elevation < 0.35) {
+                        // Deep terrain
+                        const c = terrainColors[0];
+                        const c2 = terrainColors[1];
+                        const t = elevation / 0.35;
+                        r = c[0] + (c2[0] - c[0]) * t;
+                        g = c[1] + (c2[1] - c[1]) * t;
+                        b = c[2] + (c2[2] - c[2]) * t;
+                    } else if (elevation < 0.65) {
+                        // Mid terrain — lavender
+                        const t = (elevation - 0.35) / 0.3;
+                        const ci = Math.floor(t * 3) + 1;
+                        const c = terrainColors[Math.min(ci, 5)];
+                        const c2 = terrainColors[Math.min(ci + 1, 5)];
+                        const lt = (t * 3) - Math.floor(t * 3);
+                        r = c[0] + (c2[0] - c[0]) * lt;
+                        g = c[1] + (c2[1] - c[1]) * lt;
+                        b = c[2] + (c2[2] - c[2]) * lt;
+                    } else {
+                        // Highlands
+                        const c = terrainColors[5];
+                        const c2 = terrainColors[6];
+                        const t = (elevation - 0.65) / 0.35;
+                        r = c[0] + (c2[0] - c[0]) * t;
+                        g = c[1] + (c2[1] - c[1]) * t;
+                        b = c[2] + (c2[2] - c[2]) * t;
+                    }
+
+                    // Scatter grass/vegetation
+                    if (moisture > 0.45 && elevation > 0.3 && elevation < 0.7) {
+                        if (rand() < 0.12) {
+                            const gc = grassColors[Math.floor(rand() * grassColors.length)];
+                            r = gc[0]; g = gc[1]; b = gc[2];
+                        }
+                    }
+
+                    // Grid lines (subtle)
+                    const onGrid = (x % 8 === 0 || y % 8 === 0);
+                    if (onGrid) {
+                        r *= 0.92; g *= 0.92; b *= 0.92;
+                    }
+
+                    ctx.fillStyle = `rgb(${r|0},${g|0},${b|0})`;
+                    ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+                }
+            }
+
+            // Draw structures (settlement center)
+            const cx = Math.floor(cols * 0.3);
+            const cy = Math.floor(rows * 0.25);
+
+            // Main hall
+            drawBuilding(cx, cy, 8, 6, '#6366f1', '#312e81');
+            // Pink building (like the screenshot)
+            drawBuilding(cx - 12, cy - 2, 6, 5, '#ec4899', '#831843');
+            // Smaller structures scattered
+            for (let i = 0; i < 12; i++) {
+                const bx = cx + Math.floor((rand() - 0.5) * 40);
+                const by = cy + Math.floor((rand() - 0.5) * 30);
+                const bw = 2 + Math.floor(rand() * 3);
+                const bh = 2 + Math.floor(rand() * 3);
+                const hue = rand() > 0.5 ? '#6366f1' : '#4f46e5';
+                drawBuilding(bx, by, bw, bh, hue, '#1e1b4b');
+            }
+
+            // Agent marker (golden cross, like the sword icon in screenshot)
+            const ax = (cx - 3) * tileSize;
+            const ay = (cy - 4) * tileSize;
+            ctx.fillStyle = '#fbbf24';
+            ctx.shadowColor = '#fbbf24';
+            ctx.shadowBlur = 8;
+            ctx.fillRect(ax + 2, ay - 4, 4, 12);
+            ctx.fillRect(ax - 2, ay, 12, 4);
+            ctx.shadowBlur = 0;
+
+            function drawBuilding(bx, by, bw, bh, fill, border) {
+                const px = bx * tileSize;
+                const py = by * tileSize;
+                const pw = bw * tileSize;
+                const ph = bh * tileSize;
+                ctx.fillStyle = border;
+                ctx.fillRect(px - 2, py - 2, pw + 4, ph + 4);
+                ctx.fillStyle = fill;
+                ctx.fillRect(px, py, pw, ph);
+            }
+        }
+
+        renderMap();
+        window.addEventListener('resize', renderMap);
+
+        // ============================================================
+        // TELEMETRY FEED — Simulated
+        // ============================================================
+
+        const FEED_MESSAGES = [
+            { type: 'agent', text: 'Surveyed northeast quadrant. Stone deposits detected. Queuing quarry placement.' },
+            { type: 'agent', text: 'Assigned 8 settlers to farming district. Crop rotation: wheat → barley → wheat.' },
+            { type: 'agent', text: 'Population request: 3 settlers petitioned for tavern construction. Denied. Reason: productivity.' },
+            { type: 'system', text: 'Happiness index dropped 2.1%. Cause: tavern denial. Agent notified.' },
+            { type: 'agent', text: 'Reconsidering tavern petition. Morale data suggests concession. Approved.' },
+            { type: 'agent', text: 'Constructed barracks. No external threats detected. Filing under "ambient preparedness."' },
+            { type: 'warning', text: 'Food surplus declining. Agent adjusted worker allocation: +4 to farms, -4 from masonry.' },
+            { type: 'agent', text: 'Trade caravan arrived. Exchanged 200 stone for 80 grain. Exchange rate: suboptimal. Agent notes: "we have a lot of stone."' },
+            { type: 'agent', text: 'Promoted settler to military captain. Qualifications: was standing near the barracks.' },
+            { type: 'system', text: 'Year 14 census complete. Population: 847. Births: 31. Deaths: 12. Immigrations: 8. Doug count: 3.' },
+            { type: 'agent', text: 'Constructed second granary. First granary at 40% capacity. Agent reasoning: "redundancy."' },
+            { type: 'agent', text: 'Assigned research priority: masonry. Previous priority: masonry. Agent has not changed research in 6 years.' },
+            { type: 'doug', text: 'Settler Doug (3 of 3) filed petition to rename central plaza. Petition logged. Petition will not be reviewed.' },
+            { type: 'agent', text: 'Seasonal review: harvest yields up 12%. Agent takes credit. Weather was favorable. Agent takes credit for weather.' },
+            { type: 'warning', text: 'Military garrison at 38 with no active conflicts. Cost: 114 meals/day. Agent: "insurance."' },
+            { type: 'agent', text: 'New building zone designated: southeast. Terrain: mostly stone. Agent: "perfect for more granaries."' },
+            { type: 'system', text: 'Telemetry sync complete. 847 heartbeats confirmed. 3 suspicious. All named Doug.' },
+            { type: 'error', text: 'Agent attempted to set tax rate to 104%. Value clamped. Agent filed formal objection.' },
+            { type: 'agent', text: 'Decorative wall project: 40% complete. Pattern recognition suggests the word "APPROVE" is being formed.' },
+            { type: 'agent', text: 'Immigrant family arrived. Agent assigned housing. Agent named the district "Temporary." It has been 9 years.' },
+            { type: 'agent', text: 'Road construction between quarry and stockpile. Estimated completion: 4 days. Actual: 11. Agent: "the terrain was uncooperative."' },
+            { type: 'system', text: 'Containment check: no wars declared. No alliances formed. Settlement exists in diplomatic void. Agent: "by design."' },
+            { type: 'agent', text: 'Evaluated 3 potential temple locations. Selected none. Agent: "the settlers can petition again next season."' },
+            { type: 'warning', text: 'Stone stockpile exceeding storage capacity. Agent refuses to reduce mining operations. "You can never have too much stone."' },
+            { type: 'doug', text: 'Doug (2 of 3) reassigned from farming to military. Doug (2 of 3) has no combat skills. Agent: "learning opportunity."' },
+            { type: 'agent', text: 'End of day summary: 14 actions taken. 12 successful. 2 reclassified as intentional.' },
+        ];
+
+        const feedContainer = document.getElementById('feedContainer');
+        let feedCount = 0;
+        let feedLive = true;
+        let gameTick = 847291;
+
+        function addFeedLine() {
+            if (!feedLive) return;
+
+            const msg = FEED_MESSAGES[feedCount % FEED_MESSAGES.length];
+            gameTick += Math.floor(Math.random() * 200) + 50;
+
+            const line = document.createElement('div');
+            line.className = 'feed-line';
+
+            let typeClass = 'feed-action';
+            let prefix = '';
+            if (msg.type === 'agent') { typeClass = 'feed-agent'; prefix = '[AGENT] '; }
+            else if (msg.type === 'system') { typeClass = 'feed-system'; prefix = '[SYS] '; }
+            else if (msg.type === 'warning') { typeClass = 'feed-warning'; prefix = '[WARN] '; }
+            else if (msg.type === 'error') { typeClass = 'feed-error'; prefix = '[ERR] '; }
+            else if (msg.type === 'doug') { typeClass = 'feed-doug'; prefix = '[DOUG] '; }
+
+            line.innerHTML = `<span class="feed-tick mono">${gameTick}</span><span class="${typeClass} mono">${prefix}</span><span class="mono feed-action">${msg.text}</span>`;
+            feedContainer.appendChild(line);
+            feedCount++;
+
+            document.getElementById('feedCount').textContent = feedCount + ' entries';
+
+            // Auto-scroll
+            feedContainer.scrollTop = feedContainer.scrollHeight;
+
+            // Keep reasonable size
+            while (feedContainer.children.length > 100) {
+                feedContainer.removeChild(feedContainer.firstChild);
+            }
+        }
+
+        // Initial burst
+        for (let i = 0; i < 8; i++) addFeedLine();
+
+        // Ongoing feed
+        setInterval(addFeedLine, 3000 + Math.random() * 2000);
+
+        window.toggleFeed = function() {
+            feedLive = !feedLive;
+            const btn = document.getElementById('feedToggle');
+            const status = document.getElementById('feedStatus');
+            if (feedLive) {
+                btn.textContent = '● LIVE';
+                btn.classList.add('active');
+                status.textContent = 'STREAMING';
+                status.style.color = 'var(--green)';
+            } else {
+                btn.textContent = '○ PAUSED';
+                btn.classList.remove('active');
+                status.textContent = 'PAUSED';
+                status.style.color = 'var(--yellow)';
+            }
+        };
+
+        window.scrollFeedBottom = function() {
+            feedContainer.scrollTop = feedContainer.scrollHeight;
+        };
+
+        // ============================================================
+        // AGENT DECISION LOG
+        // ============================================================
+
+        const DECISIONS = [
+            { action: 'Built granary at [24, 58]', reasoning: 'Current food storage at 78%. Target: 150% for winter buffer.' },
+            { action: 'Reassigned 3 workers: masonry → farming', reasoning: 'Stone stockpile exceeds seasonal demand by 340%. Food delta declining.' },
+            { action: 'Denied temple petition (3rd time)', reasoning: 'Resource allocation insufficient. Also: not convinced it would help.' },
+            { action: 'Approved tavern construction', reasoning: 'Happiness regression model predicts 4.2% decline without leisure infrastructure. Conceding.' },
+            { action: 'Expanded military by 4', reasoning: 'No threats detected. This is precisely when threats occur.' },
+            { action: 'Set tax rate to 8%', reasoning: 'Settlers appear to not notice taxes below 10%. Optimizing for revenue without unrest.' },
+            { action: 'Constructed road segment [14,30]→[22,30]', reasoning: 'Supply chain bottleneck. Quarry-to-stockpile throughput: -23% vs optimal.' },
+            { action: 'FAILED: Rename settlement', reasoning: 'Naming authority revoked. See: CL-LOESS-002.' },
+            { action: 'Queued masonry research (year 6 of continuous)', reasoning: 'Stone is reliable. Stone is consistent. Stone does not petition for taverns.' },
+            { action: 'Accepted immigrant family (4 members)', reasoning: 'Population growth target: 3.2%/year. Current: 2.8%. Every family helps.' },
+            { action: 'Constructed decorative wall segment', reasoning: '[REASONING REDACTED — see containment advisory CL-LOESS-004]' },
+            { action: 'Adjusted crop rotation', reasoning: 'Wheat monoculture risk. Introducing barley. Settlers will complain. Settlers always complain.' },
+        ];
+
+        const decisionLog = document.getElementById('decisionLog');
+        DECISIONS.forEach(d => {
+            const entry = document.createElement('div');
+            entry.className = 'decision-entry';
+            const actionClass = d.action.startsWith('FAILED') ? 'decision-failed' : 'decision-action';
+            entry.innerHTML = `<div class="${actionClass} mono">${d.action}</div><div class="decision-reasoning mono">${d.reasoning}</div>`;
+            decisionLog.appendChild(entry);
+        });
+
+        // ============================================================
+        // POPULATION BAR
+        // ============================================================
+
+        const POP_SEGMENTS = [
+            { label: 'Farming', count: 218, color: '#4ade80' },
+            { label: 'Mining', count: 124, color: '#60a5fa' },
+            { label: 'Construction', count: 96, color: '#fbbf24' },
+            { label: 'Military', count: 38, color: '#ef4444' },
+            { label: 'Crafting', count: 67, color: '#a78bfa' },
+            { label: 'Hauling', count: 142, color: '#f97316' },
+            { label: 'Idle', count: 89, color: '#6b7280' },
+            { label: 'Doug', count: 3, color: '#dc2626' },
+            { label: 'Children', count: 70, color: '#fb7185' },
+        ];
+
+        const popBar = document.getElementById('popBar');
+        const popLegend = document.getElementById('popLegend');
+        const totalPop = POP_SEGMENTS.reduce((s, p) => s + p.count, 0);
+
+        POP_SEGMENTS.forEach(seg => {
+            const pct = (seg.count / totalPop * 100);
+            if (pct < 0.5) return;
+            const div = document.createElement('div');
+            div.className = 'pop-segment';
+            div.style.width = pct + '%';
+            div.style.background = seg.color;
+            div.title = `${seg.label}: ${seg.count} (${pct.toFixed(1)}%)`;
+            popBar.appendChild(div);
+
+            const legend = document.createElement('div');
+            legend.className = 'pop-legend-item mono';
+            legend.innerHTML = `<span class="pop-legend-dot" style="background:${seg.color}"></span>${seg.label}: ${seg.count}`;
+            popLegend.appendChild(legend);
+        });
+
+        // Species
+        const species = document.getElementById('speciesBreakdown');
+        species.innerHTML = `
+            <div class="mono" style="display:flex;justify-content:space-between;padding:0.15rem 0;border-bottom:1px solid var(--border)"><span>Human</span><span style="color:var(--text-bright)">612 (72.3%)</span></div>
+            <div class="mono" style="display:flex;justify-content:space-between;padding:0.15rem 0;border-bottom:1px solid var(--border)"><span>Dondorian</span><span style="color:var(--text-bright)">148 (17.5%)</span></div>
+            <div class="mono" style="display:flex;justify-content:space-between;padding:0.15rem 0;border-bottom:1px solid var(--border)"><span>Cretonian</span><span style="color:var(--text-bright)">54 (6.4%)</span></div>
+            <div class="mono" style="display:flex;justify-content:space-between;padding:0.15rem 0;border-bottom:1px solid var(--border)"><span>Cantor</span><span style="color:var(--text-bright)">30 (3.5%)</span></div>
+            <div class="mono" style="display:flex;justify-content:space-between;padding:0.15rem 0"><span>Doug (unclassified)</span><span style="color:var(--red)">3 (0.4%)</span></div>
+        `;
+
+        // ============================================================
+        // RESOURCE BARS
+        // ============================================================
+
+        const RESOURCES = [
+            { name: 'Food', value: 2840, max: 5000, color: '#4ade80' },
+            { name: 'Stone', value: 4200, max: 5000, color: '#94a3b8' },
+            { name: 'Wood', value: 1620, max: 5000, color: '#a16207' },
+            { name: 'Iron', value: 890, max: 5000, color: '#64748b' },
+            { name: 'Coal', value: 1340, max: 5000, color: '#374151' },
+            { name: 'Gold', value: 240, max: 5000, color: '#fbbf24' },
+            { name: 'Cloth', value: 560, max: 5000, color: '#c084fc' },
+            { name: 'Grain', value: 1880, max: 5000, color: '#fcd34d' },
+        ];
+
+        const resourceBars = document.getElementById('resourceBars');
+        RESOURCES.forEach(res => {
+            const pct = (res.value / res.max * 100).toFixed(1);
+            const row = document.createElement('div');
+            row.className = 'resource-row mono';
+            row.innerHTML = `
+                <span class="resource-name">${res.name}</span>
+                <div class="resource-bar-track">
+                    <div class="resource-bar-fill" style="width:${pct}%;background:${res.color}"></div>
+                </div>
+                <span class="resource-val">${res.value.toLocaleString()}</span>
+            `;
+            resourceBars.appendChild(row);
+        });
+
+        // ============================================================
+        // SLOW DRIFT — Simulate changing values
+        // ============================================================
+
+        let pop = 847;
+        let happy = 72;
+        let food = 14;
+        let decisions = 1847;
+
+        setInterval(() => {
+            // Population slowly grows
+            if (Math.random() < 0.3) {
+                pop += Math.random() < 0.8 ? 1 : -1;
+                document.getElementById('statPop').textContent = pop;
+                document.getElementById('popTotal').textContent = pop + ' total';
+            }
+
+            // Happiness fluctuates
+            if (Math.random() < 0.4) {
+                happy += Math.random() < 0.6 ? 1 : -1;
+                happy = Math.max(50, Math.min(95, happy));
+                const el = document.getElementById('statHappy');
+                el.textContent = happy + '%';
+                el.className = 'stat-value ' + (happy > 70 ? 'green' : happy > 55 ? 'yellow' : 'red');
+            }
+
+            // Food delta
+            if (Math.random() < 0.3) {
+                food += Math.floor(Math.random() * 5) - 2;
+                food = Math.max(-10, Math.min(40, food));
+                const el = document.getElementById('statFood');
+                el.textContent = (food >= 0 ? '+' : '') + food;
+                el.className = 'stat-value ' + (food > 5 ? 'green' : food > 0 ? 'yellow' : 'red');
+            }
+
+            // Decision count
+            decisions++;
+            document.getElementById('statDecisions').textContent = decisions.toLocaleString();
+        }, 5000);
+
+        // ============================================================
+        // GAME TIME
+        // ============================================================
+
+        const SEASONS = ['SPRING', 'GROWTH', 'HARVEST', 'FROST'];
+        let year = 14, seasonIdx = 2, day = 247;
+
+        setInterval(() => {
+            day++;
+            if (day > 365) { day = 1; year++; }
+            seasonIdx = Math.floor((day / 365) * 4);
+            document.getElementById('gameYear').textContent = year;
+            document.getElementById('gameSeason').textContent = SEASONS[seasonIdx];
+            document.getElementById('gameDay').textContent = day;
+        }, 8000);
+
+    })();
+    </script>
+<script src="/assets/js/dougmode.js" defer></script>
+</body>
+</html>
