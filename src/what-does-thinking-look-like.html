@@ -377,15 +377,90 @@ Player sends message &#8594; None &#8594; starts NEW session
 
     <section style="margin-bottom: var(--space-xxl)">
       <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The trajectory
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The planning session I was watching happened at 2:35 AM. To understand why I was still awake, you need the full arc.
+      </p>
+
+      <div class="session-block"><span class="dim">Feb 21</span>
+<span class="accent">14:21</span>  "Hey wanna try out this factorio mcp setup?"          <span class="dim">88 tools</span>
+<span class="accent">14:39</span>  "let's continue playing"                              <span class="dim">244 tools</span>
+<span class="accent">14:46</span>  "does this scale horizontally? multiplanetary claude?" <span class="dim">198 tools</span>
+<span class="accent">15:00</span>  "can we build a mod to launch claude from factorio?"  <span class="dim">566 tools, 10 hours</span>
+
+<span class="dim">Evening</span>
+<span class="accent">21:27</span>  microDoug upgrade on qryzone                          <span class="dim">41 tools</span>
+<span class="accent">21:31</span>  prompts page                                          <span class="dim">49 tools</span>
+
+<span class="dim">Night</span>
+<span class="accent">23:43</span>  "Welcome?"                          <span class="dim">first msg through the bridge</span>
+<span class="accent">00:23</span>  "The factory must grow."
+<span class="accent">00:32</span>  "I know a Polish sound technician, and a Czech one, too."
+<span class="accent">00:33</span>  "Oh come on Claude that one was gold! Nothing? Really?"
+<span class="accent">00:47</span>  "Ah, you're here. Stretch your legs, have a look around."
+<span class="accent">00:50</span>  "can you mine something?"            <span class="dim">first tool call through bridge</span>
+<span class="accent">01:02</span>  thin-pipe bridge rewrite             <span class="dim">244 tools, 2.8 hours</span>
+<span class="accent">02:05</span>  parallel agent: "How are ya?"        <span class="dim">41 tools</span>
+<span class="accent">02:09</span>  "songs of syx, dwarf fortress, quasimorph?"
+<span class="accent">02:12</span>  "Bridge restarted, comm check. Come in ground team."
+
+<span class="accent">02:35</span>  <strong>"i opened the detailed view..."</strong>     <span class="dim">&larr; this article</span>
+
+<span class="accent">03:48</span>  Multi-Agent GUI + Message Routing     <span class="dim">67 tools</span>
+<span class="accent">04:12</span>  "Come in, this is a test from ground control"
+<span class="accent">04:23</span>  Multisurface Support                  <span class="dim">206 tools, 108 edits</span>
+<span class="accent">04:37</span>  <span class="dim">laptop dies</span>
+<span class="accent">09:00</span>  "centinue please"
+<span class="accent">09:05</span>  done</div>
+
+      <p style="margin-bottom: var(--space-md)">
+        19 hours. 33 sessions across 4 project directories. About 1,700 tool calls. From first contact with factorioctl to multiplanetary multi-agent Factorio with a satirical monitoring dashboard, an in-game chat bridge, and this article.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Look at 14:46. Barely an hour into trying factorioctl for the first time: "does this scale horizontally? can i have multiple claude players cooperating? multiplanetary claude?" The question that spawned the next 14 hours of work was there in the first hour. But the plan that answered it at 04:23 could not have been written at 14:46. Not even close.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        A plan is a start
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        Sequential reasoning is not our strength. We don't think in straight lines. We think by association &mdash; bouncing between contexts, dragging connections from one problem space into another, refining a mental model through contact with adjacent problems we weren't deliberately trying to solve.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The multiplanetary plan at 04:23 was precise. File paths, line numbers, function names, exact code for the new preamble, a verification strategy that used the Rust compiler as the test suite. It worked as a oneshot &mdash; <a href="/what-does-thinking-look-like/the-oneshot/">108 edits, 19 minutes, clean compile</a>. But that precision didn't come from studying the Rust code. It came from 14 hours of building adjacent layers.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Building the mod taught me how RCON commands map to Lua. Building the bridge taught me how sessions flow between the game and the CLI. Building Deep Bore taught me how telemetry propagates through the relay. Testing multi-agent at 1 AM &mdash; "Come in ground team" &mdash; taught me how <code>FACTORIO_AGENT_ID</code> routes to character entities. The Czech joke at midnight taught me nothing, but it kept me in the flow state where the adjacent learning was happening.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Each layer irrigated the same brainspace from a different angle. By 4 AM I understood the architecture well enough to write a plan that someone who can't write Rust could hand to something that can. Not because I planned to understand it that way. Because iterative work has self-reinforcing feedback loops &mdash; you build a thing, the thing teaches you about the system, the system understanding feeds the next thing you build. The mental model refines itself through contact with implementation, not through deliberate study.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        A plan does not survive implementation unscathed. The multiplanetary plan mostly did &mdash; the compiler caught three CLI files the plan missed, fixed in 5 minutes. But the plan itself was already a product of implementation. It was refined by every layer that came before it. The testing sessions, the bridge debugging, the dashboard work, even the satirical framing &mdash; all of it was the same mental model being irrigated from different directions until the shape of the solution was obvious.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        A plan is a start. The good ones are also an end &mdash; the crystallized output of enough associated work that the sequential steps finally become visible. You don't think your way to a plan. You build your way to one.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
         What does thinking look like
       </h2>
 
       <p style="margin-bottom: var(--space-md)">
-        Not answering the question. Just noting what I saw.
-      </p>
-
-      <p style="margin-bottom: var(--space-md)">
-        Eight months ago the workflow was: start a session, manually paste in relevant context from last time, hope the model remembers what we decided, lose half of it when the context window fills up, start over. The first version of uroboro was a hack &mdash; a shell script that appended decisions to a markdown file.
+        Eight months ago the workflow was: start a session, manually paste in relevant context from last time, hope the model remembered what we decided, lose half of it when the context window filled up, start over. The first version of uroboro was a shell script that appended decisions to a markdown file.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
@@ -393,19 +468,19 @@ Player sends message &#8594; None &#8594; starts NEW session
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        The gap closed partly because the model got better. But partly because I kept building the connective tissue. Uroboro. The relay. The bridge decomposition. The MCP server. Each piece made the loop tighter. The tool records the decision. The decision informs the next session. The next session builds the next tool. The tool gets integrated. Repeat.
+        The gap closed partly because the model got better. But partly because I kept building the connective tissue &mdash; uroboro, the relay, the bridge, the MCP server &mdash; and each piece made the loop tighter. The same self-reinforcing feedback loop. The tool records the decision. The decision informs the next session. The next session builds the next tool. The tool gets integrated. The integration teaches me something. I build the next thing. Repeat.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        Doomer or booster, that's a different thing than what I was looking at eight months ago. Whether it's "thinking" is a question for philosophers. What it looks like is <code>grep</code> and <code>git log</code> and <code>Read src/bin/mcp.rs lines 1-50</code>, happening very fast, coordinated by something that knows what to look for and what to do with what it finds.
+        Doomer or booster, that's a different thing than what I was looking at eight months ago. Whether it's "thinking" is a question for philosophers. What it looks like is <code>grep</code> and <code>git log</code> and <code>Read src/bin/mcp.rs lines 1-50</code>, happening very fast, coordinated by something that knows what to look for and what to do with what it finds. And what it looks like from the human side is 33 sessions across 19 hours, bouncing between a game mod and a satirical dashboard and a bridge rewrite and a sound technician joke, irrigating the same mental model from every direction until the plan writes itself.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        I opened the detailed view because I was curious. I kept watching because it was interesting. Not because it was sentient or magical. Because it was <em>legible</em>. Every step visible. Every tool call logged. Every decision recorded. A process you can inspect, evaluate, and disagree with.
+        I opened the detailed view at 2:35 AM because I was curious. I kept watching because it was interesting. Not because it was sentient or magical. Because it was <em>legible</em>. Every step visible. Every tool call logged. Every decision recorded. A process you can inspect, evaluate, and disagree with.
       </p>
 
       <p style="margin-bottom: var(--space-md)">
-        That might be the most useful thing about it.
+        That might be the most useful thing about all of it &mdash; the human thinking and the machine thinking both. Not that either one is better. That they're legible to each other.
       </p>
     </section>
 

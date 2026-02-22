@@ -1,0 +1,323 @@
+---
+layout: base.njk
+title: What does thinking look like / The oneshot - qry.zone
+description: 108 edits to Rust code I can't write, from a plan I could
+---
+
+<style>
+.session-block {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: var(--space-lg);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+.session-block .dim {
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+}
+.session-block .accent {
+  color: var(--color-accent);
+}
+.timeline-bar {
+  display: flex;
+  align-items: stretch;
+  height: 32px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  margin: var(--space-lg) 0;
+  border: 1px solid var(--color-border);
+}
+.timeline-phase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-background);
+  font-weight: 600;
+}
+.timeline-phase.work {
+  background: var(--color-accent);
+}
+.timeline-phase.dead {
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+.timeline-phase.resume {
+  background: var(--color-accent);
+  opacity: 0.7;
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-md);
+  margin: var(--space-lg) 0;
+}
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-md);
+  text-align: center;
+}
+.stat-card .number {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  color: var(--color-accent);
+  display: block;
+}
+.stat-card .label {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+.edit-cascade {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+.edit-cascade .file {
+  color: var(--color-accent);
+}
+.edit-cascade .count {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+</style>
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/what-does-thinking-look-like/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; What does thinking look like
+      </a>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The oneshot
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        108 edits to Rust code I can't write, from a plan I could
+      </p>
+      <p style="font-size: 0.85rem; color: var(--color-text-secondary);">February 2026</p>
+    </div>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <p style="margin-bottom: var(--space-md)">
+        I don't know Rust.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        I know what <a href="https://github.com/QRY91/factorioctl" target="_blank" rel="noopener noreferrer">factorioctl</a> does because I built the Factorio mod it talks to, the bridge that pipes messages between them, and the <a href="/fun/chasm-logic/deep-bore/">Deep Bore</a> telemetry dashboard that monitors everything. I've read the Rust code enough to understand the architecture. I know that <code>game.surfaces[1]</code> means Nauvis, that every Lua command goes through RCON, that character preambles resolve the agent before running any tool. I know the code. I can't write it.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Factorio: Space Age added multiple planets. Every tool in factorioctl hardcoded <code>game.surfaces[1]</code> &mdash; Nauvis, the starting planet. 55 occurrences across 3 files. An agent on Vulcanus would try to mine from Nauvis. Useless.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        So I wrote the plan. Not "make it work on other planets." A plan with file paths, line numbers, function names, exact code snippets for the new preamble, a list of every function that needed changes, and a verification strategy. Architecture understanding I had. Rust syntax I didn't. At 4:23 AM I pasted it in and said "implement the following plan."
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        14 minutes
+      </h2>
+
+      <div class="timeline-bar">
+        <div class="timeline-phase work" style="flex: 14;" title="Phase 1: 14 min active work">14 min &mdash; 185 calls</div>
+        <div class="timeline-phase dead" style="flex: 262;" title="Laptop dead: 262 min">laptop dead &mdash; 4h 22m</div>
+        <div class="timeline-phase resume" style="flex: 5;" title="Resume: 5 min">5 min</div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        It started at 04:23:49. Read the files I pointed it at. Grepped for every <code>game.surfaces[1]</code> occurrence. Found all 42 in <code>lua.rs</code>, all 12 in <code>mod.rs</code>, the 1 in <code>mcp.rs</code>. Created 6 tasks. Started editing.
+      </p>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <span class="number">206</span>
+          <span class="label">tool calls</span>
+        </div>
+        <div class="stat-card">
+          <span class="number">108</span>
+          <span class="label">edits</span>
+        </div>
+        <div class="stat-card">
+          <span class="number">7</span>
+          <span class="label">files modified</span>
+        </div>
+        <div class="stat-card">
+          <span class="number">19</span>
+          <span class="label">minutes active</span>
+        </div>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        The edit cascade for <code>lua.rs</code> alone:
+      </p>
+
+      <div class="session-block"><span class="dim">04:25:36</span> Edit <span class="accent">character_preamble</span> &mdash; add <code>local surface = c.surface</code>
+<span class="dim">04:25:44</span> Edit <span class="accent">surface_preamble</span> &mdash; new helper, fallback to surfaces[1]
+<span class="dim">04:25:47</span> Edit <span class="accent">start_mining</span> &mdash; game.surfaces[1] &rarr; surface
+<span class="dim">04:25:57</span> Edit <span class="accent">mine_at</span> &mdash; 3 replacements
+<span class="dim">04:26:02</span> Edit <span class="accent">mine_nearest</span>
+<span class="dim">04:26:06</span> Edit <span class="accent">place_entity</span> &mdash; 3 replacements
+<span class="dim">04:26:21</span> Edit <span class="accent">place_underground_belt</span> &mdash; 3 replacements
+<span class="dim">04:26:25</span> Edit <span class="accent">place_ghost</span>
+<span class="dim">04:26:32</span> Edit <span class="accent">clear_area</span> &mdash; restructure surface resolution
+<span class="dim">04:26:57</span> Edit <span class="accent">find_entities</span> &mdash; add agent_id param + surface_preamble
+<span class="dim">04:27:12</span> Edit <span class="accent">get_entity</span>
+<span class="dim">04:27:25</span> Edit <span class="accent">get_entity_inventory</span>
+<span class="dim">04:27:40</span> Edit <span class="accent">find_resources</span>
+<span class="dim">04:27:53</span> Edit <span class="accent">find_nearest_resource</span> &mdash; 2 replacements
+<span class="dim">04:28:18</span> Edit <span class="accent">get_tiles</span>
+<span class="dim">04:28:23</span> Edit <span class="accent">get_tile</span>
+<span class="dim">04:28:36</span> Edit <span class="accent">remove_entity_at</span>
+<span class="dim">04:28:48</span> Edit <span class="accent">remove_entity</span>
+<span class="dim">04:29:06</span> Edit <span class="accent">rotate_entity</span>
+<span class="dim">04:29:11</span> Edit <span class="accent">insert_items</span>
+<span class="dim">04:29:24</span> Edit <span class="accent">extract_items</span>
+<span class="dim">04:29:32</span> Edit <span class="accent">set_recipe</span>
+<span class="dim">04:30:07</span> Edit <span class="accent">create_native_blueprint</span>
+<span class="dim">04:30:25</span> Edit <span class="accent">save_blueprint</span>
+<span class="dim">04:30:38</span> Edit <span class="accent">place_blueprint</span>
+<span class="dim">04:30:49</span> Edit <span class="accent">import_blueprint</span>
+<span class="dim">04:31:00</span> Edit <span class="accent">get_research_status</span> &mdash; convert from raw string to format!
+<span class="dim">04:31:27</span> Edit <span class="accent">get_available_research</span>
+<span class="dim">04:31:57</span> Edit <span class="accent">start_research</span>
+<span class="dim">04:32:03</span> Edit <span class="accent">get_power_status</span>
+<span class="dim">04:32:17</span> Edit <span class="accent">get_power_networks</span>
+<span class="dim">04:32:30</span> Edit <span class="accent">find_power_issues</span>
+<span class="dim">04:32:44</span> Edit <span class="accent">get_power_coverage</span>
+<span class="dim">04:32:58</span> Edit <span class="accent">get_alerts</span>
+<span class="dim">04:33:09</span> Edit <span class="accent">get_belt_lane_contents</span>
+<span class="dim">04:33:25</span> Grep &mdash; <span class="dim">verify remaining game.surfaces[1] all intentional</span>
+<span class="dim">         </span> <span class="accent">&check;</span> 5 remain: character creation, fallback, init &mdash; correct</div>
+
+      <p style="margin-bottom: var(--space-md)">
+        66 edits in 8 minutes. One function every 7 seconds on average. Read the function signature, understand the Lua template string, add the <code>agent_id</code> parameter, prepend the surface preamble, replace <code>game.surfaces[1]</code> with <code>surface</code>, fix the format arguments. Repeat.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Then it went dark
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        At 04:37:43, the final action: <code>cargo build --release</code>. The Rust compiler started. The laptop battery didn't care about compile times.
+      </p>
+
+      <div class="session-block"><span class="dim">04:37:43</span> Bash: cd factorioctl && cargo build --release
+<span class="dim">         </span> <span class="accent">&hellip;</span>
+<span class="dim">         </span>
+<span class="dim">         </span> <span class="dim">[262 minutes of nothing]</span>
+<span class="dim">         </span>
+<span class="dim">09:00:08</span> <span class="accent">centinue please</span></div>
+
+      <p style="margin-bottom: var(--space-md)">
+        Four hours and twenty-two minutes later I plugged in, opened the laptop, and typed "centinue please" because apparently I also can't spell at 9 AM.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The session resumed exactly where it stopped. The build hadn't completed &mdash; the process died with the laptop &mdash; so it ran <code>cargo build --release</code> again. The Rust compiler found what the plan missed: three CLI modules (<code>map.rs</code>, <code>power.rs</code>, <code>research.rs</code>) that also called the updated functions. 21 more tool calls. Fixed. Rebuilt. Clean compile.
+      </p>
+
+      <div class="session-block"><span class="dim">09:04:34</span> Build succeeds with only pre-existing warnings (no new ones).
+<span class="dim">09:04:35</span> Grep: remaining game.surfaces[1] in lua.rs
+<span class="dim">09:04:41</span> All 5 remaining are intentional:
+         1. <span class="accent">register_character_helpers</span> (line 383) &mdash; creating character on Nauvis
+         2. <span class="accent">surface_preamble</span> doc comment (line 436)
+         3. <span class="accent">surface_preamble</span> fallback (line 442)
+         4. <span class="accent">init_character</span> (line 471) &mdash; new character always spawns on Nauvis
+         5. <span class="accent">clear_area</span> fallback (line 2801)</div>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The approach
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        The clever part wasn't the code. It was the plan's core insight: every agent already has a character, and every character already has a <code>.surface</code> property. Instead of adding a <code>surface_name</code> parameter to every MCP tool &mdash; which would mean changing every tool's schema, every call site, every test &mdash; just derive it from the character.
+      </p>
+
+      <div class="session-block"><span class="dim">Before:</span>
+fn character_preamble(agent_id: &str) -&gt; String {
+    <span class="dim">// resolves character, checks validity</span>
+    local c = global.factorioctl_get_character("{agent_id}")
+    if not (c and c.valid) then ... end
+}
+
+<span class="dim">After:</span>
+fn character_preamble(agent_id: &str) -&gt; String {
+    local c = global.factorioctl_get_character("{agent_id}")
+    if not (c and c.valid) then ... end
+    <span class="accent">local surface = c.surface</span>  <span class="dim">// &larr; one line</span>
+}</div>
+
+      <p style="margin-bottom: var(--space-md)">
+        One line added to the preamble. Every function that already called <code>character_preamble</code> gets <code>surface</code> for free. Then it's mechanical: find <code>game.surfaces[1]</code>, replace with <code>surface</code>. Zero changes to MCP tool schemas. Zero changes to the mod. Zero changes to the bridge. An agent on Vulcanus just works.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        I knew that because I built the mod, the bridge, and the dashboard. I understood the architecture from every angle except the one that writes <code>.rs</code> files. The plan had file paths, line numbers, function names, exact code snippets. It had a list of what stays unchanged and why. It had a verification strategy that used the Rust compiler itself as the test suite &mdash; <code>cargo build</code> catches every missing <code>agent_id</code> argument.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        Architecture knowledge wrote the plan. Rust syntax filled it in. Different skills, different sources.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Files modified
+      </h2>
+
+      <div class="edit-cascade" style="margin-bottom: var(--space-lg)">
+        <p><span class="file">src/client/lua.rs</span> &mdash; <span class="count">66 edits</span>. 42 <code>game.surfaces[1]</code> replacements. New <code>surface_preamble</code>. <code>agent_id</code> param added to ~26 functions.</p>
+        <p><span class="file">src/client/mod.rs</span> &mdash; <span class="count">27 edits</span>. 12 inline Lua fixes. <code>&self.agent_id</code> passed to ~16 call sites.</p>
+        <p><span class="file">src/bin/mcp.rs</span> &mdash; <span class="count">8 edits</span>. Research/power tool call sites. <code>broadcast_thought</code> flying text.</p>
+        <p><span class="file">src/cli/power.rs</span> &mdash; <span class="count">3 edits</span>. CLI call sites the compiler caught.</p>
+        <p><span class="file">src/cli/research.rs</span> &mdash; <span class="count">2 edits</span>. Same.</p>
+        <p><span class="file">src/world/entity.rs</span> &mdash; <span class="count">1 edit</span>. Add <code>surface</code> field to <code>CharacterStatus</code>.</p>
+        <p><span class="file">src/cli/map.rs</span> &mdash; <span class="count">1 edit</span>. Same.</p>
+      </div>
+
+      <p style="margin-bottom: var(--space-md)">
+        What stayed unchanged: every MCP tool parameter struct. Every CLI command interface. Character auto-creation (still spawns on Nauvis). The <code>get_surfaces()</code> function. The mod. The bridge. The dashboard.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What this means
+      </h2>
+
+      <p style="margin-bottom: var(--space-md)">
+        I don't know Rust. I do know what my system needs to do on other planets. Those are different kinds of knowledge and they live in different places. The plan came from months of building adjacent layers &mdash; the mod, the bridge, the dashboard &mdash; where I learned the architecture by using it, not by reading it.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The implementation came from 19 minutes of an LLM doing something it's good at: mechanical, high-volume edits with consistent pattern application across a large codebase. Read function, add parameter, change surface reference, fix format args, move to next function. 108 times. With the Rust compiler as the final check.
+      </p>
+
+      <p style="margin-bottom: var(--space-md)">
+        The laptop dying in the middle is the detail that makes it real. Not a polished demo. Not a curated example. A session that ran at 4 AM, got interrupted by dead hardware, and picked up 4 hours later with a typo. The code compiled anyway.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p>Part of <a href="/what-does-thinking-look-like/">What does thinking look like</a></p>
+    </footer>
+
+  </div>
+</article>
