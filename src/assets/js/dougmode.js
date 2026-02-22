@@ -47,7 +47,7 @@
     // =========================================================
 
     '#dougModeToggle {',
-    '  position: fixed; top: 0.75rem; right: 1rem; z-index: 10001;',
+    '  position: fixed; top: 3.5rem; right: 1rem; z-index: 10001;',
     '  font-family: "Roboto Mono", "IBM Plex Mono", "Atkinson Hyperlegible Mono", monospace;',
     '  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em;',
     '  text-transform: uppercase; padding: 0.35rem 0.75rem;',
