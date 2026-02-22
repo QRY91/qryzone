@@ -885,6 +885,18 @@ permalink: /fun/chasm-logic/deep-bore/
         return Math.random().toString(36).slice(2, 10);
     }
 
+    function parseFactorioColors(text) {
+        return text.replace(
+            /\[color=([0-9.]+),([0-9.]+),([0-9.]+)\]([\s\S]*?)\[\/color\]/g,
+            function (_, r, g, b, content) {
+                var cr = Math.round(parseFloat(r) * 255);
+                var cg = Math.round(parseFloat(g) * 255);
+                var cb = Math.round(parseFloat(b) * 255);
+                return '<span style="color:rgb(' + cr + ',' + cg + ',' + cb + ')">' + content + '</span>';
+            }
+        );
+    }
+
     // ── Log Generation ─────────────────────────────────────────
 
     function generateLog(tick, pool) {
@@ -1058,7 +1070,7 @@ permalink: /fun/chasm-logic/deep-bore/
             '<span class="log-ts">' + log.timestamp + '</span>  ' +
             '<span class="' + agentClass + '">' + log.agent + '</span>  ' +
             '<span class="' + levelClass + '">' + levelPrefix + '</span>' +
-            '<span class="' + msgClass + '">' + log.msg + '</span>';
+            '<span class="' + msgClass + '">' + parseFactorioColors(log.msg) + '</span>';
         return div;
     }
 
