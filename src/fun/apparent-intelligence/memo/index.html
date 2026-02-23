@@ -8,95 +8,48 @@ permalink: /fun/apparent-intelligence/memo/
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MEMORANDUM - CHASM LOGIC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/assets/css/chasm-logic.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
-            cursor: crosshair; /* Adds that "Lab Subject" feel */
-        }
+        /* Memo page overrides */
+        nav { padding: 1.5rem 2rem; }
+        .nav-inner { max-width: 80rem; }
+        section { padding: 6rem 2rem; }
 
-        .mono {
-            font-family: 'Roboto Mono', monospace;
-        }
-
-        .aperture-btn {
-            background-color: #F58025;
-            color: white;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1);
-            transition: all 0.1s ease;
-        }
-
-        .aperture-btn:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
-        }
-
-        .aperture-btn:active {
-            transform: translate(4px, 4px);
-            box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
-        }
-
-        .warning-stripe {
-            background: repeating-linear-gradient(
-                45deg,
-                #F58025,
-                #F58025 20px,
-                #000 20px,
-                #000 40px
-            );
-            height: 8px;
-        }
-
+        /* Scanline effect */
         body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(
-                to bottom,
-                rgba(18, 16, 16, 0) 50%,
-                rgba(0, 0, 0, 0.05) 50%
-            );
-            background-size: 100% 4px;
-            z-index: 9999;
-            pointer-events: none;
+            content: " "; display: block; position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(to bottom, rgba(18,16,16,0) 50%, rgba(0,0,0,0.05) 50%);
+            background-size: 100% 4px; z-index: 9999; pointer-events: none;
         }
 
+        /* Memo document */
         .memo-document {
-            background: #f8f8f8;
-            border: 4px solid black;
-            box-shadow: 12px 12px 0px 0px rgba(0, 0, 0, 1);
+            background: var(--cl-surface);
+            border: 4px solid var(--cl-border);
+            box-shadow: 12px 12px 0 0 var(--cl-card-shadow);
         }
 
-        .redacted-bar {
-            background: black;
-            color: black;
-            user-select: none;
-        }
+        /* Redacted bar */
+        .redacted-bar { background: black; color: black; user-select: none; }
 
+        /* Stamp */
         .stamp {
             transform: rotate(-15deg);
-            border: 4px solid #F58025;
-            color: #F58025;
-            font-weight: 900;
-            padding: 8px 16px;
-            display: inline-block;
-            opacity: 0.3;
+            border: 4px solid var(--cl-accent);
+            color: var(--cl-accent);
+            font-weight: 900; padding: 8px 16px;
+            display: inline-block; opacity: 0.3;
         }
     </style>
 </head>
-<body class="bg-white text-black">
+<body>
 
     <!-- Harassment Banner -->
-    <div class="bg-yellow-300 text-black py-2 font-bold text-center border-b-4 border-black uppercase text-xs tracking-widest hover:bg-red-500 hover:text-white cursor-pointer transition-colors">
+    <div class="harassment-banner mono">
         <span class="mono">⚠ URGENT:</span> Your current intelligence is below market average. <span class="underline">Upgrade Now</span>
     </div>
 
@@ -104,42 +57,40 @@ permalink: /fun/apparent-intelligence/memo/
     <div class="warning-stripe"></div>
 
     <!-- Navbar -->
-    <nav class="border-b-4 border-black py-6 px-8">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <img src="/assets/fun/apparent-intelligence/apparent_intelligence_logo.png" alt="Apparent Intelligence" class="h-16 md:h-20">
-            <a href="/fun/apparent-intelligence/" class="aperture-btn px-6 py-3 text-sm uppercase">
-                Back to Home
-            </a>
+    <nav>
+        <div class="nav-inner">
+            <img src="/assets/fun/apparent-intelligence/apparent_intelligence_logo.png" alt="Apparent Intelligence" style="height:4rem">
+            <a href="/fun/apparent-intelligence/" class="aperture-btn mono">Back to Home</a>
         </div>
     </nav>
 
     <!-- Memo Section -->
-    <section class="py-24 px-8">
-        <div class="max-w-4xl mx-auto">
+    <section>
+        <div style="max-width:56rem;margin:0 auto;padding:0 2rem">
 
             <!-- Document Header -->
-            <div class="memo-document p-12 relative">
+            <div class="memo-document" style="padding:3rem;position:relative">
 
                 <!-- Stamp -->
-                <div class="absolute top-8 right-8 stamp mono text-2xl">
+                <div class="stamp mono" style="position:absolute;top:2rem;right:2rem;font-size:1.5rem">
                     SERIES A<br>CONFIDENTIAL
                 </div>
 
                 <!-- Memo Header -->
-                <div class="mb-8 pb-8 border-b-4 border-black">
-                    <p class="mono font-bold text-sm mb-2">MEMORANDUM FOR RECORD</p>
-                    <p class="mono text-sm mb-1"><strong>FROM:</strong> OFFICE OF THE CHIEF VISIONARY DISRUPTOR</p>
-                    <p class="mono text-sm mb-1"><strong>TO:</strong> ALL TEST SUBJECTS, INVESTORS, AND PEOPLE CURRENTLY HALLUCINATING TRIANGLES</p>
-                    <p class="mono text-sm"><strong>SUBJECT:</strong> ACQUISITION OF "APPARENT INTELLIGENCE"</p>
+                <div style="margin-bottom:2rem;padding-bottom:2rem;border-bottom:4px solid var(--cl-border)">
+                    <p class="mono" style="font-weight:bold;font-size:0.875rem;margin-bottom:0.5rem">MEMORANDUM FOR RECORD</p>
+                    <p class="mono" style="font-size:0.875rem;margin-bottom:0.25rem"><strong>FROM:</strong> OFFICE OF THE CHIEF VISIONARY DISRUPTOR</p>
+                    <p class="mono" style="font-size:0.875rem;margin-bottom:0.25rem"><strong>TO:</strong> ALL TEST SUBJECTS, INVESTORS, AND PEOPLE CURRENTLY HALLUCINATING TRIANGLES</p>
+                    <p class="mono" style="font-size:0.875rem"><strong>SUBJECT:</strong> ACQUISITION OF "APPARENT INTELLIGENCE"</p>
                 </div>
 
                 <!-- Audio Player -->
-                <div class="mb-8 p-6 bg-black border-4 border-orange-500" style="border-color: #F58025;">
-                    <div class="flex items-center gap-4">
-                        <div class="text-orange-500 text-3xl" style="color: #F58025;">🎙️</div>
-                        <div class="flex-1">
-                            <p class="mono text-xs text-white font-bold mb-2">AUDIO TRANSCRIPT - CLASSIFIED</p>
-                            <audio controls class="w-full" style="filter: invert(1) hue-rotate(180deg);">
+                <div style="margin-bottom:2rem;padding:1.5rem;background:var(--cl-terminal-bg);border:4px solid var(--cl-accent)">
+                    <div style="display:flex;align-items:center;gap:1rem">
+                        <div style="font-size:1.875rem;color:var(--cl-accent)">🎙️</div>
+                        <div style="flex:1">
+                            <p class="mono" style="font-size:0.75rem;color:white;font-weight:bold;margin-bottom:0.5rem">AUDIO TRANSCRIPT - CLASSIFIED</p>
+                            <audio controls style="width:100%;filter:invert(1) hue-rotate(180deg);">
                                 <source src="/assets/fun/apparent-intelligence/memo_voiced.mp3" type="audio/mpeg">
                                 Your browser does not support the audio element.
                             </audio>
@@ -148,8 +99,8 @@ permalink: /fun/apparent-intelligence/memo/
                 </div>
 
                 <!-- Memo Body -->
-                <div class="space-y-6 text-lg leading-relaxed">
-                    <p class="font-bold text-xl">Brock Granite here.</p>
+                <div style="font-size:1.125rem;line-height:1.75">
+                    <p style="font-weight:bold;font-size:1.25rem">Brock Granite here.</p>
 
                     <p>
                         The bean counters up in Finance—great guys, very disrupted—told me that if we want to secure the next round of funding, we need to "pivot." They told me "Brock, nobody wants blockchain-enabled avocado toast subscriptions anymore. They want A.I. They want Machine Learning. They want to disrupt the paradigm."
@@ -171,7 +122,7 @@ permalink: /fun/apparent-intelligence/memo/
                         The concept is simple. We don't make you smarter. That takes book-learning and time, and quite frankly, you don't have the runway for it. Instead, Apparent Intelligence uses a proprietary mixture of retinal projectors, subdermal bone conduction, and aggressive confidence algorithms to make it <em>seem</em> like you know what the hell you're talking about.
                     </p>
 
-                    <p class="font-bold text-2xl text-center py-4" style="color: #F58025;">
+                    <p style="font-weight:bold;font-size:1.5rem;text-align:center;padding:1rem 0;color:var(--cl-accent)">
                         "Seeing is Believing!"
                     </p>
 
@@ -183,7 +134,7 @@ permalink: /fun/apparent-intelligence/memo/
                         Here's how it works: We jam a micro-processor directly into your visual cortex. You walk into a meeting. Your boss asks about the quarterly figures. You don't know the figures. You don't even know what a quarter is.
                     </p>
 
-                    <p class="font-black text-3xl text-center py-4">BAM.</p>
+                    <p style="font-weight:900;font-size:1.875rem;text-align:center;padding:1rem 0">BAM.</p>
 
                     <p>
                         The Apparent Intelligence chip highlights your boss's forehead and projects a bullet-pointed list of buzzwords that mean absolutely nothing but sound fantastic. Terms like <em>"Synergistic blockchain verticality,"</em> <em>"Gamified omnichannel liquidity,"</em> and <em>"Disruptive bagel optimization."</em>
@@ -197,8 +148,8 @@ permalink: /fun/apparent-intelligence/memo/
                         Your boss? Impressed. Your coworkers? Intimidated. You? You're technically chemically lobotomized for the duration of the presentation, but you just secured a promotion. That is the Apparent Intelligence promise!
                     </p>
 
-                    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-6 my-8">
-                        <p class="font-bold mb-2">⚠️ KNOWN ISSUES:</p>
+                    <div style="background:var(--cl-banner-bg);border-left:4px solid var(--cl-accent);padding:1.5rem;margin:2rem 0">
+                        <p style="font-weight:bold;margin-bottom:0.5rem">⚠️ KNOWN ISSUES:</p>
                         <p>
                             Now, the lab boys tell me there are some minor bugs. Occasionally the chip can't distinguish between a venture capitalist and a hostile badger, causing the user to attempt to merge with a woodland creature.
                         </p>
@@ -212,27 +163,25 @@ permalink: /fun/apparent-intelligence/memo/
                         So, line up. We need volunteers to test the Alpha Build. Compensation is experience, exposure, and a voucher for a free MRI if your head starts making a dialing sound.
                     </p>
 
-                    <p class="font-bold text-xl py-4">
+                    <p style="font-weight:bold;font-size:1.25rem;padding:1rem 0">
                         Apparent Intelligence. Fake it 'til you make it, or until the thermal paste melts your frontal lobe.
                     </p>
 
-                    <p class="text-center font-light text-gray-600">
+                    <p style="text-align:center;font-weight:300;color:var(--cl-text-dim)">
                         We're done here.
                     </p>
 
-                    <div class="text-right mt-12">
-                        <p class="mono font-black text-2xl">BROCK GRANITE</p>
-                        <p class="mono text-sm text-gray-600">Founder & Chief Visionary Disruptor</p>
-                        <p class="mono text-xs text-gray-500">Chasm Logic / Bedrock Holdings</p>
+                    <div style="text-align:right;margin-top:3rem">
+                        <p class="mono" style="font-weight:900;font-size:1.5rem">BROCK GRANITE</p>
+                        <p class="mono" style="font-size:0.875rem;color:var(--cl-text-dim)">Founder & Chief Visionary Disruptor</p>
+                        <p class="mono" style="font-size:0.75rem;color:var(--cl-text-muted)">Chasm Logic / Bedrock Holdings</p>
                     </div>
                 </div>
             </div>
 
             <!-- Back Button -->
-            <div class="text-center mt-12">
-                <a href="/fun/apparent-intelligence/" class="aperture-btn px-10 py-4 text-lg uppercase inline-block">
-                    Return to Landing Page
-                </a>
+            <div style="text-align:center;margin-top:3rem">
+                <a href="/fun/apparent-intelligence/" class="aperture-btn mono" style="padding:1rem 2.5rem;font-size:1.125rem">Return to Landing Page</a>
             </div>
         </div>
     </section>
@@ -241,13 +190,14 @@ permalink: /fun/apparent-intelligence/memo/
     <div class="warning-stripe"></div>
 
     <!-- Footer -->
-    <footer class="bg-black text-white py-8 px-8 border-t-4 border-black">
-        <div class="max-w-7xl mx-auto text-center">
-            <div class="mono text-xs text-gray-500">
+    <footer>
+        <div style="max-width:80rem;margin:0 auto;text-align:center">
+            <div class="mono footer-copy">
                 © 2026 CHASM LOGIC. ALL RIGHTS DISRUPTED.
             </div>
         </div>
     </footer>
     <script src="/assets/js/microdoug.js" defer></script>
+    <script src="/assets/js/dougmode.js" defer></script>
 </body>
 </html>

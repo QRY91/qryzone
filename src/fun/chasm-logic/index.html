@@ -10,92 +10,7 @@ permalink: /fun/chasm-logic/
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: #fafafa; color: black; cursor: crosshair; }
-        .mono { font-family: 'Roboto Mono', monospace; }
-
-        .warning-stripe { background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px); height: 8px; }
-        .harassment-banner {
-            background: #fef08a; color: black; padding: 0.5rem; font-weight: bold;
-            text-align: center; border-bottom: 4px solid black;
-            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em;
-            cursor: pointer; transition: all 0.2s;
-        }
-        .harassment-banner:hover { background: #ef4444; color: white; }
-        .section-divider { height: 4px; background: black; }
-        .back-link {
-            position: fixed; top: 3.5rem; left: 1rem; background: black; color: white;
-            padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold;
-            text-decoration: none; z-index: 1000; border: 2px solid black;
-            box-shadow: 4px 4px 0 0 #F58025; transition: all 0.1s;
-        }
-        .back-link:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 #F58025; }
-
-        nav { border-bottom: 4px solid black; padding: 1rem 2rem; }
-        .nav-inner { max-width: 60rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-
-        .doc { max-width: 60rem; margin: 0 auto; padding: 0 2rem; }
-
-        /* Header */
-        .page-header { padding: 4rem 0 2rem; }
-        .page-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; letter-spacing: -0.02em; margin-bottom: 1.5rem; line-height: 1.1; }
-        .page-header p { font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem; color: #374151; }
-
-        /* Summary stats */
-        .stats { display: flex; flex-wrap: wrap; gap: 1.5rem; padding: 1.25rem 0; border-top: 2px solid black; border-bottom: 2px solid black; margin: 1.5rem 0 3rem; }
-        .stat { font-size: 0.75rem; letter-spacing: 0.05em; }
-        .stat-num { font-weight: 900; font-size: 1.25rem; display: block; }
-
-        /* Document entries */
-        .doc-entry {
-            display: block; padding: 1.5rem 0 1.5rem 1rem;
-            border-bottom: 1px solid #e5e7eb;
-            border-left: 4px solid transparent;
-            text-decoration: none; color: inherit;
-            transition: all 0.15s;
-        }
-        .doc-live { cursor: pointer; }
-        .doc-live:hover { background: white; border-left-color: #F58025; padding-left: 1.5rem; }
-        .doc-locked { opacity: 0.55; }
-        .doc-locked:hover { opacity: 0.7; }
-
-        .doc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .doc-ref { font-size: 0.7rem; color: #9ca3af; letter-spacing: 0.1em; }
-        .doc-title { font-size: 1.1rem; font-weight: 900; margin-bottom: 0.5rem; line-height: 1.3; }
-        .doc-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; font-size: 0.75rem; color: #6b7280; }
-        .doc-note { font-size: 0.75rem; color: #F58025; margin-top: 0.5rem; line-height: 1.5; }
-
-        /* Badges */
-        .badge { display: inline-block; padding: 0.15rem 0.5rem; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; vertical-align: middle; }
-        .badge-type { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
-        .badge-live { background: #dcfce7; color: #16a34a; }
-        .badge-pending { background: #fef9c3; color: #a16207; }
-        .badge-held { background: #fee2e2; color: #dc2626; }
-        .badge-disputed { background: #fee2e2; color: #dc2626; }
-        .badge-deferred { background: #f3f4f6; color: #6b7280; }
-        .badge-outdated { background: #f3f4f6; color: #6b7280; }
-        .cl-a { background: #F58025; color: white; }
-        .cl-b { background: black; color: white; }
-        .cl-all { background: #6b7280; color: white; }
-        .cl-redacted { background: #dc2626; color: white; }
-        .cl-c { background: #7c3aed; color: white; }
-
-        .dot { color: #d1d5db; }
-
-        /* Footer note */
-        .index-footer { padding: 2rem 0 4rem; border-top: 2px solid black; margin-top: 1rem; }
-        .index-footer p { font-size: 0.8rem; color: #6b7280; line-height: 1.7; margin-bottom: 0.5rem; }
-
-        footer { background: black; color: white; padding: 3rem 2rem; }
-        .footer-inner { max-width: 60rem; margin: 0 auto; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
-        footer h3 { font-weight: 900; margin-bottom: 0.75rem; font-size: 0.9rem; }
-        footer p, footer li { font-size: 0.8rem; color: #9ca3af; line-height: 1.6; }
-        footer ul { list-style: none; }
-        footer li { margin-bottom: 0.35rem; }
-        .footer-copy { text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: #4b5563; border-top: 1px solid #374151; padding-top: 1.5rem; }
-    </style>
+    <link rel="stylesheet" href="/assets/css/chasm-logic.css">
 </head>
 <body>
     <a href="/fun/" class="back-link mono">&larr; back to fun</a>
@@ -115,8 +30,8 @@ permalink: /fun/chasm-logic/
     <nav>
         <div class="nav-inner">
             <div>
-                <div style="font-weight:900;font-size:1.25rem;letter-spacing:-0.02em">CHASM LOGIC</div>
-                <div class="mono" style="font-size:0.6rem;color:#6b7280;letter-spacing:0.1em;text-transform:uppercase">Investor Relations — Document Index</div>
+                <div style="font-weight:900;font-size:1.25rem;letter-spacing:-0.02em" class="nav-brand">CHASM LOGIC</div>
+                <div class="mono" style="font-size:0.6rem;color:var(--cl-text-dim);letter-spacing:0.1em;text-transform:uppercase">Investor Relations — Document Index</div>
             </div>
             <span class="badge cl-b mono" style="font-size:0.65rem;padding:0.4rem 0.75rem">SERIES B — INTERNAL</span>
         </div>
@@ -128,7 +43,7 @@ permalink: /fun/chasm-logic/
             <h1>Document Index</h1>
             <p>Internal document register. Maintained by Communications Division.</p>
             <p>Classification levels reflect distribution authorization at time of filing. Documents marked <span class="mono" style="font-weight:700;color:#dc2626">REDACTED</span> require clearance verification through Legal (Doug). Documents marked <span class="mono" style="font-weight:700">HELD</span> are under active review.</p>
-            <p style="color:#6b7280;font-size:0.85rem">This portal was not designed for external access.</p>
+            <p style="color:var(--cl-text-dim);font-size:0.85rem">This portal was not designed for external access.</p>
         </div>
 
         <div class="stats mono">
@@ -136,26 +51,10 @@ permalink: /fun/chasm-logic/
             <div class="stat"><span class="stat-num" style="color:#16a34a">9</span> ACCESSIBLE</div>
             <div class="stat"><span class="stat-num" style="color:#a16207">0</span> PENDING</div>
             <div class="stat"><span class="stat-num" style="color:#dc2626">2</span> CLASSIFIED</div>
-            <div class="stat"><span class="stat-num" style="color:#6b7280">1</span> DEFERRED</div>
+            <div class="stat"><span class="stat-num" style="color:var(--cl-text-dim)">1</span> DEFERRED</div>
         </div>
 
-        <!-- CL-DOC-001 — LIVE -->
-        <a href="/fun/claudetite-keyz/memo/" class="doc-entry doc-live">
-            <div class="doc-top">
-                <span class="doc-ref mono">CL-DOC-001</span>
-                <span class="badge cl-a mono">SERIES A</span>
-            </div>
-            <div class="doc-title">Keygrave Acquisition — Internal Memorandum</div>
-            <div class="doc-meta mono">
-                <span class="badge badge-type">MEMORANDUM</span>
-                <span class="dot">&middot;</span>
-                J. Clay (ed.) / B. Granite (dictation)
-                <span class="dot">&middot;</span>
-                <span class="badge badge-live">LIVE</span>
-            </div>
-        </a>
-
-        <!-- CL-DOC-002 — LIVE -->
+        <!-- CL-DOC-002 — Claudetite Keyz (PRODUCT) -->
         <a href="/fun/claudetite-keyz/" class="doc-entry doc-live">
             <div class="doc-top">
                 <span class="doc-ref mono">CL-DOC-002</span>
@@ -166,6 +65,22 @@ permalink: /fun/chasm-logic/
                 <span class="badge badge-type">PRODUCT PAGE</span>
                 <span class="dot">&middot;</span>
                 B. Granite / J. Clay
+                <span class="dot">&middot;</span>
+                <span class="badge badge-live">LIVE</span>
+            </div>
+        </a>
+
+        <!-- CL-DOC-001 — Keygrave Memo (child of CL-DOC-002) -->
+        <a href="/fun/claudetite-keyz/memo/" class="doc-entry doc-live doc-entry-child">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-001</span>
+                <span class="badge cl-a mono">SERIES A</span>
+            </div>
+            <div class="doc-title">Keygrave Acquisition — Internal Memorandum</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">MEMORANDUM</span>
+                <span class="dot">&middot;</span>
+                J. Clay (ed.) / B. Granite (dictation)
                 <span class="dot">&middot;</span>
                 <span class="badge badge-live">LIVE</span>
             </div>
@@ -189,23 +104,7 @@ permalink: /fun/chasm-logic/
             <div class="doc-note mono microdoug-slot" data-trigger="hover" data-prompt="CLASSIFIED: " data-length="80" style="color:#dc2626;font-size:0.7rem;opacity:0;transition:opacity 0.3s;cursor:default"></div>
         </div>
 
-        <!-- CL-DOC-004 — LIVE -->
-        <a href="/fun/apparent-intelligence/memo/" class="doc-entry doc-live">
-            <div class="doc-top">
-                <span class="doc-ref mono">CL-DOC-004</span>
-                <span class="badge cl-b mono">SERIES B</span>
-            </div>
-            <div class="doc-title">Apparent Intelligence — AI-CHIP-7™ Acquisition</div>
-            <div class="doc-meta mono">
-                <span class="badge badge-type">MEMORANDUM</span>
-                <span class="dot">&middot;</span>
-                J. Clay (ed.) / B. Granite (dictation)
-                <span class="dot">&middot;</span>
-                <span class="badge badge-live">LIVE</span>
-            </div>
-        </a>
-
-        <!-- CL-DOC-005 — LIVE -->
+        <!-- CL-DOC-005 — Apparent Intelligence (PRODUCT) -->
         <a href="/fun/apparent-intelligence/" class="doc-entry doc-live">
             <div class="doc-top">
                 <span class="doc-ref mono">CL-DOC-005</span>
@@ -216,6 +115,22 @@ permalink: /fun/chasm-logic/
                 <span class="badge badge-type">PRODUCT PAGE</span>
                 <span class="dot">&middot;</span>
                 B. Granite / J. Clay
+                <span class="dot">&middot;</span>
+                <span class="badge badge-live">LIVE</span>
+            </div>
+        </a>
+
+        <!-- CL-DOC-004 — AI-CHIP-7 Memo (child of CL-DOC-005) -->
+        <a href="/fun/apparent-intelligence/memo/" class="doc-entry doc-live doc-entry-child">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-004</span>
+                <span class="badge cl-b mono">SERIES B</span>
+            </div>
+            <div class="doc-title">Apparent Intelligence — AI-CHIP-7™ Acquisition</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">MEMORANDUM</span>
+                <span class="dot">&middot;</span>
+                J. Clay (ed.) / B. Granite (dictation)
                 <span class="dot">&middot;</span>
                 <span class="badge badge-live">LIVE</span>
             </div>
@@ -342,7 +257,7 @@ permalink: /fun/chasm-logic/
         <div class="index-footer">
             <p class="mono" style="font-size:0.75rem">End of index. 12 documents filed. 9 accessible. 3 pending, held, or classified.</p>
             <p class="mono" style="font-size:0.75rem">This portal is updated as documents are filed. Filing frequency is not guaranteed.</p>
-            <p class="mono" style="font-size:0.75rem;margin-top:1rem;color:#9ca3af">— J. Clay, Communications Division</p>
+            <p class="mono" style="font-size:0.75rem;margin-top:1rem;color:var(--cl-text-muted)">— J. Clay, Communications Division</p>
         </div>
 
     </div>

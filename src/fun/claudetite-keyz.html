@@ -20,178 +20,133 @@ connections:
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/chasm-logic.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: white; color: black; cursor: crosshair; }
-        .mono { font-family: 'Roboto Mono', monospace; }
-        .aperture-btn {
-            background: #F58025; color: white; font-weight: 700;
-            letter-spacing: 0.05em; box-shadow: 8px 8px 0 0 black;
-            transition: all 0.1s; border: none; cursor: pointer;
-            text-transform: uppercase; text-decoration: none; display: inline-block;
-            padding: 0.75rem 1.5rem; font-size: 0.875rem;
-        }
-        .aperture-btn:hover { transform: translate(2px, 2px); box-shadow: 6px 6px 0 0 black; }
-        .brutal-card { border: 3px solid black; box-shadow: 12px 12px 0 0 black; }
-        .warning-stripe { background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px); height: 8px; }
-        .harassment-banner {
-            background: #fef08a; color: black; padding: 0.5rem; font-weight: bold;
-            text-align: center; border-bottom: 4px solid black;
-            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em;
-            cursor: pointer; transition: all 0.2s;
-        }
-        .harassment-banner:hover { background: #ef4444; color: white; }
-        nav { border-bottom: 4px solid black; padding: 1.5rem 2rem; }
-        .nav-inner { max-width: 80rem; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .nav-brand { font-weight: 900; font-size: 1.25rem; letter-spacing: -0.02em; }
-        .nav-sub { font-size: 0.65rem; color: #6b7280; letter-spacing: 0.1em; text-transform: uppercase; }
-        .hero { padding: 6rem 2rem; text-align: center; background-image: linear-gradient(to right, #e5e5e5 1px, transparent 1px), linear-gradient(to bottom, #e5e5e5 1px, transparent 1px); background-size: 40px 40px; }
-        .hero h1 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.95; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
-        .hero-sub { font-size: clamp(1.25rem, 3vw, 2rem); font-weight: 300; margin-bottom: 1rem; max-width: 50rem; margin-left: auto; margin-right: auto; }
-        .hero-desc { font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 300; color: #4b5563; margin-bottom: 3rem; max-width: 50rem; margin-left: auto; margin-right: auto; }
-        .hero-img { width: 100%; max-width: 60rem; margin: 3rem auto 0; border: 4px solid black; overflow: hidden; background: #f3f4f6; }
-        .hero-img img { width: 100%; height: auto; display: block; }
-        .section-divider { height: 4px; background: black; }
+        /* Product page overrides */
+        nav { padding: 1.5rem 2rem; }
+        .nav-inner { max-width: 80rem; }
+        .nav-sub { font-size: 0.65rem; color: var(--cl-text-dim); letter-spacing: 0.1em; text-transform: uppercase; }
         section { padding: 6rem 2rem; }
         .section-inner { max-width: 80rem; margin: 0 auto; }
+        h2 { font-size: 2rem; }
+        p { font-size: 1.125rem; }
+
+        /* Hero */
+        .hero {
+            padding: 6rem 2rem; text-align: center;
+            background-image: linear-gradient(to right, var(--cl-border-lighter) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--cl-border-lighter) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .hero h1 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 0.95; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+        .hero-sub { font-size: clamp(1.25rem, 3vw, 2rem); font-weight: 300; margin-bottom: 1rem; max-width: 50rem; margin-left: auto; margin-right: auto; }
+        .hero-desc { font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 300; color: var(--cl-text-dim); margin-bottom: 3rem; max-width: 50rem; margin-left: auto; margin-right: auto; }
+        .hero-img { width: 100%; max-width: 60rem; margin: 3rem auto 0; border: 4px solid var(--cl-border); overflow: hidden; background: var(--cl-surface-alt); }
+        .hero-img img { width: 100%; height: auto; display: block; }
+
+        /* Grid layouts */
         .grid-2 { display: grid; grid-template-columns: 1fr; gap: 4rem; }
         .grid-2 > div { display: flex; flex-direction: column; }
         @media (min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
-        .label { display: inline-block; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: bold; margin-bottom: 1.5rem; }
-        .label-dark { background: black; color: white; }
-        .label-orange { background: #F58025; color: white; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+
+        /* Extra label */
         .label-red { background: #dc2626; color: white; }
-        h2 { font-size: 2rem; font-weight: 900; margin-bottom: 1.5rem; line-height: 1.1; }
-        p { font-size: 1.125rem; line-height: 1.7; margin-bottom: 1rem; }
-        .quote { border-left: 4px solid black; padding-left: 1rem; font-weight: bold; }
-        .quote-orange { border-left-color: #F58025; }
-        .img-box { border: 4px solid black; position: relative; overflow: hidden; margin-top: 2rem; }
+
+        /* Quotes */
+        .quote { border-left: 4px solid var(--cl-border); padding-left: 1rem; font-weight: bold; color: var(--cl-text-heading); }
+        .quote-orange { border-left-color: var(--cl-accent); }
+
+        /* Image boxes */
+        .img-box { border: 4px solid var(--cl-border); position: relative; overflow: hidden; margin-top: 2rem; }
         .img-box img { width: 100%; height: auto; display: block; filter: grayscale(100%); transition: filter 0.3s; }
         .img-box:hover img { filter: grayscale(0%); }
-        .img-badge { position: absolute; bottom: 0; right: 0; background: #dc2626; color: white; padding: 0.5rem; font-size: 0.75rem; font-weight: bold; border-top: 4px solid black; border-left: 4px solid black; }
-        .features { background: #f9fafb; }
+        .img-badge { position: absolute; bottom: 0; right: 0; background: #dc2626; color: white; padding: 0.5rem; font-size: 0.75rem; font-weight: bold; border-top: 4px solid var(--cl-border); border-left: 4px solid var(--cl-border); }
+
+        /* Features section */
+        .features { background: var(--cl-surface); }
         .features h2 { font-size: 3rem; text-align: center; margin-bottom: 1rem; }
-        .features-sub { text-align: center; font-size: 1.25rem; font-weight: 300; margin-bottom: 4rem; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .feature-card { background: white; padding: 2rem; display: flex; flex-direction: column; }
+        .features-sub { text-align: center; font-size: 1.25rem; font-weight: 300; margin-bottom: 4rem; color: var(--cl-text-dim); }
+
+        /* Feature card overrides for product pages */
+        .feature-card { padding: 2rem; display: flex; flex-direction: column; }
+        .feature-card:hover { transform: none; box-shadow: 12px 12px 0 0 var(--cl-card-shadow); }
         .feature-icon { font-size: 3.5rem; margin-bottom: 1rem; }
         .feature-title { font-size: 1.25rem; font-weight: 900; margin-bottom: 1rem; }
         .feature-desc { font-size: 1rem; line-height: 1.5; margin-bottom: 1rem; flex: 1; }
-        .terminal { background: black; color: #4ade80; padding: 1rem; font-size: 0.75rem; }
-        .terminal-dim { opacity: 0.5; }
-        .terminal-orange { color: #F58025; }
 
         /* Key visualization */
-        .key-row { display: flex; gap: 0.5rem; justify-content: center; margin: 2rem 0; }
+        .key-row { display: flex; gap: 0.5rem; justify-content: center; margin: 2rem 0; flex-wrap: wrap; }
         .key {
-            width: 4.5rem; height: 4.5rem; border: 3px solid black;
+            width: 4.5rem; height: 4.5rem; border: 3px solid var(--cl-border);
             display: flex; align-items: center; justify-content: center;
-            font-weight: 900; font-size: 1.75rem; background: white;
-            box-shadow: 0 4px 0 0 black;
+            font-weight: 900; font-size: 1.75rem; background: var(--cl-card-bg);
+            box-shadow: 0 4px 0 0 var(--cl-border); color: var(--cl-text-heading);
             transition: all 0.1s; cursor: pointer; user-select: none;
         }
-        .key:active { transform: translateY(4px); box-shadow: 0 0 0 0 black; }
-        .key-active { background: #F58025; color: white; }
-        .key-ghost { background: #e5e7eb; color: #9ca3af; border-color: #9ca3af; box-shadow: 0 4px 0 0 #9ca3af; }
-        .key-label { font-size: 0.65rem; text-align: center; margin-top: 0.25rem; color: #6b7280; letter-spacing: 0.05em; }
+        .key:active { transform: translateY(4px); box-shadow: 0 0 0 0 var(--cl-border); }
+        .key-active { background: var(--cl-accent); color: white; border-color: var(--cl-accent); box-shadow: 0 4px 0 0 var(--cl-accent); }
+        .key-ghost { background: var(--cl-surface-hover); color: var(--cl-text-muted); border-color: var(--cl-text-muted); box-shadow: 0 4px 0 0 var(--cl-text-muted); }
+        .key-label { font-size: 0.65rem; text-align: center; margin-top: 0.25rem; color: var(--cl-text-dim); letter-spacing: 0.05em; }
 
+        /* Testimonials */
         .testimonial { max-width: 50rem; margin: 0 auto; }
-        .testimonial-card { background: white; padding: 3rem; position: relative; }
-        .testimonial-label { position: absolute; top: 0; left: 0; background: black; color: white; padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold; transform: translateY(-100%); }
-        .testimonial-quote { font-size: 1.5rem; font-weight: 300; line-height: 1.6; margin-bottom: 2rem; }
-        .testimonial-footer { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid black; padding-top: 1.5rem; }
-        .stars { background: #F58025; color: white; padding: 0.25rem 0.75rem; font-size: 0.75rem; }
+        .testimonial-card { background: var(--cl-card-bg); padding: 3rem; position: relative; }
+        .testimonial-label { position: absolute; top: 0; left: 0; background: var(--cl-text-heading); color: var(--cl-bg); padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold; transform: translateY(-100%); }
+        .testimonial-quote { font-size: 1.5rem; font-weight: 300; line-height: 1.6; margin-bottom: 2rem; color: var(--cl-text); }
+        .testimonial-footer { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--cl-border); padding-top: 1.5rem; }
+        .stars { background: var(--cl-accent); color: white; padding: 0.25rem 0.75rem; font-size: 0.75rem; }
 
-        /* Spec table */
-        .spec-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
-        .spec-table tr { border-bottom: 2px solid black; }
+        /* Spec table overrides */
         .spec-table td { padding: 1rem 0; font-size: 1rem; }
-        .spec-table td:first-child { font-weight: 900; width: 40%; font-size: 0.875rem; letter-spacing: 0.05em; text-transform: uppercase; }
-        .spec-table td:last-child { text-align: right; }
-        .spec-table .spec-note { font-size: 0.75rem; color: #6b7280; display: block; margin-top: 0.25rem; }
+        .spec-table td:first-child { font-size: 0.875rem; letter-spacing: 0.05em; }
 
         /* Pricing */
         .pricing-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 64rem; margin: 0 auto; }
         @media (min-width: 768px) { .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
-        .price-card { background: white; padding: 2.5rem 2rem; text-align: center; position: relative; display: flex; flex-direction: column; }
-        .price-tag { font-size: 4rem; font-weight: 900; line-height: 1; }
-        .price-per { font-size: 0.875rem; color: #6b7280; margin-bottom: 1.5rem; }
-        .price-name { font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; }
-        .price-desc { font-size: 0.875rem; color: #6b7280; margin-bottom: 2rem; line-height: 1.5; }
+        .price-card { background: var(--cl-card-bg); padding: 2.5rem 2rem; text-align: center; position: relative; display: flex; flex-direction: column; }
+        .price-tag { font-size: 4rem; font-weight: 900; line-height: 1; color: var(--cl-text-heading); }
+        .price-per { font-size: 0.875rem; color: var(--cl-text-dim); margin-bottom: 1.5rem; }
+        .price-name { font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; color: var(--cl-text-heading); }
+        .price-desc { font-size: 0.875rem; color: var(--cl-text-dim); margin-bottom: 2rem; line-height: 1.5; }
         .price-list { text-align: left; margin-bottom: 2rem; flex: 1; }
-        .price-list div { padding: 0.5rem 0; border-bottom: 1px solid #e5e7eb; font-size: 0.875rem; }
+        .price-list div { padding: 0.5rem 0; border-bottom: 1px solid var(--cl-border-light); font-size: 0.875rem; color: var(--cl-text); }
         .popular-badge { position: absolute; top: -1rem; left: 50%; transform: translateX(-50%); background: #dc2626; color: white; padding: 0.25rem 1rem; font-size: 0.75rem; font-weight: bold; white-space: nowrap; }
 
-        /* Pro reveal */
-        .pro-reveal { background: black; color: white; text-align: center; }
+        /* Pro reveal (always dark regardless of theme) */
+        .pro-reveal { background: #000; color: white; text-align: center; }
         .pro-reveal h2 { color: white; font-size: 3rem; }
         .pro-reveal p { color: #9ca3af; }
-        .pro-feature-card { background: #111; border-color: #333; color: white; }
+        .pro-feature-card { background: #111; border-color: #333; color: white; box-shadow: 12px 12px 0 0 #1a1a1a; }
         .pro-feature-card .feature-desc { color: #9ca3af; }
+        .pro-feature-card .feature-title { color: white; }
         .pro-terminal { background: #1a1a1a; border: 2px solid #333; }
 
-        /* Meter */
+        /* Meters */
         .meter { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
-        .meter-label { width: 5rem; background: black; color: white; text-align: center; padding: 0.25rem; font-size: 0.75rem; }
-        .meter-bar { flex: 1; background: #e5e7eb; height: 0.5rem; border-radius: 4px; overflow: hidden; }
-        .meter-fill { background: #F58025; height: 100%; }
+        .meter-label { width: 5rem; background: var(--cl-text-heading); color: var(--cl-bg); text-align: center; padding: 0.25rem; font-size: 0.75rem; }
+        .meter-bar { flex: 1; background: var(--cl-border-light); height: 0.5rem; border-radius: 4px; overflow: hidden; }
+        .meter-fill { background: var(--cl-accent); height: 100%; }
 
-        footer { background: black; color: white; padding: 4rem 2rem; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
-        footer h3 { font-weight: 900; margin-bottom: 1rem; }
-        footer h4 { font-weight: bold; font-size: 0.875rem; margin-bottom: 1rem; }
-        footer p { font-size: 0.875rem; color: #9ca3af; line-height: 1.6; }
-        footer ul { list-style: none; }
-        footer li { font-size: 0.875rem; color: #9ca3af; margin-bottom: 0.5rem; }
-        .disclaimer { border-top: 1px solid #374151; padding-top: 2rem; font-size: 0.75rem; color: #6b7280; line-height: 1.7; }
-        .disclaimer p { margin-bottom: 1rem; font-size: 0.75rem; }
-        .warning { color: #F58025; }
-        .footer-copy { text-align: center; margin-top: 2rem; font-size: 0.75rem; color: #4b5563; }
-        .back-link {
-            position: fixed;
-            top: 3.5rem;
-            left: 1rem;
-            background: black;
-            color: white;
-            padding: 0.5rem 1rem;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-decoration: none;
-            z-index: 1000;
-            border: 2px solid black;
-            box-shadow: 4px 4px 0 0 #F58025;
-            transition: all 0.1s;
-        }
-        .back-link:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 0 #F58025; }
-
-        /* Comparison table marks */
+        /* Comparison marks */
         .cmp-yes, .cmp-no {
             display: inline-flex; align-items: center; justify-content: center;
             width: 1.6rem; height: 1.6rem; border-radius: 50%;
             font-size: 0.85rem; font-weight: 900; line-height: 1;
             transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s;
         }
-        .cmp-yes {
-            background: #dcfce7; color: #16a34a;
-            box-shadow: 0 0 0 2px #bbf7d0;
-        }
+        .cmp-yes { background: #dcfce7; color: #16a34a; box-shadow: 0 0 0 2px #bbf7d0; }
         .cmp-yes:hover { transform: scale(1.25); box-shadow: 0 0 0 3px #86efac, 0 0 12px rgba(22, 163, 74, 0.3); }
-        .cmp-no {
-            background: #f3f4f6; color: #d1d5db;
-            box-shadow: 0 0 0 2px #e5e7eb;
-        }
+        .cmp-no { background: var(--cl-surface-hover); color: var(--cl-border-lighter); box-shadow: 0 0 0 2px var(--cl-border-light); }
         .cmp-no:hover { transform: scale(1.15); }
 
         /* Keystroke animation */
-        @keyframes keystroke-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
+        @keyframes keystroke-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         .blink { animation: keystroke-pulse 1s step-end infinite; }
     </style>
 </head>
 <body>
-    <a href="/fun/" class="back-link mono">&larr; back to fun</a>
+    <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
 
     <div class="harassment-banner">
         <span class="mono">⚠ AUDIT:</span> You approved 847 diffs last week with a 104-key keyboard. That's 101 keys of dead weight. <span style="text-decoration:underline">Optimize Now</span>
@@ -206,7 +161,7 @@ connections:
                 <div class="nav-sub mono">A Chasm Logic Hardware Division</div>
             </div>
             <div style="display:flex;gap:1rem;align-items:center">
-                <span class="mono" style="font-size:0.75rem;color:#6b7280">MODEL CCK-3</span>
+                <span class="mono" style="font-size:0.75rem;color:var(--cl-text-dim)">MODEL CCK-3</span>
                 <a href="/fun/claudetite-keyz/memo/" class="aperture-btn" style="background:black">Read Memo</a>
                 <button onclick="alert('⚠ KEY 1 HAS BEEN PRESSED.\n\nYou have mass-approved this purchase.\n\nThere is no Key 2 for this dialog.')" class="aperture-btn">Pre-Order</button>
             </div>
@@ -329,7 +284,7 @@ connections:
                     <div class="feature-icon">3️⃣</div>
                     <div class="feature-title mono">KEY 3 — "SURE, WHY NOT"</div>
                     <p class="feature-desc">Included for regulatory compliance. No user has pressed Key 3 in production. The switch beneath it is decorative. Quality assurance has never actuated it. It is there so the product can be legally classified as offering "choice."</p>
-                    <div style="border:4px solid black;padding:1rem">
+                    <div style="border:4px solid var(--cl-border);padding:1rem">
                         <div class="mono" style="font-size:0.75rem">
                             <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>TIMES PRESSED:</span><span style="font-weight:bold">0</span></div>
                             <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem"><span>SWITCH TESTED:</span><span style="font-weight:bold">NO</span></div>
@@ -361,7 +316,7 @@ connections:
                 <div class="terminal-dim">> no tests were harmed in this approval</div>
                 <div class="terminal-dim">> (no tests existed)</div>
             </div>
-            <p style="text-align:center;margin-top:2rem;font-size:0.85rem;color:#6b7280">
+            <p style="text-align:center;margin-top:2rem;font-size:0.85rem;color:var(--cl-text-dim)">
                 Verify your CCK-3 compatibility score. Enroll in the <a href="https://github.com/QRY91/keygrave" style="color:#F58025;font-weight:700" target="_blank" rel="noopener">Keygrave Beta Telemetry Program</a>.
             </p>
         </div>
@@ -370,7 +325,7 @@ connections:
     <div class="section-divider"></div>
 
     <!-- TESTIMONIAL -->
-    <section style="background:#f9fafb">
+    <section style="background:var(--cl-surface)">
         <div class="section-inner">
             <h2 style="text-align:center;font-size:3rem;margin-bottom:4rem">FIELD REPORTS</h2>
             <div class="testimonial" style="margin-bottom:3rem">
@@ -381,7 +336,7 @@ connections:
                     <div class="testimonial-footer">
                         <div>
                             <div class="mono" style="font-weight:bold;font-size:0.875rem">SUBJECT #0041</div>
-                            <div style="font-size:0.875rem;color:#6b7280">(On Leave)</div>
+                            <div style="font-size:0.875rem;color:var(--cl-text-dim)">(On Leave)</div>
                         </div>
                         <div class="stars mono">★★★★★</div>
                     </div>
@@ -395,7 +350,7 @@ connections:
                     <div class="testimonial-footer">
                         <div>
                             <div class="mono" style="font-weight:bold;font-size:0.875rem">SUBJECT #1127</div>
-                            <div style="font-size:0.875rem;color:#6b7280">(Promoted)</div>
+                            <div style="font-size:0.875rem;color:var(--cl-text-dim)">(Promoted)</div>
                         </div>
                         <div class="stars mono">★★★★☆</div>
                     </div>
@@ -667,7 +622,7 @@ connections:
     <div class="section-divider"></div>
 
     <!-- PRICING -->
-    <section style="background:#f9fafb">
+    <section style="background:var(--cl-surface)">
         <div class="section-inner">
             <h2 style="text-align:center;font-size:3rem;margin-bottom:1rem">PRICING</h2>
             <p style="text-align:center;font-size:1.25rem;font-weight:300;margin-bottom:4rem">Less keyboard. More per key.</p>
@@ -735,67 +690,67 @@ connections:
             <!-- COMPARISON TABLE -->
             <div style="margin-top:5rem">
                 <h2 style="text-align:center;font-size:2rem;margin-bottom:0.5rem">FULL COMPARISON</h2>
-                <p style="text-align:center;font-size:1rem;font-weight:300;color:#6b7280;margin-bottom:3rem">Everything you need to know. Nothing you need to read.</p>
+                <p style="text-align:center;font-size:1rem;font-weight:300;color:var(--cl-text-dim);margin-bottom:3rem">Everything you need to know. Nothing you need to read.</p>
 
                 <div style="overflow-x:auto">
                     <table class="mono" style="width:100%;border-collapse:collapse;font-size:0.85rem">
                         <thead>
-                            <tr style="border-bottom:4px solid black">
+                            <tr style="border-bottom:4px solid var(--cl-border)">
                                 <th style="text-align:left;padding:1rem 1rem 1rem 0;width:40%"></th>
-                                <th style="padding:1rem;text-align:center;width:20%">CCK-3<br><span style="font-size:0.7rem;color:#6b7280;font-weight:normal">$149</span></th>
+                                <th style="padding:1rem;text-align:center;width:20%">CCK-3<br><span style="font-size:0.7rem;color:var(--cl-text-dim);font-weight:normal">$149</span></th>
                                 <th style="padding:1rem;text-align:center;width:20%;color:#dc2626">KEYZ PRO<br><span style="font-size:0.7rem;font-weight:normal">$499</span></th>
                                 <th style="padding:1rem;text-align:center;width:20%;color:#7c3aed">KEYZ ULTRA<br><span style="font-size:0.7rem;font-weight:normal">$999/mo + API</span></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Hardware</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Physical keys</td><td style="text-align:center">3</td><td style="text-align:center">6</td><td style="text-align:center">3 (wireless)</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Keys that do something</td><td style="text-align:center">1</td><td style="text-align:center">1</td><td style="text-align:center">1 (after inference)</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Braided USB-C cable</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Onboard camera</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">API token slot (physical)</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">RGB lighting</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">1 green LED</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Escape key</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light);background:var(--cl-surface-hover)"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Hardware</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Physical keys</td><td style="text-align:center">3</td><td style="text-align:center">6</td><td style="text-align:center">3 (wireless)</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Keys that do something</td><td style="text-align:center">1</td><td style="text-align:center">1</td><td style="text-align:center">1 (after inference)</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Braided USB-C cable</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Onboard camera</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">API token slot (physical)</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">RGB lighting</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">1 green LED</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Escape key</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
 
-                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Workflow</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Mass-approve diffs</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Mass-approve diffs you haven't read</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Pretend to re-read the diff</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Conceptual undo</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Actual undo</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Escalate to deactivated employee</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Talc "looking into it" integration</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Strata ticket auto-assignment</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light);background:var(--cl-surface-hover)"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Workflow</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Mass-approve diffs</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Mass-approve diffs you haven't read</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Pretend to re-read the diff</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Conceptual undo</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Actual undo</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Escalate to deactivated employee</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Talc "looking into it" integration</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Strata ticket auto-assignment</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
 
-                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Intelligence</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Cloud keypress inference</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">128k token keypress context window</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">LLM agrees with your keypress</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">97.2%</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">LLM silently overrides your keypress</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">2.8%</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Billed for overridden keypresses</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Heart rate monitoring (wristband req.)</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light);background:var(--cl-surface-hover)"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Intelligence</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Cloud keypress inference</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">128k token keypress context window</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">LLM agrees with your keypress</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">97.2%</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">LLM silently overrides your keypress</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">2.8%</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Billed for overridden keypresses</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Heart rate monitoring (wristband req.)</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
 
-                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Security & Compliance</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">HTTPS</td><td style="text-align:center">N/A</td><td style="text-align:center">N/A</td><td style="text-align:center;color:#dc2626">No</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">SOC 2 badge on the box</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">SOC 2 compliance</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">API token transmitted in plaintext</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Binding arbitration on keypress</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Diff review liability waiver</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light);background:var(--cl-surface-hover)"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Security & Compliance</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">HTTPS</td><td style="text-align:center">N/A</td><td style="text-align:center">N/A</td><td style="text-align:center;color:#dc2626">No</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">SOC 2 badge on the box</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">SOC 2 compliance</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">API token transmitted in plaintext</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Binding arbitration on keypress</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Diff review liability waiver</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
 
-                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Support</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Quick Start Guide</td><td style="text-align:center">1 sentence</td><td style="text-align:center">2 sentences</td><td style="text-align:center">API docs (404)</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Dedicated account manager</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">Greg</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Account manager availability</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">On leave</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Return policy</td><td style="text-align:center">No</td><td style="text-align:center">No</td><td style="text-align:center">No</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light);background:var(--cl-surface-hover)"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Support</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Quick Start Guide</td><td style="text-align:center">1 sentence</td><td style="text-align:center">2 sentences</td><td style="text-align:center">API docs (404)</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Dedicated account manager</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">Greg</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Account manager availability</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">On leave</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Return policy</td><td style="text-align:center">No</td><td style="text-align:center">No</td><td style="text-align:center">No</td></tr>
 
-                            <tr style="border-bottom:1px solid #e5e7eb;background:#f3f4f6"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Vibes</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Feeling of productivity</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Actual productivity</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Ability to write a for loop from memory</td><td style="text-align:center;color:#dc2626">Declining</td><td style="text-align:center;color:#dc2626">Gone</td><td style="text-align:center;color:#dc2626">Never had it</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">Coworker envy</td><td style="text-align:center">Moderate</td><td style="text-align:center">High</td><td style="text-align:center">Concern</td></tr>
-                            <tr style="border-bottom:1px solid #e5e7eb"><td style="padding:0.75rem 1rem 0.75rem 0">HR incidents (avg. per quarter)</td><td style="text-align:center">0.2</td><td style="text-align:center">1.1</td><td style="text-align:center">3.7</td></tr>
-                            <tr style="border-bottom:2px solid black"><td style="padding:0.75rem 1rem 0.75rem 0">Indistinguishable from CI/CD pipeline</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">Sometimes</td><td style="text-align:center;font-weight:bold;color:#7c3aed">Fully</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light);background:var(--cl-surface-hover)"><td colspan="4" style="padding:0.75rem 0;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Vibes</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Feeling of productivity</td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td><td style="text-align:center"><span class="cmp-yes">✓</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Actual productivity</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center"><span class="cmp-no">—</span></td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Ability to write a for loop from memory</td><td style="text-align:center;color:#dc2626">Declining</td><td style="text-align:center;color:#dc2626">Gone</td><td style="text-align:center;color:#dc2626">Never had it</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">Coworker envy</td><td style="text-align:center">Moderate</td><td style="text-align:center">High</td><td style="text-align:center">Concern</td></tr>
+                            <tr style="border-bottom:1px solid var(--cl-border-light)"><td style="padding:0.75rem 1rem 0.75rem 0">HR incidents (avg. per quarter)</td><td style="text-align:center">0.2</td><td style="text-align:center">1.1</td><td style="text-align:center">3.7</td></tr>
+                            <tr style="border-bottom:2px solid var(--cl-border)"><td style="padding:0.75rem 1rem 0.75rem 0">Indistinguishable from CI/CD pipeline</td><td style="text-align:center"><span class="cmp-no">—</span></td><td style="text-align:center">Sometimes</td><td style="text-align:center;font-weight:bold;color:#7c3aed">Fully</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -860,5 +815,6 @@ connections:
     </footer>
     <div class="warning-stripe"></div>
     <script src="/assets/js/microdoug.js" defer></script>
+    <script src="/assets/js/dougmode.js" defer></script>
 </body>
 </html>

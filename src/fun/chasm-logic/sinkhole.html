@@ -11,7 +11,24 @@ permalink: /fun/chasm-logic/sinkhole/
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Atkinson+Hyperlegible+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Dark theme (default) */
         :root {
+            --teal: #14b8a6;
+            --teal-light: #0a2a26;
+            --teal-dark: #2dd4bf;
+            --bg: #0e0e0e;
+            --surface: #161616;
+            --text: #b8b8b8;
+            --text-secondary: #888;
+            --text-dim: #666;
+            --border: #2a2a2a;
+            --border-light: #222;
+            --footer-bg: #0a0a0a;
+            --footer-text: #c8d8d4;
+            --footer-dim: #5f7a74;
+        }
+        /* Light theme */
+        [data-theme="light"] {
             --teal: #0d9488;
             --teal-light: #ccfbf1;
             --teal-dark: #065f53;
@@ -22,9 +39,12 @@ permalink: /fun/chasm-logic/sinkhole/
             --text-dim: #94a8a3;
             --border: #d4e4e0;
             --border-light: #e8f0ee;
+            --footer-bg: #1a2e2a;
+            --footer-text: #c8d8d4;
+            --footer-dim: #94a8a3;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; transition: background-color 0.3s ease, color 0.3s ease; }
         .mono { font-family: 'Atkinson Hyperlegible Mono', monospace; }
         .back-link {
             position: fixed; top: 1.5rem; left: 1.5rem; background: var(--surface);
@@ -134,16 +154,16 @@ permalink: /fun/chasm-logic/sinkhole/
         .rb-active { background: #fef9c3; color: #854d0e; }
 
         /* Footer */
-        footer { background: var(--text); color: #c8d8d4; padding: 3rem 2rem; font-size: 0.85rem; }
+        footer { background: var(--footer-bg); color: var(--footer-text); padding: 3rem 2rem; font-size: 0.85rem; }
         .footer-inner { max-width: 64rem; margin: 0 auto; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
         footer h3 { color: white; font-size: 0.9rem; margin-bottom: 0.75rem; }
-        footer p, footer li { color: #94a8a3; line-height: 1.7; }
+        footer p, footer li { color: var(--footer-dim); line-height: 1.7; }
         footer ul { list-style: none; }
         footer li { margin-bottom: 0.35rem; }
-        footer a { color: #94a8a3; text-decoration: underline; }
-        footer a:hover { color: var(--teal-light); }
-        .footer-copy { text-align: center; font-size: 0.75rem; color: #5f7a74; border-top: 1px solid #2a3e3a; padding-top: 1.5rem; margin-top: 1rem; }
+        footer a { color: var(--footer-dim); text-decoration: underline; }
+        footer a:hover { color: var(--teal); }
+        .footer-copy { text-align: center; font-size: 0.75rem; color: var(--footer-dim); border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 1rem; }
 
         @media (max-width: 640px) {
             .hero { padding: 4rem 0 3rem; }
@@ -152,7 +172,7 @@ permalink: /fun/chasm-logic/sinkhole/
     </style>
 </head>
 <body>
-    <a href="/fun/" class="back-link">&larr; back to fun</a>
+    <a href="/fun/chasm-logic/" class="back-link">&larr; back to index</a>
 
     <div class="page">
 
@@ -434,7 +454,7 @@ permalink: /fun/chasm-logic/sinkhole/
                     <h3>Products</h3>
                     <ul>
                         <li>The Ticket Hole (v2.1.0)</li>
-                        <li style="color:#5f7a74;font-size:0.8rem">Our second title. Currently our most recent title.</li>
+                        <li style="color:var(--footer-dim);font-size:0.8rem">Our second title. Currently our most recent title.</li>
                     </ul>
                 </div>
                 <div>
