@@ -966,6 +966,20 @@ permalink: /fun/chasm-logic/deep-bore/
             case "status":
                 msg = "Status: " + JSON.stringify(data).slice(0, 100);
                 break;
+            case "task_complete":
+                msg = "[CHAIN] Task complete: " + (data.task_id || "unknown") +
+                      " (" + ((data.chain_index || 0) + 1) + "/" + (data.chain_length || "?") + ")";
+                level = "OK";
+                break;
+            case "auto_chain":
+                msg = "[CHAIN] Dispatching: " + (data.task_id || "unknown") +
+                      " (" + ((data.chain_index || 0) + 1) + "/" + (data.chain_length || "?") + ")";
+                level = "INFO";
+                break;
+            case "chain_complete":
+                msg = "[CHAIN] All " + (data.tasks_completed || 0) + " tasks complete.";
+                level = "OK";
+                break;
             default:
                 msg = JSON.stringify(data).slice(0, 120);
         }
