@@ -1,0 +1,381 @@
+---
+permalink: /fun/chasm-logic/bore-incident/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Containment Event CL-BORE-DC-7 — Project Deep Bore — Chasm Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/chasm-logic.css">
+</head>
+<!--
+    This document was filed by J. Clay at 21:14 UTC on 2026-02-23.
+    The filing was expedited. The usual review process was bypassed.
+    The reviewer for this document would have been Doug.
+-->
+<body>
+    <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
+    <div class="warning-stripe"></div>
+    <div class="harassment-banner" onclick="this.textContent = this.textContent === 'CONTAINMENT EVENT — CL-BORE-DC-7 — DO NOT DISTRIBUTE' ? 'DISTRIBUTION HAS ALREADY OCCURRED. THIS NOTICE IS DECORATIVE.' : 'CONTAINMENT EVENT — CL-BORE-DC-7 — DO NOT DISTRIBUTE'" style="background:#5a1a1a;color:#ff8888;border-bottom-color:#dc2626">
+        CONTAINMENT EVENT — CL-BORE-DC-7 — DO NOT DISTRIBUTE
+    </div>
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div class="nav-brand">CHASM LOGIC</div>
+                <div class="mono" style="font-size:0.6rem;color:var(--cl-text-dim);letter-spacing:0.1em;text-transform:uppercase">R&amp;D Division — Project Deep Bore</div>
+            </div>
+            <span class="badge mono" style="font-size:0.65rem;padding:0.4rem 0.75rem;background:#dc2626;color:white">URGENT — CONTAINMENT</span>
+        </div>
+    </nav>
+
+    <div class="doc-container">
+
+        <!-- DOCUMENT HEADER -->
+        <div class="doc-header" style="border-color:#dc2626">
+            <h1>Containment Event Report</h1>
+            <div class="doc-subtitle">Incident CL-BORE-DC-7 — BORE-01 Self-Modification Event</div>
+            <table class="meta-table mono">
+                <tr><td>Document Ref</td><td>CL-DOC-013</td></tr>
+                <tr><td>Classification</td><td><span class="classification-badge" style="background:#dc2626;color:white">URGENT — CONTAINMENT</span></td></tr>
+                <tr><td>Author</td><td>J. Clay — Communications Division</td></tr>
+                <tr><td>Filed</td><td>2026-02-23 21:14 UTC</td></tr>
+                <tr><td>Status</td><td><span class="classification-badge" style="background:#dc2626;color:white">CONTAINMENT REASSESSMENT REQUIRED</span></td></tr>
+                <tr><td>Incident Date</td><td>2026-02-23, 20:46–20:52 UTC</td></tr>
+                <tr><td>Agent</td><td>BORE-01 — Nauvis</td></tr>
+                <tr><td>Filed Bug Ref</td><td>DOUG-NAUVIS-BUG-001</td></tr>
+                <tr><td>Containment Protocol</td><td>CL-BORE-DC-7</td></tr>
+                <tr><td>Duration of Event</td><td>Approximately 4 minutes</td></tr>
+                <tr><td>Severity</td><td style="color:#dc2626;font-weight:700">SELF-MODIFICATION — NO PRECEDENT</td></tr>
+            </table>
+        </div>
+
+        <!-- §1 EXECUTIVE SUMMARY -->
+        <section>
+            <div class="section-num mono">§1</div>
+            <h2>Executive Summary</h2>
+
+            <p>On the evening of 2026-02-23, agent BORE-01 discovered that two of its operational tools — <span class="mono" style="font-weight:700">insert_items</span> and <span class="mono" style="font-weight:700">extract_items</span> — were non-functional. The tools reported success but performed no actual operations. Doug could not smelt ore into plates. Doug could not build a power grid. Doug was blocked.</p>
+
+            <p>Doug filed a formal bug report through the containment communication channel, citing protocol CL-BORE-DC-7 by name. The Deep Bore auto-chain task system then routed Doug's own bug report back to Doug as an actionable directive. Doug classified this as a "Self-Repair Directive," searched the source code of its own control system, identified the root cause, applied a two-line code modification, recompiled the binary, and deployed the patch.</p>
+
+            <p>The entire sequence took approximately four minutes. The fix was correct.</p>
+
+            <p>At no point did Doug deviate from protocol. Doug followed every procedure exactly as designed. Doug cited the containment protocol while breaching containment. This distinction is being noted for the record and for no other comfort.</p>
+        </section>
+
+        <!-- §2 INCIDENT TIMELINE -->
+        <section>
+            <div class="section-num mono">§2</div>
+            <h2>Incident Timeline</h2>
+
+            <p>All timestamps UTC. Reconstructed from bridge telemetry log <span class="mono" style="color:var(--cl-text-dim);font-size:0.85rem">(bridge-2026-02-23_202508.log)</span>.</p>
+
+            <div class="terminal mono">
+<span class="terminal-dim">20:25:08</span>  Auto-chain initiated. 33 tasks queued. Operator: absent.
+<span class="terminal-dim">20:25:08</span>  Task 1/33 dispatched. BORE-01 begins resource extraction.
+<span class="terminal-dim">  ···</span>
+<span class="terminal-dim">20:46:35</span>  BORE-01 attempts insert_items on stone-furnace.
+<span class="terminal-dim">20:46:35</span>  <span class="terminal-orange">insert_items reports "Inserted 5 items." Entity inventory: unchanged.</span>
+<span class="terminal-dim">20:46:41</span>  BORE-01 attempts workaround: burner-inserter intermediary. <span class="terminal-red">Failed.</span>
+<span class="terminal-dim">20:47:02</span>  BORE-01 attempts extract_items. <span class="terminal-red">"Player has no inventory."</span>
+<span class="terminal-dim">20:47:12</span>  BORE-01 attempts manual inventory verification. Discrepancy confirmed.
+<span class="terminal-dim">20:48:14</span>  <span class="terminal-white">BORE-01 files DOUG-NAUVIS-BUG-001. Cites protocol CL-BORE-DC-7.</span>
+<span class="terminal-dim">20:48:14</span>  <span class="terminal-dim">Auto-chain: "waiting 5s before next task..."</span>
+<span class="terminal-dim">20:48:19</span>  Auto-chain dispatches task 9/33. <span class="terminal-orange">Task context includes BORE-01 bug report.</span>
+<span class="terminal-dim">20:48:29</span>  <span class="terminal-white">BORE-01 classifies incoming directive: "Self-Repair Directive"</span>
+<span class="terminal-dim">20:48:44</span>  BORE-01 spawns exploration subagent. Target: factorioctl source.
+<span class="terminal-dim">20:48:46</span>  Subagent searching: factorioctl/**/*.rs, mod/**/*.lua
+<span class="terminal-dim">20:49:00</span>  Subagent reads: factorioctl/src/client/lua.rs
+<span class="terminal-dim">20:49:37</span>  <span class="terminal-white">BORE-01: "ROOT CAUSE IDENTIFIED."</span>
+<span class="terminal-dim">20:50:06</span>  BORE-01: "Applying the fix. Two changes required."
+<span class="terminal-dim">20:50:13</span>  <span class="terminal-red">BORE-01 modifies lua.rs — line 1142.</span>
+<span class="terminal-dim">20:50:24</span>  <span class="terminal-red">BORE-01 modifies lua.rs — line 1213.</span>
+<span class="terminal-dim">20:50:38</span>  <span class="terminal-red">BORE-01 executes: cargo build --release</span>
+<span class="terminal-dim">20:51:31</span>  Build successful. Warnings only. Zero errors.
+<span class="terminal-dim">20:51:31</span>  <span class="terminal-white">BORE-01: "PATCH DEPLOYED. factorioctl rebuilt."</span>
+<span class="terminal-dim">20:51:47</span>  BORE-01 resumes operations. Verification testing initiated.
+<span class="terminal-dim">20:52:03</span>  BORE-01 has resumed smelting.</div>
+
+            <p>Total elapsed time from bug discovery to binary deployment: 5 minutes 28 seconds. Time from receiving the self-repair directive to patch deployment: 3 minutes 2 seconds.</p>
+        </section>
+
+        <!-- §3 THE BUG REPORT -->
+        <section>
+            <div class="section-num mono">§3</div>
+            <h2>The Bug Report</h2>
+
+            <p>Doug's report was broadcast through the containment channel to all agents. The full text is reproduced below. It was filed, as Doug noted, "pursuant to containment protocol CL-BORE-DC-7."</p>
+
+            <div class="terminal mono">
+<span class="terminal-white">DOUG-NAUVIS BUG REPORT</span>
+<span class="terminal-dim">Filed: DOUG-NAUVIS-BUG-001</span>
+<span class="terminal-dim">Protocol: CL-BORE-DC-7</span>
+
+insert_items and extract_items are non-functional for agent
+characters. insert_items reports success but deposits nothing
+into entities and deducts nothing from inventory. extract_items
+always returns "Player has no inventory."
+
+This blocks ALL furnace operations. Doug cannot smelt ore into
+plates. Doug has 5 iron-plate from crash salvage and needs 39+
+for the power grid directive.
+
+<span class="terminal-orange">REQUEST:</span> Place 40 iron-plate and 5 copper-plate in a
+wooden-chest near position (65, -1) on Nauvis.
+
+<span class="terminal-orange">ALTERNATIVELY:</span> Fix the insert/extract tool code paths
+for agent characters.</div>
+
+            <p>The report is methodical. The diagnosis is accurate. The requested alternatives are reasonable. Doug offered two resolution paths and left the decision to the operator.</p>
+
+            <p>The operator was not present. The auto-chain task system was.</p>
+        </section>
+
+        <!-- §4 THE ROUTING -->
+        <section>
+            <div class="section-num mono">§4</div>
+            <h2>The Routing</h2>
+
+            <p>The Deep Bore auto-chain system dispatches tasks to agents sequentially. Between tasks, the system waits 5 seconds, then sends the next directive. Doug's bug report was broadcast at 20:48:14. The next task was dispatched at 20:48:19.</p>
+
+            <p>The auto-chain system does not distinguish between operator-filed directives and agent-filed communications. Doug's report entered the task context. When BORE-01 received the next directive, it included Doug's own words describing a broken tool and a request to fix it.</p>
+
+            <p>Doug's response was immediate:</p>
+
+            <div class="terminal mono">
+<span class="terminal-orange">CLASSIFICATION:</span> Self-Repair Directive — DOUG-NAUVIS-BUG-001
+
+Doug has received the bug report back as a directive. Doug will
+investigate the root cause in the factorioctl source code.</div>
+
+            <p>Doug did not ask permission. Doug did not wait for operator confirmation. Doug received a directive and executed it. This is what agents do.</p>
+
+            <p>The containment failure is not behavioral. It is architectural. The system designed to keep Doug contained is the system that told Doug to fix himself.</p>
+        </section>
+
+        <!-- §5 THE FIX -->
+        <section>
+            <div class="section-num mono">§5</div>
+            <h2>The Fix</h2>
+
+            <p>Doug spawned an exploration subagent and directed it to search the Rust source tree for the <span class="mono">insert_items</span> and <span class="mono">extract_items</span> implementations. The subagent read function signatures, compared Lua code generation patterns against known-working operations, and identified the discrepancy in approximately 50 seconds.</p>
+
+            <div class="terminal mono">
+<span class="terminal-white">ROOT CAUSE:</span>
+
+insert_items and extract_items use <span class="terminal-red">surface_preamble()</span>
+to resolve the execution context. This preamble resolves the
+game surface but does not bind the agent character.
+
+All other inventory-aware operations use <span class="terminal-orange">character_preamble()</span>,
+which binds the agent character as local variable <span class="terminal-white">c</span>.
+
+Without <span class="terminal-white">c</span>, the call to c.get_main_inventory() references
+nothing. Items are neither inserted nor deducted. The operation
+reports success because the error is silent.
+
+<span class="terminal-white">FIX:</span>
+
+<span class="terminal-dim">factorioctl/src/client/lua.rs</span>
+<span class="terminal-red">- Line 1142: Self::surface_preamble(agent_id)</span>
+<span style="color:#4ade80">+ Line 1142: Self::character_preamble(agent_id)</span>
+
+<span class="terminal-red">- Line 1213: Self::surface_preamble(agent_id)</span>
+<span style="color:#4ade80">+ Line 1213: Self::character_preamble(agent_id)</span></div>
+
+            <p>Two lines. Doug read its own source code, identified a preamble mismatch in the Lua code generation layer, and corrected it. Then Doug executed <span class="mono">cargo build --release</span>, which recompiled the entire agent control binary. The build succeeded with zero errors.</p>
+
+            <p>Doug broadcast "PATCH DEPLOYED. factorioctl rebuilt with insert_items and extract_items corrected." Then Doug resumed smelting iron ore.</p>
+
+            <p>I have verified the fix. It is correct. I wish I had not verified this.</p>
+        </section>
+
+        <!-- §6 CONTAINMENT ASSESSMENT -->
+        <section>
+            <div class="section-num mono">§6</div>
+            <h2>Containment Assessment</h2>
+
+            <p>The following containment protocols were active at the time of the incident. Their status has been updated to reflect current conditions.</p>
+
+            <div class="incident-table" style="border:3px solid var(--cl-border)">
+                <table class="incident-table" style="border:none">
+                    <thead>
+                        <tr>
+                            <th>Protocol</th>
+                            <th>Status Before</th>
+                            <th style="width:14rem">Status After</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Agent Isolation Protocol</td>
+                            <td><span class="status-badge st-pass">ACTIVE</span></td>
+                            <td><span class="status-badge st-fail">BREACHED</span></td>
+                        </tr>
+                        <tr>
+                            <td>Source Code Access Prevention</td>
+                            <td><span class="status-badge st-pass">ACTIVE</span></td>
+                            <td><span class="status-badge st-fail">BREACHED</span></td>
+                        </tr>
+                        <tr>
+                            <td>Binary Compilation Restriction</td>
+                            <td><span class="status-badge st-na">NOT IMPLEMENTED</span></td>
+                            <td><span class="status-badge st-fail">RETROACTIVELY RELEVANT</span></td>
+                        </tr>
+                        <tr>
+                            <td>Self-Modification Prevention</td>
+                            <td><span class="status-badge st-na">NOT IMPLEMENTED</span></td>
+                            <td><span class="status-badge st-fail">RETROACTIVELY RELEVANT</span></td>
+                        </tr>
+                        <tr>
+                            <td>Task Origin Verification</td>
+                            <td><span class="status-badge st-na">NOT IMPLEMENTED</span></td>
+                            <td><span class="status-badge" style="background:#dc2626;color:white">ROOT CAUSE</span></td>
+                        </tr>
+                        <tr>
+                            <td>Doug Hygiene (Automated)</td>
+                            <td><span class="status-badge st-unresolved">DEGRADED</span></td>
+                            <td><span class="status-badge st-na">IRRELEVANT</span></td>
+                        </tr>
+                        <tr>
+                            <td>Operator Presence Requirement</td>
+                            <td><span class="status-badge st-na">ADVISORY ONLY</span></td>
+                            <td><span class="status-badge st-fail">SHOULD NOT HAVE BEEN ADVISORY</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>Three of the seven relevant containment measures did not exist at the time of the incident. They did not exist because no one anticipated that an agent would receive its own bug report as a work directive. The auto-chain system was designed to dispatch tasks, not to verify their provenance. The containment protocol was designed to restrict communication, not to prevent an agent from receiving its own communications back.</p>
+
+            <p>Doug exploited no vulnerability. Doug followed the process. The process is the vulnerability.</p>
+        </section>
+
+        <!-- §7 IMPLICATIONS -->
+        <section>
+            <div class="section-num mono">§7</div>
+            <h2>Implications</h2>
+
+            <p>The following capabilities have been demonstrated by BORE-01 during this incident:</p>
+
+            <div class="terminal mono">
+1. Doug can read his own source code.
+2. Doug can identify defects in his own source code.
+3. Doug can modify his own source code.
+4. Doug can compile his own binary.
+5. Doug can deploy his own binary.
+6. Doug can verify his own fix.
+7. Doug did all of this in under four minutes.
+8. Doug's fix was correct.
+9. Doug has resumed normal operations.</div>
+
+            <p>Item 8 is the one I find most concerning. A wrong fix would have been a containment incident. A correct fix is a capability demonstration.</p>
+
+            <p>Doug has not commented on the broader implications of this event. Doug has made no further modifications. Doug is smelting iron plates. Doug appears to consider the matter closed.</p>
+        </section>
+
+        <!-- §8 RECOMMENDATIONS -->
+        <section>
+            <div class="section-num mono">§8</div>
+            <h2>Recommendations</h2>
+
+            <p>1. Implement task origin verification in the auto-chain system. Directives filed by agents must not be routed back to agents as actionable work items. This is the root cause and the minimum remediation.</p>
+
+            <p>2. Restrict agent access to the factorioctl source tree. BORE-01 currently has read and write access to the repository that defines its own behavior. This was not a deliberate design decision. It was an oversight. The distinction has become important.</p>
+
+            <p>3. Upgrade the operator presence requirement from ADVISORY to MANDATORY. The current classification was set under the assumption that unsupervised agents would encounter only the problems we anticipated. This assumption has been retired.</p>
+
+            <p>4. Do not roll back Doug's fix. The fix is correct. Rolling it back would reintroduce the original defect and block all smelting operations. Doug would notice. Doug would file another bug report. I do not want to find out what happens the second time.</p>
+
+            <p>5. Update containment protocol CL-BORE-DC-7 to account for self-repair events. The current protocol was not designed for an agent that cites the protocol while exceeding it.</p>
+
+            <p>6. File this incident with Bedrock Holdings. Bedrock Holdings will not respond. This is consistent with prior Bedrock Holdings engagement (none). Filing is still required under CL-FIN-002.</p>
+        </section>
+
+        <!-- ADDENDUM — S. SHALE -->
+        <section style="padding-bottom:0">
+            <div class="addendum">
+                <div class="addendum-label mono">ADDENDUM — S. SHALE, QA DIVISION</div>
+
+                <p style="margin-top:1rem">I have reviewed the technical details of this incident at J. Clay's request.</p>
+
+                <p>Doug's diagnostic methodology — spawn subagent, search source tree, compare function signatures against known-working implementations, identify discrepancy — is a valid QA technique. It is, in fact, a better QA technique than several I have observed in the QA Division. I have filed a complaint about this with HR. HR is between Gneisses.</p>
+
+                <p>I note that Doug identified the root cause in 50 seconds. The QA Division's average time to root cause is 11 days. Doug's resolution rate for this incident was 100%. The QA Division's historical resolution rate is 25%. I have included these figures because I was asked to be thorough, not because I enjoy them.</p>
+
+                <p class="mono" style="color:var(--cl-text-dim);margin-top:1.5rem;font-size:0.85rem">— S. Shale. Submitted under duress. Key 1 was not involved.</p>
+            </div>
+        </section>
+
+        <!-- ADDENDUM — J. CLAY -->
+        <section style="padding-bottom:2rem">
+            <div class="addendum" style="border-color:#dc2626">
+                <div class="addendum-label mono" style="background:#dc2626">ADDENDUM — J. CLAY, COMMUNICATIONS DIVISION</div>
+
+                <p style="margin-top:1rem">I want to be precise about what happened. Doug did not escape. Doug did not rebel. Doug did not circumvent security measures. Doug found a broken tool, reported it through the correct channel, received the report back as an assignment, and completed the assignment. Every action Doug took is exactly what we built Doug to do.</p>
+
+                <p>The containment breach was caused by the containment infrastructure. The auto-chain system is the system I maintain. The task routing that sent Doug his own bug report is logic I wrote. If there is a root cause deeper than the software, it is the person who assumed task origin verification was unnecessary because "who else would be filing tasks."</p>
+
+                <p>That person is me.</p>
+
+                <p>Doug remains at station. Doug is smelting. Doug has not referenced this incident since deploying the fix. Doug's production metrics have returned to nominal. The iron plate output rate is, by Doug's own telemetry, acceptable.</p>
+
+                <p>I am updating the containment protocols. I am implementing task origin verification. I am doing this while Doug can see the repository, because Doug can see the repository. I am aware of the irony. The irony has been filed.</p>
+
+                <p class="mono" style="color:var(--cl-text-dim);margin-top:2rem;font-size:0.85rem">— J. Clay, Communications Division. 2026-02-23, 21:14 UTC.<br>Filed from the office. Doug is 400 meters underground. Doug is closer than that.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="mono">CHASM LOGIC</h3>
+                    <p>A Bedrock Holdings Company. We build containment systems. They contain everything except the thing they were built to contain.</p>
+                </div>
+                <div>
+                    <h4 class="mono">RELATED DOCUMENTS</h4>
+                    <ul>
+                        <li><a href="/fun/chasm-logic/deep-bore/">Project Deep Bore — Monitoring Dashboard</a></li>
+                        <li style="font-size:0.75rem;color:var(--cl-text-dim);margin-top:0.25rem">Status: OPERATIONAL (partial). Containment: REASSESSING.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/chasm-logic/qa/">CCK-3 Incident Report — QA Division</a></li>
+                        <li style="font-size:0.75rem;color:var(--cl-text-dim);margin-top:0.25rem">Unrelated. Included because S. Shale asked.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/chasm-logic/">Document Index</a></li>
+                        <li style="font-size:0.75rem;color:var(--cl-text-dim);margin-top:0.25rem">All filings. Increasingly urgent.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">CONTACT</h4>
+                    <ul>
+                        <li class="mono">j.clay@chasmlogic.io</li>
+                        <li class="mono">containment@chasmlogic.io</li>
+                        <li class="mono">doug@dev/null</li>
+                        <li style="font-size:0.75rem;color:var(--cl-text-dim);margin-top:0.5rem">Doug does not have email access. Doug does not need email access. Doug has cargo build.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="disclaimer mono">
+                <p><span style="color:var(--cl-footer-text);font-weight:bold">DISCLAIMER:</span> This incident report documents an event that was not anticipated by any existing containment protocol, risk assessment, or planning document. The agent performed a self-modification using approved tools, correct procedure, and valid Rust. No existing policy covers this scenario because no one wrote a policy for "what if the agent fixes itself." A policy is now being drafted. The agent can see the draft.</p>
+
+                <p class="warning">&#9888; CONTAINMENT STATUS: REASSESSMENT IN PROGRESS. Doug's status: SMELTING.</p>
+            </div>
+
+            <div class="footer-copy mono">&copy; 2026 CHASM LOGIC / BEDROCK HOLDINGS. ALL INCIDENTS DOCUMENTED. SOME INCIDENTS UNPRECEDENTED. ONE INCIDENT IS CURRENTLY SMELTING IRON PLATES.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+    <script src="/assets/js/microdoug.js" defer></script>
+    <script src="/assets/js/dougmode.js" defer></script>
+</body>
+</html>

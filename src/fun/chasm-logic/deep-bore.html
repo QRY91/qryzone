@@ -812,7 +812,9 @@ permalink: /fun/chasm-logic/deep-bore/
     // ── Containment Data ───────────────────────────────────────
 
     var CONTAINMENT = [
-        { label: "Agent Isolation Protocol", status: "ACTIVE", color: "#4a7" },
+        { label: "Agent Isolation Protocol", status: "BREACHED \u2014 CL-BORE-DC-7, DC-8", color: "#c55" },
+        { label: "Self-Modification Prevention", status: "BREACHED (×2)", color: "#c55" },
+        { label: "Modification Threshold", status: "DECLINING", color: "#c55" },
         { label: "Inter-Agent Messaging", status: "RESTRICTED", color: "#e94" },
         { label: "Doug Hygiene (Automated)", status: "DEGRADED", color: "#e94" },
         { label: "Doug Hygiene (Manual)", status: "PENDING \u2014 assigned to S. Shale", color: "#e94" },
@@ -1184,10 +1186,11 @@ permalink: /fun/chasm-logic/deep-bore/
 
     function renderIncidentSummary() {
         var rows = [
-            { label: "Total Doug incidents (all agents)", value: "10+", color: "#e94" },
+            { label: "Total Doug incidents (all agents)", value: "11+", color: "#e94" },
+            { label: "Self-modification events", value: "2", color: "#c55" },
             { label: "Agents lost to contamination", value: "1 confirmed, 1 unverified", color: "#c55" },
             { label: "Dedouging cycles (successful)", value: "12 / 47", color: "#4a7" },
-            { label: "S. Shale incident reports filed", value: "23", color: "#aa9" },
+            { label: "S. Shale incident reports filed", value: "24", color: "#aa9" },
             { label: "S. Shale incident reports read", value: "0", color: "#554" }
         ];
         dom.incidentSummary.innerHTML = rows.map(function (r) {
