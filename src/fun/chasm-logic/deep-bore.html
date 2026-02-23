@@ -1051,6 +1051,14 @@ permalink: /fun/chasm-logic/deep-bore/
                 msg = "All " + (data.tasks_completed || 0) + " tasks complete.";
                 level = "OK";
                 break;
+            case "task_verified":
+                msg = "Verify " + (data.task_id || "unknown") + ": " + (data.summary || "");
+                level = data.passed ? "OK" : "WARN";
+                break;
+            case "task_skipped":
+                msg = "SKIPPED " + (data.task_id || "unknown") + " \u2014 " + (data.reason || "max retries");
+                level = "ERR";
+                break;
             default:
                 msg = JSON.stringify(data).slice(0, 120);
         }
