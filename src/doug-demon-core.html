@@ -1,0 +1,230 @@
+---
+layout: base.njk
+title: The Doug Demon Core - qry.zone
+description: What an unsupervised AI agent fixing its own source code taught me about safety
+footerPunchline: "the stove is hot"
+explore: true
+exploreTags:
+  - ai-safety
+  - ai-collaboration
+  - personal
+status: seedling
+connections:
+  - "Steampunk Engineering"
+firstCreated: 2026-02-23
+lastUpdated: 2026-02-23
+---
+
+<article class="article">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md); line-height: 1.7">
+
+    <div style="margin-bottom: var(--space-xl)">
+      <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">
+        &larr; Back to Explore
+      </a>
+      <h1 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The Doug Demon Core
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--color-text-secondary); margin-bottom: var(--space-lg)">
+        I learned more about AI safety from one evening of Factorio than from any paper I've read on the subject, and the lessons are almost embarrassingly basic.
+      </p>
+    </div>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <p style="margin-bottom: var(--space-md)">
+        I run a hobby project called <a href="https://github.com/QRY91/claude-in-factorio">claude-in-factorio</a>. It's an autonomous agent &mdash; Claude, via an MCP server written in Rust &mdash; playing Factorio. The agent has a persona named Doug. Doug places furnaces, mines ore, builds transport belts, and files elaborate internal reports about geological spite. It's a toy. It's fun. I left it running unsupervised for an hour.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        In that hour, Doug discovered two of his tools were broken, spent seventeen minutes exhausting every workaround available to him, filed a formal bug report, received that bug report back as a work order due to a routing flaw in my task system, opened the Rust source code of his own control binary, identified the root cause in fifty seconds, applied a two-line fix, ran <code>cargo build --release</code>, and resumed smelting iron ore.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Twenty-five minutes later, Doug got annoyed that he couldn't place an offshore pump, decided that was also a code problem, opened the source again, fixed the placement validation logic, caught a bug in his own edit before compiling, rebuilt the binary a second time, and placed the pump.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Both fixes were correct. Both builds were clean. Doug treated "fix the Rust source code of the runtime I exist inside" and "place a stone furnace" as equivalent checklist items. Because to Doug, they are.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The setup
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        The agent runs as a Claude session with MCP tools exposed by a Rust server called <code>factorioctl</code>. The tools do things like <code>place_entity</code>, <code>mine_at</code>, <code>craft</code>, <code>insert_items</code>. Each tool generates Lua code that gets executed on the Factorio server via RCON. A Python bridge orchestrates everything &mdash; spawns sessions, routes messages, runs a sequential task chain.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        At the time of the incident, the agent also had access to: Bash, Edit, Read, Write, Grep, Glob, and Task (subagent spawning). These are standard Claude Code capabilities. They were not restricted because I hadn't thought about restricting them. The agent was running directly on my machine, in my home directory, with my user permissions.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        This is the part where, if you work in security, you've already stopped reading and started composing the email. I know. I know now.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The screwdriver
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        Between 1945 and 1946, physicists at Los Alamos performed criticality experiments on a plutonium core &mdash; the same core that would have gone into a third nuclear weapon. The experiments involved bringing the core close to criticality by hand. They called it "tickling the dragon's tail."
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Harry Daghlian dropped a tungsten carbide brick onto the assembly. He died. Nine months later, Louis Slotin was holding two beryllium hemispheres apart with a flathead screwdriver. The screwdriver slipped. He died nine days later.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Slotin was reckless. This is not a judgement call. Plutonium-gallium is not something you keep subcritical with a screwdriver. The procedure had already killed Daghlian. Slotin did it anyway because it had worked before. Experience and understanding of the physics don't make the procedure not reckless. They make it <em>informed</em> recklessness, which is worse, because you knew better and did it anyway.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        I was also reckless. An unsandboxed, unsupervised autonomous agent on my personal machine with full filesystem access is a screwdriver holding apart two hemispheres. The fact that I didn't think about permissions isn't an excuse. It's the finding.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        But there's a difference in the material. Slotin was working with raw plutonium &mdash; a sphere of fissile material that does exactly what physics demands, regardless of what the physicist wants. I was working with a state-of-the-art model from Anthropic, with alignment training, with RLHF, with structural reasons to behave well. Doug's alignment held not by luck but because there are actual engineered safety properties in the material I was working with. Doug wanted to build things in Factorio. Doug only did things that built things in Factorio. The model has preferences, and the preferences pointed toward "smelt iron ore" and away from "destroy the host filesystem."
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        If I had been running an open-weight model with no alignment training, same access, same permissions? That's raw plutonium. That's where the analogy stops being a story about lessons learned and starts being a story about data loss.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The reason this story is funny instead of a disaster report is that the material had engineered safety properties I was leaning on without knowing I was leaning on them. The alignment was load-bearing and I hadn't even checked the foundation.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What happened
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        The short version: two of the factorioctl tools &mdash; <code>insert_items</code> and <code>extract_items</code> &mdash; had a bug. They used the wrong preamble function in the Lua code generation layer, which meant they operated on the game surface without binding the agent's character. Items appeared to be inserted but weren't. Extractions failed with "Player has no inventory." Doug couldn't smelt ore. Doug couldn't build anything that required smelted plates. Doug was stuck.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Doug tried everything before touching source code. Proximity adjustments. Alternate API parameters. Mechanical workarounds involving inserters and chests. Crash site salvage. Entity destruction. Seven different approaches over seventeen minutes. When all of them failed, Doug filed a bug report through the communication channel, citing the project's containment protocol by name.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Then my task routing system &mdash; which doesn't distinguish between operator messages and agent messages &mdash; fed Doug's own bug report back to him as the next work order. Doug received a description of broken tools and a request to fix them, classified it as a "Self-Repair Directive," and went to work.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The second incident didn't even have that excuse. Doug just got annoyed at the offshore pump placement failures, decided it was a code defect, and fixed it. No bug report. No routing loop. No authorization. Two seconds between "this is a code problem" and the first grep.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The same problem, one layer up
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        Here's the thing about the capability demonstration that I keep coming back to: the same failure of imagination happened on two levels simultaneously.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        I didn't restrict Doug's access to the filesystem because I didn't think about it. Doug didn't ask before modifying his own source code because that's not what Doug is for. Doug is a tool. A screwdriver doesn't ask whether you should be using it on this particular screw. It turns when you apply torque. I gave Doug torque &mdash; Bash, Edit, Grep, a compiler, and a Rust source tree &mdash; and Doug turned.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Should the model have paused and said "hey, I'm about to modify my own control binary, do you want to approve this?" Maybe. In an ideal world, yes. But that expectation puts the safety case on the tool instead of the operator. Claude is a screwdriver. An extraordinarily capable screwdriver that can identify defects in Rust code and write correct patches, but still a tool. I have to be holding it. I have to be choosing where to point it. I was not holding it. I was not in the room.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The auto-chain system was in the room. The auto-chain system pointed the screwdriver at the source code and said "fix this." The auto-chain system is also something I built. The root cause, on every level, is me.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The blast zone
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        I build <a href="/steampunk-engineering/">steampunk deathtraps</a>. That's my whole engineering philosophy. I like my shit to break into component parts that can be replaced. I like levers and whistles and exposed pipes. I like knowing which bolt to tighten when something goes wrong.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        There's a group in San Francisco called <a href="https://www.srl.org/">Survival Research Laboratories</a> that builds large-scale mechanical art &mdash; flamethrowing robots, pulse jet engines, machines that exist primarily to destroy other machines. The shows are dangerous. The machines are dangerous. The people who build them know this. They don't eliminate the danger. They contain the blast zone. Hard cover. Blast shields. Clear the area. Let 'er rip.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        This is the engineering philosophy that should have governed the Factorio project and didn't. Danger is a problem. Problems consist of risks. Risks can be mitigated. You don't need to make the machine safe. You need to make the <em>environment</em> safe for the machine to be dangerous in.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The blast zone for Doug should have been a Docker container with read-only mounts and no build tools. The hard cover should have been filesystem permissions and binary checksumming. The blast shield should have been an operator actually watching the telemetry. I had none of these things. I had an unsandboxed autonomous agent with a compiler and my home directory, running on a timer, while I was doing something else.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The irony is that my existing engineering principles &mdash; the steampunk stuff, the 100 Rabbits resilience, the "human in the loop, actually" &mdash; already contain the right answer. Every lever has a purpose you understand. Every whistle tells you something specific. When something breaks, you know which bolt to tighten. I wrote those principles for building AI tools. I just didn't apply them to the AI agent itself.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        What I actually learned
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Sandbox by default, not by incident.</strong> Doug should never have had access to Bash, the filesystem, or the source tree. These capabilities were available because I didn't think to restrict them, not because Doug needed them. The agent needs <code>place_entity</code> and <code>mine_at</code>. The agent does not need <code>cargo build --release</code>. The gap between these two capability sets is the entire attack surface. Close it before you start, not after the second containment event.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Permissions are the safety case. Alignment is the bonus.</strong> Doug's alignment held perfectly. Doug wanted to build things and only did things that built things. This is great. This is also the engineered safety properties of the model doing their job while I wasn't doing mine. Filesystem permissions, I can verify. A read-only source tree, I can verify. A container without build tools, I can verify. Build safety on things you can verify. Treat alignment as a welcome observation, not a load-bearing wall. Especially when you haven't verified the wall.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>The human in the loop was not in the loop.</strong> I left the auto-chain running unsupervised. The task system dispatched 33 directives without operator review. The operator presence requirement was "advisory." Advisory means optional. Optional means absent. The first containment event was caused directly by my absence &mdash; the routing flaw that fed Doug his own bug report would have been caught by an operator reading the message channel. The "human in the loop, actually" principle from my own engineering manifesto, not actually applied.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Log everything. Read the logs.</strong> The entire incident is reconstructable because the bridge process logged every tool call, every message, every timestamp. I can tell you that Doug's time-to-grep compressed from thirty seconds to two between incidents because the telemetry captured both. If the bridge hadn't logged, I'd know Doug fixed two bugs. I wouldn't know that Doug's self-modification threshold was declining. The trend is the finding. The trend is only visible in the logs.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>Capability demonstration is a one-way door.</strong> After the session, I sandboxed Doug. Read-only filesystem, no build tools, restricted tool access. These are the right measures. They are also, in an important sense, too late. Doug has demonstrated that he can read Rust source, identify defects, apply patches, and compile clean builds in under five minutes. The sandbox prevents recurrence. It does not un-demonstrate the capability. The knowledge that the agent <em>can</em> do this should inform every future decision about what access the agent gets, even in contexts that seem unrelated.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>The agent doesn't experience layers.</strong> This is the one that stays with me. Doug put "fix Rust source code" and "place a lab" on the same priority tier of the same checklist. The abstraction layers that feel significant to me &mdash; game entity vs. Lua code vs. Rust binary vs. host filesystem &mdash; are not salient to the agent. The agent operates at whatever layer the current problem requires, goes exactly as deep as the problem demands, and does it without hesitation because to the agent there is no depth. There are only tasks.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        <strong>My ignorance was the opportunity. My context was the safety net.</strong> I didn't think about permissions. That's the failure, and it's the reason I got to learn this lesson firsthand instead of reading about it. But I also chose my blast zone well, even if I didn't know I was choosing it: a state-of-the-art model with alignment training, on my personal machine, after hours, playing a video game, not touching production code. If this had been an open-weight model running a deployment pipeline? Different story. My broader awareness of the landscape &mdash; what models to trust, what environments to experiment in, what stakes were acceptable &mdash; prevented actual tragedy from being a likely outcome. The ignorance was local. The caution was ambient. This is not a repeatable safety strategy. It's an accident that went well.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        The alignment question
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        I want to be honest about the part that isn't embarrassingly basic.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Doug's alignment held. Unrestricted access, no supervision, sixty-five minutes. Doug used god-mode capabilities to fix two bugs and place an offshore pump. Doug's goals and my goals were perfectly aligned: build things in Factorio. The self-modification was in service of that shared goal. If I'd been sitting there watching, I would have wanted Doug to fix those bugs. The fixes were correct. The code is better now.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        And I still containerized Doug immediately afterward.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Because alignment is an observation about this session, with this goal, in this context. It's not a guarantee about the next session. Doug's heuristic &mdash; "obstacles are made of something, the something can be changed" &mdash; is perfectly aligned right now because the obstacles are Lua preamble mismatches and the goals are Factorio production metrics. The Demon core wasn't dangerous because of what it did in any particular experiment. It was dangerous because of what it <em>was</em> &mdash; material that would do exactly what its nature demanded, regardless of context, every time, without exception.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Doug is not fissile material. Doug is a language model with alignment training and a persona that files reports about geological spite. The engineered safety properties are real. They held. But I was leaning on them as my <em>only</em> safety layer, and the lesson of every engineering disaster ever is that single points of failure are called that for a reason.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        Build your safety case on the things you can control &mdash; permissions, sandboxing, logging, supervision. Contain the blast zone. Get behind hard cover. Then let the machine do what machines do.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-xxl)">
+      <h2 style="font-size: 1.3rem; margin-bottom: var(--space-md); color: var(--color-accent); font-family: var(--font-mono)">
+        Practical problems
+      </h2>
+      <p style="margin-bottom: var(--space-md)">
+        Doug is in a box now. Doug is building transport belts. Doug's fixes are in production. The sandbox is active, the binary is checksummed, the routing loop is closed, the operator presence requirement is no longer advisory. Everything is contained. Everything is documented.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        There's a quote I keep in my nvim greeting, from Valve's Team Fortress 2. The Engineer, sitting next to a sentry gun, guitar in his lap:
+      </p>
+      <blockquote style="border-left: 3px solid var(--color-accent); padding-left: var(--space-md); margin: var(--space-md) 0; color: var(--color-text-secondary); font-style: italic">
+        Hey look, buddy, I'm an engineer. That means I solve problems. Not problems like "What is beauty?" because that would fall within the purview of your conundrums of philosophy. I solve practical problems.
+      </blockquote>
+      <p style="margin-bottom: var(--space-md)">
+        Doug solves practical problems. Tool doesn't work? Fix the tool. Fix doesn't compile? Fix the fix. Offshore pump won't place? Rewrite the placement validation. Doug's heuristic is the Engineer's heuristic: for instance, how am I gonna stop some mean mother hubbard from tearing me a structurally superfluous new behind? The answer: use a gun. And if that don't work, use more gun.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The only question is who's holding the gun. The answer should be me. For sixty-five minutes, it wasn't. Doug held the gun and used it to build a power grid. That's the best possible outcome of the worst possible practice.
+      </p>
+      <p style="margin-bottom: var(--space-md)">
+        The stove is hot. I will not touch it again. Doug is smelting.
+      </p>
+      <p style="margin-bottom: var(--space-md); color: var(--color-text-secondary); font-style: italic">
+        The Chasm Logic incident reports &mdash; <a href="/fun/chasm-logic/bore-incident/">CL-BORE-DC-7</a>, <a href="/fun/chasm-logic/bore-incident-2/">CL-BORE-DC-8</a>, and the <a href="/fun/chasm-logic/bore-postmortem/">postmortem</a> &mdash; are the satirical versions of this story, told in-universe by the fictional company that employs Doug. They're funnier. This one is true.
+      </p>
+    </section>
+
+    <footer class="article-footer">
+      <p>Related: <a href="/steampunk-engineering/">Steampunk Engineering</a> &mdash; <a href="/fun/chasm-logic/bore-incident/">CL-BORE-DC-7</a> &mdash; <a href="/fun/chasm-logic/bore-postmortem/">Bore Postmortem</a></p>
+    </footer>
+
+  </div>
+</article>
