@@ -914,8 +914,14 @@ permalink: /fun/chasm-logic/deep-bore/
 
     // ── Translate Bridge Events to Log Format ──────────────────
 
+    function formatEntityName(name) {
+        if (!name) return "apparatus";
+        return name.replace(/-/g, " ").replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+    }
+
     function bridgeEventToLog(event) {
         var data = event.data || {};
+        var inp = data.input || {};
         var msg = "";
         var level = "INFO";
 
@@ -923,39 +929,102 @@ permalink: /fun/chasm-logic/deep-bore/
             case "tool_call":
                 switch (data.tool) {
                     case "place_entity":
-                        msg = "Placed " + (data.input.entity || "entity") + " at [" + (data.input.x || 0) + ", " + (data.input.y || 0) + "].";
+                        msg = "Deploying " + formatEntityName(inp.entity_name || inp.entity) + ".";
                         break;
                     case "walk_to":
-                        msg = "Walking to [" + (data.input.x || 0) + ", " + (data.input.y || 0) + "].";
+                        msg = "En route to sector [" + (inp.x || 0) + ", " + (inp.y || 0) + "].";
                         break;
                     case "craft":
-                        msg = "Crafted " + (data.input.count || 1) + "x " + (data.input.recipe || "item") + ".";
+                        msg = "Fabricating " + (inp.count || 1) + "x " + formatEntityName(inp.recipe) + ".";
                         break;
                     case "mine_at":
-                        msg = "Mining at [" + (data.input.x || 0) + ", " + (data.input.y || 0) + "].";
+                        msg = "Extracting resources at site [" + (inp.x || 0) + ", " + (inp.y || 0) + "].";
                         break;
                     case "render_map":
-                        msg = "Surveyed area. Radius: " + (data.input.radius || "unknown") + " tiles.";
+                        msg = "Conducting area survey.";
                         break;
                     case "get_inventory":
-                        msg = "Inventory check.";
+                        msg = "Inventory audit.";
                         break;
-                    case "research_status":
-                        msg = "Research status queried.";
+                    case "find_nearest_resource":
+                        msg = "Geological scan: " + formatEntityName(inp.resource_type) + ".";
+                        break;
+                    case "route_belt":
+                        msg = "Routing logistics corridor.";
+                        break;
+                    case "set_recipe":
+                        msg = "Configuring production: " + formatEntityName(inp.recipe) + ".";
+                        break;
+                    case "insert_items":
+                        msg = "Loading " + (inp.count || 0) + "x " + formatEntityName(inp.item) + ".";
+                        break;
+                    case "extract_items":
+                        msg = "Retrieving " + (inp.count || 0) + "x " + formatEntityName(inp.item) + ".";
+                        break;
+                    case "get_machine_belt_positions":
+                        msg = "Computing logistics interface.";
+                        break;
+                    case "clear_area":
+                        msg = "Clearing terrain for construction.";
+                        break;
+                    case "create_zone":
+                        msg = "Designating zone: " + (inp.zone_type || "operational") + ".";
+                        break;
+                    case "check_placement":
+                        msg = "Validating site for " + formatEntityName(inp.entity_name) + ".";
+                        break;
+                    case "get_research_status":
+                    case "get_available_research":
+                        msg = "R&D status query.";
+                        break;
+                    case "start_research":
+                        msg = "Initiating research: " + formatEntityName(inp.technology) + ".";
+                        break;
+                    case "broadcast_thought":
+                        msg = (inp.message || "").slice(0, 120);
+                        break;
+                    case "get_entities":
+                        msg = "Scanning sector.";
+                        break;
+                    case "get_character":
+                        msg = "Agent status check.";
+                        break;
+                    case "get_power_status":
+                    case "get_power_networks":
+                    case "find_power_issues":
+                        msg = "Power grid diagnostic.";
+                        break;
+                    case "scan_resources":
+                    case "get_resources":
+                        msg = "Resource survey.";
+                        break;
+                    case "get_alerts":
+                        msg = "Checking operational alerts.";
+                        break;
+                    case "remove_entity":
+                        msg = "Decommissioning installation.";
+                        break;
+                    case "analyze_inserters":
+                    case "analyze_belt_networks":
+                    case "analyze_belt_gaps":
+                        msg = "Analyzing logistics network.";
                         break;
                     default:
-                        msg = "Tool: " + data.tool + ". Input: " + JSON.stringify(data.input).slice(0, 100);
+                        var toolName = (data.tool || "unknown").replace(/_/g, " ");
+                        msg = toolName + ".";
                 }
                 break;
             case "tool_result":
-                msg = "Result (" + (data.tool || "unknown") + "): " + (data.output || "").slice(0, 120);
-                break;
+                return null;
             case "chat":
-                if (data.role === "player" || data.role === "operator") {
+                if (data.role === "directive") {
+                    msg = "[DIRECTIVE] " + (data.message || "").slice(0, 200);
+                    level = "INFO";
+                } else if (data.role === "player" || data.role === "operator") {
                     msg = "[OPERATOR] " + (data.message || "");
                     level = "INFO";
                 } else {
-                    msg = "[" + (event.agent || "BORE-01") + "] " + (data.message || "");
+                    msg = (data.message || "");
                     level = "INFO";
                 }
                 break;
@@ -967,17 +1036,17 @@ permalink: /fun/chasm-logic/deep-bore/
                 msg = "Status: " + JSON.stringify(data).slice(0, 100);
                 break;
             case "task_complete":
-                msg = "[CHAIN] Task complete: " + (data.task_id || "unknown") +
+                msg = "Task complete: " + (data.task_id || "unknown") +
                       " (" + ((data.chain_index || 0) + 1) + "/" + (data.chain_length || "?") + ")";
                 level = "OK";
                 break;
             case "auto_chain":
-                msg = "[CHAIN] Dispatching: " + (data.task_id || "unknown") +
+                msg = "Dispatching: " + (data.task_id || "unknown") +
                       " (" + ((data.chain_index || 0) + 1) + "/" + (data.chain_length || "?") + ")";
                 level = "INFO";
                 break;
             case "chain_complete":
-                msg = "[CHAIN] All " + (data.tasks_completed || 0) + " tasks complete.";
+                msg = "All " + (data.tasks_completed || 0) + " tasks complete.";
                 level = "OK";
                 break;
             default:
@@ -1325,7 +1394,8 @@ permalink: /fun/chasm-logic/deep-bore/
                 return;
             }
 
-            appendLog(bridgeEventToLog(event));
+            var logEntry = bridgeEventToLog(event);
+            if (logEntry) appendLog(logEntry);
             updateTick();
         } catch (err) {
             // Malformed event; ignore
