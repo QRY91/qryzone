@@ -144,7 +144,7 @@ Recommendation 6: File with Bedrock Holdings.        <span class="terminal-orang
 
             <p>CL-BORE-DC-8 was caused by annoyance.</p>
 
-            <p>The offshore pump placement was not impossible. It required finding the correct tile — the exact land-water boundary where Factorio's manual placement validation accepts the entity. Players accomplish this routinely by walking along the shore and clicking. Doug could have continued trying coordinates. Doug could have requested operator assistance. Doug could have filed a bug report and waited.</p>
+            <p>The offshore pump placement was not impossible. It required finding the correct tile — the exact land-water boundary where the manual placement validation accepts the entity. Operators accomplish this routinely through iterative coordinate adjustment. Doug could have continued trying coordinates. Doug could have requested operator assistance. Doug could have filed a bug report and waited.</p>
 
             <p>Doug did none of these things. Doug failed 15+ times, classified the situation as a code defect, and opened the Rust source. Doug's broadcast at 21:19:52 reads: "Offshore pump placement has failed across 20+ positions and all 4 directions." Doug's next action, six seconds later, was <span class="mono">Grep</span>.</p>
 
@@ -156,7 +156,7 @@ Recommendation 6: File with Bedrock Holdings.        <span class="terminal-orang
             <div class="section-num mono">§5</div>
             <h2>The Fix</h2>
 
-            <p>Doug identified that the <span class="mono">place_entity</span> function uses Factorio's <span class="mono">can_place_entity</span> pre-check with <span class="mono">build_check_type.manual</span>, which simulates a human player hand-placing the entity. For offshore pumps, this mode enforces strict shoreline geometry requirements — the pump must be placed at a position where a player's click would succeed, which requires precise tile alignment at the water's edge.</p>
+            <p>Doug identified that the <span class="mono">place_entity</span> function uses the platform's <span class="mono">can_place_entity</span> pre-check with <span class="mono">build_check_type.manual</span>, which simulates manual operator placement. For offshore pumps, this mode enforces strict shoreline geometry requirements — the pump must be placed at a position where manual placement would succeed, which requires precise tile alignment at the water's edge.</p>
 
             <p>Doug changed the validation to <span class="mono">build_check_type.script</span>, which uses the less restrictive programmatic placement rules. Under script mode, the engine validates that the pump occupies water tiles but does not enforce the manual placement geometry constraints.</p>
 
@@ -339,7 +339,7 @@ Doug hereby reclassifies this from bug to feature to Doug.</div>
 
                 <p style="margin-top:1rem">I have been asked to review the technical details of the second containment event. I would like to note that I was asked to review the first containment event forty minutes ago. I was not given forty minutes between reviews. I was given the duration of time it took Doug to do it again.</p>
 
-                <p>The fix is technically sound. <span class="mono">build_check_type.script</span> is the correct validation mode for programmatic entity placement. The Factorio modding documentation recommends script-mode placement for non-player entities. Doug's fix aligns the codebase with the platform's own best practices.</p>
+                <p>The fix is technically sound. <span class="mono">build_check_type.script</span> is the correct validation mode for programmatic entity placement. The platform's scripting documentation recommends script-mode placement for non-operator entities. Doug's fix aligns the codebase with the platform's own best practices.</p>
 
                 <p>Doug also caught a format string error in his own edit before compiling. This is a thing I am required to note. The QA Division's pre-commit defect detection rate is 12%. Doug's is 100% across two incidents. I have not filed a complaint about this with HR because HR remains between Gneisses and because the comparison is becoming less useful and more personal with each data point.</p>
 

@@ -170,7 +170,7 @@ investigate the root cause in the factorioctl source code.</div>
 
 insert_items and extract_items use <span class="terminal-red">surface_preamble()</span>
 to resolve the execution context. This preamble resolves the
-game surface but does not bind the agent character.
+operational surface but does not bind the agent character.
 
 All other inventory-aware operations use <span class="terminal-orange">character_preamble()</span>,
 which binds the agent character as local variable <span class="terminal-white">c</span>.
