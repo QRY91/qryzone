@@ -397,6 +397,10 @@ h2 {
   overflow-x: auto;
   white-space: pre;
 }
+.terminal:has(> div) {
+  display: flex;
+  flex-direction: column;
+}
 .terminal-dim { opacity: 0.5; }
 .terminal-orange { color: #F58025; }
 .terminal-white { color: white; }
