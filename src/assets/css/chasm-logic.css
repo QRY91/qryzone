@@ -398,8 +398,10 @@ h2 {
   white-space: pre;
 }
 .terminal:has(> div) {
-  display: flex;
-  flex-direction: column;
+  white-space: normal;
+}
+.terminal > div {
+  white-space: pre;
 }
 .terminal-dim { opacity: 0.5; }
 .terminal-orange { color: #F58025; }
