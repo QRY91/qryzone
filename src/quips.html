@@ -166,6 +166,15 @@ description: Short-form content explorer — cycle through ideas, escape through
 
 .inner-square li { margin-bottom: 2px; }
 
+.inner-square .quip-desc {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+    line-height: 1.4;
+    font-style: italic;
+}
+
 .inner-square .quip-type {
     font-family: var(--font-mono);
     font-size: 0.6rem;
@@ -303,6 +312,7 @@ description: Short-form content explorer — cycle through ideas, escape through
     .inner-square p { font-size: 0.65rem; }
     .inner-square pre { font-size: 0.55rem; padding: 4px; }
     .inner-square ul { font-size: 0.65rem; margin-left: var(--space-sm); }
+    .inner-square .quip-desc { font-size: 0.5rem; }
     .inner-square .quip-type { font-size: 0.5rem; }
     .pocket { font-size: 0.65rem; }
     .nav-chevron { font-size: 0.7rem; }
@@ -565,6 +575,59 @@ description: Short-form content explorer — cycle through ideas, escape through
         { id: 'musicbox', cycle: 'play', title: 'music box', body: '<p>A sequencer in the browser. Place notes on a grid, hit play, hear patterns emerge. Music is just data with timing.</p><p>The grid is the instrument. The constraint is the composition.</p>', pocket: 'press play', source: '/fun/music-box/' }
     ];
 
+    // ── Descriptions (TL;DR) ──────────────────────────
+    var descs = {
+        sailboat:   'A filter for what tools deserve to exist',
+        removal:    'The fastest code is code that doesn\'t run',
+        attention:  'On reclaiming focus from the noise',
+        spite:      'Transforming institutional dysfunction into fuel',
+        honesty:    'This is all insane but I have a mortgage',
+        koan:       'A student asked the master about architecture',
+        convergent: 'Homebrew experiments anticipated production architecture',
+        deslopping: 'Applying slop research to human-AI collaborative writing',
+        deepend:    'What this place is, what it draws from, and why',
+        treadmill:  'Reducing dependency on paid AI without losing the value',
+        gradient:   'What people call slop is Aristotle, rediscovered by machines',
+        disassemble:'Building three tools from 10,000 deleted lines',
+        mirror:     'What happens when you ask an AI to analyze your voice?',
+        thinking:   'Opening the detailed view on a Claude Code session',
+        powers:     'On complicity through silence in tech',
+        workshop:   'What if portfolios showed process instead of polish?',
+        cli:        'Why terminals beat GUIs for actual work',
+        pipe:       'Six commands, no GUI, composable and scriptable',
+        'css-trick':'Float-based L-wrap \u2014 no clip-path, no JS',
+        stack:      'Seven CLI tools, all composable, all work on a sailboat',
+        claw:       'Lunchbreak CTF: prompt injection for $100',
+        steampunk:  'AI tools with levers and whistles instead of black boxes',
+        spinner:    'One loading animation killed a server',
+        itsmash:    'Tools, mascots, and what we actually need from AI',
+        keys58:     'Constraints on input force clarity of thought',
+        dbfirst:    'When the problem is in the data, not the code',
+        nixos:      'Learning declarative configuration on modular hardware',
+        overnight:  'Using TDD as a specification language for AI agents',
+        distill:    'Mining git history to extract how you actually work',
+        logodesign: 'An 8\u00d78 symbol, recursive and mathematically interesting',
+        simp:       'How hard do you push before an LLM agrees the Earth is flat?',
+        hyperresponder: 'Same tools, wildly different results',
+        qubiq:      'Rotate, align, solve \u2014 or just watch',
+        boids:      'Three rules, emergent flocking',
+        life:       'Simple rules, infinite complexity',
+        attractors: 'Deterministic but unpredictable trajectories',
+        mandelbrot: 'Infinite complexity from z\u00b2 + c',
+        flowfield:  'Particles following invisible currents',
+        wavetank:   'Ripples, reflections, interference patterns',
+        asciilogo:  'The logo rendered in every medium',
+        logomath:   'Bit operations, symmetry groups, pocket geometry',
+        ditherpunk: 'Reducing images to 1-bit with style',
+        lenia:      'Continuous cellular automata \u2014 life, but smooth',
+        lsystems:   'Recursive string rewriting grows fractals',
+        maze:       'Every algorithm has a bias',
+        sorting:    'Watching algorithms sort is hypnotic',
+        turtle:     'Draw anything with four commands',
+        musicbox:   'Place notes on a grid, hear patterns emerge'
+    };
+    quips.forEach(function(q) { q.desc = descs[q.id] || ''; });
+
     // ── Articles for dispersed dark edge cells ────────
     var articles = [
         { t: 'sailboat test', u: '/sailboat-test/' },
@@ -799,6 +862,7 @@ description: Short-form content explorer — cycle through ideas, escape through
             '<div class="corner-spacer"></div>' +
             (quip.type ? '<div class="quip-type">' + quip.type + '</div>' : '') +
             '<h2><a href="' + quip.source + '">' + quip.title + '</a></h2>' +
+            (quip.desc ? '<div class="quip-desc">' + quip.desc + '</div>' : '') +
             quip.body;
     }
 
