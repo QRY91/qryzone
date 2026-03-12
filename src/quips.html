@@ -285,10 +285,12 @@ description: Short-form content explorer — cycle through ideas, escape through
 @media (max-width: 640px) {
     .quips-layout {
         flex-direction: column;
+        align-items: stretch;
         padding: 0 var(--space-sm);
     }
     .logo-grid {
         gap: 2px;
+        width: 100%;
     }
     .cell-link {
         font-size: 0.55rem;
@@ -304,7 +306,7 @@ description: Short-form content explorer — cycle through ideas, escape through
     .inner-square .quip-type { font-size: 0.5rem; }
     .pocket { font-size: 0.65rem; }
     .nav-chevron { font-size: 0.7rem; }
-    .layer-map { perspective: none; margin-left: 0; }
+    .layer-map { perspective: none; margin-left: 0; align-self: center; }
     .layer-map-scene {
         transform: none;
         display: flex;
@@ -717,7 +719,11 @@ description: Short-form content explorer — cycle through ideas, escape through
     }
 
     function getTrackLabel(quip) {
-        return mobileQuery.matches ? (quip.words + 'w') : quip.title;
+        return mobileQuery.matches ? String(quip.words) : quip.title;
+    }
+
+    function getEdgeLabel(article) {
+        return mobileQuery.matches ? String(article.t.length) : article.t;
     }
 
     // ── DOM refs ──────────────────────────────────────
@@ -725,6 +731,7 @@ description: Short-form content explorer — cycle through ideas, escape through
     var innerEl, pocketTextEl;
     var trackCells = [];
     var edgeCells = [];
+    var currentEdgeArticles = [];
     var mapLevels = {};
     var layerNameEl;
 
@@ -805,12 +812,12 @@ description: Short-form content explorer — cycle through ideas, escape through
     }
 
     function updateEdges() {
-        var edgeArticles = shuffle(articles);
+        currentEdgeArticles = shuffle(articles);
         edgeCells.forEach(function(cell, i) {
             var link = cell.querySelector('.cell-link');
-            if (link && i < edgeArticles.length) {
-                link.href = edgeArticles[i].u;
-                link.querySelector('span').textContent = edgeArticles[i].t;
+            if (link && i < currentEdgeArticles.length) {
+                link.href = currentEdgeArticles[i].u;
+                link.querySelector('span').textContent = getEdgeLabel(currentEdgeArticles[i]);
             }
         });
     }
@@ -857,7 +864,7 @@ description: Short-form content explorer — cycle through ideas, escape through
         edgeCells.length = 0;
         wildcardQuip = pickWildcard();
 
-        var edgeArticles = shuffle(articles);
+        currentEdgeArticles = shuffle(articles);
         var edgeIdx = 0;
         var innerInserted = false;
         var pocketInserted = false;
@@ -944,11 +951,11 @@ description: Short-form content explorer — cycle through ideas, escape through
 
                 var cell = document.createElement('div');
                 cell.className = 'cell cell-on';
-                if (edgeIdx < edgeArticles.length) {
+                if (edgeIdx < currentEdgeArticles.length) {
                     var link = document.createElement('a');
                     link.className = 'cell-link';
-                    link.href = edgeArticles[edgeIdx].u;
-                    link.innerHTML = '<span>' + edgeArticles[edgeIdx].t + '</span>';
+                    link.href = currentEdgeArticles[edgeIdx].u;
+                    link.innerHTML = '<span>' + getEdgeLabel(currentEdgeArticles[edgeIdx]) + '</span>';
                     cell.appendChild(link);
                     edgeIdx++;
                 }
@@ -1012,9 +1019,15 @@ description: Short-form content explorer — cycle through ideas, escape through
         }
     }, { passive: true });
 
-    // ── Responsive track labels ───────────────────────
+    // ── Responsive labels ────────────────────────────
     mobileQuery.addEventListener('change', function() {
         updateTrackContent();
+        edgeCells.forEach(function(cell, i) {
+            var link = cell.querySelector('.cell-link');
+            if (link && i < currentEdgeArticles.length) {
+                link.querySelector('span').textContent = getEdgeLabel(currentEdgeArticles[i]);
+            }
+        });
     });
 
     // ── Init ──────────────────────────────────────────
