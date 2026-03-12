@@ -166,15 +166,6 @@ description: Short-form content explorer — cycle through ideas, escape through
 
 .inner-square li { margin-bottom: 2px; }
 
-.inner-square .quip-desc {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-sm);
-    line-height: 1.4;
-    font-style: italic;
-}
-
 .inner-square .quip-type {
     font-family: var(--font-mono);
     font-size: 0.6rem;
@@ -312,7 +303,6 @@ description: Short-form content explorer — cycle through ideas, escape through
     .inner-square p { font-size: 0.65rem; }
     .inner-square pre { font-size: 0.55rem; padding: 4px; }
     .inner-square ul { font-size: 0.65rem; margin-left: var(--space-sm); }
-    .inner-square .quip-desc { font-size: 0.5rem; }
     .inner-square .quip-type { font-size: 0.5rem; }
     .pocket { font-size: 0.65rem; }
     .nav-chevron { font-size: 0.7rem; }
@@ -862,7 +852,6 @@ description: Short-form content explorer — cycle through ideas, escape through
             '<div class="corner-spacer"></div>' +
             (quip.type ? '<div class="quip-type">' + quip.type + '</div>' : '') +
             '<h2><a href="' + quip.source + '">' + quip.title + '</a></h2>' +
-            (quip.desc ? '<div class="quip-desc">' + quip.desc + '</div>' : '') +
             quip.body;
     }
 
