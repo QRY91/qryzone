@@ -1,0 +1,597 @@
+---
+layout: base.njk
+title: "Grid v13 — Slides"
+description: Flashcard-style navigation through multi-slide quips
+---
+
+<style>
+/* ── Page header ───────────────────────────────── */
+.slides-header {
+    max-width: 600px;
+    margin: 0 auto var(--space-lg);
+    padding: 0 var(--space-md);
+}
+
+.slides-header h1 {
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    color: var(--color-accent);
+    margin-bottom: var(--space-xs);
+}
+
+.slides-header p {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: var(--space-sm);
+}
+
+.slides-header .nav-back {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.slides-header .nav-back:hover {
+    color: var(--color-accent);
+}
+
+/* ── Grid ──────────────────────────────────────── */
+.logo-grid {
+    max-width: 600px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 3px;
+    padding: 0 var(--space-md);
+    overflow: hidden;
+}
+
+.cell {
+    border-radius: var(--border-radius);
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.cell-border { background: #333; }
+.cell-track { background: #222; }
+
+/* ── Inner Square: L-shaped content area ───────── */
+.inner-square {
+    grid-column: 3 / 7;
+    grid-row: 3 / 7;
+    background: #333;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    text-align: left;
+    overflow: hidden;
+    min-height: 0;
+    min-width: 0;
+    perspective: 800px;
+}
+
+.inner-content {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: rotateY(0deg);
+}
+
+.inner-content.flip-out {
+    transform: rotateY(90deg);
+    transition: transform 0.18s ease-in;
+}
+
+.inner-content.flip-in {
+    transform: rotateY(0deg);
+    transition: transform 0.22s ease-out;
+}
+
+.corner-pusher {
+    float: right;
+    width: 0;
+    height: 75%;
+}
+
+.corner-spacer {
+    float: right;
+    clear: right;
+    width: 25%;
+    height: 25%;
+}
+
+.inner-square h2 {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: #f0dfaf;
+    margin-bottom: var(--space-sm);
+}
+
+.inner-square p {
+    margin-bottom: var(--space-sm);
+    font-size: 0.75rem;
+    color: #dcdccc;
+}
+
+.inner-square p:last-child {
+    margin-bottom: 0;
+}
+
+/* ── Slide indicator ───────────────────────────── */
+.slide-indicator {
+    float: right;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: #7f9f7f;
+    line-height: 1;
+    margin-bottom: var(--space-xs);
+}
+
+/* ── Progress bar ──────────────────────────────── */
+.progress-wrap {
+    width: 100%;
+    height: 2px;
+    background: transparent;
+    margin-bottom: var(--space-sm);
+    overflow: hidden;
+    clear: right;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #7f9f7f;
+    width: 0;
+}
+
+.progress-bar.filling {
+    animation: fill 3s linear forwards;
+}
+
+@keyframes fill {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* ── The Pocket: 2x2 merged block ──────────────── */
+.pocket {
+    grid-column: 6 / 8;
+    grid-row: 6 / 8;
+    background: var(--color-background, #3f3f3f);
+    z-index: 1;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: #e84393;
+    text-align: center;
+    padding: var(--space-sm);
+    line-height: 1.4;
+    user-select: none;
+}
+
+/* ── Nav chevrons ──────────────────────────────── */
+.nav-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    font-size: 0.8rem;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.2s;
+    user-select: none;
+    font-family: var(--font-mono);
+    padding: 0;
+}
+
+.nav-chevron:hover {
+    color: var(--color-accent);
+}
+
+.nav-chevron:active {
+    color: #fff;
+}
+
+.nav-chevron.slide-mode {
+    font-size: 0.65rem;
+    color: #7f9f7f;
+}
+
+.nav-chevron.slide-mode:hover {
+    color: var(--color-accent);
+}
+
+/* ── Auto-play toggle ──────────────────────────── */
+.autoplay-wrap {
+    max-width: 600px;
+    margin: var(--space-lg) auto 0;
+    padding: 0 var(--space-md);
+    text-align: center;
+}
+
+.autoplay-btn {
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: var(--space-xs) var(--space-md);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.autoplay-btn:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.autoplay-btn.active {
+    color: #7f9f7f;
+    border-color: #7f9f7f;
+}
+
+/* ── Reduced motion ────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .inner-content.flip-out,
+    .inner-content.flip-in {
+        transition: none !important;
+        transform: none !important;
+    }
+
+    .progress-bar.filling {
+        animation: none !important;
+        width: 100% !important;
+    }
+}
+
+/* ── Mobile ────────────────────────────────────── */
+@media (max-width: 640px) {
+    .logo-grid {
+        gap: 2px;
+        padding: 0 var(--space-xs);
+    }
+
+    .inner-square {
+        padding: var(--space-sm);
+        font-size: 0.65rem;
+    }
+
+    .inner-square h2 {
+        font-size: 0.75rem;
+    }
+
+    .inner-square p {
+        font-size: 0.65rem;
+    }
+
+    .slide-indicator {
+        font-size: 0.5rem;
+    }
+
+    .pocket {
+        font-size: 0.6rem;
+    }
+
+    .nav-chevron {
+        font-size: 0.65rem;
+    }
+
+    .nav-chevron.slide-mode {
+        font-size: 0.55rem;
+    }
+}
+</style>
+
+<div class="slides-header">
+    <a href="/hidden/article-template/" class="nav-back">&larr; prototypes</a>
+    <h1>v13. Slides</h1>
+    <p>Flashcard-style navigation through multi-slide quips.</p>
+</div>
+
+<div class="logo-grid" id="logoGrid"></div>
+
+<div class="autoplay-wrap">
+    <button class="autoplay-btn" id="autoplayBtn">&#9654; Auto-play</button>
+</div>
+
+<script>
+(function() {
+    var LOGO = [0xFF, 0x81, 0xBD, 0xBD, 0xBF, 0xB9, 0x89, 0xFF];
+
+    function zone(r, c) {
+        if ((r === 5 || r === 6) && (c === 5 || c === 6)) return 'pocket';
+        if ((r === 4 && c === 6) || (r === 6 && c === 4)) return 'chevron';
+        if (r >= 2 && r <= 5 && c >= 2 && c <= 5) return 'inner';
+        return (LOGO[r] >> (7 - c)) & 1 ? 'border' : 'track';
+    }
+
+    // ── Demo quip with 5 slides ───────────────────
+    var quip = {
+        title: 'the sailboat test',
+        slides: [
+            '<p>Hundred Rabbits live on a sailboat. They make software that runs on solar-powered machines with unreliable connectivity.</p>',
+            '<p>Their constraint isn\'t aesthetic \u2014 it\'s survival. If a tool requires cloud APIs, auto-updates, or always-on internet, it fails at sea.</p>',
+            '<p>This creates a brutal filter: <strong>will this work on a boat?</strong> No Electron apps. No SaaS dashboards. No build tools that phone home.</p>',
+            '<p>What survives: plain text, local-first data, offline-capable interfaces, tools that do one thing well without dependencies.</p>',
+            '<p>The sailboat test isn\'t about boats. It\'s about asking: <em>will this run in 50 years? Will it work without permission from a server?</em></p>'
+        ],
+        pocket: 'should work on a boat'
+    };
+
+    var totalSlides = quip.slides.length;
+
+    // ── State ─────────────────────────────────────
+    var currentSlide = 0;
+    var isFlipping = false;
+    var autoPlaying = false;
+    var autoplayTimer = null;
+    var hoveringInner = false;
+
+    // ── DOM refs ──────────────────────────────────
+    var grid = document.getElementById('logoGrid');
+    var autoplayBtn = document.getElementById('autoplayBtn');
+    var innerEl, contentEl, pocketEl;
+    var nextBtn, prevBtn;
+
+    // ── Build grid ────────────────────────────────
+    function buildGrid() {
+        grid.innerHTML = '';
+        var innerInserted = false;
+        var pocketInserted = false;
+
+        for (var r = 0; r < 8; r++) {
+            for (var c = 0; c < 8; c++) {
+                var z = zone(r, c);
+
+                // Inner square: insert once at first inner cell
+                if (z === 'inner' && !innerInserted) {
+                    innerEl = document.createElement('div');
+                    innerEl.className = 'inner-square';
+
+                    contentEl = document.createElement('div');
+                    contentEl.className = 'inner-content';
+                    renderSlide();
+                    innerEl.appendChild(contentEl);
+
+                    // Hover pause for autoplay
+                    innerEl.addEventListener('mouseenter', function() {
+                        hoveringInner = true;
+                        pauseAutoplayTimer();
+                    });
+                    innerEl.addEventListener('mouseleave', function() {
+                        hoveringInner = false;
+                        if (autoPlaying) startAutoplayTimer();
+                    });
+
+                    // Touch swipe
+                    setupSwipe(innerEl);
+
+                    grid.appendChild(innerEl);
+                    innerInserted = true;
+                    continue;
+                }
+                if (z === 'inner') continue;
+
+                // Pocket: insert once at first pocket cell
+                if (z === 'pocket' && !pocketInserted) {
+                    pocketEl = document.createElement('div');
+                    pocketEl.className = 'pocket';
+                    pocketEl.textContent = quip.pocket;
+                    grid.appendChild(pocketEl);
+                    pocketInserted = true;
+                    continue;
+                }
+                if (z === 'pocket') continue;
+
+                // Chevrons
+                if (z === 'chevron') {
+                    var cell = document.createElement('div');
+                    cell.className = 'cell cell-border';
+                    var btn = document.createElement('button');
+                    btn.className = 'nav-chevron';
+
+                    if (r === 4 && c === 6) {
+                        // Next chevron (top-right of pocket)
+                        nextBtn = btn;
+                        btn.setAttribute('aria-label', 'Next slide');
+                        btn.addEventListener('click', function() { goNext(); });
+                    } else {
+                        // Prev chevron (bottom-left of pocket)
+                        prevBtn = btn;
+                        btn.setAttribute('aria-label', 'Previous slide');
+                        btn.addEventListener('click', function() { goPrev(); });
+                    }
+
+                    updateChevrons();
+                    cell.appendChild(btn);
+                    grid.appendChild(cell);
+                    continue;
+                }
+
+                // Border / track cells
+                var cell = document.createElement('div');
+                cell.className = 'cell ' + (z === 'border' ? 'cell-border' : 'cell-track');
+                grid.appendChild(cell);
+            }
+        }
+    }
+
+    // ── Render current slide content ──────────────
+    function renderSlide() {
+        contentEl.innerHTML =
+            '<div class="corner-pusher"></div>' +
+            '<div class="corner-spacer"></div>' +
+            '<div class="slide-indicator">' + (currentSlide + 1) + '/' + totalSlides + '</div>' +
+            '<div class="progress-wrap"><div class="progress-bar' + (autoPlaying && !hoveringInner ? ' filling' : '') + '"></div></div>' +
+            '<h2>' + quip.title + '</h2>' +
+            quip.slides[currentSlide];
+    }
+
+    // ── Update chevron labels ─────────────────────
+    function updateChevrons() {
+        if (!nextBtn || !prevBtn) return;
+
+        // Next chevron (4,6)
+        if (currentSlide === totalSlides - 1) {
+            nextBtn.textContent = '\u25b2';
+            nextBtn.className = 'nav-chevron';
+        } else {
+            nextBtn.textContent = '+1';
+            nextBtn.className = 'nav-chevron slide-mode';
+        }
+
+        // Prev chevron (6,4)
+        if (currentSlide === 0) {
+            prevBtn.textContent = '\u25c0';
+            prevBtn.className = 'nav-chevron';
+        } else {
+            prevBtn.textContent = '\u22121';
+            prevBtn.className = 'nav-chevron slide-mode';
+        }
+    }
+
+    // ── Flip transition ───────────────────────────
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function flipTo(newSlide) {
+        if (isFlipping || newSlide === currentSlide) return;
+        if (newSlide < 0 || newSlide >= totalSlides) return;
+        isFlipping = true;
+
+        if (reducedMotion) {
+            currentSlide = newSlide;
+            renderSlide();
+            updateChevrons();
+            isFlipping = false;
+            return;
+        }
+
+        // Flip out
+        contentEl.className = 'inner-content flip-out';
+
+        // At midpoint, swap content and flip in
+        setTimeout(function() {
+            currentSlide = newSlide;
+            renderSlide();
+            updateChevrons();
+            contentEl.className = 'inner-content flip-in';
+
+            setTimeout(function() {
+                contentEl.className = 'inner-content';
+                isFlipping = false;
+            }, 220);
+        }, 180);
+    }
+
+    // ── Navigation helpers ────────────────────────
+    function goNext() {
+        var next = (currentSlide + 1) % totalSlides;
+        flipTo(next);
+        resetAutoplayTimer();
+    }
+
+    function goPrev() {
+        if (currentSlide === 0) return;
+        flipTo(currentSlide - 1);
+        resetAutoplayTimer();
+    }
+
+    // ── Autoplay ──────────────────────────────────
+    function startAutoplayTimer() {
+        clearTimeout(autoplayTimer);
+        if (!autoPlaying || hoveringInner) return;
+        // Restart progress bar animation
+        var bar = contentEl.querySelector('.progress-bar');
+        if (bar) {
+            bar.className = 'progress-bar';
+            // Force reflow to restart animation
+            void bar.offsetWidth;
+            bar.className = 'progress-bar filling';
+        }
+        autoplayTimer = setTimeout(function() {
+            goNext();
+        }, 3000);
+    }
+
+    function pauseAutoplayTimer() {
+        clearTimeout(autoplayTimer);
+        var bar = contentEl.querySelector('.progress-bar');
+        if (bar) bar.className = 'progress-bar';
+    }
+
+    function resetAutoplayTimer() {
+        if (autoPlaying) startAutoplayTimer();
+    }
+
+    function toggleAutoplay() {
+        autoPlaying = !autoPlaying;
+        if (autoPlaying) {
+            autoplayBtn.textContent = '\u23f8 Pause';
+            autoplayBtn.classList.add('active');
+            startAutoplayTimer();
+        } else {
+            autoplayBtn.textContent = '\u25b6 Auto-play';
+            autoplayBtn.classList.remove('active');
+            pauseAutoplayTimer();
+        }
+    }
+
+    autoplayBtn.addEventListener('click', toggleAutoplay);
+
+    // ── Keyboard ──────────────────────────────────
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            goNext();
+        }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            goPrev();
+        }
+    });
+
+    // ── Touch swipe ───────────────────────────────
+    function setupSwipe(el) {
+        var startX = 0;
+        var startY = 0;
+        var threshold = 40;
+
+        el.addEventListener('touchstart', function(e) {
+            startX = e.changedTouches[0].clientX;
+            startY = e.changedTouches[0].clientY;
+        }, { passive: true });
+
+        el.addEventListener('touchend', function(e) {
+            var dx = e.changedTouches[0].clientX - startX;
+            var dy = e.changedTouches[0].clientY - startY;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > threshold) {
+                if (dx < 0) {
+                    goNext();
+                } else {
+                    goPrev();
+                }
+            }
+        }, { passive: true });
+    }
+
+    // ── Init ──────────────────────────────────────
+    buildGrid();
+})();
+</script>

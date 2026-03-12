@@ -1,0 +1,625 @@
+---
+layout: base.njk
+title: "Grid v14 — Reader Mode"
+description: "Long-form article reading UI using the 8×8 logo grid as layout structure"
+---
+
+<style>
+/* ── Page layout ───────────────────────────────────── */
+.reader-page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    text-align: center;
+}
+
+.reader-title {
+    font-family: var(--font-mono);
+    color: #f0dfaf;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.reader-subtitle {
+    color: #7f9f7f;
+    font-size: 0.78rem;
+    margin-bottom: var(--space-lg);
+    font-family: var(--font-sans);
+}
+
+/* ── 8×8 grid ──────────────────────────────────────── */
+.logo-grid {
+    max-width: 700px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 3px;
+    overflow: hidden;
+}
+
+.cell {
+    border-radius: var(--border-radius);
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
+}
+
+.cell-border {
+    background: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: #555;
+    text-align: center;
+    padding: 2px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cell-track {
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: #555;
+    text-align: center;
+    padding: 2px;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    border-left: 2px solid transparent;
+    user-select: none;
+}
+
+.cell-track:hover {
+    color: #dcdccc;
+}
+
+.cell-track.toc-active {
+    color: #f0dfaf;
+    border-left-color: #f0dfaf;
+}
+
+/* ── Inner square: scrollable L-shaped content ─────── */
+.inner-square {
+    grid-column: 3 / 7;
+    grid-row: 3 / 7;
+    background: #333;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: #dcdccc;
+    line-height: 1.6;
+    text-align: left;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    min-width: 0;
+    position: relative;
+    scroll-behavior: smooth;
+
+    scrollbar-width: thin;
+    scrollbar-color: #f0dfaf44 transparent;
+}
+
+.inner-square::-webkit-scrollbar {
+    width: 4px;
+}
+
+.inner-square::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.inner-square::-webkit-scrollbar-thumb {
+    background: #f0dfaf44;
+    border-radius: 2px;
+}
+
+.inner-square::-webkit-scrollbar-thumb:hover {
+    background: #f0dfaf88;
+}
+
+/* Float-wrap for L-shape pocket cutout */
+.corner-pusher {
+    float: right;
+    width: 0;
+    height: 75%;
+}
+
+.corner-spacer {
+    float: right;
+    clear: right;
+    width: 25%;
+    height: 25%;
+}
+
+/* Reading progress bar */
+.progress-bar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: #f0dfaf;
+    z-index: 2;
+    transition: width 0.1s linear;
+    border-radius: 1px;
+    margin-bottom: var(--space-sm);
+}
+
+/* Section styling */
+.inner-square section {
+    margin-bottom: var(--space-lg);
+}
+
+.inner-square section:last-child {
+    margin-bottom: var(--space-md);
+}
+
+.inner-square h3 {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: #f0dfaf;
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+}
+
+.inner-square section:first-child h3 {
+    margin-top: 0;
+}
+
+.inner-square p {
+    margin-bottom: var(--space-sm);
+    font-size: 0.78rem;
+    color: #dcdccc;
+}
+
+.inner-square p:last-child {
+    margin-bottom: 0;
+}
+
+/* ── Chevron buttons ───────────────────────────────── */
+.nav-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    font-size: 0.75rem;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.2s;
+    user-select: none;
+    font-family: var(--font-mono);
+    padding: 0;
+}
+
+.nav-chevron:hover {
+    color: #f0dfaf;
+}
+
+.nav-chevron:active {
+    color: #fff;
+}
+
+.nav-chevron.dimmed {
+    color: #333;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ── Pocket: 2×2 next-article block ────────────────── */
+.pocket {
+    grid-column: 6 / 8;
+    grid-row: 6 / 8;
+    background: var(--color-background, #3f3f3f);
+    z-index: 1;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: #e84393;
+    text-align: center;
+    padding: var(--space-sm);
+    line-height: 1.4;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+    text-decoration: none;
+}
+
+.pocket:hover {
+    border-color: #e84393;
+    background: #352;
+    color: #e84393;
+    text-decoration: none;
+}
+
+.pocket:active {
+    background: #2a2a2a;
+}
+
+/* ── Footer nav ────────────────────────────────────── */
+.reader-nav {
+    margin-top: var(--space-lg);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding-bottom: var(--space-md);
+}
+
+.reader-nav a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.reader-nav a:hover {
+    color: var(--color-accent);
+}
+
+/* ── Reduced motion ────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .inner-square {
+        scroll-behavior: auto;
+    }
+
+    .cell-track {
+        transition: none;
+    }
+
+    .nav-chevron {
+        transition: none;
+    }
+
+    .pocket {
+        transition: none;
+    }
+
+    .progress-bar {
+        transition: none;
+    }
+}
+
+/* ── Mobile ≤640px ─────────────────────────────────── */
+@media (max-width: 640px) {
+    .logo-grid {
+        gap: 2px;
+    }
+
+    .inner-square {
+        font-size: 0.65rem;
+        padding: var(--space-sm);
+    }
+
+    .inner-square h3 {
+        font-size: 0.72rem;
+    }
+
+    .inner-square p {
+        font-size: 0.65rem;
+    }
+
+    .cell-border {
+        font-size: 0.42rem;
+    }
+
+    .cell-track {
+        font-size: 0.5rem;
+    }
+
+    .nav-chevron {
+        font-size: 0.6rem;
+    }
+
+    .pocket {
+        font-size: 0.55rem;
+    }
+
+    .reader-title {
+        font-size: 0.9rem;
+    }
+
+    .reader-subtitle {
+        font-size: 0.68rem;
+    }
+}
+</style>
+
+<div class="reader-page">
+    <h1 class="reader-title">v14. Reader Mode</h1>
+    <p class="reader-subtitle">Long-form content in the grid. Track = table of contents.</p>
+
+    <div class="logo-grid" id="logoGrid"></div>
+
+    <p class="reader-nav">
+        <a href="/hidden/article-template/">&larr; prototypes</a>
+    </p>
+</div>
+
+<script>
+(function() {
+    var LOGO = [0xFF, 0x81, 0xBD, 0xBD, 0xBF, 0xB9, 0x89, 0xFF];
+
+    function zone(r, c) {
+        if ((r === 5 || r === 6) && (c === 5 || c === 6)) return 'pocket';
+        if ((r === 4 && c === 6) || (r === 6 && c === 4)) return 'chevron';
+        if (r >= 2 && r <= 5 && c >= 2 && c <= 5) return 'inner';
+        return (LOGO[r] >> (7 - c)) & 1 ? 'border' : 'track';
+    }
+
+    // ── Section data ──────────────────────────────────
+    var sections = [
+        { id: 's1', abbr: '1.test' },
+        { id: 's2', abbr: '2.filt' },
+        { id: 's3', abbr: '3.surv' },
+        { id: 's4', abbr: '4.boat' },
+        { id: 's5', abbr: '5.impl' }
+    ];
+
+    // ── Counter-clockwise track path (15 cells) ──────
+    var trackPath = [
+        '3,6', '2,6', '1,6', '1,5', '1,4', '1,3', '1,2', '1,1',
+        '2,1', '3,1', '4,1', '5,1', '6,1', '6,2', '6,3'
+    ];
+    var trackIndexMap = {};
+    trackPath.forEach(function(key, i) { trackIndexMap[key] = i; });
+
+    // ── Border cell labels (decorative article titles) ─
+    var borderLabels = [
+        'perma', 'local', 'tools', 'stack', 'craft',
+        'spite', 'boats', 'solar', 'plain', 'shell',
+        'nixos', 'pipes', 'debug', 'zines', 'build',
+        'grids', 'ascii', 'dither', 'boids', 'merge',
+        'claw', 'watts', 'taste', 'keys', 'simp',
+        'flow', 'maze', 'focus'
+    ];
+
+    // ── State ─────────────────────────────────────────
+    var currentSection = 0;
+    var innerEl = null;
+    var trackCells = [];
+    var prevBtn = null;
+    var nextBtn = null;
+
+    // ── Reduced motion check ──────────────────────────
+    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var scrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
+
+    // ── Mobile check ──────────────────────────────────
+    var isMobile = window.matchMedia('(max-width: 640px)').matches;
+
+    // ── Build the grid ────────────────────────────────
+    var grid = document.getElementById('logoGrid');
+    var innerInserted = false;
+    var pocketInserted = false;
+    var borderIdx = 0;
+
+    for (var r = 0; r < 8; r++) {
+        for (var c = 0; c < 8; c++) {
+            var key = r + ',' + c;
+            var z = zone(r, c);
+
+            // Inner square: insert once at first inner cell (2,2)
+            if (z === 'inner' && !innerInserted) {
+                innerEl = document.createElement('div');
+                innerEl.className = 'inner-square';
+                innerEl.id = 'innerSquare';
+                innerEl.innerHTML =
+                    '<div class="progress-bar" id="progressBar"></div>' +
+                    '<div class="corner-pusher"></div>' +
+                    '<div class="corner-spacer"></div>' +
+                    '<section id="s1">' +
+                    '<h3>The Sailboat Test</h3>' +
+                    '<p>Hundred Rabbits live on a sailboat. They make software that runs on solar-powered machines with unreliable connectivity. Their constraint isn\'t aesthetic \u2014 it\'s survival.</p>' +
+                    '</section>' +
+                    '<section id="s2">' +
+                    '<h3>The Filter</h3>' +
+                    '<p>If a tool requires cloud APIs, auto-updates, or always-on internet, it fails at sea. This creates a brutal filter for software design.</p>' +
+                    '<p>No Electron apps. No SaaS dashboards. No build tools that phone home. What survives is what works without permission.</p>' +
+                    '</section>' +
+                    '<section id="s3">' +
+                    '<h3>What Survives</h3>' +
+                    '<p>Plain text. Local-first data. Offline-capable interfaces. Tools that do one thing well without dependencies on distant servers.</p>' +
+                    '<p>These aren\'t radical ideas \u2014 they\'re what computing looked like before we outsourced everything to the cloud.</p>' +
+                    '</section>' +
+                    '<section id="s4">' +
+                    '<h3>Beyond Boats</h3>' +
+                    '<p>The sailboat test isn\'t really about boats. It\'s about asking: will this run in 50 years? Will it work without permission from a server?</p>' +
+                    '<p>Most modern software fails this test. That\'s worth thinking about.</p>' +
+                    '</section>' +
+                    '<section id="s5">' +
+                    '<h3>Implications</h3>' +
+                    '<p>If you\'re building tools, consider the sailboat test as a design constraint. Not because your users are sailors, but because resilient software serves everyone better.</p>' +
+                    '<p>The best tools are the ones that don\'t need anyone\'s permission to keep working.</p>' +
+                    '</section>';
+                grid.appendChild(innerEl);
+                innerInserted = true;
+                continue;
+            }
+            if (z === 'inner') continue;
+
+            // Pocket: insert once at first pocket cell (5,5)
+            if (z === 'pocket' && !pocketInserted) {
+                var pocket = document.createElement('a');
+                pocket.className = 'pocket';
+                pocket.href = '#';
+                pocket.textContent = 'next article \u2192';
+                grid.appendChild(pocket);
+                pocketInserted = true;
+                continue;
+            }
+            if (z === 'pocket') continue;
+
+            // Chevrons
+            if (z === 'chevron') {
+                var cell = document.createElement('div');
+                cell.className = 'cell cell-border';
+                cell.style.background = '#333';
+                var btn = document.createElement('button');
+                btn.className = 'nav-chevron';
+
+                if (r === 4 && c === 6) {
+                    // Top chevron → scroll down (next)
+                    btn.textContent = '\u25bc';
+                    btn.setAttribute('aria-label', 'Next section');
+                    btn.addEventListener('click', scrollToNext);
+                    nextBtn = btn;
+                } else {
+                    // Bottom chevron (6,4) → scroll up (prev)
+                    btn.textContent = '\u25b2';
+                    btn.setAttribute('aria-label', 'Previous section');
+                    btn.addEventListener('click', scrollToPrev);
+                    prevBtn = btn;
+                }
+
+                cell.appendChild(btn);
+                grid.appendChild(cell);
+                continue;
+            }
+
+            // Track cells
+            if (z === 'track') {
+                var tIdx = trackIndexMap[key];
+                var cell = document.createElement('div');
+                cell.className = 'cell cell-track';
+
+                if (tIdx !== undefined && tIdx < sections.length) {
+                    cell.textContent = isMobile ? (tIdx + 1) : sections[tIdx].abbr;
+                    cell.dataset.section = tIdx;
+                    (function(sIdx) {
+                        cell.addEventListener('click', function() {
+                            scrollToSection(sIdx);
+                        });
+                    })(tIdx);
+                    trackCells[tIdx] = cell;
+                } else {
+                    cell.textContent = '\u00b7';
+                    cell.style.cursor = 'default';
+                }
+
+                grid.appendChild(cell);
+                continue;
+            }
+
+            // Border cells
+            if (z === 'border') {
+                var cell = document.createElement('div');
+                cell.className = 'cell cell-border';
+                cell.textContent = borderIdx < borderLabels.length ? borderLabels[borderIdx] : '';
+                borderIdx++;
+                grid.appendChild(cell);
+                continue;
+            }
+        }
+    }
+
+    // ── Scroll navigation ─────────────────────────────
+    function scrollToSection(idx) {
+        var target = document.getElementById(sections[idx].id);
+        if (target && innerEl) {
+            target.scrollIntoView({ behavior: scrollBehavior, block: 'start' });
+        }
+    }
+
+    function scrollToNext() {
+        if (currentSection < sections.length - 1) {
+            scrollToSection(currentSection + 1);
+        }
+    }
+
+    function scrollToPrev() {
+        if (currentSection > 0) {
+            scrollToSection(currentSection - 1);
+        }
+    }
+
+    // ── Update active track cell ──────────────────────
+    function updateActiveTrack(idx) {
+        currentSection = idx;
+        trackCells.forEach(function(cell, i) {
+            if (cell) {
+                if (i === idx) {
+                    cell.classList.add('toc-active');
+                } else {
+                    cell.classList.remove('toc-active');
+                }
+            }
+        });
+        updateChevrons();
+    }
+
+    function updateChevrons() {
+        if (prevBtn) {
+            if (currentSection === 0) {
+                prevBtn.classList.add('dimmed');
+            } else {
+                prevBtn.classList.remove('dimmed');
+            }
+        }
+        if (nextBtn) {
+            if (currentSection >= sections.length - 1) {
+                nextBtn.classList.add('dimmed');
+            } else {
+                nextBtn.classList.remove('dimmed');
+            }
+        }
+    }
+
+    // ── Reading progress bar ──────────────────────────
+    var progressBar = document.getElementById('progressBar');
+
+    function updateProgress() {
+        if (!innerEl || !progressBar) return;
+        var scrollTop = innerEl.scrollTop;
+        var scrollHeight = innerEl.scrollHeight - innerEl.clientHeight;
+        var pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        progressBar.style.width = Math.min(pct, 100) + '%';
+    }
+
+    innerEl.addEventListener('scroll', updateProgress);
+
+    // ── IntersectionObserver for TOC tracking ─────────
+    var sectionEls = sections.map(function(s) {
+        return document.getElementById(s.id);
+    });
+
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                var idx = sectionEls.indexOf(entry.target);
+                if (idx !== -1) {
+                    updateActiveTrack(idx);
+                }
+            }
+        });
+    }, {
+        root: innerEl,
+        threshold: 0.3
+    });
+
+    sectionEls.forEach(function(el) {
+        if (el) observer.observe(el);
+    });
+
+    // ── Initialize state ──────────────────────────────
+    updateActiveTrack(0);
+    updateProgress();
+})();
+</script>

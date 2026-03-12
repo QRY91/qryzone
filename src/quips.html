@@ -166,6 +166,14 @@ description: Short-form content explorer — cycle through ideas, escape through
 
 .inner-square li { margin-bottom: 2px; }
 
+.inner-square .slide-indicator {
+    float: right;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: #7f9f7f;
+    letter-spacing: 0.05em;
+}
+
 .inner-square .quip-type {
     font-family: var(--font-mono);
     font-size: 0.6rem;
@@ -183,6 +191,26 @@ description: Short-form content explorer — cycle through ideas, escape through
 .inner-square.visible {
     opacity: 1;
     transition: opacity 0.2s ease-in;
+}
+
+/* Slide flip (vertical axis) */
+.inner-square {
+    transform-style: preserve-3d;
+}
+
+.inner-square.flip-out {
+    transform: rotateY(90deg);
+    transition: transform 0.18s ease-in;
+}
+
+.inner-square.flip-in {
+    transform: rotateY(0deg);
+    transition: transform 0.22s ease-out;
+}
+
+.nav-chevron.slide-mode {
+    color: #7f9f7f;
+    font-size: 0.65rem;
 }
 
 /* ── Pocket ──────────────────────────────────────── */
@@ -303,9 +331,11 @@ description: Short-form content explorer — cycle through ideas, escape through
     .inner-square p { font-size: 0.65rem; }
     .inner-square pre { font-size: 0.55rem; padding: 4px; }
     .inner-square ul { font-size: 0.65rem; margin-left: var(--space-sm); }
+    .inner-square .slide-indicator { font-size: 0.5rem; }
     .inner-square .quip-type { font-size: 0.5rem; }
     .pocket { font-size: 0.65rem; }
     .nav-chevron { font-size: 0.7rem; }
+    .nav-chevron.slide-mode { font-size: 0.55rem; }
     .layer-map { perspective: none; margin-left: 0; align-self: center; }
     .layer-map-scene {
         transform: none;
@@ -323,10 +353,238 @@ description: Short-form content explorer — cycle through ideas, escape through
     .layer-map-name { font-size: 0.6rem; }
 }
 
+/* ── Info button + modal ─────────────────────────── */
+.info-btn {
+    position: fixed;
+    bottom: var(--space-md);
+    right: var(--space-md);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #333;
+    border: 1px solid var(--color-border);
+    color: #7f9f7f;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    z-index: 90;
+}
+.info-btn:hover { background: #444; color: var(--color-accent); }
+
+.info-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+.info-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.info-modal {
+    background: #1e1e1e;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: var(--space-lg) var(--space-xl);
+    max-width: 680px;
+    width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    text-align: center;
+    position: relative;
+}
+
+.info-close {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-family: var(--font-mono);
+}
+.info-close:hover { color: var(--color-text); }
+
+.info-title {
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+    font-size: 1.3rem;
+    margin-bottom: var(--space-xs);
+}
+
+.info-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: var(--space-lg);
+}
+
+/* Isometric scene in modal */
+.info-iso-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: clamp(280px, 50vw, 440px);
+    margin-bottom: var(--space-md);
+    perspective: 900px;
+}
+
+.info-iso-scene {
+    --cell: clamp(20px, 4.5vw, 38px);
+    --gap: 2px;
+    --lift: clamp(45px, 9vw, 80px);
+    position: relative;
+    width: calc(var(--cell) * 8 + var(--gap) * 7);
+    height: calc(var(--cell) * 8 + var(--gap) * 7);
+    transform-style: preserve-3d;
+    transform: rotateX(58deg) rotateZ(-45deg);
+}
+
+.info-iso-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: grid;
+    grid-template-columns: repeat(8, var(--cell));
+    grid-template-rows: repeat(8, var(--cell));
+    gap: var(--gap);
+    transform: translateZ(calc(var(--z) * var(--lift)));
+    transition: transform 0.4s ease, filter 0.3s ease, opacity 0.3s ease;
+    background: rgba(255, 255, 255, 0.015);
+    border-radius: 3px;
+}
+
+.info-iso-layer:hover {
+    transform: translateZ(calc(var(--z) * var(--lift) + 10px));
+    filter: brightness(1.1);
+}
+
+.info-iso-cell {
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 2px;
+    transition: background 0.3s, opacity 0.3s, box-shadow 0.3s;
+}
+.info-iso-cell.filled {
+    border-color: rgba(0, 0, 0, 0.25);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.info-iso-cell.dim       { opacity: 0.08; }
+.info-iso-cell.highlight { box-shadow: 0 0 10px 2px currentColor; filter: brightness(1.4); }
+
+.info-zone-inner   { background: #e8b830; }
+.info-zone-track   { background: #4dabf7; }
+.info-zone-pocket  { background: #e84393; }
+.info-zone-chevron { background: #51cf66; }
+.info-zone-border  { background: #636b73; }
+
+.info-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-md);
+    justify-content: center;
+    margin-bottom: var(--space-xs);
+}
+
+.info-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: 3px 8px;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+    user-select: none;
+}
+.info-legend-item:hover,
+.info-legend-item.active {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text);
+}
+
+.info-legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.info-sum {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    opacity: 0.5;
+    margin-bottom: var(--space-md);
+}
+
+.info-hints {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+}
+.info-hints kbd {
+    background: #333;
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.65rem;
+}
+
+@media (max-width: 640px) {
+    .info-iso-wrapper {
+        min-height: auto;
+        perspective: none;
+    }
+    .info-iso-scene {
+        transform: none;
+        --cell: 30px;
+        width: auto;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    .info-iso-layer {
+        position: relative;
+        transform: none !important;
+    }
+    .info-iso-layer::before {
+        content: attr(data-label);
+        display: block;
+        grid-column: 1 / -1;
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        color: var(--color-text-secondary);
+        text-align: left;
+        padding-bottom: 2px;
+    }
+    .info-iso-layer {
+        grid-template-rows: auto repeat(8, var(--cell));
+    }
+}
+
 /* ── Reduced motion ──────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
     .inner-square.fading,
-    .inner-square.visible {
+    .inner-square.visible,
+    .inner-square.flip-out,
+    .inner-square.flip-in {
         transition: none;
     }
     .cell-link span {
@@ -334,12 +592,35 @@ description: Short-form content explorer — cycle through ideas, escape through
     }
     .layer-map-level,
     .layer-map-level canvas { transition: none; }
+    .info-overlay { transition: none; }
+    .info-iso-layer { transition: none; }
+    .info-iso-cell { transition: none; }
 }
 </style>
 
 <div class="quips-layout">
     <div class="logo-grid" id="logoGrid"></div>
     <div class="layer-map" id="layerMap"></div>
+</div>
+
+<button class="info-btn" id="infoBtn" title="How this grid works">?</button>
+
+<div class="info-overlay" id="infoOverlay">
+    <div class="info-modal">
+        <button class="info-close" id="infoClose">&times;</button>
+        <h2 class="info-title">Grid Anatomy</h2>
+        <p class="info-subtitle">The 8&times;8 logo grid decomposed into functional layers.</p>
+        <div class="info-iso-wrapper">
+            <div class="info-iso-scene" id="infoScene"></div>
+        </div>
+        <div class="info-legend" id="infoLegend"></div>
+        <p class="info-sum">15 + 15 + 4 + 2 + 28 = 64</p>
+        <div class="info-hints">
+            <kbd>&uarr;</kbd> <kbd>&darr;</kbd> next/prev &nbsp;&middot;&nbsp;
+            <kbd>space</kbd> pocket escape &nbsp;&middot;&nbsp;
+            click track cells to jump
+        </div>
+    </div>
 </div>
 
 <script>
@@ -361,9 +642,11 @@ description: Short-form content explorer — cycle through ideas, escape through
         {
             id: 'sailboat', cycle: 'philosophy',
             title: 'the sailboat test',
-            body: '<p>Hundred Rabbits live on a sailboat. 51-day Pacific crossings without reliable internet. Power budgets in solar watts.</p>' +
-                  '<p>If a tool requires cloud APIs, constant connectivity, or more power than a solar panel provides \u2014 it doesn\'t work. It\'s not theoretical. It\'s Tuesday.</p>' +
-                  '<p>Will this run in 50 years? Can I fix it myself? Does it need an empire to maintain?</p>',
+            slides: [
+                '<p>Hundred Rabbits live on a sailboat. 51-day Pacific crossings without reliable internet. Power budgets in solar watts.</p>',
+                '<p>If a tool requires cloud APIs, constant connectivity, or more power than a solar panel provides \u2014 it doesn\'t work. It\'s not theoretical. It\'s Tuesday.</p>',
+                '<p>Will this run in 50 years? Can I fix it myself? Does it need an empire to maintain?</p>'
+            ],
             pocket: 'those should work on a boat',
             source: '/sailboat-test/'
         },
@@ -499,9 +782,11 @@ description: Short-form content explorer — cycle through ideas, escape through
         {
             id: 'cli', cycle: 'craft',
             title: 'CLI-first',
-            body: '<p>A GUI is a conclusion. A CLI is a conversation. One gives you answers; the other gives you vocabulary.</p>' +
-                  '<p>Pipes, redirects, scripts \u2014 the shell composes. Every tool becomes a building block. The mouse clicks one thing at a time. The keyboard builds pipelines.</p>' +
-                  '<p>When you work CLI-first, you can explain exactly what you did. Try that with 47 clicks.</p>',
+            slides: [
+                '<p>A GUI is a conclusion. A CLI is a conversation. One gives you answers; the other gives you vocabulary.</p>',
+                '<p>Pipes, redirects, scripts \u2014 the shell composes. Every tool becomes a building block. The mouse clicks one thing at a time. The keyboard builds pipelines.</p>',
+                '<p>When you work CLI-first, you can explain exactly what you did. Try that with 47 clicks.</p>'
+            ],
             pocket: 'pipe it forward',
             source: '/cli-first-development/'
         },
@@ -696,13 +981,22 @@ description: Short-form content explorer — cycle through ideas, escape through
     // ── Word count for mobile ─────────────────────────
     var tmpDiv = document.createElement('div');
     quips.forEach(function(q) {
-        tmpDiv.innerHTML = q.body;
-        q.words = (tmpDiv.textContent || '').trim().split(/\s+/).length;
+        if (q.slides) {
+            q.words = 0;
+            q.slides.forEach(function(s) {
+                tmpDiv.innerHTML = s;
+                q.words += (tmpDiv.textContent || '').trim().split(/\s+/).length;
+            });
+        } else {
+            tmpDiv.innerHTML = q.body;
+            q.words = (tmpDiv.textContent || '').trim().split(/\s+/).length;
+        }
     });
 
     // ── State ─────────────────────────────────────────
     var currentCycle = torusKeys[0];
     var currentIndex = 0;
+    var currentSlide = 0;
     var wildcardQuip = null;
     var pocketHovered = false;
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -714,17 +1008,27 @@ description: Short-form content explorer — cycle through ideas, escape through
         var hash = location.hash.slice(1);
         if (!hash) return;
         var parts = hash.split(':');
-        if (parts.length === 2 && toruses[parts[0]]) {
+        if (parts.length >= 2 && toruses[parts[0]]) {
             currentCycle = parts[0];
             var idx = parseInt(parts[1]);
             if (!isNaN(idx) && idx >= 0 && idx < toruses[currentCycle].length) {
                 currentIndex = idx;
             }
+            if (parts.length >= 3) {
+                var si = parseInt(parts[2]);
+                var quip = toruses[currentCycle][currentIndex];
+                if (!isNaN(si) && quip && quip.slides && si >= 0 && si < quip.slides.length) {
+                    currentSlide = si;
+                }
+            }
         }
     }
 
     function updateHash() {
-        history.replaceState(null, '', '#' + currentCycle + ':' + currentIndex);
+        var quip = getCurrentQuip();
+        var hash = '#' + currentCycle + ':' + currentIndex;
+        if (quip.slides && currentSlide > 0) hash += ':' + currentSlide;
+        history.replaceState(null, '', hash);
     }
 
     readHash();
@@ -781,7 +1085,7 @@ description: Short-form content explorer — cycle through ideas, escape through
 
     // ── DOM refs ──────────────────────────────────────
     var grid = document.getElementById('logoGrid');
-    var innerEl, pocketTextEl;
+    var innerEl, pocketTextEl, nextBtn, prevBtn;
     var trackCells = [];
     var edgeCells = [];
     var currentEdgeArticles = [];
@@ -820,6 +1124,7 @@ description: Short-form content explorer — cycle through ideas, escape through
                 if (key === currentCycle) return;
                 currentCycle = key;
                 currentIndex = 0;
+                currentSlide = 0;
                 wildcardQuip = pickWildcard();
                 updateDisplay();
             });
@@ -847,12 +1152,19 @@ description: Short-form content explorer — cycle through ideas, escape through
         }
     }
 
-    function renderQuipContent(el, quip) {
+    function renderQuipContent(el, quip, slideIndex) {
+        var bodyHtml = quip.slides ? quip.slides[slideIndex || 0] : quip.body;
+        var indicator = '';
+        if (quip.slides && quip.slides.length > 1) {
+            indicator = '<div class="slide-indicator">' +
+                ((slideIndex || 0) + 1) + '/' + quip.slides.length + '</div>';
+        }
         el.innerHTML = '<div class="corner-pusher"></div>' +
             '<div class="corner-spacer"></div>' +
+            indicator +
             (quip.type ? '<div class="quip-type">' + quip.type + '</div>' : '') +
             '<h2><a href="' + quip.source + '">' + quip.title + '</a></h2>' +
-            quip.body;
+            bodyHtml;
     }
 
     function updateTrackContent() {
@@ -883,11 +1195,46 @@ description: Short-form content explorer — cycle through ideas, escape through
         }
     }
 
+    function updateChevrons() {
+        var quip = getCurrentQuip();
+        if (quip.slides && quip.slides.length > 1) {
+            var onFirst = currentSlide === 0;
+            var onLast = currentSlide === quip.slides.length - 1;
+            nextBtn.textContent = onLast ? '\u25b2' : '+1';
+            prevBtn.textContent = onFirst ? '\u25c0' : '\u20131';
+            nextBtn.classList.toggle('slide-mode', !onLast);
+            prevBtn.classList.toggle('slide-mode', !onFirst);
+        } else {
+            nextBtn.textContent = '\u25b2';
+            prevBtn.textContent = '\u25c0';
+            nextBtn.classList.remove('slide-mode');
+            prevBtn.classList.remove('slide-mode');
+        }
+    }
+
+    // Slide-only flip (no track/edge/pocket change)
+    function flipSlide() {
+        var flipDelay = reducedMotion ? 0 : 180;
+
+        innerEl.classList.remove('flip-in');
+        innerEl.classList.add('flip-out');
+
+        setTimeout(function() {
+            renderQuipContent(innerEl, getCurrentQuip(), currentSlide);
+            updateChevrons();
+            updateHash();
+
+            innerEl.classList.remove('flip-out');
+            innerEl.classList.add('flip-in');
+        }, flipDelay);
+    }
+
+    // Full quip change (fade + track shift)
     function updateDisplay() {
         var delay = reducedMotion ? 0 : 150;
 
         // Fade out inner + track
-        innerEl.classList.remove('visible');
+        innerEl.classList.remove('visible', 'flip-in', 'flip-out');
         innerEl.classList.add('fading');
         if (!reducedMotion) {
             trackCells.forEach(function(tc) { tc.span.style.opacity = '0'; });
@@ -895,12 +1242,13 @@ description: Short-form content explorer — cycle through ideas, escape through
 
         setTimeout(function() {
             innerEl.style.setProperty('--torus-color', torusColors[currentCycle]);
-            renderQuipContent(innerEl, getCurrentQuip());
+            renderQuipContent(innerEl, getCurrentQuip(), currentSlide);
             updateTrackContent();
             updatePocket();
             updateEdges();
             updateHash();
             updateMinimap();
+            updateChevrons();
 
             innerEl.classList.remove('fading');
             innerEl.classList.add('visible');
@@ -930,7 +1278,7 @@ description: Short-form content explorer — cycle through ideas, escape through
                     innerEl = document.createElement('div');
                     innerEl.className = 'inner-square visible';
                     innerEl.style.setProperty('--torus-color', torusColors[currentCycle]);
-                    renderQuipContent(innerEl, getCurrentQuip());
+                    renderQuipContent(innerEl, getCurrentQuip(), currentSlide);
                     grid.appendChild(innerEl);
                     innerInserted = true;
                     continue;
@@ -968,6 +1316,7 @@ description: Short-form content explorer — cycle through ideas, escape through
                     btn.textContent = navType === 'up' ? '\u25b2' : '\u25c0';
                     btn.setAttribute('aria-label', navType === 'up' ? 'Next quip' : 'Previous quip');
                     btn.addEventListener('click', navType === 'up' ? cycleNext : cyclePrev);
+                    if (navType === 'up') nextBtn = btn; else prevBtn = btn;
                     cell.appendChild(btn);
                     grid.appendChild(cell);
                     continue;
@@ -991,6 +1340,7 @@ description: Short-form content explorer — cycle through ideas, escape through
                     (function(posIdx) {
                         link.addEventListener('click', function(e) {
                             e.preventDefault();
+                            currentSlide = 0;
                             var pool = toruses[currentCycle];
                             currentIndex = (currentIndex + 1 + posIdx) % pool.length;
                             updateDisplay();
@@ -1018,17 +1368,33 @@ description: Short-form content explorer — cycle through ideas, escape through
         }
 
         updateTrackContent();
+        updateChevrons();
         updateHash();
     }
 
     // ── Navigation ────────────────────────────────────
     function cyclePrev() {
+        var quip = getCurrentQuip();
+        if (quip.slides && currentSlide > 0) {
+            currentSlide--;
+            flipSlide();
+            return;
+        }
         var pool = toruses[currentCycle];
         currentIndex = (currentIndex - 1 + pool.length) % pool.length;
+        var prevQuip = getCurrentQuip();
+        currentSlide = prevQuip.slides ? prevQuip.slides.length - 1 : 0;
         updateDisplay();
     }
 
     function cycleNext() {
+        var quip = getCurrentQuip();
+        if (quip.slides && currentSlide < quip.slides.length - 1) {
+            currentSlide++;
+            flipSlide();
+            return;
+        }
+        currentSlide = 0;
         var pool = toruses[currentCycle];
         currentIndex = (currentIndex + 1) % pool.length;
         updateDisplay();
@@ -1038,6 +1404,7 @@ description: Short-form content explorer — cycle through ideas, escape through
         var target = wildcardQuip;
         currentCycle = target.cycle;
         currentIndex = toruses[currentCycle].indexOf(target);
+        currentSlide = 0;
         wildcardQuip = pickWildcard();
         updateDisplay();
     }
@@ -1082,6 +1449,132 @@ description: Short-form content explorer — cycle through ideas, escape through
             }
         });
     });
+
+    // ── Info modal (isometric minimap) ─────────────────
+    (function() {
+        var overlay = document.getElementById('infoOverlay');
+        var btn = document.getElementById('infoBtn');
+        var closeBtn = document.getElementById('infoClose');
+        var scene = document.getElementById('infoScene');
+        var legend = document.getElementById('infoLegend');
+        var built = false;
+
+        function buildInfoScene() {
+            if (built) return;
+            built = true;
+
+            var B = [0xFF, 0x81, 0xBD, 0xBD, 0xBF, 0xB9, 0x89, 0xFF];
+            function zone(r, c) {
+                if ((r === 5 || r === 6) && (c === 5 || c === 6)) return 'pocket';
+                if ((r === 4 && c === 6) || (r === 6 && c === 4)) return 'chevron';
+                if (r >= 2 && r <= 5 && c >= 2 && c <= 5) return 'inner';
+                return (B[r] >> (7 - c)) & 1 ? 'border' : 'track';
+            }
+
+            var layers = [
+                { zones: ['border'],           z: 0, label: 'context — edge links to articles' },
+                { zones: ['track', 'chevron'], z: 1, label: 'navigation — track + chevrons' },
+                { zones: ['inner', 'pocket'],  z: 2, label: 'content — quip + pocket escape' }
+            ];
+
+            layers.forEach(function(layer) {
+                var el = document.createElement('div');
+                el.className = 'info-iso-layer';
+                el.style.setProperty('--z', layer.z);
+                el.dataset.label = layer.label;
+                for (var r = 0; r < 8; r++) {
+                    for (var c = 0; c < 8; c++) {
+                        var cell = document.createElement('div');
+                        cell.className = 'info-iso-cell';
+                        var z = zone(r, c);
+                        if (layer.zones.indexOf(z) !== -1) {
+                            cell.classList.add('filled', 'info-zone-' + z);
+                            cell.dataset.zone = z;
+                        }
+                        el.appendChild(cell);
+                    }
+                }
+                scene.appendChild(el);
+            });
+
+            // Spread animation
+            scene.querySelectorAll('.info-iso-layer').forEach(function(l, i) {
+                l.style.opacity = '0';
+                l.style.transform = 'translateZ(0)';
+                setTimeout(function() {
+                    l.style.opacity = '';
+                    l.style.transform = '';
+                }, 80 + i * 120);
+            });
+
+            // Legend with hover/click
+            var items = [
+                { zone: 'inner',   label: 'Inner L',  n: 15, bg: '#e8b830', desc: 'quip content area' },
+                { zone: 'track',   label: 'Track',    n: 15, bg: '#4dabf7', desc: 'conveyor belt of upcoming quips' },
+                { zone: 'pocket',  label: 'Pocket',   n: 4,  bg: '#e84393', desc: 'escape to a random torus' },
+                { zone: 'chevron', label: 'Chevrons', n: 2,  bg: '#51cf66', desc: 'next/prev (or +1/−1 slides)' },
+                { zone: 'border',  label: 'Border',   n: 28, bg: '#636b73', desc: 'links to full articles' }
+            ];
+
+            var allFilled = scene.querySelectorAll('.info-iso-cell.filled');
+            var allLayers = scene.querySelectorAll('.info-iso-layer');
+            var locked = null;
+
+            function hl(target) {
+                allFilled.forEach(function(c) {
+                    c.classList.toggle('highlight', c.dataset.zone === target);
+                    c.classList.toggle('dim', c.dataset.zone !== target);
+                });
+                allLayers.forEach(function(l) {
+                    l.style.opacity = l.querySelector('[data-zone="' + target + '"]') ? '' : '0.15';
+                });
+            }
+            function clr() {
+                allFilled.forEach(function(c) { c.classList.remove('highlight', 'dim'); });
+                allLayers.forEach(function(l) { l.style.opacity = ''; });
+            }
+
+            items.forEach(function(it) {
+                var el = document.createElement('div');
+                el.className = 'info-legend-item';
+                el.innerHTML = '<span class="info-legend-swatch" style="background:' + it.bg + '"></span>' +
+                    it.label + ' (' + it.n + ')';
+                el.title = it.desc;
+                el.addEventListener('mouseenter', function() { if (!locked) hl(it.zone); });
+                el.addEventListener('mouseleave', function() { if (!locked) clr(); });
+                el.addEventListener('click', function() {
+                    if (locked === it.zone) {
+                        locked = null; clr(); el.classList.remove('active');
+                    } else {
+                        locked = it.zone; hl(it.zone);
+                        legend.querySelectorAll('.info-legend-item').forEach(function(li) { li.classList.remove('active'); });
+                        el.classList.add('active');
+                    }
+                });
+                legend.appendChild(el);
+            });
+        }
+
+        function open() {
+            buildInfoScene();
+            overlay.classList.add('open');
+        }
+        function close() {
+            overlay.classList.remove('open');
+        }
+
+        btn.addEventListener('click', open);
+        closeBtn.addEventListener('click', close);
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) close();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && overlay.classList.contains('open')) {
+                e.stopPropagation();
+                close();
+            }
+        });
+    })();
 
     // ── Init ──────────────────────────────────────────
     buildGrid();
