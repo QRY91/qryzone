@@ -1,0 +1,402 @@
+---
+layout: false
+permalink: /fun/brick-wall/
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Like talking to a brick wall. An infinite wall of deflections.">
+    <title>Brick Wall - qry.zone</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Atkinson+Hyperlegible+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #8a8278;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            font-family: 'Atkinson Hyperlegible', sans-serif;
+            cursor: default;
+            user-select: none;
+        }
+
+        .back-link {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(30, 30, 30, 0.85);
+            border: 1px solid #3f3f3f;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            color: #f0dfaf;
+            text-decoration: none;
+            font-family: 'Atkinson Hyperlegible Mono', monospace;
+            font-size: 0.85rem;
+            z-index: 100;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
+        }
+        .back-link:hover {
+            border-color: #f0dfaf;
+            box-shadow: 0 0 10px rgba(240, 223, 175, 0.15);
+        }
+
+        .title-overlay {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            text-align: center;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .title-overlay h1 {
+            font-family: 'Atkinson Hyperlegible Mono', monospace;
+            font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+            color: #f0dfaf;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.6);
+            letter-spacing: 0.05em;
+            opacity: 0.85;
+        }
+        .title-overlay p {
+            font-family: 'Atkinson Hyperlegible Mono', monospace;
+            font-size: clamp(0.6rem, 1.2vw, 0.75rem);
+            color: #dcdccc;
+            text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+            margin-top: 0.3rem;
+            opacity: 0.5;
+        }
+
+        #wall {
+            position: absolute;
+            left: 50%;
+            will-change: transform;
+        }
+
+        .brick-row {
+            display: flex;
+        }
+
+        .brick {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.5);
+            text-align: center;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .brick::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(168deg, rgba(255,255,255,0.08) 0%, transparent 40%),
+                linear-gradient(to bottom, rgba(0,0,0,0.04) 0%, transparent 20%, rgba(0,0,0,0.07) 100%);
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .brick { font-size: 0.5rem; padding: 2px 4px; }
+        }
+    </style>
+</head>
+<body>
+    <a href="/fun/" class="back-link">← back</a>
+
+    <div id="wall"></div>
+
+    <div class="title-overlay">
+        <h1>Like Talking to a Brick Wall</h1>
+        <p>scroll for more</p>
+    </div>
+
+    <script>
+    (function() {
+        const DEFLECTIONS = [
+            "It is what it is",
+            "Let's agree to disagree",
+            "I hear you, but…",
+            "That's just how things are",
+            "You're overthinking it",
+            "Calm down",
+            "It's not that deep",
+            "I never said that",
+            "You always do this",
+            "Whatever you say",
+            "Sure, fine",
+            "I don't want to talk about it",
+            "Can we not do this right now",
+            "That's not what I meant",
+            "You're being dramatic",
+            "I was just joking",
+            "It's not a big deal",
+            "You're too sensitive",
+            "Let's move on",
+            "I already said sorry",
+            "What do you want me to say",
+            "I don't know what to tell you",
+            "I'm sorry you feel that way",
+            "That's your opinion",
+            "I don't remember that",
+            "Everyone does it",
+            "You're reading into it",
+            "Let's not go there",
+            "This isn't productive",
+            "I think we're done here",
+            "I don't have time for this",
+            "It could be worse",
+            "Other people have it harder",
+            "You're making a mountain out of a molehill",
+            "I didn't mean it like that",
+            "Why are you bringing this up now",
+            "That was a long time ago",
+            "It's not my fault",
+            "I did my best",
+            "Nobody's perfect",
+            "At least I tried",
+            "You wouldn't understand",
+            "It's complicated",
+            "I don't owe you an explanation",
+            "You're putting words in my mouth",
+            "I don't see the problem",
+            "We've been over this",
+            "What's done is done",
+            "Can we just drop it",
+            "Fine, you're right, happy?",
+            "I'm just being honest",
+            "Someone had to say it",
+            "No offense, but…",
+            "I'm just playing devil's advocate",
+            "Both sides have a point",
+            "Let's not make this a thing",
+            "That's above my pay grade",
+            "It's not my problem",
+            "I'll think about it",
+            "We'll see",
+            "Maybe",
+            "If you say so",
+            "Sure, whatever",
+            "Noted",
+            "Interesting",
+            "Cool",
+            "Look",
+            "Listen",
+            "Here's the thing",
+            "With all due respect",
+            "That's just my personality",
+            "People are too PC these days",
+            "I was raised different",
+            "That's the way we've always done it",
+            "If it ain't broke",
+            "I'm just being real",
+            "Let's be rational about this",
+            "You're being emotional",
+            "Nothing personal",
+            "It's just business",
+            "Per my last email",
+            "As previously discussed",
+            "Going forward",
+            "Let's take this offline",
+            "Let's circle back",
+            "That's a great question",
+            "Sounds good",
+            "New phone who dis",
+            "I don't recall",
+            "That's not my recollection",
+            "I plead the fifth",
+            "No comment",
+            "It depends on what you mean",
+            "Mistakes were made",
+            "I take full responsibility",
+            "We're looking into it",
+            "Lessons were learned",
+            "I appreciate your concern",
+            "I'll get back to you on that",
+            "That's one way to look at it",
+            "You're not wrong",
+            "I mean, technically…",
+            "To be fair",
+        ];
+
+        const BRICK_COLORS = [
+            '#a0522d', '#8b4513', '#a45a3d', '#b5573a',
+            '#9c4a2f', '#8e4433', '#a25038', '#b06040',
+            '#994430', '#7d3a28', '#ae5535', '#a34d32',
+            '#925040', '#884838', '#9e5842', '#a8604a',
+        ];
+
+        const wall = document.getElementById('wall');
+        let usedIndices = new Set();
+        let scrollY = 0;
+        let rowCount = 0;
+
+        // Sizing — recalculated on resize
+        let brickW, brickH, gap, rowH;
+
+        function calcSizes() {
+            if (window.innerWidth <= 600) {
+                brickW = 120; brickH = 40; gap = 3;
+            } else {
+                brickW = 156; brickH = 52; gap = 4;
+            }
+            rowH = brickH + gap;
+        }
+
+        function pickDeflection() {
+            if (usedIndices.size >= DEFLECTIONS.length) usedIndices.clear();
+            let idx;
+            do { idx = Math.floor(Math.random() * DEFLECTIONS.length); } while (usedIndices.has(idx));
+            usedIndices.add(idx);
+            return DEFLECTIONS[idx];
+        }
+
+        function pickColor() {
+            return BRICK_COLORS[Math.floor(Math.random() * BRICK_COLORS.length)];
+        }
+
+        function makeBrick(w, withText) {
+            const el = document.createElement('div');
+            el.className = 'brick';
+            el.style.width = w + 'px';
+            el.style.height = brickH + 'px';
+            el.style.backgroundColor = pickColor();
+            if (withText) el.textContent = pickDeflection();
+            return el;
+        }
+
+        function makeRow(isOffset) {
+            const row = document.createElement('div');
+            row.className = 'brick-row';
+            row.style.height = brickH + 'px';
+            row.style.marginBottom = gap + 'px';
+            row.style.gap = gap + 'px';
+
+            const viewW = window.innerWidth;
+            const halfW = Math.floor(brickW / 2);
+
+            if (isOffset) {
+                row.appendChild(makeBrick(halfW, false));
+                const afterHalf = halfW + gap;
+                const fullSlots = Math.ceil((viewW - afterHalf) / (brickW + gap)) + 1;
+                for (let i = 0; i < fullSlots; i++) row.appendChild(makeBrick(brickW, true));
+                row.appendChild(makeBrick(halfW, false));
+            } else {
+                const count = Math.ceil(viewW / (brickW + gap)) + 1;
+                for (let i = 0; i < count; i++) row.appendChild(makeBrick(brickW, true));
+            }
+            return row;
+        }
+
+        function addRows(n) {
+            for (let i = 0; i < n; i++) {
+                wall.appendChild(makeRow(rowCount % 2 === 1));
+                rowCount++;
+            }
+        }
+
+        function ensureRows() {
+            const wallHeight = rowCount * rowH;
+            const needed = window.innerHeight + rowH * 8;
+            while (wallHeight - scrollY < needed + rowH * 5) {
+                addRows(5);
+                break;
+            }
+            // More precise check
+            while (rowCount * rowH - scrollY < needed) {
+                addRows(1);
+            }
+        }
+
+        function cleanup() {
+            const rowsAbove = Math.floor(scrollY / rowH);
+            if (rowsAbove > 50) {
+                const remove = rowsAbove - 20;
+                for (let i = 0; i < remove && wall.firstChild; i++) {
+                    wall.removeChild(wall.firstChild);
+                }
+                rowCount -= remove;
+                scrollY -= remove * rowH;
+            }
+        }
+
+        function applyScroll() {
+            wall.style.transform = 'translateX(-50%) translateY(' + (-scrollY) + 'px)';
+        }
+
+        function buildWall() {
+            wall.innerHTML = '';
+            rowCount = 0;
+            scrollY = 0;
+            usedIndices.clear();
+            calcSizes();
+            const rowsNeeded = Math.ceil(window.innerHeight / rowH) + 10;
+            addRows(rowsNeeded);
+            applyScroll();
+        }
+
+        // Auto-scroll
+        const autoSpeed = 0.3; // px per frame
+
+        function tick() {
+            scrollY += autoSpeed;
+            if (scrollY < 0) scrollY = 0;
+            ensureRows();
+            cleanup();
+            applyScroll();
+            requestAnimationFrame(tick);
+        }
+
+        // Wheel scroll
+        window.addEventListener('wheel', (e) => {
+            scrollY += e.deltaY * 0.5;
+            if (scrollY < 0) scrollY = 0;
+            ensureRows();
+            e.preventDefault();
+        }, { passive: false });
+
+        // Touch scroll
+        let touchY = 0;
+        window.addEventListener('touchstart', (e) => {
+            touchY = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            const dy = touchY - e.touches[0].clientY;
+            touchY = e.touches[0].clientY;
+            scrollY += dy;
+            if (scrollY < 0) scrollY = 0;
+            ensureRows();
+            e.preventDefault();
+        }, { passive: false });
+
+        // Resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(buildWall, 300);
+        });
+
+        // Go
+        buildWall();
+        requestAnimationFrame(tick);
+    })();
+    </script>
+</body>
+</html>
