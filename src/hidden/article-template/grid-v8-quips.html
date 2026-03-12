@@ -1,0 +1,650 @@
+---
+layout: base.njk
+title: "Grid v8 — Quips"
+description: Short-form content viewer with pocket navigation and contextual edge links
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-logo.css">
+---
+
+<style>
+.logo-grid {
+    max-width: 800px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 3px;
+    padding: 0 var(--space-md);
+    overflow: hidden;
+}
+
+.cell {
+    border-radius: var(--border-radius);
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.cell-on { background: #333333; }
+.cell-off { background: transparent; }
+
+.cell-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    text-align: center;
+    padding: var(--space-xs);
+    line-height: 1.2;
+    width: 100%;
+    height: 100%;
+    transition: color 0.2s, background 0.2s;
+}
+
+.cell-on .cell-link { color: #555555; }
+.cell-on .cell-link:hover { color: var(--color-accent); text-decoration: none; }
+.cell-off .cell-link { color: var(--color-text-secondary); }
+.cell-off .cell-link:hover { color: var(--color-accent); text-decoration: none; }
+
+.cell-link span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Inner Square: L-shaped content area ─────────── */
+.inner-square {
+    grid-column: 3 / 7;
+    grid-row: 3 / 7;
+    background: #333333;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    text-align: left;
+    overflow: hidden;
+    min-height: 0;
+    min-width: 0;
+}
+
+/* Float-based L-wrap: pusher forces spacer to bottom-right */
+.corner-pusher {
+    float: right;
+    width: 0;
+    height: 75%;
+}
+
+.corner-spacer {
+    float: right;
+    clear: right;
+    width: 25%;
+    height: 25%;
+}
+
+.inner-square h2 {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: #f0dfaf;
+    margin-bottom: var(--space-sm);
+}
+
+.inner-square p {
+    margin-bottom: var(--space-sm);
+    font-size: 0.75rem;
+    color: #dcdccc;
+}
+
+.inner-square p:last-child {
+    margin-bottom: 0;
+}
+
+.inner-square pre {
+    background: #2a2a2a;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    line-height: 1.5;
+    color: #dcdccc;
+    overflow-x: hidden;
+    margin-bottom: var(--space-sm);
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.inner-square pre .comment { color: #7f9f7f; }
+.inner-square pre .keyword { color: #f0dfaf; }
+.inner-square pre .string { color: #cc9393; }
+.inner-square pre .fn { color: #93e0e3; }
+
+.inner-square ul {
+    margin: 0 0 var(--space-sm) var(--space-md);
+    padding: 0;
+    font-size: 0.75rem;
+    color: #dcdccc;
+    line-height: 1.6;
+}
+
+.inner-square li {
+    margin-bottom: 2px;
+}
+
+.inner-square .quip-type {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: #7f9f7f;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+/* Fade transition for quip swaps */
+.inner-square.fading {
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
+}
+
+.inner-square.visible {
+    opacity: 1;
+    transition: opacity 0.2s ease-in;
+}
+
+/* ── The Pocket: navigation portal ───────────────── */
+.pocket {
+    grid-column: 6 / 8;
+    grid-row: 6 / 8;
+    background: var(--color-background, #3f3f3f);
+    z-index: 1;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    text-align: center;
+    padding: var(--space-sm);
+    line-height: 1.4;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+}
+
+.pocket:hover {
+    border-color: var(--color-accent);
+    background: #353535;
+}
+
+.pocket:active {
+    background: #2a2a2a;
+}
+</style>
+
+<div class="logo-grid" id="logoGrid"></div>
+
+<script>
+(function() {
+    const LOGO = [
+        0b11111111,
+        0b10000001,
+        0b10111101,
+        0b10111101,
+        0b10111111,
+        0b10111001,
+        0b10001001,
+        0b11111111
+    ];
+
+    // ── Quips: short-form content units ─────────────────
+    const quips = [
+        {
+            id: 'sailboat',
+            title: 'the sailboat test',
+            body: '<p>Hundred Rabbits live on a sailboat. 51-day Pacific crossings without reliable internet. Power budgets in solar watts.</p>' +
+                  '<p>If a tool requires cloud APIs, constant connectivity, or more power than a solar panel provides — it doesn\'t work. It\'s not theoretical. It\'s Tuesday.</p>' +
+                  '<p>Will this run in 50 years? Can I fix it myself? Does it need an empire to maintain?</p>',
+            pocket: 'those should work on a boat',
+            source: '/sailboat-test/',
+            tags: ['philosophy', 'tools', 'constraints'],
+            related: ['removal', 'cli']
+        },
+        {
+            id: 'removal',
+            title: 'remove to optimize',
+            body: '<p>The fastest code is code that doesn\'t run. The most reliable system is the one with fewer parts. The best optimization is deletion.</p>' +
+                  '<p>Before you profile, before you cache, before you parallelize — ask: does this need to exist at all?</p>' +
+                  '<p>Removing unnecessary work beats optimizing it. Every time.</p>',
+            pocket: 'what can you delete?',
+            source: '/optimization-through-removal/',
+            tags: ['engineering', 'simplicity', 'philosophy'],
+            related: ['sailboat', 'cli']
+        },
+        {
+            id: 'cli',
+            title: 'CLI-first',
+            body: '<p>A GUI is a conclusion. A CLI is a conversation. One gives you answers; the other gives you vocabulary.</p>' +
+                  '<p>Pipes, redirects, scripts — the shell composes. Every tool becomes a building block. The mouse clicks one thing at a time. The keyboard builds pipelines.</p>' +
+                  '<p>When you work CLI-first, you can explain exactly what you did. Try that with 47 clicks.</p>',
+            pocket: 'pipe it forward',
+            source: '/cli-first-development/',
+            tags: ['tools', 'workflow', 'unix'],
+            related: ['sailboat', 'attention']
+        },
+        {
+            id: 'attention',
+            title: 'managing attention',
+            body: '<p>Attention is the actual currency. Not time — you can\'t save time. But you can direct attention.</p>' +
+                  '<p>Every notification is a withdrawal. Every context switch is a tax. The inbox is a todo list that other people write for you.</p>' +
+                  '<p>Be present. Make a choice. Live with intent.</p>',
+            pocket: 'where are you looking?',
+            source: '/managing-attention/',
+            tags: ['philosophy', 'focus', 'productivity'],
+            related: ['removal', 'spite']
+        },
+        {
+            id: 'spite',
+            title: 'learning to spite',
+            body: '<p>The dysfunction becomes data. The suffering becomes a case study. The terrible job becomes the clearest lesson in what not to build.</p>' +
+                  '<p>Spite is underrated as a motivator. Not the petty kind — the kind that says: I will build the thing that should have existed.</p>' +
+                  '<p>Channel it. Make it productive. Then ship it.</p>',
+            pocket: 'ship it anyway',
+            source: '/learning-to-spite/',
+            tags: ['philosophy', 'motivation', 'building'],
+            related: ['attention', 'honesty']
+        },
+        {
+            id: 'honesty',
+            title: 'economic honesty',
+            body: '<p>This is all insane but I have a mortgage. That\'s the honest version. The dishonest version has mission statements and core values and a ping pong table.</p>' +
+                  '<p>Most tech work exists to extract value, not create it. The question isn\'t whether you\'re complicit — you are. The question is what you do with the rest of your hours.</p>',
+            pocket: 'what\'s the honest version?',
+            source: '/economic-honesty/',
+            tags: ['philosophy', 'honesty', 'work'],
+            related: ['spite', 'sailboat']
+        },
+        // ── Code quips ───────────────────────────────────
+        {
+            id: 'pipe',
+            title: 'the pipeline',
+            type: 'code',
+            body: '<div class="quip-type">shell</div>' +
+                  '<pre>' +
+                  '<span class="comment"># find the 10 largest node_modules</span>\n' +
+                  'find . -name node_modules \\\n' +
+                  '  -type d -prune \\\n' +
+                  '  | xargs du -sh \\\n' +
+                  '  | sort -rh \\\n' +
+                  '  | head -10</pre>' +
+                  '<p>Six commands. No GUI. Composable, repeatable, scriptable. Each line does one thing.</p>',
+            pocket: 'pipe it',
+            source: '/cli-first-development/',
+            tags: ['code', 'tools', 'unix'],
+            related: ['cli', 'css-trick']
+        },
+        {
+            id: 'css-trick',
+            title: 'the L-shape trick',
+            type: 'code',
+            body: '<div class="quip-type">css</div>' +
+                  '<pre>' +
+                  '<span class="comment">/* float-based L-wrap */</span>\n' +
+                  '<span class="keyword">.pusher</span> {\n' +
+                  '  <span class="fn">float</span>: right;\n' +
+                  '  width: 0;\n' +
+                  '  height: 50%;\n' +
+                  '}\n' +
+                  '<span class="keyword">.spacer</span> {\n' +
+                  '  <span class="fn">float</span>: right;\n' +
+                  '  <span class="fn">clear</span>: right;\n' +
+                  '  width: 25%; height: 50%;\n' +
+                  '}</pre>' +
+                  '<p>No clip-path. No JS. Just two invisible floats that carve an L-shaped text region.</p>',
+            pocket: 'how it works',
+            source: '/logo-design/',
+            tags: ['code', 'css', 'design'],
+            related: ['pipe', 'sailboat']
+        },
+        // ── List quip ───────────────────────────────────
+        {
+            id: 'stack',
+            title: 'the stack',
+            type: 'list',
+            body: '<div class="quip-type">tools</div>' +
+                  '<ul>' +
+                  '<li>neovim &mdash; think in text</li>' +
+                  '<li>tmux &mdash; session as workspace</li>' +
+                  '<li>zsh + fzf &mdash; fuzzy everything</li>' +
+                  '<li>git &mdash; time travel</li>' +
+                  '<li>ripgrep &mdash; find it now</li>' +
+                  '<li>jq &mdash; json surgery</li>' +
+                  '<li>ssh &mdash; be anywhere</li>' +
+                  '</ul>' +
+                  '<p>Seven tools. All CLI. All composable. All work on a sailboat.</p>',
+            pocket: 'what\'s yours?',
+            source: '/cli-tooling-stack/',
+            tags: ['tools', 'unix', 'workflow'],
+            related: ['pipe', 'cli']
+        },
+        // ── Quote/koan quip ─────────────────────────────
+        {
+            id: 'koan',
+            title: 'the recursive koan',
+            type: 'koan',
+            body: '<p>A student asked the master: "What is the best software architecture?"</p>' +
+                  '<p>The master pointed at the logo on the screen &mdash; an 8&times;8 grid with a pocket in the corner.</p>' +
+                  '<p>"What do you see in the pocket?" asked the master.</p>' +
+                  '<p>"Another grid," said the student.</p>' +
+                  '<p>"And in that grid\'s pocket?"</p>' +
+                  '<p>The student was enlightened.</p>',
+            pocket: 'look deeper',
+            source: '/logo-design/',
+            tags: ['philosophy', 'design', 'recursion'],
+            related: ['sailboat', 'removal']
+        },
+        // ── Lorem ipsum length tests ────────────────────
+        {
+            id: 'test-100',
+            title: '~100 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>',
+            pocket: 'next length',
+            source: '#',
+            tags: ['test'],
+            related: ['test-200']
+        },
+        {
+            id: 'test-200',
+            title: '~200 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>' +
+                  '<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p>',
+            pocket: 'next length',
+            source: '#',
+            tags: ['test'],
+            related: ['test-300']
+        },
+        {
+            id: 'test-300',
+            title: '~300 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>' +
+                  '<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>' +
+                  '<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>',
+            pocket: 'next length',
+            source: '#',
+            tags: ['test'],
+            related: ['test-400']
+        },
+        {
+            id: 'test-400',
+            title: '~400 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>' +
+                  '<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>' +
+                  '<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis.</p>',
+            pocket: 'next length',
+            source: '#',
+            tags: ['test'],
+            related: ['test-500']
+        },
+        {
+            id: 'test-500',
+            title: '~500 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>' +
+                  '<p>Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.</p>' +
+                  '<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>' +
+                  '<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>',
+            pocket: 'next length',
+            source: '#',
+            tags: ['test'],
+            related: ['test-600']
+        },
+        {
+            id: 'test-600',
+            title: '~600 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>' +
+                  '<p>Exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>' +
+                  '<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error.</p>' +
+                  '<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>',
+            pocket: 'next length',
+            source: '#',
+            tags: ['test'],
+            related: ['test-800']
+        },
+        {
+            id: 'test-800',
+            title: '~800 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>' +
+                  '<p>Nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>' +
+                  '<p>Sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>' +
+                  '<p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>' +
+                  '<p>Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.</p>',
+            pocket: 'overflow?',
+            source: '#',
+            tags: ['test'],
+            related: ['test-100']
+        }
+    ];
+
+    // ── All linkable content for edge cells ─────────────
+    // Tags enable contextual filtering: code quips surface technical links,
+    // philosophy quips surface essays, etc.
+    const articles = [
+        { t: 'sailboat test', u: '/sailboat-test/', g: ['philosophy', 'constraints'] },
+        { t: 'CLI-first', u: '/cli-first-development/', g: ['tools', 'unix', 'code'] },
+        { t: 'hack my claw', u: '/hack-my-claw/', g: ['code', 'tools'] },
+        { t: 'errata', u: '/errata/', g: ['philosophy'] },
+        { t: 'logo design', u: '/logo-design/', g: ['design', 'recursion', 'code'] },
+        { t: 'convergent evolution', u: '/convergent-evolution-personal-ai/', g: ['philosophy'] },
+        { t: 'de-slopping', u: '/antislop-editorial/', g: ['philosophy', 'work'] },
+        { t: 'steampunk eng.', u: '/steampunk-engineering/', g: ['tools', 'constraints'] },
+        { t: '250MB spinner', u: '/250mb-spinner/', g: ['code', 'tools'] },
+        { t: 'SIMP protocol', u: '/simp-protocol/', g: ['code', 'design'] },
+        { t: 'it-smash', u: '/it-smash/', g: ['tools', 'unix'] },
+        { t: 'styleguide', u: '/styleguide/', g: ['design', 'css'] },
+        { t: '58 keys', u: '/58-keys-then-1/', g: ['tools', 'workflow'] },
+        { t: 'hyperresponder', u: '/ai-hyperresponder/', g: ['philosophy', 'code'] },
+        { t: 'atkinson', u: '/atkinson-hyperlegible/', g: ['design', 'css'] },
+        { t: 'CLI stack', u: '/cli-tooling-stack/', g: ['tools', 'unix', 'workflow'] },
+        { t: 'cloud treadmill', u: '/cloud-ai-treadmill/', g: ['philosophy', 'work'] },
+        { t: 'db-first debug', u: '/database-first-debugging/', g: ['code', 'tools'] },
+        { t: 'disassemble', u: '/disassemble-recombine/', g: ['philosophy', 'design'] },
+        { t: 'distilling style', u: '/distilling-style/', g: ['design', 'code'] },
+        { t: 'doug demon', u: '/doug-demon-core/', g: ['philosophy', 'work'] },
+        { t: 'economic honesty', u: '/economic-honesty/', g: ['philosophy', 'honesty', 'work'] },
+        { t: 'gradient descent', u: '/greatest-hits-through-gradient-descent/', g: ['philosophy'] },
+        { t: 'write a zine', u: '/how-to-write-a-zine/', g: ['design', 'workflow'] },
+        { t: 'learning to spite', u: '/learning-to-spite/', g: ['philosophy', 'motivation'] },
+        { t: 'lily58 gaming', u: '/lily58-gaming/', g: ['tools'] },
+        { t: 'living workshop', u: '/living-workshop/', g: ['workflow', 'philosophy'] },
+        { t: 'local AI econ', u: '/local-ai-economics/', g: ['philosophy', 'work'] },
+        { t: 'managing attention', u: '/managing-attention/', g: ['philosophy', 'focus'] },
+        { t: 'RPi digest', u: '/minimal-steampunk-poc/', g: ['tools', 'constraints'] },
+        { t: 'NixOS', u: '/nixos-on-framework/', g: ['tools', 'unix', 'code'] },
+        { t: 'off the deep end', u: '/off-the-deep-end/', g: ['philosophy'] },
+        { t: 'remove to optimize', u: '/optimization-through-removal/', g: ['philosophy', 'code'] },
+        { t: 'overnight AI', u: '/overnight-ai-development/', g: ['code', 'workflow'] },
+        { t: 'panopticron', u: '/panopticron/', g: ['code', 'tools'] },
+        { t: 'microstudio', u: '/permacomputing-microstudio/', g: ['constraints', 'tools'] },
+        { t: 'powers for good', u: '/powers-for-good/', g: ['philosophy', 'work'] },
+        { t: 'productivity', u: '/productivity-breakthrough/', g: ['workflow', 'philosophy'] },
+        { t: 'qrazy', u: '/qrazy/', g: ['code', 'design'] },
+        { t: 'recursive mirror', u: '/recursive-mirror/', g: ['philosophy', 'recursion'] },
+        { t: 'slopsquid', u: '/slopsquid-technical-preset/', g: ['code', 'tools'] },
+        { t: 'brainfarts', u: '/social-media-brainfarts/', g: ['philosophy'] },
+        { t: 'UX challenges', u: '/ux-challenges/', g: ['design', 'workflow'] },
+        { t: 'thinking', u: '/what-does-thinking-look-like/', g: ['philosophy'] },
+        { t: 'what I can do', u: '/what-i-can-actually-do/', g: ['philosophy', 'work'] },
+        { t: 'zenburn', u: '/zenburn-theme/', g: ['design', 'css'] },
+        { t: 'about', u: '/about/', g: [] },
+        { t: 'QUBIQ', u: '/fun/qubiq/', g: ['code', 'design'] },
+        { t: 'boids', u: '/fun/boids/', g: ['code'] },
+        { t: 'game of life', u: '/fun/game-of-life/', g: ['code'] },
+        { t: 'attractors', u: '/fun/attractors/', g: ['code', 'design'] },
+        { t: 'mandelbrot', u: '/fun/mandelbrot/', g: ['code'] },
+        { t: 'flowfield', u: '/fun/flowfield/', g: ['code', 'design'] },
+        { t: 'wave tank', u: '/fun/wave-tank/', g: ['code'] },
+        { t: 'ascii logo', u: '/fun/ascii-logo/', g: ['code', 'design', 'recursion'] },
+        { t: 'logo math', u: '/fun/logo-math/', g: ['code', 'design', 'recursion'] },
+        { t: 'ditherpunk', u: '/fun/ditherpunk/', g: ['code', 'design'] },
+        { t: 'lenia', u: '/fun/lenia/', g: ['code'] },
+        { t: 'L-systems', u: '/fun/l-systems/', g: ['code', 'recursion'] },
+        { t: 'maze', u: '/fun/maze/', g: ['code'] },
+        { t: 'sorting', u: '/fun/sorting/', g: ['code'] },
+        { t: 'turtle', u: '/fun/turtle/', g: ['code'] },
+        { t: 'music box', u: '/fun/music-box/', g: ['code', 'design'] },
+    ];
+
+    // ── State ───────────────────────────────────────────
+    let currentQuip = 0;
+
+    // ── Cells claimed by containers ─────────────────────
+    const innerCells = new Set();
+    for (let r = 2; r <= 5; r++) {
+        for (let c = 2; c <= 5; c++) {
+            if (r === 5 && c === 5) continue;
+            innerCells.add(r + ',' + c);
+        }
+    }
+    const pocketCells = new Set(['5,5', '5,6', '6,5', '6,6']);
+    const claimed = new Set([...innerCells, ...pocketCells]);
+
+    // ── Shuffle helper ──────────────────────────────────
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    // ── Find related articles for a quip ────────────────
+    function getEdgeArticles(quip) {
+        const quipTags = new Set(quip.tags || []);
+        const relatedIds = new Set(quip.related || []);
+        const relatedSources = new Set(
+            quips.filter(q => relatedIds.has(q.id)).map(q => q.source)
+        );
+
+        // Score each article: +2 for explicit related, +1 per tag overlap
+        const scored = articles
+            .filter(a => a.u !== quip.source)
+            .map(a => {
+                let score = relatedSources.has(a.u) ? 2 : 0;
+                (a.g || []).forEach(tag => { if (quipTags.has(tag)) score++; });
+                return { ...a, score };
+            });
+
+        // High-scoring first (shuffled within tiers), then the rest shuffled
+        const matched = shuffle(scored.filter(a => a.score > 0))
+            .sort((a, b) => b.score - a.score);
+        const rest = shuffle(scored.filter(a => a.score === 0));
+        return [...matched, ...rest];
+    }
+
+    // ── Build grid ──────────────────────────────────────
+    const grid = document.getElementById('logoGrid');
+    let innerEl, pocketEl;
+    const edgeCells = [];
+
+    function buildGrid() {
+        grid.innerHTML = '';
+        edgeCells.length = 0;
+        const quip = quips[currentQuip];
+        const edgeArticles = getEdgeArticles(quip);
+        let idx = 0;
+        let innerInserted = false;
+        let pocketInserted = false;
+
+        for (let y = 0; y < 8; y++) {
+            for (let x = 0; x < 8; x++) {
+                const key = y + ',' + x;
+
+                if (innerCells.has(key) && !innerInserted) {
+                    innerEl = document.createElement('div');
+                    innerEl.className = 'inner-square visible';
+                    renderQuipContent(innerEl, quip);
+                    grid.appendChild(innerEl);
+                    innerInserted = true;
+                    continue;
+                }
+
+                if (pocketCells.has(key) && !pocketInserted) {
+                    pocketEl = document.createElement('div');
+                    pocketEl.className = 'pocket';
+                    pocketEl.textContent = quip.pocket;
+                    pocketEl.addEventListener('click', nextQuip);
+                    grid.appendChild(pocketEl);
+                    pocketInserted = true;
+                    continue;
+                }
+
+                if (claimed.has(key)) continue;
+
+                const bit = (LOGO[y] >> (7 - x)) & 1;
+                const cell = document.createElement('div');
+                cell.className = 'cell ' + (bit ? 'cell-on' : 'cell-off');
+
+                if (idx < edgeArticles.length) {
+                    const link = document.createElement('a');
+                    link.className = 'cell-link';
+                    link.href = edgeArticles[idx].u;
+                    link.innerHTML = '<span>' + edgeArticles[idx].t + '</span>';
+                    cell.appendChild(link);
+                    idx++;
+                }
+
+                edgeCells.push(cell);
+                grid.appendChild(cell);
+            }
+        }
+    }
+
+    function renderQuipContent(el, quip) {
+        el.innerHTML = '<div class="corner-pusher"></div>' +
+            '<div class="corner-spacer"></div>' +
+            '<h2>' + quip.title + '</h2>' +
+            quip.body;
+    }
+
+    // ── Navigate to next quip ───────────────────────────
+    function nextQuip() {
+        innerEl.classList.remove('visible');
+        innerEl.classList.add('fading');
+
+        setTimeout(function() {
+            currentQuip = (currentQuip + 1) % quips.length;
+            const quip = quips[currentQuip];
+
+            // Swap inner content
+            renderQuipContent(innerEl, quip);
+
+            // Update pocket text
+            pocketEl.textContent = quip.pocket;
+
+            // Re-shuffle edge cells with related articles
+            const edgeArticles = getEdgeArticles(quip);
+            edgeCells.forEach(function(cell, i) {
+                const link = cell.querySelector('.cell-link');
+                if (link && i < edgeArticles.length) {
+                    link.href = edgeArticles[i].u;
+                    link.querySelector('span').textContent = edgeArticles[i].t;
+                }
+            });
+
+            // Fade in
+            innerEl.classList.remove('fading');
+            innerEl.classList.add('visible');
+        }, 150);
+    }
+
+    // ── Init ────────────────────────────────────────────
+    buildGrid();
+})();
+</script>

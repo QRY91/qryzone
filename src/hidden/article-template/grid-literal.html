@@ -1,0 +1,66 @@
+---
+layout: base.njk
+title: "Literal 8x8 Grid — Article Template Prototype D"
+description: The logo as a literal 8x8 CSS grid of square blocks
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-logo.css">
+---
+
+<style>
+.grid-8x8 {
+    max-width: 800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    /* Force square cells: each cell's height = its width */
+    aspect-ratio: 1 / 1;
+    gap: 2px;
+}
+
+.cell {
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s;
+}
+
+/* 0 = off (background), 1 = on (filled) */
+.cell-0 {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+}
+
+.cell-1 {
+    background: var(--color-accent);
+}
+</style>
+
+<div style="max-width: 800px; margin: 0 auto; padding: 0 var(--space-md);">
+    <div class="grid-8x8" id="logoGrid"></div>
+</div>
+
+<script>
+(function() {
+    const LOGO = [
+        0b11111111,
+        0b10000001,
+        0b10111101,
+        0b10111101,
+        0b10111111,
+        0b10111001,
+        0b10001001,
+        0b11111111
+    ];
+
+    const grid = document.getElementById('logoGrid');
+
+    for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++) {
+            const cell = document.createElement('div');
+            const bit = (LOGO[y] >> (7 - x)) & 1;
+            cell.className = 'cell cell-' + bit;
+            cell.dataset.row = y;
+            cell.dataset.col = x;
+            grid.appendChild(cell);
+        }
+    }
+})();
+</script>

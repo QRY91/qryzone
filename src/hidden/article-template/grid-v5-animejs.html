@@ -1,0 +1,395 @@
+---
+layout: base.njk
+title: "Grid v5 — anime.js"
+description: 8x8 logo grid with anime.js physical animations
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-logo.css">
+---
+
+<style>
+.logo-grid {
+    max-width: 800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+    padding: 0 var(--space-md);
+    perspective: 800px;
+}
+
+.logo-grid .cell {
+    aspect-ratio: 1 / 1;
+    border-radius: var(--border-radius);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.cell-on {
+    background: #333333;
+}
+
+.cell-off {
+    background: transparent;
+}
+
+.cell-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    text-align: center;
+    padding: var(--space-xs);
+    line-height: 1.2;
+    width: 100%;
+    height: 100%;
+    transition: color 0.2s;
+}
+
+.cell-on .cell-link {
+    color: #555555;
+}
+.cell-on .cell-link:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.cell-off .cell-link {
+    color: var(--color-text-secondary);
+}
+.cell-off .cell-link:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.cell-link span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.effect-bar {
+    max-width: 800px;
+    margin: var(--space-md) auto 0;
+    padding: 0 var(--space-md);
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.effect-btn {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.effect-btn:hover, .effect-btn.active {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+</style>
+
+<div class="logo-grid" id="logoGrid"></div>
+
+<div class="effect-bar" id="effectBar">
+    <button class="effect-btn active" data-fx="breathe">breathe</button>
+    <button class="effect-btn" data-fx="wave">wave</button>
+    <button class="effect-btn" data-fx="stagger-in">stagger in</button>
+    <button class="effect-btn" data-fx="ripple">ripple</button>
+    <button class="effect-btn" data-fx="float">float</button>
+    <button class="effect-btn" data-fx="shuffle">shuffle</button>
+    <button class="effect-btn" data-fx="reset">reset</button>
+</div>
+
+<script src="/assets/js/anime.min.js"></script>
+<script>
+(function() {
+    const LOGO = [
+        0b11111111,
+        0b10000001,
+        0b10111101,
+        0b10111101,
+        0b10111111,
+        0b10111001,
+        0b10001001,
+        0b11111111
+    ];
+
+    const articles = [
+        { t: 'sailboat test', u: '/sailboat-test/' },
+        { t: 'CLI-first', u: '/cli-first-development/' },
+        { t: 'hack my claw', u: '/hack-my-claw/' },
+        { t: 'errata', u: '/errata/' },
+        { t: 'logo design', u: '/logo-design/' },
+        { t: 'convergent evolution', u: '/convergent-evolution-personal-ai/' },
+        { t: 'de-slopping', u: '/antislop-editorial/' },
+        { t: 'steampunk eng.', u: '/steampunk-engineering/' },
+        { t: '250MB spinner', u: '/250mb-spinner/' },
+        { t: 'SIMP protocol', u: '/simp-protocol/' },
+        { t: 'it-smash', u: '/it-smash/' },
+        { t: 'styleguide', u: '/styleguide/' },
+        { t: '58 keys', u: '/58-keys-then-1/' },
+        { t: 'hyperresponder', u: '/ai-hyperresponder/' },
+        { t: 'atkinson', u: '/atkinson-hyperlegible/' },
+        { t: 'CLI stack', u: '/cli-tooling-stack/' },
+        { t: 'cloud treadmill', u: '/cloud-ai-treadmill/' },
+        { t: 'db-first debug', u: '/database-first-debugging/' },
+        { t: 'disassemble', u: '/disassemble-recombine/' },
+        { t: 'distilling style', u: '/distilling-style/' },
+        { t: 'doug demon', u: '/doug-demon-core/' },
+        { t: 'economic honesty', u: '/economic-honesty/' },
+        { t: 'gradient descent', u: '/greatest-hits-through-gradient-descent/' },
+        { t: 'write a zine', u: '/how-to-write-a-zine/' },
+        { t: 'learning to spite', u: '/learning-to-spite/' },
+        { t: 'lily58 gaming', u: '/lily58-gaming/' },
+        { t: 'living workshop', u: '/living-workshop/' },
+        { t: 'local AI econ', u: '/local-ai-economics/' },
+        { t: 'managing attention', u: '/managing-attention/' },
+        { t: 'RPi digest', u: '/minimal-steampunk-poc/' },
+        { t: 'NixOS', u: '/nixos-on-framework/' },
+        { t: 'off the deep end', u: '/off-the-deep-end/' },
+        { t: 'remove to optimize', u: '/optimization-through-removal/' },
+        { t: 'overnight AI', u: '/overnight-ai-development/' },
+        { t: 'panopticron', u: '/panopticron/' },
+        { t: 'microstudio', u: '/permacomputing-microstudio/' },
+        { t: 'powers for good', u: '/powers-for-good/' },
+        { t: 'productivity', u: '/productivity-breakthrough/' },
+        { t: 'qrazy', u: '/qrazy/' },
+        { t: 'recursive mirror', u: '/recursive-mirror/' },
+        { t: 'slopsquid', u: '/slopsquid-technical-preset/' },
+        { t: 'brainfarts', u: '/social-media-brainfarts/' },
+        { t: 'UX challenges', u: '/ux-challenges/' },
+        { t: 'thinking', u: '/what-does-thinking-look-like/' },
+        { t: 'what I can do', u: '/what-i-can-actually-do/' },
+        { t: 'zenburn', u: '/zenburn-theme/' },
+        { t: 'about', u: '/about/' },
+        { t: 'QUBIQ', u: '/fun/qubiq/' },
+        { t: 'boids', u: '/fun/boids/' },
+        { t: 'game of life', u: '/fun/game-of-life/' },
+        { t: 'attractors', u: '/fun/attractors/' },
+        { t: 'mandelbrot', u: '/fun/mandelbrot/' },
+        { t: 'flowfield', u: '/fun/flowfield/' },
+        { t: 'wave tank', u: '/fun/wave-tank/' },
+        { t: 'ascii logo', u: '/fun/ascii-logo/' },
+        { t: 'logo math', u: '/fun/logo-math/' },
+        { t: 'ditherpunk', u: '/fun/ditherpunk/' },
+        { t: 'lenia', u: '/fun/lenia/' },
+        { t: 'L-systems', u: '/fun/l-systems/' },
+        { t: 'maze', u: '/fun/maze/' },
+        { t: 'sorting', u: '/fun/sorting/' },
+        { t: 'turtle', u: '/fun/turtle/' },
+        { t: 'music box', u: '/fun/music-box/' },
+        { t: 'three body', u: '/fun/three-body/' },
+        { t: 'pendulum', u: '/fun/double-pendulum/' },
+    ];
+
+    for (let i = articles.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [articles[i], articles[j]] = [articles[j], articles[i]];
+    }
+
+    const grid = document.getElementById('logoGrid');
+    const cellEls = [];
+    let idx = 0;
+
+    for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++) {
+            const bit = (LOGO[y] >> (7 - x)) & 1;
+            const cell = document.createElement('div');
+            cell.className = 'cell ' + (bit ? 'cell-on' : 'cell-off');
+            cell.dataset.row = y;
+            cell.dataset.col = x;
+            cell.dataset.bit = bit;
+
+            if (idx < articles.length) {
+                const link = document.createElement('a');
+                link.className = 'cell-link';
+                link.href = articles[idx].u;
+                link.innerHTML = '<span>' + articles[idx].t + '</span>';
+                cell.appendChild(link);
+                idx++;
+            }
+
+            grid.appendChild(cell);
+            cellEls.push(cell);
+        }
+    }
+
+    // ── Animation effects ───────────────────────────────
+
+    let currentAnim = null;
+
+    function killCurrent() {
+        if (currentAnim) {
+            if (currentAnim.pause) currentAnim.pause();
+            if (currentAnim.remove) currentAnim.remove(cellEls);
+        }
+        anime.remove(cellEls);
+    }
+
+    function resetCells(duration) {
+        return anime({
+            targets: cellEls,
+            translateX: 0,
+            translateY: 0,
+            translateZ: 0,
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            scale: 1,
+            opacity: 1,
+            duration: duration || 600,
+            easing: 'easeOutElastic(1, 0.5)',
+            delay: anime.stagger(15, { grid: [8, 8], from: 'center' })
+        });
+    }
+
+    const effects = {
+        // Gentle scale breathing — on-cells pulse slightly larger, off-cells slightly smaller
+        breathe: function() {
+            currentAnim = anime({
+                targets: cellEls.filter(c => c.dataset.bit === '1'),
+                scale: [1, 1.04],
+                duration: 3000,
+                easing: 'easeInOutSine',
+                direction: 'alternate',
+                loop: true,
+                delay: anime.stagger(80, { grid: [8, 8], from: 'center' })
+            });
+        },
+
+        // Wave: cells translate up/down in a sine wave across the grid
+        wave: function() {
+            currentAnim = anime({
+                targets: cellEls,
+                translateY: function(el) {
+                    return [0, (el.dataset.bit === '1' ? -8 : -4)];
+                },
+                duration: 2500,
+                easing: 'easeInOutSine',
+                direction: 'alternate',
+                loop: true,
+                delay: anime.stagger(100, { grid: [8, 8], from: 'left' })
+            });
+        },
+
+        // Stagger in: all cells start scaled to 0 and pop in from center outward
+        'stagger-in': function() {
+            anime.set(cellEls, { scale: 0, rotateZ: 45 });
+            currentAnim = anime({
+                targets: cellEls,
+                scale: 1,
+                rotateZ: 0,
+                duration: 800,
+                easing: 'easeOutElastic(1, 0.5)',
+                delay: anime.stagger(40, { grid: [8, 8], from: 'center' })
+            });
+        },
+
+        // Ripple: cells lift and tilt from a center click point
+        ripple: function() {
+            currentAnim = anime({
+                targets: cellEls,
+                translateZ: function(el) {
+                    const r = parseInt(el.dataset.row), c = parseInt(el.dataset.col);
+                    const dist = Math.sqrt((r - 3.5) ** 2 + (c - 3.5) ** 2);
+                    return [0, Math.max(0, 20 - dist * 5)];
+                },
+                rotateX: function(el) {
+                    return [(parseInt(el.dataset.row) - 3.5) * -2, 0];
+                },
+                rotateY: function(el) {
+                    return [(parseInt(el.dataset.col) - 3.5) * 2, 0];
+                },
+                duration: 2000,
+                easing: 'easeInOutSine',
+                direction: 'alternate',
+                loop: true,
+                delay: anime.stagger(60, { grid: [8, 8], from: 'center' })
+            });
+        },
+
+        // Float: each cell drifts gently in a random direction, then back
+        float: function() {
+            currentAnim = anime({
+                targets: cellEls,
+                translateX: function() { return anime.random(-6, 6); },
+                translateY: function() { return anime.random(-6, 6); },
+                rotateZ: function() { return anime.random(-3, 3); },
+                duration: function() { return anime.random(2000, 4000); },
+                easing: 'easeInOutSine',
+                direction: 'alternate',
+                loop: true,
+                delay: function() { return anime.random(0, 1000); }
+            });
+        },
+
+        // Shuffle: cells scatter and reassemble
+        shuffle: function() {
+            currentAnim = anime.timeline({ loop: false });
+            // Scatter
+            currentAnim.add({
+                targets: cellEls,
+                translateX: function() { return anime.random(-200, 200); },
+                translateY: function() { return anime.random(-200, 200); },
+                rotateZ: function() { return anime.random(-180, 180); },
+                scale: 0.6,
+                opacity: 0.4,
+                duration: 800,
+                easing: 'easeInExpo',
+                delay: anime.stagger(20, { grid: [8, 8], from: 'center' })
+            });
+            // Reassemble
+            currentAnim.add({
+                targets: cellEls,
+                translateX: 0,
+                translateY: 0,
+                rotateZ: 0,
+                scale: 1,
+                opacity: 1,
+                duration: 1200,
+                easing: 'easeOutElastic(1, 0.6)',
+                delay: anime.stagger(25, { grid: [8, 8], from: 'center' })
+            });
+        },
+
+        reset: function() {
+            resetCells(600);
+        }
+    };
+
+    function runEffect(name) {
+        killCurrent();
+        // Quick reset before starting a new looping effect
+        if (name !== 'stagger-in' && name !== 'shuffle' && name !== 'reset') {
+            anime.set(cellEls, {
+                translateX: 0, translateY: 0, translateZ: 0,
+                rotateX: 0, rotateY: 0, rotateZ: 0,
+                scale: 1, opacity: 1
+            });
+        }
+        if (effects[name]) effects[name]();
+    }
+
+    // Start with breathe
+    runEffect('breathe');
+
+    document.getElementById('effectBar').addEventListener('click', function(e) {
+        const btn = e.target.closest('.effect-btn');
+        if (!btn) return;
+        document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        runEffect(btn.dataset.fx);
+    });
+})();
+</script>

@@ -1,0 +1,335 @@
+---
+layout: base.njk
+title: "Pixel Border — Article Template Prototype C"
+description: Logo-shaped article layout with the actual 8x8 logo as a chunky pixel border
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-logo.css">
+---
+
+<style>
+/* ── Prototype C: Pixel Border ───────────────────────── */
+/* The logo's 8x8 pixel pattern rendered as a visible border
+ * around the article. Each "pixel" is a chunky block.
+ * Content lives inside the logo shape.
+ *
+ * Logo bytes: 0xFF, 0x81, 0xBD, 0xBD, 0xBF, 0xB9, 0x89, 0xFF
+ */
+
+.pixel-article {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* The pixel grid — rendered via box-shadow on a pseudo-element */
+.pixel-frame {
+    position: relative;
+    padding: 0;
+}
+
+/* Canvas renders the logo border */
+.pixel-border-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Content sits inside, with padding to clear the border pixels */
+.pixel-content {
+    position: relative;
+    z-index: 1;
+    /* Padding maps to the logo's inner space:
+     * 1 pixel border on each side = ~12.5% of width
+     * Inner square starts at col 2, row 2 */
+    padding: calc(var(--pixel-size, 24px) * 2) calc(var(--pixel-size, 24px) * 2) calc(var(--pixel-size, 24px) * 3) calc(var(--pixel-size, 24px) * 2);
+    max-width: 100%;
+    line-height: 1.8;
+}
+
+.pixel-content header {
+    margin-bottom: var(--space-xl);
+}
+
+.pixel-content h1 {
+    font-size: 1.8rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    margin-bottom: var(--space-sm);
+    margin-top: var(--space-sm);
+}
+
+.pixel-content .article-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.pixel-content h2 {
+    font-size: 1.2rem;
+    font-family: var(--font-mono);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-md);
+}
+
+.pixel-content section {
+    margin-bottom: var(--space-xl);
+}
+
+.pixel-content p {
+    margin-bottom: var(--space-md);
+}
+
+.pixel-content blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding-left: var(--space-md);
+    margin: var(--space-lg) 0;
+    font-style: italic;
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+}
+
+.pixel-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-md) 0;
+}
+
+.pixel-content ul li {
+    margin-bottom: var(--space-sm);
+    padding-left: var(--space-md);
+    border-left: 2px solid var(--color-border);
+}
+
+/* The pocket — positioned in the bottom-right gap of the pixel border */
+.pixel-pocket {
+    position: absolute;
+    z-index: 2;
+    /* Position in the logo's pocket area: cols 5-6, rows 5-6
+     * That's 62.5%-75% from left, 62.5%-75% from top */
+    bottom: calc(var(--pixel-size, 24px) * 1);
+    right: calc(var(--pixel-size, 24px) * 1);
+    width: calc(var(--pixel-size, 24px) * 2);
+    height: calc(var(--pixel-size, 24px) * 2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-accent);
+    text-align: center;
+    line-height: 1.2;
+    /* The pocket is "empty" — no border fills here */
+}
+
+.pixel-footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-md);
+    margin-top: var(--space-xl);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 640px) {
+    .pixel-content {
+        --pixel-size: 14px;
+    }
+    .pixel-pocket {
+        font-size: 0.6rem;
+    }
+}
+</style>
+
+<div class="pixel-article">
+    <div class="pixel-frame" id="pixelFrame">
+        <canvas class="pixel-border-canvas" id="pixelCanvas"></canvas>
+
+        <div class="pixel-content">
+            <header>
+                <span class="status-badge status-seedling">seedling</span>
+                <h1>The sailboat test</h1>
+                <p class="article-subtitle">A filter for what tools deserve to exist</p>
+            </header>
+
+            <section>
+                <p>
+                    Hundred Rabbits (Devine Lu Linvega and Rekka Bellum) live and work on a sailboat.
+                    51-day Pacific crossings without reliable internet. Power budgets measured in solar
+                    watts. Everything they build has to work in those conditions.
+                </p>
+                <p>
+                    This creates a brutal filter. If a tool requires cloud APIs, constant connectivity,
+                    or more power than a solar panel provides — it doesn't work. It's not a theoretical
+                    limitation. It's Tuesday.
+                </p>
+            </section>
+
+            <section>
+                <blockquote>
+                    "I wanted a way of doing computers that nobody could take away from me."
+                </blockquote>
+            </section>
+
+            <section>
+                <h2>The questions</h2>
+                <ul>
+                    <li>Will this still run in 50 years?</li>
+                    <li>Can I fix it myself?</li>
+                    <li>Does it require an empire to maintain?</li>
+                    <li>Will this still work if the internet goes down?</li>
+                    <li>Does this increase or decrease dependency on external services?</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Applied</h2>
+                <p>
+                    Most modern software fails this test immediately. SaaS, cloud APIs, subscription
+                    services — all gone when the connectivity is. That's fine for some things. But
+                    your core tools? The ones you think with?
+                </p>
+                <p>Those should work on a sailboat.</p>
+            </section>
+
+            <div class="pixel-footer">
+                <p>
+                    Inspired by <a href="https://100r.co" target="_blank" rel="noopener noreferrer">100 Rabbits</a>
+                    and <a href="https://permacomputing.net" target="_blank" rel="noopener noreferrer">permacomputing</a>.
+                </p>
+            </div>
+        </div>
+
+        <div class="pixel-pocket" id="pixelPocket">
+            boat?
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const LOGO = [
+        0b11111111,
+        0b10000001,
+        0b10111101,
+        0b10111101,
+        0b10111111,
+        0b10111001,
+        0b10001001,
+        0b11111111
+    ];
+
+    const canvas = document.getElementById('pixelCanvas');
+    const frame = document.getElementById('pixelFrame');
+    const pocket = document.getElementById('pixelPocket');
+    const ctx = canvas.getContext('2d');
+
+    // Get accent color from CSS custom property
+    const style = getComputedStyle(document.documentElement);
+    const accentColor = style.getPropertyValue('--color-accent').trim() || '#f0dfaf';
+    const borderColor = style.getPropertyValue('--color-border').trim() || '#4a4a4a';
+
+    function drawPixel(x, y, w, h) {
+        ctx.fillStyle = accentColor;
+        ctx.globalAlpha = 0.15;
+        ctx.fillRect(x, y, w, h);
+        ctx.strokeStyle = accentColor;
+        ctx.globalAlpha = 0.08;
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    }
+
+    function render() {
+        const width = frame.offsetWidth;
+        const height = frame.offsetHeight;
+        const px = width / 8; // Square pixels based on width
+
+        frame.style.setProperty('--pixel-size', px + 'px');
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.clearRect(0, 0, width, height);
+
+        // Top row (row 0): full width bar, 1 pixel tall
+        for (let x = 0; x < 8; x++) {
+            drawPixel(Math.floor(x * px), 0, Math.ceil(px), Math.ceil(px));
+        }
+
+        // Bottom row (row 7): full width bar at the bottom
+        const bottomY = height - Math.ceil(px);
+        for (let x = 0; x < 8; x++) {
+            drawPixel(Math.floor(x * px), bottomY, Math.ceil(px), Math.ceil(px));
+        }
+
+        // Side columns: col 0 and col 7 run the full height between top and bottom
+        const innerTop = Math.ceil(px);
+        const innerBottom = bottomY;
+        for (let y = innerTop; y < innerBottom; y += Math.ceil(px)) {
+            const h = Math.min(Math.ceil(px), innerBottom - y);
+            drawPixel(0, y, Math.ceil(px), h); // left column
+            drawPixel(Math.floor(7 * px), y, Math.ceil(px), h); // right column
+        }
+
+        // Logo inner pattern at the TOP only (rows 1-6)
+        // Only draw col 1 and col 6 blocks (the "inner frame" edges)
+        // Skip cols 2-5 to keep the content area clean
+        for (let row = 1; row <= 6; row++) {
+            for (let x = 1; x < 7; x++) {
+                const isFilled = LOGO[row] & (1 << (7 - x));
+                const isContentArea = x >= 2 && x <= 5;
+
+                if (isFilled && !isContentArea) {
+                    drawPixel(
+                        Math.floor(x * px),
+                        Math.floor(row * px),
+                        Math.ceil(px),
+                        Math.ceil(px)
+                    );
+                }
+            }
+        }
+
+        // Mirror the logo's bottom rows (5-6) near the bottom of the article
+        // This creates the pocket gap in the bottom-right
+        for (let row = 5; row <= 6; row++) {
+            for (let x = 1; x < 7; x++) {
+                const isFilled = LOGO[row] & (1 << (7 - x));
+                const isContentArea = x >= 2 && x <= 5;
+                const isPocket = x >= 5 && x <= 6;
+
+                if (isFilled && !isContentArea && !isPocket) {
+                    const mirrorRow = 7 - (6 - row); // maps row 5→6, row 6→7 from bottom
+                    const yPos = height - Math.floor((8 - row) * px);
+                    drawPixel(
+                        Math.floor(x * px),
+                        yPos,
+                        Math.ceil(px),
+                        Math.ceil(px)
+                    );
+                }
+            }
+        }
+
+        ctx.globalAlpha = 1;
+
+        // Position the pocket element in the bottom-right gap
+        pocket.style.bottom = Math.floor(px) + 'px';
+        pocket.style.right = Math.floor(px) + 'px';
+        pocket.style.width = Math.floor(px * 2) + 'px';
+        pocket.style.height = Math.floor(px * 2) + 'px';
+    }
+
+    render();
+
+    // Re-render on resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(render, 100);
+    });
+})();
+</script>

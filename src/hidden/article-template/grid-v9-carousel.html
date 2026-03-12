@@ -1,0 +1,731 @@
+---
+layout: base.njk
+title: "Grid v9 — Carousel"
+description: Cyclical torus navigation with pocket escape hatch
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-logo.css">
+---
+
+<style>
+.logo-grid {
+    max-width: 800px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 3px;
+    padding: 0 var(--space-md);
+    overflow: hidden;
+}
+
+.cell {
+    border-radius: var(--border-radius);
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.cell-on { background: #333333; }
+.cell-off { background: transparent; }
+
+.cell-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    text-align: center;
+    padding: var(--space-xs);
+    line-height: 1.2;
+    width: 100%;
+    height: 100%;
+    transition: color 0.2s, background 0.2s;
+}
+
+.cell-on .cell-link { color: #555555; }
+.cell-on .cell-link:hover { color: var(--color-accent); text-decoration: none; }
+.cell-off .cell-link { color: var(--color-text-secondary); }
+.cell-off .cell-link:hover { color: var(--color-accent); text-decoration: none; }
+
+.cell-link span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Inner Square: L-shaped content area ─────────── */
+.inner-square {
+    grid-column: 3 / 7;
+    grid-row: 3 / 7;
+    background: #333333;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    text-align: left;
+    overflow: hidden;
+    min-height: 0;
+    min-width: 0;
+}
+
+/* Float-based L-wrap: pusher forces spacer to bottom-right */
+.corner-pusher {
+    float: right;
+    width: 0;
+    height: 75%;
+}
+
+.corner-spacer {
+    float: right;
+    clear: right;
+    width: 25%;
+    height: 25%;
+}
+
+.inner-square h2 {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: #f0dfaf;
+    margin-bottom: 2px;
+}
+
+.inner-square h2 a {
+    color: #f0dfaf;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.inner-square h2 a:hover {
+    color: var(--color-accent);
+}
+
+.inner-square p {
+    margin-bottom: var(--space-sm);
+    font-size: 0.75rem;
+    color: #dcdccc;
+}
+
+.inner-square p:last-child {
+    margin-bottom: 0;
+}
+
+.inner-square pre {
+    background: #2a2a2a;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    line-height: 1.5;
+    color: #dcdccc;
+    overflow-x: hidden;
+    margin-bottom: var(--space-sm);
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.inner-square pre .comment { color: #7f9f7f; }
+.inner-square pre .keyword { color: #f0dfaf; }
+.inner-square pre .string { color: #cc9393; }
+.inner-square pre .fn { color: #93e0e3; }
+
+.inner-square ul {
+    margin: 0 0 var(--space-sm) var(--space-md);
+    padding: 0;
+    font-size: 0.75rem;
+    color: #dcdccc;
+    line-height: 1.6;
+}
+
+.inner-square li {
+    margin-bottom: 2px;
+}
+
+.inner-square .quip-type {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: #7f9f7f;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+/* Position dots */
+.position-dots {
+    font-size: 0.5rem;
+    color: #555;
+    margin-bottom: var(--space-sm);
+    letter-spacing: 0.1em;
+    line-height: 1;
+}
+
+/* Fade transition for quip swaps */
+.inner-square.fading {
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
+}
+
+.inner-square.visible {
+    opacity: 1;
+    transition: opacity 0.2s ease-in;
+}
+
+/* ── The Pocket: escape hatch ────────────────────── */
+.pocket {
+    grid-column: 6 / 8;
+    grid-row: 6 / 8;
+    background: var(--color-background, #3f3f3f);
+    z-index: 1;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    text-align: center;
+    padding: var(--space-sm);
+    line-height: 1.4;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, font-size 0.2s;
+    user-select: none;
+}
+
+.pocket:hover {
+    border-color: var(--color-accent);
+    background: #353535;
+}
+
+.pocket:active {
+    background: #2a2a2a;
+}
+
+/* ── Nav chevrons ────────────────────────────────── */
+.nav-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    font-size: 0.8rem;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.2s;
+    user-select: none;
+    font-family: var(--font-mono);
+    padding: 0;
+}
+
+.nav-chevron:hover {
+    color: var(--color-accent);
+}
+
+.nav-chevron:active {
+    color: #fff;
+}
+</style>
+
+<div class="logo-grid" id="logoGrid"></div>
+
+<script>
+(function() {
+    var LOGO = [
+        0b11111111,
+        0b10000001,
+        0b10111101,
+        0b10111101,
+        0b10111111,
+        0b10111001,
+        0b10001001,
+        0b11111111
+    ];
+
+    // ── Quips organized into semantic cycles (toruses) ──
+    var quips = [
+        // ── Philosophy torus ────────────────────────────
+        {
+            id: 'sailboat', cycle: 'philosophy',
+            title: 'the sailboat test',
+            body: '<p>Hundred Rabbits live on a sailboat. 51-day Pacific crossings without reliable internet. Power budgets in solar watts.</p>' +
+                  '<p>If a tool requires cloud APIs, constant connectivity, or more power than a solar panel provides \u2014 it doesn\'t work. It\'s not theoretical. It\'s Tuesday.</p>' +
+                  '<p>Will this run in 50 years? Can I fix it myself? Does it need an empire to maintain?</p>',
+            pocket: 'those should work on a boat',
+            source: '/sailboat-test/'
+        },
+        {
+            id: 'removal', cycle: 'philosophy',
+            title: 'remove to optimize',
+            body: '<p>The fastest code is code that doesn\'t run. The most reliable system is the one with fewer parts. The best optimization is deletion.</p>' +
+                  '<p>Before you profile, before you cache, before you parallelize \u2014 ask: does this need to exist at all?</p>' +
+                  '<p>Removing unnecessary work beats optimizing it. Every time.</p>',
+            pocket: 'what can you delete?',
+            source: '/optimization-through-removal/'
+        },
+        {
+            id: 'attention', cycle: 'philosophy',
+            title: 'managing attention',
+            body: '<p>Attention is the actual currency. Not time \u2014 you can\'t save time. But you can direct attention.</p>' +
+                  '<p>Every notification is a withdrawal. Every context switch is a tax. The inbox is a todo list that other people write for you.</p>' +
+                  '<p>Be present. Make a choice. Live with intent.</p>',
+            pocket: 'where are you looking?',
+            source: '/managing-attention/'
+        },
+        {
+            id: 'spite', cycle: 'philosophy',
+            title: 'learning to spite',
+            body: '<p>The dysfunction becomes data. The suffering becomes a case study. The terrible job becomes the clearest lesson in what not to build.</p>' +
+                  '<p>Spite is underrated as a motivator. Not the petty kind \u2014 the kind that says: I will build the thing that should have existed.</p>' +
+                  '<p>Channel it. Make it productive. Then ship it.</p>',
+            pocket: 'ship it anyway',
+            source: '/learning-to-spite/'
+        },
+        {
+            id: 'honesty', cycle: 'philosophy',
+            title: 'economic honesty',
+            body: '<p>This is all insane but I have a mortgage. That\'s the honest version. The dishonest version has mission statements and core values and a ping pong table.</p>' +
+                  '<p>Most tech work exists to extract value, not create it. The question isn\'t whether you\'re complicit \u2014 you are. The question is what you do with the rest of your hours.</p>',
+            pocket: 'what\'s the honest version?',
+            source: '/economic-honesty/'
+        },
+        {
+            id: 'koan', cycle: 'philosophy',
+            title: 'the recursive koan',
+            type: 'koan',
+            body: '<p>A student asked the master: "What is the best software architecture?"</p>' +
+                  '<p>The master pointed at the logo on the screen \u2014 an 8\u00d78 grid with a pocket in the corner.</p>' +
+                  '<p>"What do you see in the pocket?" asked the master.</p>' +
+                  '<p>"Another grid," said the student.</p>' +
+                  '<p>"And in that grid\'s pocket?"</p>' +
+                  '<p>The student was enlightened.</p>',
+            pocket: 'look deeper',
+            source: '/logo-design/'
+        },
+        // ── Craft torus ─────────────────────────────────
+        {
+            id: 'cli', cycle: 'craft',
+            title: 'CLI-first',
+            body: '<p>A GUI is a conclusion. A CLI is a conversation. One gives you answers; the other gives you vocabulary.</p>' +
+                  '<p>Pipes, redirects, scripts \u2014 the shell composes. Every tool becomes a building block. The mouse clicks one thing at a time. The keyboard builds pipelines.</p>' +
+                  '<p>When you work CLI-first, you can explain exactly what you did. Try that with 47 clicks.</p>',
+            pocket: 'pipe it forward',
+            source: '/cli-first-development/'
+        },
+        {
+            id: 'pipe', cycle: 'craft',
+            title: 'the pipeline',
+            type: 'code',
+            body: '<div class="quip-type">shell</div>' +
+                  '<pre>' +
+                  '<span class="comment"># find the 10 largest node_modules</span>\n' +
+                  'find . -name node_modules \\\n' +
+                  '  -type d -prune \\\n' +
+                  '  | xargs du -sh \\\n' +
+                  '  | sort -rh \\\n' +
+                  '  | head -10</pre>' +
+                  '<p>Six commands. No GUI. Composable, repeatable, scriptable. Each line does one thing.</p>',
+            pocket: 'pipe it',
+            source: '/cli-first-development/'
+        },
+        {
+            id: 'css-trick', cycle: 'craft',
+            title: 'the L-shape trick',
+            type: 'code',
+            body: '<div class="quip-type">css</div>' +
+                  '<pre>' +
+                  '<span class="comment">/* float-based L-wrap */</span>\n' +
+                  '<span class="keyword">.pusher</span> {\n' +
+                  '  <span class="fn">float</span>: right;\n' +
+                  '  width: 0;\n' +
+                  '  height: 50%;\n' +
+                  '}\n' +
+                  '<span class="keyword">.spacer</span> {\n' +
+                  '  <span class="fn">float</span>: right;\n' +
+                  '  <span class="fn">clear</span>: right;\n' +
+                  '  width: 25%; height: 50%;\n' +
+                  '}</pre>' +
+                  '<p>No clip-path. No JS. Just two invisible floats that carve an L-shaped text region.</p>',
+            pocket: 'how it works',
+            source: '/logo-design/'
+        },
+        {
+            id: 'stack', cycle: 'craft',
+            title: 'the stack',
+            type: 'list',
+            body: '<div class="quip-type">tools</div>' +
+                  '<ul>' +
+                  '<li>neovim \u2014 think in text</li>' +
+                  '<li>tmux \u2014 session as workspace</li>' +
+                  '<li>zsh + fzf \u2014 fuzzy everything</li>' +
+                  '<li>git \u2014 time travel</li>' +
+                  '<li>ripgrep \u2014 find it now</li>' +
+                  '<li>jq \u2014 json surgery</li>' +
+                  '<li>ssh \u2014 be anywhere</li>' +
+                  '</ul>' +
+                  '<p>Seven tools. All CLI. All composable. All work on a sailboat.</p>',
+            pocket: 'what\'s yours?',
+            source: '/cli-tooling-stack/'
+        },
+        // ── Test torus ──────────────────────────────────
+        {
+            id: 'test-100', cycle: 'test',
+            title: '~100 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.</p>',
+            pocket: 'next length',
+            source: '#'
+        },
+        {
+            id: 'test-200', cycle: 'test',
+            title: '~200 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>' +
+                  '<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.</p>',
+            pocket: 'next length',
+            source: '#'
+        },
+        {
+            id: 'test-300', cycle: 'test',
+            title: '~300 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>' +
+                  '<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>' +
+                  '<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>',
+            pocket: 'next length',
+            source: '#'
+        },
+        {
+            id: 'test-400', cycle: 'test',
+            title: '~400 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>' +
+                  '<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>' +
+                  '<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis.</p>',
+            pocket: 'next length',
+            source: '#'
+        },
+        {
+            id: 'test-500', cycle: 'test',
+            title: '~500 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>' +
+                  '<p>Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.</p>' +
+                  '<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>' +
+                  '<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>',
+            pocket: 'next length',
+            source: '#'
+        },
+        {
+            id: 'test-600', cycle: 'test',
+            title: '~600 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>' +
+                  '<p>Exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>' +
+                  '<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error.</p>' +
+                  '<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>',
+            pocket: 'next length',
+            source: '#'
+        },
+        {
+            id: 'test-800', cycle: 'test',
+            title: '~800 chars',
+            body: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>' +
+                  '<p>Nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>' +
+                  '<p>Sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>' +
+                  '<p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>' +
+                  '<p>Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.</p>',
+            pocket: 'overflow?',
+            source: '#'
+        }
+    ];
+
+    // ── All linkable content for edge cells (random/dispersed) ──
+    var articles = [
+        { t: 'sailboat test', u: '/sailboat-test/' },
+        { t: 'CLI-first', u: '/cli-first-development/' },
+        { t: 'hack my claw', u: '/hack-my-claw/' },
+        { t: 'errata', u: '/errata/' },
+        { t: 'logo design', u: '/logo-design/' },
+        { t: 'convergent evolution', u: '/convergent-evolution-personal-ai/' },
+        { t: 'de-slopping', u: '/antislop-editorial/' },
+        { t: 'steampunk eng.', u: '/steampunk-engineering/' },
+        { t: '250MB spinner', u: '/250mb-spinner/' },
+        { t: 'SIMP protocol', u: '/simp-protocol/' },
+        { t: 'it-smash', u: '/it-smash/' },
+        { t: 'styleguide', u: '/styleguide/' },
+        { t: '58 keys', u: '/58-keys-then-1/' },
+        { t: 'hyperresponder', u: '/ai-hyperresponder/' },
+        { t: 'atkinson', u: '/atkinson-hyperlegible/' },
+        { t: 'CLI stack', u: '/cli-tooling-stack/' },
+        { t: 'cloud treadmill', u: '/cloud-ai-treadmill/' },
+        { t: 'db-first debug', u: '/database-first-debugging/' },
+        { t: 'disassemble', u: '/disassemble-recombine/' },
+        { t: 'distilling style', u: '/distilling-style/' },
+        { t: 'doug demon', u: '/doug-demon-core/' },
+        { t: 'economic honesty', u: '/economic-honesty/' },
+        { t: 'gradient descent', u: '/greatest-hits-through-gradient-descent/' },
+        { t: 'write a zine', u: '/how-to-write-a-zine/' },
+        { t: 'learning to spite', u: '/learning-to-spite/' },
+        { t: 'lily58 gaming', u: '/lily58-gaming/' },
+        { t: 'living workshop', u: '/living-workshop/' },
+        { t: 'local AI econ', u: '/local-ai-economics/' },
+        { t: 'managing attention', u: '/managing-attention/' },
+        { t: 'RPi digest', u: '/minimal-steampunk-poc/' },
+        { t: 'NixOS', u: '/nixos-on-framework/' },
+        { t: 'off the deep end', u: '/off-the-deep-end/' },
+        { t: 'remove to optimize', u: '/optimization-through-removal/' },
+        { t: 'overnight AI', u: '/overnight-ai-development/' },
+        { t: 'panopticron', u: '/panopticron/' },
+        { t: 'microstudio', u: '/permacomputing-microstudio/' },
+        { t: 'powers for good', u: '/powers-for-good/' },
+        { t: 'productivity', u: '/productivity-breakthrough/' },
+        { t: 'qrazy', u: '/qrazy/' },
+        { t: 'recursive mirror', u: '/recursive-mirror/' },
+        { t: 'slopsquid', u: '/slopsquid-technical-preset/' },
+        { t: 'brainfarts', u: '/social-media-brainfarts/' },
+        { t: 'UX challenges', u: '/ux-challenges/' },
+        { t: 'thinking', u: '/what-does-thinking-look-like/' },
+        { t: 'what I can do', u: '/what-i-can-actually-do/' },
+        { t: 'zenburn', u: '/zenburn-theme/' },
+        { t: 'about', u: '/about/' },
+        { t: 'QUBIQ', u: '/fun/qubiq/' },
+        { t: 'boids', u: '/fun/boids/' },
+        { t: 'game of life', u: '/fun/game-of-life/' },
+        { t: 'attractors', u: '/fun/attractors/' },
+        { t: 'mandelbrot', u: '/fun/mandelbrot/' },
+        { t: 'flowfield', u: '/fun/flowfield/' },
+        { t: 'wave tank', u: '/fun/wave-tank/' },
+        { t: 'ascii logo', u: '/fun/ascii-logo/' },
+        { t: 'logo math', u: '/fun/logo-math/' },
+        { t: 'ditherpunk', u: '/fun/ditherpunk/' },
+        { t: 'lenia', u: '/fun/lenia/' },
+        { t: 'L-systems', u: '/fun/l-systems/' },
+        { t: 'maze', u: '/fun/maze/' },
+        { t: 'sorting', u: '/fun/sorting/' },
+        { t: 'turtle', u: '/fun/turtle/' },
+        { t: 'music box', u: '/fun/music-box/' }
+    ];
+
+    // ── Build toruses from cycle property ─────────────
+    var toruses = {};
+    quips.forEach(function(q) {
+        if (!toruses[q.cycle]) toruses[q.cycle] = [];
+        toruses[q.cycle].push(q);
+    });
+    var torusKeys = Object.keys(toruses);
+
+    // ── State ─────────────────────────────────────────
+    var currentCycle = torusKeys[0];
+    var currentIndex = 0;
+    var wildcardQuip = null;
+    var pocketHovered = false;
+
+    // ── Cells claimed by containers ───────────────────
+    var innerCells = new Set();
+    for (var r = 2; r <= 5; r++) {
+        for (var c = 2; c <= 5; c++) {
+            if (r === 5 && c === 5) continue;
+            innerCells.add(r + ',' + c);
+        }
+    }
+    var pocketCells = new Set(['5,5', '5,6', '6,5', '6,6']);
+    // Nav chevron positions: above pocket (4,6) and left of pocket (6,4)
+    var navPositions = { '4,6': 'up', '6,4': 'left' };
+    var claimed = new Set([...innerCells, ...pocketCells, '4,6', '6,4']);
+
+    // ── Helpers ───────────────────────────────────────
+    function shuffle(arr) {
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+        }
+        return a;
+    }
+
+    function getCurrentQuip() {
+        return toruses[currentCycle][currentIndex];
+    }
+
+    function pickWildcard() {
+        var otherCycles = torusKeys.filter(function(k) { return k !== currentCycle; });
+        if (otherCycles.length === 0) {
+            // Only one cycle — pick any quip not current
+            var pool = quips.filter(function(q) { return q !== getCurrentQuip(); });
+            return pool[Math.floor(Math.random() * pool.length)] || quips[0];
+        }
+        var cycle = otherCycles[Math.floor(Math.random() * otherCycles.length)];
+        var pool = toruses[cycle];
+        return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    // ── Grid elements ─────────────────────────────────
+    var grid = document.getElementById('logoGrid');
+    var innerEl, pocketEl;
+    var edgeCells = [];
+
+    function renderQuipContent(el, quip) {
+        var pool = toruses[currentCycle];
+        var dots = pool.map(function(_, i) {
+            return i === currentIndex ? '\u25cf' : '\u25cb';
+        }).join(' ');
+
+        el.innerHTML = '<div class="corner-pusher"></div>' +
+            '<div class="corner-spacer"></div>' +
+            (quip.type ? '<div class="quip-type">' + quip.type + '</div>' : '') +
+            '<h2><a href="' + quip.source + '">' + quip.title + '</a></h2>' +
+            '<div class="position-dots">' + dots + '</div>' +
+            quip.body;
+    }
+
+    function buildGrid() {
+        grid.innerHTML = '';
+        edgeCells.length = 0;
+        wildcardQuip = pickWildcard();
+
+        var quip = getCurrentQuip();
+        var edgeArticles = shuffle(articles);
+        var idx = 0;
+        var innerInserted = false;
+        var pocketInserted = false;
+
+        for (var y = 0; y < 8; y++) {
+            for (var x = 0; x < 8; x++) {
+                var key = y + ',' + x;
+
+                // Inner square (first cell triggers insertion)
+                if (innerCells.has(key) && !innerInserted) {
+                    innerEl = document.createElement('div');
+                    innerEl.className = 'inner-square visible';
+                    renderQuipContent(innerEl, quip);
+                    grid.appendChild(innerEl);
+                    innerInserted = true;
+                    continue;
+                }
+
+                // Pocket (first cell triggers insertion)
+                if (pocketCells.has(key) && !pocketInserted) {
+                    pocketEl = document.createElement('div');
+                    pocketEl.className = 'pocket';
+                    pocketEl.textContent = wildcardQuip.pocket;
+                    pocketEl.addEventListener('click', escapeToWildcard);
+                    pocketEl.addEventListener('mouseenter', function() {
+                        pocketHovered = true;
+                        pocketEl.textContent = '\u2192 ' + wildcardQuip.title;
+                    });
+                    pocketEl.addEventListener('mouseleave', function() {
+                        pocketHovered = false;
+                        pocketEl.textContent = wildcardQuip.pocket;
+                    });
+                    grid.appendChild(pocketEl);
+                    pocketInserted = true;
+                    continue;
+                }
+
+                // Nav chevron cells
+                if (navPositions[key]) {
+                    var navType = navPositions[key];
+                    var cell = document.createElement('div');
+                    cell.className = 'cell cell-on';
+                    var btn = document.createElement('button');
+                    btn.className = 'nav-chevron';
+                    btn.textContent = navType === 'up' ? '\u25b2' : '\u25c0';
+                    btn.setAttribute('aria-label', navType === 'up' ? 'Previous quip' : 'Next quip');
+                    btn.addEventListener('click', navType === 'up' ? cyclePrev : cycleNext);
+                    cell.appendChild(btn);
+                    grid.appendChild(cell);
+                    continue;
+                }
+
+                // Skip remaining claimed cells
+                if (claimed.has(key)) continue;
+
+                // Regular edge cells — random articles
+                var bit = (LOGO[y] >> (7 - x)) & 1;
+                var cell = document.createElement('div');
+                cell.className = 'cell ' + (bit ? 'cell-on' : 'cell-off');
+
+                if (idx < edgeArticles.length) {
+                    var link = document.createElement('a');
+                    link.className = 'cell-link';
+                    link.href = edgeArticles[idx].u;
+                    link.innerHTML = '<span>' + edgeArticles[idx].t + '</span>';
+                    cell.appendChild(link);
+                    idx++;
+                }
+
+                edgeCells.push(cell);
+                grid.appendChild(cell);
+            }
+        }
+    }
+
+    function updateDisplay() {
+        var quip = getCurrentQuip();
+
+        // Fade out
+        innerEl.classList.remove('visible');
+        innerEl.classList.add('fading');
+
+        setTimeout(function() {
+            // Swap content
+            renderQuipContent(innerEl, quip);
+
+            // Update pocket
+            if (pocketHovered) {
+                pocketEl.textContent = '\u2192 ' + wildcardQuip.title;
+            } else {
+                pocketEl.textContent = wildcardQuip.pocket;
+            }
+
+            // Reshuffle edge articles
+            var edgeArticles = shuffle(articles);
+            edgeCells.forEach(function(cell, i) {
+                var link = cell.querySelector('.cell-link');
+                if (link && i < edgeArticles.length) {
+                    link.href = edgeArticles[i].u;
+                    link.querySelector('span').textContent = edgeArticles[i].t;
+                }
+            });
+
+            // Fade in
+            innerEl.classList.remove('fading');
+            innerEl.classList.add('visible');
+        }, 150);
+    }
+
+    // ── Navigation ────────────────────────────────────
+    function cyclePrev() {
+        var pool = toruses[currentCycle];
+        currentIndex = (currentIndex - 1 + pool.length) % pool.length;
+        updateDisplay();
+    }
+
+    function cycleNext() {
+        var pool = toruses[currentCycle];
+        currentIndex = (currentIndex + 1) % pool.length;
+        updateDisplay();
+    }
+
+    function escapeToWildcard() {
+        var target = wildcardQuip;
+        currentCycle = target.cycle;
+        currentIndex = toruses[currentCycle].indexOf(target);
+        wildcardQuip = pickWildcard();
+        updateDisplay();
+    }
+
+    // ── Keyboard navigation ───────────────────────────
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowUp') { e.preventDefault(); cyclePrev(); }
+        if (e.key === 'ArrowDown') { e.preventDefault(); cycleNext(); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); cycleNext(); }
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); escapeToWildcard(); }
+    });
+
+    // ── Init ──────────────────────────────────────────
+    buildGrid();
+})();
+</script>

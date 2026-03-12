@@ -1,0 +1,127 @@
+---
+layout: base.njk
+title: "Grid v2 — Logo Cards"
+description: 8x8 logo grid with card blocks that link to content
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-logo.css">
+---
+
+<style>
+.logo-grid {
+    max-width: 800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+    padding: 0 var(--space-md);
+}
+
+/* Force square cells */
+.logo-grid .cell {
+    aspect-ratio: 1 / 1;
+    border-radius: var(--border-radius);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 1-bit: filled pixel — darker grey, like the header logo */
+.cell-on {
+    background: #333333;
+}
+
+/* 0-bit: empty pixel — transparent, background bleeds through */
+.cell-off {
+    background: transparent;
+}
+
+/* Card overlay for 0-bit cells that have content */
+.cell-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    text-align: center;
+    padding: var(--space-xs);
+    line-height: 1.2;
+    transition: color 0.2s, background-color 0.2s;
+    width: 100%;
+    height: 100%;
+}
+
+.cell-card:hover {
+    color: var(--color-accent);
+    background: rgba(240, 223, 175, 0.05);
+    text-decoration: none;
+}
+
+.cell-card span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>
+
+<div class="logo-grid" id="logoGrid"></div>
+
+<script>
+(function() {
+    const LOGO = [
+        0b11111111,
+        0b10000001,
+        0b10111101,
+        0b10111101,
+        0b10111111,
+        0b10111001,
+        0b10001001,
+        0b11111111
+    ];
+
+    // Content pool — shuffled into the 0-bit cells
+    const cards = [
+        { title: 'sailboat test', url: '/sailboat-test/' },
+        { title: 'CLI-first', url: '/cli-first-development/' },
+        { title: 'hack my claw', url: '/hack-my-claw/' },
+        { title: 'errata', url: '/errata/' },
+        { title: 'logo design', url: '/logo-design/' },
+        { title: 'convergent evolution', url: '/convergent-evolution-personal-ai/' },
+        { title: 'antislop', url: '/antislop-editorial/' },
+        { title: 'steampunk eng.', url: '/steampunk-engineering/' },
+        { title: '250MB spinner', url: '/250mb-spinner/' },
+        { title: 'de-slopping', url: '/deslopping-in-practice/' },
+        { title: 'SIMP protocol', url: '/simp-protocol/' },
+        { title: 'it-smash', url: '/it-smash/' },
+        { title: 'styleguide', url: '/styleguide/' },
+    ];
+
+    // Shuffle
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+
+    const grid = document.getElementById('logoGrid');
+    let cardIdx = 0;
+
+    for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++) {
+            const bit = (LOGO[y] >> (7 - x)) & 1;
+            const cell = document.createElement('div');
+            cell.className = 'cell ' + (bit ? 'cell-on' : 'cell-off');
+
+            if (!bit && cardIdx < cards.length) {
+                const link = document.createElement('a');
+                link.className = 'cell-card';
+                link.href = cards[cardIdx].url;
+                link.innerHTML = '<span>' + cards[cardIdx].title + '</span>';
+                cell.appendChild(link);
+                cardIdx++;
+            }
+
+            grid.appendChild(cell);
+        }
+    }
+})();
+</script>

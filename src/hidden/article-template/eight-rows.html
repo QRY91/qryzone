@@ -1,0 +1,285 @@
+---
+layout: base.njk
+title: "8-Row Grid — Article Template Prototype B"
+description: Logo-shaped article layout mapping 8 rows to semantic article zones
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-logo.css">
+---
+
+<style>
+/* ── Prototype B: 8-Row Grid ─────────────────────────── */
+/* Maps logo rows to article zones:
+ * Row 0: ████████ → Title bar (full width, accent)
+ * Row 1: █      █ → Metadata strip (framed)
+ * Row 2: █ ████ █ → Main content
+ * Row 3: █ ████ █ → Main content
+ * Row 4: █ ██████ → Breakout (extends right)
+ * Row 5: █ ███  █ → Content + pocket
+ * Row 6: █   █  █ → Content + pocket
+ * Row 7: ████████ → Footer (full width)
+ */
+
+.grid-article {
+    max-width: 800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 0;
+}
+
+/* Row 0: Title bar — full width, solid, like top border */
+.grid-row0 {
+    background: var(--color-accent);
+    color: var(--color-background);
+    padding: var(--space-lg) var(--space-xl);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.grid-row0 h1 {
+    font-size: 1.8rem;
+    font-family: var(--font-mono);
+    color: var(--color-background);
+    margin: 0;
+    font-weight: 700;
+}
+
+/* Row 1: Metadata — thin strip with frame edges visible */
+.grid-row1 {
+    border-left: 3px solid var(--color-accent);
+    border-right: 3px solid var(--color-accent);
+    padding: var(--space-sm) var(--space-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    background: var(--color-background);
+}
+
+.grid-row1 .status-badge {
+    margin: 0;
+}
+
+/* Rows 2-3: Main content — bordered sides, padded inner */
+.grid-row23 {
+    border-left: 3px solid var(--color-accent);
+    border-right: 3px solid var(--color-accent);
+    padding: var(--space-xl);
+    background: var(--color-background);
+}
+
+.grid-row23 .inner {
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+.grid-row23 p {
+    margin-bottom: var(--space-md);
+}
+
+/* Row 4: Breakout — extends right, border only on left */
+.grid-row4 {
+    border-left: 3px solid var(--color-accent);
+    border-right: none;
+    padding: var(--space-lg) var(--space-xl);
+    background: var(--color-background);
+    /* Visual "extension" — no right border, content can breathe */
+    position: relative;
+}
+
+.grid-row4::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--color-accent);
+    /* Only cover top portion — logo row 4 is 10111111, extends to right edge */
+}
+
+.grid-row4 blockquote {
+    max-width: 700px;
+    border-left: 3px solid var(--color-accent);
+    padding-left: var(--space-lg);
+    margin: 0;
+    font-style: italic;
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Rows 5-6: Content + Pocket — two column layout */
+.grid-row56 {
+    border-left: 3px solid var(--color-accent);
+    border-right: 3px solid var(--color-accent);
+    padding: var(--space-xl);
+    background: var(--color-background);
+    display: grid;
+    grid-template-columns: 1fr 180px;
+    gap: var(--space-xl);
+    align-items: start;
+}
+
+.grid-row56-content {
+    line-height: 1.8;
+}
+
+.grid-row56-content h2 {
+    font-size: 1.2rem;
+    font-family: var(--font-mono);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-md);
+}
+
+.grid-row56-content p {
+    margin-bottom: var(--space-md);
+}
+
+.grid-row56-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-md) 0;
+}
+
+.grid-row56-content ul li {
+    margin-bottom: var(--space-sm);
+    padding-left: var(--space-md);
+    border-left: 2px solid var(--color-border);
+}
+
+/* The pocket — sidebar element */
+.grid-pocket {
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    text-align: center;
+    position: sticky;
+    top: var(--space-xl);
+    /* Visual gap mimicking the logo's empty pocket pixels */
+    background: var(--color-background);
+}
+
+.grid-pocket-label {
+    display: block;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Row 7: Footer — full width, solid, like bottom border */
+.grid-row7 {
+    background: var(--color-accent);
+    padding: var(--space-md) var(--space-xl);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    font-size: 0.85rem;
+}
+
+.grid-row7 a {
+    color: var(--color-background);
+    text-decoration: none;
+}
+
+.grid-row7 a:hover {
+    text-decoration: underline;
+}
+
+.grid-row7 p {
+    margin: 0;
+    color: var(--color-background);
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 640px) {
+    .grid-row56 {
+        grid-template-columns: 1fr;
+    }
+    .grid-pocket {
+        position: relative;
+        top: auto;
+    }
+}
+</style>
+
+<div class="grid-article">
+    <!-- Row 0: ████████ Title bar -->
+    <div class="grid-row0">
+        <h1>The sailboat test</h1>
+    </div>
+
+    <!-- Row 1: █      █ Metadata -->
+    <div class="grid-row1">
+        <span class="status-badge status-seedling">seedling</span>
+        <span>A filter for what tools deserve to exist</span>
+        <span>January 2025</span>
+    </div>
+
+    <!-- Rows 2-3: █ ████ █ Main content -->
+    <div class="grid-row23">
+        <div class="inner">
+            <p>
+                Hundred Rabbits (Devine Lu Linvega and Rekka Bellum) live and work on a sailboat.
+                51-day Pacific crossings without reliable internet. Power budgets measured in solar
+                watts. Everything they build has to work in those conditions.
+            </p>
+            <p>
+                This creates a brutal filter. If a tool requires cloud APIs, constant connectivity,
+                or more power than a solar panel provides — it doesn't work. It's not a theoretical
+                limitation. It's Tuesday.
+            </p>
+        </div>
+    </div>
+
+    <!-- Row 4: █ ██████ Breakout (extends right) -->
+    <div class="grid-row4">
+        <blockquote>
+            "I wanted a way of doing computers that nobody could take away from me."
+        </blockquote>
+    </div>
+
+    <!-- Rows 5-6: █ ███  █ Content + Pocket -->
+    <div class="grid-row56">
+        <div class="grid-row56-content">
+            <h2>The questions</h2>
+            <ul>
+                <li>Will this still run in 50 years?</li>
+                <li>Can I fix it myself?</li>
+                <li>Does it require an empire to maintain?</li>
+                <li>Will this still work if the internet goes down?</li>
+                <li>Does this increase or decrease dependency on external services?</li>
+            </ul>
+
+            <h2>Applied</h2>
+            <p>
+                Most modern software fails this test immediately. SaaS, cloud APIs, subscription
+                services — all gone when the connectivity is. That's fine for some things. But
+                your core tools? The ones you think with?
+            </p>
+            <p>Those should work on a sailboat.</p>
+        </div>
+
+        <aside class="grid-pocket">
+            <span class="grid-pocket-label">the pocket</span>
+            "does it work<br>on a boat?"
+        </aside>
+    </div>
+
+    <!-- Row 7: ████████ Footer -->
+    <div class="grid-row7">
+        <p>
+            Inspired by <a href="https://100r.co" target="_blank" rel="noopener noreferrer">100 Rabbits</a>
+            · <a href="https://permacomputing.net" target="_blank" rel="noopener noreferrer">permacomputing</a>
+            · <a href="/steampunk-engineering/">Steampunk engineering</a>
+            · <a href="/250mb-spinner/">The 250MB spinner</a>
+        </p>
+    </div>
+</div>

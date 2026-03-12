@@ -1,0 +1,193 @@
+---
+layout: base.njk
+title: "Grid v3 — Full 64"
+description: 8x8 logo grid with all 64 cells populated
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-logo.css">
+---
+
+<style>
+.logo-grid {
+    max-width: 800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+    padding: 0 var(--space-md);
+}
+
+.logo-grid .cell {
+    aspect-ratio: 1 / 1;
+    border-radius: var(--border-radius);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 1-bit: filled — darker grey, the logo structure */
+.cell-on {
+    background: #333333;
+}
+
+/* 0-bit: empty — background bleeds through */
+.cell-off {
+    background: transparent;
+}
+
+/* Every cell is a clickable card */
+.cell-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    text-align: center;
+    padding: var(--space-xs);
+    line-height: 1.2;
+    width: 100%;
+    height: 100%;
+    transition: color 0.2s, background-color 0.15s;
+}
+
+/* Text color depends on cell type */
+.cell-on .cell-link {
+    color: #555555;
+}
+.cell-on .cell-link:hover {
+    color: var(--color-accent);
+    background: rgba(240, 223, 175, 0.08);
+    text-decoration: none;
+}
+
+.cell-off .cell-link {
+    color: var(--color-text-secondary);
+}
+.cell-off .cell-link:hover {
+    color: var(--color-accent);
+    background: rgba(240, 223, 175, 0.05);
+    text-decoration: none;
+}
+
+.cell-link span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>
+
+<div class="logo-grid" id="logoGrid"></div>
+
+<script>
+(function() {
+    const LOGO = [
+        0b11111111,
+        0b10000001,
+        0b10111101,
+        0b10111101,
+        0b10111111,
+        0b10111001,
+        0b10001001,
+        0b11111111
+    ];
+
+    // All content — enough to fill 64 cells
+    const articles = [
+        { t: 'sailboat test', u: '/sailboat-test/' },
+        { t: 'CLI-first', u: '/cli-first-development/' },
+        { t: 'hack my claw', u: '/hack-my-claw/' },
+        { t: 'errata', u: '/errata/' },
+        { t: 'logo design', u: '/logo-design/' },
+        { t: 'convergent evolution', u: '/convergent-evolution-personal-ai/' },
+        { t: 'de-slopping', u: '/antislop-editorial/' },
+        { t: 'steampunk eng.', u: '/steampunk-engineering/' },
+        { t: '250MB spinner', u: '/250mb-spinner/' },
+        { t: 'SIMP protocol', u: '/simp-protocol/' },
+        { t: 'it-smash', u: '/it-smash/' },
+        { t: 'styleguide', u: '/styleguide/' },
+        { t: '58 keys', u: '/58-keys-then-1/' },
+        { t: 'hyperresponder', u: '/ai-hyperresponder/' },
+        { t: 'atkinson', u: '/atkinson-hyperlegible/' },
+        { t: 'CLI stack', u: '/cli-tooling-stack/' },
+        { t: 'cloud treadmill', u: '/cloud-ai-treadmill/' },
+        { t: 'db-first debug', u: '/database-first-debugging/' },
+        { t: 'disassemble', u: '/disassemble-recombine/' },
+        { t: 'distilling style', u: '/distilling-style/' },
+        { t: 'doug demon', u: '/doug-demon-core/' },
+        { t: 'economic honesty', u: '/economic-honesty/' },
+        { t: 'gradient descent', u: '/greatest-hits-through-gradient-descent/' },
+        { t: 'write a zine', u: '/how-to-write-a-zine/' },
+        { t: 'learning to spite', u: '/learning-to-spite/' },
+        { t: 'lily58 gaming', u: '/lily58-gaming/' },
+        { t: 'living workshop', u: '/living-workshop/' },
+        { t: 'local AI econ', u: '/local-ai-economics/' },
+        { t: 'managing attention', u: '/managing-attention/' },
+        { t: 'RPi digest', u: '/minimal-steampunk-poc/' },
+        { t: 'NixOS', u: '/nixos-on-framework/' },
+        { t: 'off the deep end', u: '/off-the-deep-end/' },
+        { t: 'remove to optimize', u: '/optimization-through-removal/' },
+        { t: 'overnight AI', u: '/overnight-ai-development/' },
+        { t: 'panopticron', u: '/panopticron/' },
+        { t: 'microstudio', u: '/permacomputing-microstudio/' },
+        { t: 'powers for good', u: '/powers-for-good/' },
+        { t: 'productivity', u: '/productivity-breakthrough/' },
+        { t: 'qrazy', u: '/qrazy/' },
+        { t: 'recursive mirror', u: '/recursive-mirror/' },
+        { t: 'slopsquid', u: '/slopsquid-technical-preset/' },
+        { t: 'brainfarts', u: '/social-media-brainfarts/' },
+        { t: 'UX challenges', u: '/ux-challenges/' },
+        { t: 'thinking', u: '/what-does-thinking-look-like/' },
+        { t: 'what I can do', u: '/what-i-can-actually-do/' },
+        { t: 'zenburn', u: '/zenburn-theme/' },
+        { t: 'about', u: '/about/' },
+        // fun pages to fill remaining slots
+        { t: 'QUBIQ', u: '/fun/qubiq/' },
+        { t: 'boids', u: '/fun/boids/' },
+        { t: 'game of life', u: '/fun/game-of-life/' },
+        { t: 'attractors', u: '/fun/attractors/' },
+        { t: 'mandelbrot', u: '/fun/mandelbrot/' },
+        { t: 'flowfield', u: '/fun/flowfield/' },
+        { t: 'wave tank', u: '/fun/wave-tank/' },
+        { t: 'ascii logo', u: '/fun/ascii-logo/' },
+        { t: 'logo math', u: '/fun/logo-math/' },
+        { t: 'ditherpunk', u: '/fun/ditherpunk/' },
+        { t: 'lenia', u: '/fun/lenia/' },
+        { t: 'L-systems', u: '/fun/l-systems/' },
+        { t: 'maze', u: '/fun/maze/' },
+        { t: 'sorting', u: '/fun/sorting/' },
+        { t: 'turtle', u: '/fun/turtle/' },
+        { t: 'music box', u: '/fun/music-box/' },
+        { t: 'three body', u: '/fun/three-body/' },
+        { t: 'pendulum', u: '/fun/double-pendulum/' },
+        { t: 'sierpinski', u: '/fun/sierpinski/' },
+        { t: 'langton ant', u: '/fun/langtons-ant/' },
+    ];
+
+    // Shuffle
+    for (let i = articles.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [articles[i], articles[j]] = [articles[j], articles[i]];
+    }
+
+    const grid = document.getElementById('logoGrid');
+    let idx = 0;
+
+    for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++) {
+            const bit = (LOGO[y] >> (7 - x)) & 1;
+            const cell = document.createElement('div');
+            cell.className = 'cell ' + (bit ? 'cell-on' : 'cell-off');
+
+            if (idx < articles.length) {
+                const link = document.createElement('a');
+                link.className = 'cell-link';
+                link.href = articles[idx].url || articles[idx].u;
+                link.innerHTML = '<span>' + articles[idx].t + '</span>';
+                cell.appendChild(link);
+                idx++;
+            }
+
+            grid.appendChild(cell);
+        }
+    }
+})();
+</script>

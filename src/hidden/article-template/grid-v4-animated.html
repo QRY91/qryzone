@@ -1,0 +1,362 @@
+---
+layout: base.njk
+title: "Grid v4 — Animated"
+description: 8x8 logo grid with breathing, ripple, and hover animations
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-logo.css">
+---
+
+<style>
+.logo-grid {
+    max-width: 800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+    padding: 0 var(--space-md);
+}
+
+.logo-grid .cell {
+    aspect-ratio: 1 / 1;
+    border-radius: var(--border-radius);
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s;
+}
+
+.cell-on {
+    background: #333333;
+}
+
+.cell-off {
+    background: transparent;
+}
+
+.cell-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    text-align: center;
+    padding: var(--space-xs);
+    line-height: 1.2;
+    width: 100%;
+    height: 100%;
+    transition: color 0.2s, background-color 0.15s, transform 0.2s;
+}
+
+.cell-on .cell-link {
+    color: #555555;
+}
+.cell-on .cell-link:hover {
+    color: var(--color-accent);
+    background: rgba(240, 223, 175, 0.08);
+    text-decoration: none;
+    transform: scale(1.05);
+}
+
+.cell-off .cell-link {
+    color: var(--color-text-secondary);
+}
+.cell-off .cell-link:hover {
+    color: var(--color-accent);
+    background: rgba(240, 223, 175, 0.05);
+    text-decoration: none;
+    transform: scale(1.05);
+}
+
+.cell-link span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Effect switcher */
+.effect-bar {
+    max-width: 800px;
+    margin: var(--space-md) auto 0;
+    padding: 0 var(--space-md);
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.effect-btn {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.effect-btn:hover, .effect-btn.active {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+</style>
+
+<div class="logo-grid" id="logoGrid"></div>
+
+<div class="effect-bar" id="effectBar">
+    <button class="effect-btn active" data-fx="breath">breath</button>
+    <button class="effect-btn" data-fx="ripple">ripple</button>
+    <button class="effect-btn" data-fx="wave">wave</button>
+    <button class="effect-btn" data-fx="matrix">matrix</button>
+    <button class="effect-btn" data-fx="glitch">glitch</button>
+    <button class="effect-btn" data-fx="none">still</button>
+</div>
+
+<script>
+(function() {
+    const LOGO = [
+        0b11111111,
+        0b10000001,
+        0b10111101,
+        0b10111101,
+        0b10111111,
+        0b10111001,
+        0b10001001,
+        0b11111111
+    ];
+
+    const articles = [
+        { t: 'sailboat test', u: '/sailboat-test/' },
+        { t: 'CLI-first', u: '/cli-first-development/' },
+        { t: 'hack my claw', u: '/hack-my-claw/' },
+        { t: 'errata', u: '/errata/' },
+        { t: 'logo design', u: '/logo-design/' },
+        { t: 'convergent evolution', u: '/convergent-evolution-personal-ai/' },
+        { t: 'de-slopping', u: '/antislop-editorial/' },
+        { t: 'steampunk eng.', u: '/steampunk-engineering/' },
+        { t: '250MB spinner', u: '/250mb-spinner/' },
+        { t: 'SIMP protocol', u: '/simp-protocol/' },
+        { t: 'it-smash', u: '/it-smash/' },
+        { t: 'styleguide', u: '/styleguide/' },
+        { t: '58 keys', u: '/58-keys-then-1/' },
+        { t: 'hyperresponder', u: '/ai-hyperresponder/' },
+        { t: 'atkinson', u: '/atkinson-hyperlegible/' },
+        { t: 'CLI stack', u: '/cli-tooling-stack/' },
+        { t: 'cloud treadmill', u: '/cloud-ai-treadmill/' },
+        { t: 'db-first debug', u: '/database-first-debugging/' },
+        { t: 'disassemble', u: '/disassemble-recombine/' },
+        { t: 'distilling style', u: '/distilling-style/' },
+        { t: 'doug demon', u: '/doug-demon-core/' },
+        { t: 'economic honesty', u: '/economic-honesty/' },
+        { t: 'gradient descent', u: '/greatest-hits-through-gradient-descent/' },
+        { t: 'write a zine', u: '/how-to-write-a-zine/' },
+        { t: 'learning to spite', u: '/learning-to-spite/' },
+        { t: 'lily58 gaming', u: '/lily58-gaming/' },
+        { t: 'living workshop', u: '/living-workshop/' },
+        { t: 'local AI econ', u: '/local-ai-economics/' },
+        { t: 'managing attention', u: '/managing-attention/' },
+        { t: 'RPi digest', u: '/minimal-steampunk-poc/' },
+        { t: 'NixOS', u: '/nixos-on-framework/' },
+        { t: 'off the deep end', u: '/off-the-deep-end/' },
+        { t: 'remove to optimize', u: '/optimization-through-removal/' },
+        { t: 'overnight AI', u: '/overnight-ai-development/' },
+        { t: 'panopticron', u: '/panopticron/' },
+        { t: 'microstudio', u: '/permacomputing-microstudio/' },
+        { t: 'powers for good', u: '/powers-for-good/' },
+        { t: 'productivity', u: '/productivity-breakthrough/' },
+        { t: 'qrazy', u: '/qrazy/' },
+        { t: 'recursive mirror', u: '/recursive-mirror/' },
+        { t: 'slopsquid', u: '/slopsquid-technical-preset/' },
+        { t: 'brainfarts', u: '/social-media-brainfarts/' },
+        { t: 'UX challenges', u: '/ux-challenges/' },
+        { t: 'thinking', u: '/what-does-thinking-look-like/' },
+        { t: 'what I can do', u: '/what-i-can-actually-do/' },
+        { t: 'zenburn', u: '/zenburn-theme/' },
+        { t: 'about', u: '/about/' },
+        { t: 'QUBIQ', u: '/fun/qubiq/' },
+        { t: 'boids', u: '/fun/boids/' },
+        { t: 'game of life', u: '/fun/game-of-life/' },
+        { t: 'attractors', u: '/fun/attractors/' },
+        { t: 'mandelbrot', u: '/fun/mandelbrot/' },
+        { t: 'flowfield', u: '/fun/flowfield/' },
+        { t: 'wave tank', u: '/fun/wave-tank/' },
+        { t: 'ascii logo', u: '/fun/ascii-logo/' },
+        { t: 'logo math', u: '/fun/logo-math/' },
+        { t: 'ditherpunk', u: '/fun/ditherpunk/' },
+        { t: 'lenia', u: '/fun/lenia/' },
+        { t: 'L-systems', u: '/fun/l-systems/' },
+        { t: 'maze', u: '/fun/maze/' },
+        { t: 'sorting', u: '/fun/sorting/' },
+        { t: 'turtle', u: '/fun/turtle/' },
+        { t: 'music box', u: '/fun/music-box/' },
+        { t: 'three body', u: '/fun/three-body/' },
+        { t: 'pendulum', u: '/fun/double-pendulum/' },
+    ];
+
+    // Shuffle
+    for (let i = articles.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [articles[i], articles[j]] = [articles[j], articles[i]];
+    }
+
+    // Build grid
+    const grid = document.getElementById('logoGrid');
+    const cells = [];
+    let idx = 0;
+
+    for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++) {
+            const bit = (LOGO[y] >> (7 - x)) & 1;
+            const cell = document.createElement('div');
+            cell.className = 'cell ' + (bit ? 'cell-on' : 'cell-off');
+
+            if (idx < articles.length) {
+                const link = document.createElement('a');
+                link.className = 'cell-link';
+                link.href = articles[idx].u;
+                link.innerHTML = '<span>' + articles[idx].t + '</span>';
+                cell.appendChild(link);
+                idx++;
+            }
+
+            grid.appendChild(cell);
+            cells.push({ el: cell, bit: bit, row: y, col: x });
+        }
+    }
+
+    // ── Animation engine ────────────────────────────────
+
+    // Base colors
+    const ON_BASE = [51, 51, 51];       // #333333
+    const OFF_BASE = [63, 63, 63];      // #3f3f3f (transparent/background)
+    const ACCENT = [240, 223, 175];     // #f0dfaf
+
+    function lerpColor(a, b, t) {
+        return 'rgb(' +
+            Math.round(a[0] + (b[0] - a[0]) * t) + ',' +
+            Math.round(a[1] + (b[1] - a[1]) * t) + ',' +
+            Math.round(a[2] + (b[2] - a[2]) * t) + ')';
+    }
+
+    let currentFx = 'breath';
+    let animId = null;
+
+    const effects = {
+        none: function() {},
+
+        // Slow breathing — all cells pulse in unison
+        breath: function(t) {
+            const pulse = Math.sin(t * 0.8) * 0.5 + 0.5; // 0..1
+            cells.forEach(c => {
+                if (c.bit) {
+                    // On-cells: breathe between dark and slightly lighter
+                    const v = pulse * 0.15;
+                    c.el.style.backgroundColor = lerpColor(ON_BASE, ACCENT, v);
+                } else {
+                    c.el.style.backgroundColor = '';
+                }
+            });
+        },
+
+        // Ripple from center
+        ripple: function(t) {
+            const cx = 3.5, cy = 3.5;
+            cells.forEach(c => {
+                const dist = Math.sqrt((c.col - cx) ** 2 + (c.row - cy) ** 2);
+                const wave = Math.sin(dist * 1.5 - t * 3) * 0.5 + 0.5;
+                if (c.bit) {
+                    c.el.style.backgroundColor = lerpColor(ON_BASE, ACCENT, wave * 0.2);
+                } else {
+                    const glow = wave * 0.06;
+                    c.el.style.backgroundColor = 'rgba(240, 223, 175, ' + glow + ')';
+                }
+            });
+        },
+
+        // Horizontal wave
+        wave: function(t) {
+            cells.forEach(c => {
+                const wave = Math.sin(c.col * 0.8 + t * 2) * 0.5 + 0.5;
+                const wave2 = Math.sin(c.row * 0.6 - t * 1.5) * 0.5 + 0.5;
+                const v = (wave + wave2) / 2;
+                if (c.bit) {
+                    c.el.style.backgroundColor = lerpColor(ON_BASE, ACCENT, v * 0.25);
+                } else {
+                    c.el.style.backgroundColor = 'rgba(240, 223, 175, ' + (v * 0.04) + ')';
+                }
+            });
+        },
+
+        // Matrix rain — columns light up top-to-bottom
+        matrix: function(t) {
+            cells.forEach(c => {
+                const speed = (c.col * 0.7 + 3);
+                const fall = (t * speed + c.col * 2.3) % 12;
+                const dist = Math.abs(c.row - fall);
+                const v = dist < 2 ? (1 - dist / 2) : 0;
+                if (c.bit) {
+                    c.el.style.backgroundColor = lerpColor(ON_BASE, ACCENT, v * 0.35);
+                } else {
+                    c.el.style.backgroundColor = 'rgba(240, 223, 175, ' + (v * 0.08) + ')';
+                }
+            });
+        },
+
+        // Glitch — random cells flicker
+        glitch: function(t) {
+            const gt = Math.floor(t * 8);
+            cells.forEach(c => {
+                let v = 0;
+                // Row-level glitch bands
+                if (Math.sin(gt + c.row * 17) > 0.85) {
+                    v = Math.random() * 0.4;
+                }
+                // Random single-cell sparks
+                if (Math.sin(t * 50 + c.col * 13 + c.row * 7) > 0.96) {
+                    v = Math.random() * 0.6;
+                }
+                if (c.bit) {
+                    c.el.style.backgroundColor = lerpColor(ON_BASE, ACCENT, v);
+                } else {
+                    c.el.style.backgroundColor = v > 0.1 ?
+                        'rgba(240, 223, 175, ' + (v * 0.1) + ')' : '';
+                }
+            });
+        }
+    };
+
+    function animate(time) {
+        const t = time / 1000;
+        if (effects[currentFx]) effects[currentFx](t);
+        animId = requestAnimationFrame(animate);
+    }
+
+    animId = requestAnimationFrame(animate);
+
+    // Effect switching
+    document.getElementById('effectBar').addEventListener('click', function(e) {
+        const btn = e.target.closest('.effect-btn');
+        if (!btn) return;
+
+        currentFx = btn.dataset.fx;
+
+        // Reset all cell backgrounds when switching
+        cells.forEach(c => {
+            c.el.style.backgroundColor = '';
+        });
+
+        document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+
+    // Pause animation when tab not visible
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            cancelAnimationFrame(animId);
+        } else {
+            animId = requestAnimationFrame(animate);
+        }
+    });
+})();
+</script>

@@ -1,0 +1,135 @@
+/* article-logo.css
+ * Logo-shaped article layout system
+ * Maps the qryzone 8x8 logo grid to article structure:
+ *   Frame (outer border) → article wrapper
+ *   Inner square → content zone
+ *   Pocket (bottom-right 2x2 gap) → special element
+ *   Row 4 asymmetry → breakout section
+ */
+
+/* ── Shared foundations ──────────────────────────────── */
+
+.logo-article {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+    font-family: var(--font-sans);
+    line-height: 1.8;
+    color: var(--color-text-primary);
+}
+
+.logo-article h1 {
+    font-size: 1.8rem;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    margin-bottom: var(--space-sm);
+}
+
+.logo-article h2 {
+    font-size: 1.2rem;
+    color: var(--color-text-primary);
+    font-family: var(--font-mono);
+    margin-bottom: var(--space-md);
+}
+
+.logo-article p {
+    margin-bottom: var(--space-md);
+}
+
+.logo-article a {
+    color: var(--color-accent);
+}
+
+.logo-article blockquote {
+    border-left: 3px solid var(--color-accent);
+    padding-left: var(--space-md);
+    margin: var(--space-lg) 0;
+    font-style: italic;
+    color: var(--color-text-secondary);
+}
+
+/* ── The Pocket ──────────────────────────────────────── */
+
+.logo-pocket {
+    background: var(--color-surface);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius);
+    padding: var(--space-md) var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+}
+
+.logo-pocket-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
+}
+
+/* ── Status badges (reuse globals) ───────────────────── */
+
+.logo-article .status-badge {
+    margin-bottom: var(--space-sm);
+}
+
+.logo-article .article-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: var(--space-md);
+}
+
+/* ── Footer ──────────────────────────────────────────── */
+
+.logo-footer {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-lg);
+    margin-top: var(--space-xl);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+/* ── Prototype Index ─────────────────────────────────── */
+
+.proto-index {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+.proto-card {
+    display: block;
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    transition: border-color 0.2s;
+}
+
+.proto-card:hover {
+    border-color: var(--color-accent);
+    text-decoration: none;
+}
+
+.proto-card strong {
+    display: block;
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    margin-bottom: var(--space-xs);
+}
+
+.proto-card span {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.proto-card pre {
+    margin-top: var(--space-sm);
+    font-size: 0.7rem;
+    line-height: 1.3;
+    color: var(--color-text-secondary);
+    border: none;
+    padding: var(--space-sm);
+}
