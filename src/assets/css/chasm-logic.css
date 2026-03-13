@@ -15,8 +15,8 @@
   --cl-text: #b8b8b8;
   --cl-text-heading: #e0e0e0;
   --cl-text-secondary: #888;
-  --cl-text-dim: #666;
-  --cl-text-muted: #555;
+  --cl-text-dim: #8a8a8a;
+  --cl-text-muted: #777;
   --cl-border: #333;
   --cl-border-light: #2a2a2a;
   --cl-border-lighter: #222;
@@ -36,8 +36,11 @@
   --cl-footer-text: #e0e0e0;
   --cl-footer-dim: #777;
   --cl-footer-border: #374151;
-  --cl-terminal-bg: #000;
+  --cl-terminal-bg: #0a0a0a;
   --cl-terminal-text: #4ade80;
+  --cl-danger: #dc2626;
+  --cl-danger-subtle: #7f1d1d;
+  --cl-danger-text: #fca5a5;
 }
 
 /* --------------------------------------------------------------------------
@@ -72,8 +75,11 @@
   --cl-footer-text: white;
   --cl-footer-dim: #9ca3af;
   --cl-footer-border: #374151;
-  --cl-terminal-bg: black;
+  --cl-terminal-bg: #1a1a1a;
   --cl-terminal-text: #4ade80;
+  --cl-danger: #dc2626;
+  --cl-danger-subtle: #fecaca;
+  --cl-danger-text: #991b1b;
 }
 
 /* --------------------------------------------------------------------------
@@ -101,7 +107,7 @@ p { font-size: 1rem; line-height: 1.7; margin-bottom: 1rem; color: var(--cl-text
    WARNING STRIPE
    -------------------------------------------------------------------------- */
 .warning-stripe {
-  background: repeating-linear-gradient(45deg, #F58025, #F58025 20px, #000 20px, #000 40px);
+  background: repeating-linear-gradient(45deg, var(--cl-accent), var(--cl-accent) 20px, var(--cl-terminal-bg) 20px, var(--cl-terminal-bg) 40px);
   height: 8px;
 }
 
@@ -109,17 +115,24 @@ p { font-size: 1rem; line-height: 1.7; margin-bottom: 1rem; color: var(--cl-text
    HARASSMENT BANNER
    -------------------------------------------------------------------------- */
 .harassment-banner {
+  display: block;
+  width: 100%;
   background: var(--cl-banner-bg);
   color: var(--cl-banner-text);
   padding: 0.5rem;
   font-weight: bold;
   text-align: center;
+  border: none;
   border-bottom: 4px solid var(--cl-border);
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background-color 0.2s, color 0.2s;
+}
+.harassment-banner:focus-visible {
+  outline: 2px solid var(--cl-accent);
+  outline-offset: -2px;
 }
 .harassment-banner:hover {
   background: var(--cl-banner-hover-bg);
@@ -147,7 +160,7 @@ p { font-size: 1rem; line-height: 1.7; margin-bottom: 1rem; color: var(--cl-text
   z-index: 1000;
   border: 2px solid var(--cl-border);
   box-shadow: 4px 4px 0 0 var(--cl-accent);
-  transition: all 0.1s;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
 .back-link:hover {
   transform: translate(2px, 2px);
@@ -236,7 +249,7 @@ h2 {
   font-weight: 700;
   letter-spacing: 0.05em;
   box-shadow: 8px 8px 0 0 var(--cl-card-shadow);
-  transition: all 0.1s;
+  transition: transform 0.1s, box-shadow 0.1s;
   border: none;
   cursor: pointer;
   text-transform: uppercase;
@@ -297,7 +310,7 @@ h2 {
   border-left: 4px solid transparent;
   text-decoration: none;
   color: inherit;
-  transition: all 0.15s;
+  transition: background-color 0.15s, border-color 0.15s, padding-left 0.15s;
 }
 .doc-live { cursor: pointer; }
 .doc-live:hover {
@@ -400,7 +413,7 @@ h2 {
   flex-direction: column;
 }
 .terminal-dim { opacity: 0.5; }
-.terminal-orange { color: #F58025; }
+.terminal-orange { color: var(--cl-accent); }
 .terminal-white { color: white; }
 .terminal-red { color: #ef4444; }
 .terminal-comment { color: #6b7280; }
@@ -418,7 +431,7 @@ h2 {
   border: 3px solid var(--cl-border);
   padding: 1.25rem;
   background: var(--cl-card-bg);
-  transition: all 0.15s;
+  transition: box-shadow 0.15s, transform 0.15s;
 }
 .feature-card:hover {
   box-shadow: 6px 6px 0 0 var(--cl-card-shadow);
@@ -448,12 +461,12 @@ h2 {
 }
 .install-body { padding: 1.5rem; background: var(--cl-card-bg); }
 .install-cmd {
-  background: #1a1a1a;
-  color: #4ade80;
+  background: var(--cl-terminal-bg);
+  color: var(--cl-terminal-text);
   padding: 1rem 1.25rem;
   font-size: 0.85rem;
   line-height: 1.6;
-  border: 1px solid #333;
+  border: 1px solid var(--cl-border);
   overflow-x: auto;
   margin: 0.75rem 0;
 }
@@ -471,7 +484,7 @@ h2 {
   border: 3px solid var(--cl-border);
   background: var(--cl-card-bg);
   padding: 0;
-  transition: all 0.15s;
+  transition: box-shadow 0.15s, transform 0.15s;
   display: flex;
   flex-direction: column;
 }
@@ -772,13 +785,64 @@ footer a { color: var(--cl-footer-dim); text-decoration: underline; }
 }
 
 /* --------------------------------------------------------------------------
+   SKIP NAVIGATION
+   -------------------------------------------------------------------------- */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--cl-accent);
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  z-index: 10002;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   TABLE OVERFLOW WRAPPER
+   -------------------------------------------------------------------------- */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* --------------------------------------------------------------------------
+   SEMANTIC COLOR UTILITIES
+   -------------------------------------------------------------------------- */
+.text-danger { color: var(--cl-danger); }
+.border-danger { border-left-color: var(--cl-danger); }
+.bg-danger { background: var(--cl-danger); color: white; }
+.bg-danger-subtle { background: var(--cl-danger-subtle); color: var(--cl-danger-text); }
+.text-accent { color: var(--cl-accent); }
+.text-success { color: var(--cl-terminal-text); }
+.text-comment { color: #6b7280; }
+
+/* --------------------------------------------------------------------------
    RESPONSIVE
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
   .doc-container { padding: 1rem; }
   .doc-header { padding: 1.5rem; }
+  nav { padding: 1rem; }
 }
 @media (max-width: 640px) {
   .product-grid { grid-template-columns: 1fr; }
   .hero-product { padding: 1.5rem; }
+  .feature-grid { grid-template-columns: 1fr; }
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

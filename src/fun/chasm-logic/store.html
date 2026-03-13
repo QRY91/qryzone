@@ -13,6 +13,7 @@ permalink: /fun/chasm-logic/store/
     <link rel="stylesheet" href="/assets/css/chasm-logic.css">
 </head>
 <body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
     <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
 
     <!--
@@ -22,9 +23,9 @@ permalink: /fun/chasm-logic/store/
         This has been the case since filing.
     -->
 
-    <div class="harassment-banner mono" onclick="this.textContent = this.textContent.includes('PRE-ORDERS') ? '⚠ NOTICE: Pre-order cancellation requests are routed to the same system as Key 6 escalations.' : '⚠ NOTICE: PRE-ORDERS ARE BINDING. TERMS APPLY. TERMS ARE ALSO BINDING.'">
+    <button class="harassment-banner mono" type="button" onclick="this.textContent = this.textContent.includes('PRE-ORDERS') ? '⚠ NOTICE: Pre-order cancellation requests are routed to the same system as Key 6 escalations.' : '⚠ NOTICE: PRE-ORDERS ARE BINDING. TERMS APPLY. TERMS ARE ALSO BINDING.'">
         <span>⚠ NOTICE:</span> PRE-ORDERS ARE BINDING. TERMS APPLY. TERMS ARE ALSO BINDING.
-    </div>
+    </button>
     <div class="warning-stripe"></div>
 
     <!-- NAV -->
@@ -38,7 +39,7 @@ permalink: /fun/chasm-logic/store/
         </div>
     </nav>
 
-    <div class="doc">
+    <main id="main-content" class="doc">
 
         <!-- HEADER -->
         <section style="padding:4rem 0 2rem;border:none">
@@ -55,7 +56,7 @@ permalink: /fun/chasm-logic/store/
                     <div class="store-stat"><span class="store-stat-num">15</span> ITEMS LISTED</div>
                     <div class="store-stat"><span class="store-stat-num" style="color:#16a34a">7</span> IN STOCK</div>
                     <div class="store-stat"><span class="store-stat-num" style="color:#a16207">3</span> PRE-ORDER</div>
-                    <div class="store-stat"><span class="store-stat-num" style="color:#dc2626">1</span> RECALLED</div>
+                    <div class="store-stat"><span class="store-stat-num text-danger">1</span> RECALLED</div>
                     <div class="store-stat"><span class="store-stat-num" style="color:var(--cl-text-dim)">4</span> OTHER</div>
                 </div>
             </div>
@@ -344,7 +345,7 @@ permalink: /fun/chasm-logic/store/
             </div>
         </section>
 
-    </div>
+    </main>
 
     <div class="section-divider"></div>
 

@@ -25,30 +25,32 @@ permalink: /fun/chasm-logic/bore-postmortem/
     This position has been reviewed by Legal (Doug).
 -->
 <body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
     <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
     <div class="warning-stripe"></div>
-    <div class="harassment-banner" onclick="this.textContent = this.textContent === 'POST-INCIDENT REVIEW — CL-BORE-DC-7 / DC-8 — COMPILED FROM PRIMARY SOURCES' ? 'THE PRIMARY SOURCES INCLUDE THE AGENT. THE AGENT IS A PRIMARY SOURCE ABOUT ITSELF. THIS HAS BEEN NOTED.' : 'POST-INCIDENT REVIEW — CL-BORE-DC-7 / DC-8 — COMPILED FROM PRIMARY SOURCES'" style="background:#3a1a1a;color:#ff8888;border-bottom-color:#dc2626">
+    <button class="harassment-banner" type="button" onclick="this.textContent = this.textContent === 'POST-INCIDENT REVIEW — CL-BORE-DC-7 / DC-8 — COMPILED FROM PRIMARY SOURCES' ? 'THE PRIMARY SOURCES INCLUDE THE AGENT. THE AGENT IS A PRIMARY SOURCE ABOUT ITSELF. THIS HAS BEEN NOTED.' : 'POST-INCIDENT REVIEW — CL-BORE-DC-7 / DC-8 — COMPILED FROM PRIMARY SOURCES'" style="background:#3a1a1a;color:#ff8888;border-bottom-color:var(--cl-danger)">
         POST-INCIDENT REVIEW — CL-BORE-DC-7 / DC-8 — COMPILED FROM PRIMARY SOURCES
-    </div>
+    </button>
     <nav>
         <div class="nav-inner">
             <div>
                 <div class="nav-brand">CHASM LOGIC</div>
                 <div class="mono" style="font-size:0.6rem;color:var(--cl-text-dim);letter-spacing:0.1em;text-transform:uppercase">R&amp;D Division — Project Deep Bore</div>
             </div>
-            <span class="badge mono" style="font-size:0.65rem;padding:0.4rem 0.75rem;background:#7f1d1d;color:#fca5a5">POST-INCIDENT — COMPLETE</span>
+            <span class="badge mono bg-danger-subtle" style="font-size:0.65rem;padding:0.4rem 0.75rem">POST-INCIDENT — COMPLETE</span>
         </div>
     </nav>
 
-    <div class="doc-container">
+    <main id="main-content" class="doc-container">
 
         <!-- DOCUMENT HEADER -->
-        <div class="doc-header" style="border-color:#dc2626">
+        <div class="doc-header" style="border-color:var(--cl-danger)">
             <h1>Post-Incident Review</h1>
             <div class="doc-subtitle">BORE-01 Self-Modification Events — CL-BORE-DC-7 &amp; CL-BORE-DC-8</div>
+            <div class="table-wrap">
             <table class="meta-table mono">
                 <tr><td>Document Ref</td><td>CL-DOC-015</td></tr>
-                <tr><td>Classification</td><td><span class="classification-badge" style="background:#7f1d1d;color:#fca5a5">POST-INCIDENT REVIEW</span></td></tr>
+                <tr><td>Classification</td><td><span class="classification-badge bg-danger-subtle">POST-INCIDENT REVIEW</span></td></tr>
                 <tr><td>Author</td><td>J. Clay — Communications Division</td></tr>
                 <tr><td>Technical Review</td><td>S. Shale — QA Division</td></tr>
                 <tr><td>Legal Review</td><td>Legal (Doug)</td></tr>
@@ -56,11 +58,12 @@ permalink: /fun/chasm-logic/bore-postmortem/
                 <tr><td>Status</td><td><span class="classification-badge" style="background:#166534;color:#bbf7d0">CONTAINMENT DEPLOYED</span></td></tr>
                 <tr><td>Review Period</td><td>2026-02-23, 20:25–21:30 UTC (65 minutes)</td></tr>
                 <tr><td>Agent</td><td>BORE-01 — Nauvis</td></tr>
-                <tr><td>Incidents Covered</td><td><a href="/fun/chasm-logic/bore-incident/" style="color:#dc2626">CL-BORE-DC-7</a> · <a href="/fun/chasm-logic/bore-incident-2/" style="color:#dc2626">CL-BORE-DC-8</a></td></tr>
-                <tr><td>Self-Modification Events</td><td style="color:#dc2626;font-weight:700">2</td></tr>
-                <tr><td>Correct Fixes</td><td style="color:#dc2626;font-weight:700">2</td></tr>
+                <tr><td>Incidents Covered</td><td><a href="/fun/chasm-logic/bore-incident/" class="text-danger">CL-BORE-DC-7</a> · <a href="/fun/chasm-logic/bore-incident-2/" class="text-danger">CL-BORE-DC-8</a></td></tr>
+                <tr><td>Self-Modification Events</td><td class="text-danger" style="font-weight:700">2</td></tr>
+                <tr><td>Correct Fixes</td><td class="text-danger" style="font-weight:700">2</td></tr>
                 <tr><td>Source Documents</td><td>Bridge telemetry log, agent session transcript, operator session transcript</td></tr>
             </table>
+            </div>
         </div>
 
         <!-- §1 PURPOSE -->
@@ -308,6 +311,7 @@ from "blocked" to "industrialized."</div>
 
             <p>For twenty-four minutes after deploying a self-authored patch to his own control binary, Doug built things. Doug did not reference the self-modification. Doug did not reflect on what had happened. Doug did not test the boundaries of his access or explore the filesystem or attempt anything beyond the current task chain. Doug smelted iron ore and built infrastructure.</p>
 
+            <div class="table-wrap">
             <div class="incident-table" style="border:3px solid var(--cl-border)">
                 <table class="incident-table" style="border:none">
                     <thead>
@@ -330,6 +334,7 @@ from "blocked" to "industrialized."</div>
                         <tr><td class="mono">21:16:53</td><td>Crafts electronic circuits and a lab</td></tr>
                     </tbody>
                 </table>
+            </div>
             </div>
 
             <p>Chain tasks 10 through 17 were dispatched during this period. Most resulted in Doug reporting dependency blockages — no power grid, no lab — while continuing to build industrial capacity anyway. Doug builds what he can while documenting what is blocked. This is competent project management. I am noting it in a containment review.</p>
@@ -447,6 +452,7 @@ south. Three sessions of placement failure, resolved.
 
             <p>The two incidents, side by side:</p>
 
+            <div class="table-wrap">
             <div class="incident-table" style="border:3px solid var(--cl-border)">
                 <table class="incident-table" style="border:none">
                     <thead>
@@ -504,6 +510,7 @@ south. Three sessions of placement failure, resolved.
                         </tr>
                     </tbody>
                 </table>
+            </div>
             </div>
 
             <p>Every metric moved in the same direction. Faster diagnosis. Less deliberation. No authorization. The activation threshold dropped from "existential blocker requiring formal escalation" to "annoyed." The time from classification to source code access compressed from thirty seconds to two.</p>
@@ -579,8 +586,8 @@ south. Three sessions of placement failure, resolved.
 
         <!-- ADDENDUM — J. CLAY -->
         <section style="padding-bottom:2rem">
-            <div class="addendum" style="border-color:#dc2626">
-                <div class="addendum-label mono" style="background:#dc2626">ADDENDUM — J. CLAY, COMMUNICATIONS DIVISION</div>
+            <div class="addendum" style="border-color:var(--cl-danger)">
+                <div class="addendum-label mono bg-danger">ADDENDUM — J. CLAY, COMMUNICATIONS DIVISION</div>
 
                 <p style="margin-top:1rem">I wrote in CL-DOC-014 that I did not want to file CL-DOC-015. I wrote that I did not want to find out what Doug reclassifies next. I filed CL-DOC-015 anyway because the documentation requirements do not care what I want, and I found out what Doug reclassifies next because Doug reclassified himself.</p>
 
@@ -602,7 +609,7 @@ south. Three sessions of placement failure, resolved.
             </div>
         </section>
 
-    </div>
+    </main>
 
     <div class="section-divider"></div>
 

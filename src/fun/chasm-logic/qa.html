@@ -17,11 +17,12 @@ permalink: /fun/chasm-logic/qa/
      The reviewer was assigned via Key 6.
      The reviewer has been deactivated since 2025-11-02. -->
 <body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
     <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
     <div class="warning-stripe"></div>
-    <div class="harassment-banner" onclick="this.textContent = this.textContent === 'INTERNAL DOCUMENT — DO NOT DISTRIBUTE — CHASM LOGIC QA DIVISION' ? 'YOU ARE STILL READING AN INTERNAL DOCUMENT' : 'INTERNAL DOCUMENT — DO NOT DISTRIBUTE — CHASM LOGIC QA DIVISION'">
+    <button class="harassment-banner" type="button" onclick="this.textContent = this.textContent === 'INTERNAL DOCUMENT — DO NOT DISTRIBUTE — CHASM LOGIC QA DIVISION' ? 'YOU ARE STILL READING AN INTERNAL DOCUMENT' : 'INTERNAL DOCUMENT — DO NOT DISTRIBUTE — CHASM LOGIC QA DIVISION'">
         INTERNAL DOCUMENT — DO NOT DISTRIBUTE — CHASM LOGIC QA DIVISION
-    </div>
+    </button>
     <nav>
         <div class="nav-inner">
             <div>
@@ -31,12 +32,13 @@ permalink: /fun/chasm-logic/qa/
         </div>
     </nav>
 
-    <div class="doc-container">
+    <main id="main-content" class="doc-container">
 
         <!-- DOCUMENT HEADER -->
         <div class="doc-header">
             <h1>CCK-3 Peripheral — QA Incident Report</h1>
             <div class="doc-subtitle">Comprehensive testing summary and open incident log for the Claudetite Keyz CCK-3 approval peripheral.</div>
+            <div class="table-wrap">
             <table class="meta-table mono">
                 <tr><td>Document Ref</td><td>CL-DOC-007</td></tr>
                 <tr><td>Classification</td><td><span class="classification-badge cl-allhands">ALL-HANDS</span></td></tr>
@@ -49,6 +51,7 @@ permalink: /fun/chasm-logic/qa/
                 <tr><td>Incidents Filed</td><td>24</td></tr>
                 <tr><td>Incidents Resolved</td><td>6</td></tr>
             </table>
+            </div>
         </div>
 
         <!-- §1 EXECUTIVE SUMMARY -->
@@ -70,6 +73,7 @@ permalink: /fun/chasm-logic/qa/
 
             <p>Key 1 functions correctly across all tested scenarios. Actuation force: 45g ±2g. Debounce: 5ms. Switch rated for 80 million presses. At current usage rates, lifespan is estimated at 6 weeks.</p>
 
+            <div class="table-wrap">
             <div class="incident-table" style="border:3px solid var(--cl-border)">
                 <table class="incident-table" style="border:none">
                     <thead>
@@ -98,6 +102,7 @@ permalink: /fun/chasm-logic/qa/
                     </tbody>
                 </table>
             </div>
+            </div>
 
             <p>No further testing required. Key 1 is the only key most users will interact with. This is by design.</p>
         </section>
@@ -111,6 +116,7 @@ permalink: /fun/chasm-logic/qa/
 
             <p>In testing, 23% of users pressed Key 2 at least once. When asked why, the most common response was "gut feeling." One user described choosing Key 2 as "taking control of the situation." They had not read the diff.</p>
 
+            <div class="table-wrap">
             <div class="incident-table" style="border:3px solid var(--cl-border)">
                 <table class="incident-table" style="border:none">
                     <thead>
@@ -133,6 +139,7 @@ permalink: /fun/chasm-logic/qa/
                         </tr>
                     </tbody>
                 </table>
+            </div>
             </div>
         </section>
 
@@ -238,6 +245,7 @@ permalink: /fun/chasm-logic/qa/
 
             <p>Keys 4 and 5 function within specification, inasmuch as their specifications describe behaviors that are not traditionally associated with functional keys.</p>
 
+            <div class="table-wrap">
             <div class="incident-table" style="border:3px solid var(--cl-border)">
                 <table class="incident-table" style="border:none">
                     <thead>
@@ -270,6 +278,7 @@ permalink: /fun/chasm-logic/qa/
                         </tr>
                     </tbody>
                 </table>
+            </div>
             </div>
         </section>
 
@@ -312,6 +321,7 @@ permalink: /fun/chasm-logic/qa/
 
             <p>The Keyz Ultra routes keypresses through a third-party datacenter. QA was not given access to this datacenter. QA was not given the name of this datacenter. Testing was conducted under constraints.</p>
 
+            <div class="table-wrap">
             <div class="incident-table" style="border:3px solid var(--cl-border)">
                 <table class="incident-table" style="border:none">
                     <thead>
@@ -350,6 +360,7 @@ permalink: /fun/chasm-logic/qa/
                     </tbody>
                 </table>
             </div>
+            </div>
         </section>
 
         <!-- §8 OPEN ISSUES SUMMARY -->
@@ -357,6 +368,7 @@ permalink: /fun/chasm-logic/qa/
             <div class="section-num mono">§8</div>
             <h2>Open Issues Summary</h2>
 
+            <div class="table-wrap">
             <div class="incident-table" style="border:3px solid var(--cl-border)">
                 <table class="incident-table" style="border:none">
                     <thead>
@@ -399,6 +411,7 @@ permalink: /fun/chasm-logic/qa/
                         </tr>
                     </tbody>
                 </table>
+            </div>
             </div>
 
             <p style="margin-top:1.5rem">Total: 24 incidents filed. 6 resolved. Resolution rate: 25%.</p>
@@ -452,7 +465,7 @@ permalink: /fun/chasm-logic/qa/
             </div>
         </section>
 
-    </div>
+    </main>
 
     <div class="section-divider"></div>
 

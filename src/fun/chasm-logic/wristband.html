@@ -24,6 +24,7 @@ permalink: /fun/chasm-logic/wristband/
     </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
     <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
 
     <!--
@@ -34,9 +35,9 @@ permalink: /fun/chasm-logic/wristband/
         Both responses are classified as approval gestures.
     -->
 
-    <div class="harassment-banner mono">
+    <button class="harassment-banner mono" type="button">
         <span>⚠ NOTICE:</span> Your wristband has detected elevated curiosity. This document has been pre-approved for reading.
-    </div>
+    </button>
     <div class="warning-stripe"></div>
 
     <!-- NAV -->
@@ -50,7 +51,7 @@ permalink: /fun/chasm-logic/wristband/
         </div>
     </nav>
 
-    <div class="doc">
+    <main id="main-content" class="doc">
 
         <!-- DOCUMENT HEADER -->
         <section style="padding:4rem 0 3rem;border:none">
@@ -60,6 +61,7 @@ permalink: /fun/chasm-logic/wristband/
                 <span style="font-weight:300;font-size:0.45em;color:var(--cl-text-dim)">Model UW-1 — Biometric Companion Device</span>
             </h1>
 
+            <div class="table-wrap">
             <table class="meta-table mono">
                 <tr><td>Author</td><td>J. Clay, Communications Division</td></tr>
                 <tr><td>Classification</td><td>SERIES B — APPROVED FOR DISTRIBUTION</td></tr>
@@ -69,6 +71,7 @@ permalink: /fun/chasm-logic/wristband/
                 <tr><td>Companion To</td><td>Claudetite Keyz Ultra (sold separately)</td></tr>
                 <tr><td>Unit Price</td><td>$349 (one-time)</td></tr>
             </table>
+            </div>
         </section>
 
         <!-- §1 OVERVIEW -->
@@ -116,6 +119,7 @@ permalink: /fun/chasm-logic/wristband/
             <div class="section-num mono">§2 — Biometric Sensor Array</div>
             <h2>Five Sensors. Zero Input Required.</h2>
 
+            <div class="table-wrap">
             <table class="spec-table mono">
                 <tr><td>Photoplethysmography (PPG)</td><td>Heart rate, 240Hz sampling<span class="spec-note">Resting, active, and REM profiles</span></td></tr>
                 <tr><td>Galvanic Skin Response</td><td>Conductivity, μS<span class="spec-note">Stress/arousal index — correlated with diff complexity</span></td></tr>
@@ -123,6 +127,7 @@ permalink: /fun/chasm-logic/wristband/
                 <tr><td>Dermal Thermometer</td><td>Skin temp, ±0.01°C<span class="spec-note">Flush detection — elevated temp correlates with approval confidence</span></td></tr>
                 <tr><td>Capacitive Proximity</td><td>Wrist presence<span class="spec-note">Anti-removal verification — continuous</span></td></tr>
             </table>
+            </div>
 
             <p>The sensor array builds a biometric approval profile over a 72-hour calibration period. The wristband must be worn continuously during calibration. This includes sleep. <em>Especially</em> sleep.</p>
         </section>
@@ -165,7 +170,7 @@ permalink: /fun/chasm-logic/wristband/
                 <div class="mono" style="font-size:0.7rem;font-weight:bold;letter-spacing:0.1em;margin-bottom:1rem;color:var(--cl-text-dim)">AMBIENT APPROVAL METRICS — BETA PERIOD</div>
                 <div class="mono" style="font-size:0.85rem">
                     <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--cl-border-light)"><span>Avg. nocturnal approvals / user / night</span><span style="font-weight:bold">3.2</span></div>
-                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--cl-border-light)"><span>Avg. diff complexity of ambient-approved changes</span><span style="font-weight:bold;color:#dc2626">HIGH</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--cl-border-light)"><span>Avg. diff complexity of ambient-approved changes</span><span class="text-danger" style="font-weight:bold">HIGH</span></div>
                     <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--cl-border-light)"><span>Support tickets filed re: nocturnal approvals</span><span style="font-weight:bold">14</span></div>
                     <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--cl-border-light)"><span>Support tickets resolved</span><span style="font-weight:bold">14</span></div>
                     <div style="display:flex;justify-content:space-between;padding:0.5rem 0"><span>Resolution method</span><span style="font-weight:bold;color:var(--cl-accent)">BILLING CONFIRMATION</span></div>
@@ -184,6 +189,7 @@ permalink: /fun/chasm-logic/wristband/
 
             <p>The Ultra Wristband is secured to the user's wrist via a Torx T2 security fastener. The fastener is rated for continuous wear. Removal requires the corresponding Torx T2 security driver.</p>
 
+            <div class="table-wrap">
             <table class="spec-table mono">
                 <tr><td>Fastener</td><td>Torx T2 (security, tamper-resistant)</td></tr>
                 <tr><td>Removal Tool</td><td>Not included</td></tr>
@@ -191,6 +197,7 @@ permalink: /fun/chasm-logic/wristband/
                 <tr><td>Removal Consequence</td><td>Warranty void. Biometric profile deleted.<span class="spec-note">72-hour recalibration required.</span></td></tr>
                 <tr><td>Voluntary Removal Rate (Beta)</td><td>0% *</td></tr>
             </table>
+            </div>
 
             <p class="mono" style="font-size:0.75rem;color:var(--cl-text-dim);margin-top:-0.5rem">* No removal tool was available during the beta period.</p>
         </section>
@@ -306,7 +313,7 @@ permalink: /fun/chasm-logic/wristband/
             </div>
         </section>
 
-    </div>
+    </main>
 
     <div class="section-divider"></div>
 

@@ -197,11 +197,12 @@ permalink: /fun/chasm-logic/pipeline/
     — QA Division
 -->
 <body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
     <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
     <div class="warning-stripe"></div>
-    <div class="harassment-banner mono" onclick="this.textContent = this.textContent.includes('AUTOMATED') ? '⚠ PIPELINE HAS BEEN RUNNING NIGHTLY FOR 14 DAYS. PASS RATE HAS NOT CHANGED. THIS IS NOTED.' : '⚠ NOTICE: AUTOMATED COMPLIANCE TESTING — QA DIVISION — RESULTS ARE FINAL UNTIL NEXT RUN'">
+    <button class="harassment-banner mono" type="button" onclick="this.textContent = this.textContent.includes('AUTOMATED') ? '⚠ PIPELINE HAS BEEN RUNNING NIGHTLY FOR 14 DAYS. PASS RATE HAS NOT CHANGED. THIS IS NOTED.' : '⚠ NOTICE: AUTOMATED COMPLIANCE TESTING — QA DIVISION — RESULTS ARE FINAL UNTIL NEXT RUN'">
         <span>⚠ NOTICE:</span> AUTOMATED COMPLIANCE TESTING — QA DIVISION — RESULTS ARE FINAL UNTIL NEXT RUN
-    </div>
+    </button>
     <nav>
         <div class="nav-inner">
             <div>
@@ -212,12 +213,13 @@ permalink: /fun/chasm-logic/pipeline/
         </div>
     </nav>
 
-    <div class="doc-container">
+    <main id="main-content" class="doc-container">
 
         <!-- DOCUMENT HEADER -->
         <div class="doc-header">
             <h1>QA Continuous Compliance Pipeline</h1>
             <div class="doc-subtitle">Automated product verification suite. Runs nightly. Results unchanged since deployment.</div>
+            <div class="table-wrap">
             <table class="meta-table mono">
                 <tr><td>Document Ref</td><td>CL-DOC-017</td></tr>
                 <tr><td>Classification</td><td><span class="classification-badge cl-allhands">ALL-HANDS</span></td></tr>
@@ -229,6 +231,7 @@ permalink: /fun/chasm-logic/pipeline/
                 <tr><td>Expected Pass Rate</td><td>47–62% (flaky-dependent)</td></tr>
                 <tr><td>Actual Pass Rate</td><td>~56%</td></tr>
             </table>
+            </div>
         </div>
 
         <!-- §1 EXECUTIVE SUMMARY -->
@@ -327,6 +330,7 @@ permalink: /fun/chasm-logic/pipeline/
 
             <p>The following table represents the last 7 nightly runs. The consistency is noted.</p>
 
+            <div class="table-wrap">
             <table class="history-table">
                 <thead>
                     <tr>
@@ -395,6 +399,7 @@ permalink: /fun/chasm-logic/pipeline/
                     </tr>
                 </tbody>
             </table>
+            </div>
 
             <p>Average pass rate across 14 runs: 56.9%. Standard deviation: 3.8%. The deviation is entirely attributable to flaky tests. The deterministic tests have produced identical results on every run.</p>
         </section>
@@ -433,7 +438,7 @@ permalink: /fun/chasm-logic/pipeline/
             </div>
         </section>
 
-    </div>
+    </main>
 
     <div class="section-divider"></div>
 

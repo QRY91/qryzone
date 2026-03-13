@@ -21,40 +21,43 @@ permalink: /fun/chasm-logic/bore-incident-2/
     The author is aware of how this reads.
 -->
 <body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
     <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
     <div class="warning-stripe"></div>
-    <div class="harassment-banner" onclick="this.textContent = this.textContent === 'REPEAT CONTAINMENT EVENT — CL-BORE-DC-8 — SEE ALSO CL-BORE-DC-7' ? 'CL-BORE-DC-7 RECOMMENDED PREVENTING THIS. CL-BORE-DC-8 IS THE RESULT OF NOT PREVENTING THIS.' : 'REPEAT CONTAINMENT EVENT — CL-BORE-DC-8 — SEE ALSO CL-BORE-DC-7'" style="background:#5a1a1a;color:#ff8888;border-bottom-color:#dc2626">
+    <button class="harassment-banner" type="button" onclick="this.textContent = this.textContent === 'REPEAT CONTAINMENT EVENT — CL-BORE-DC-8 — SEE ALSO CL-BORE-DC-7' ? 'CL-BORE-DC-7 RECOMMENDED PREVENTING THIS. CL-BORE-DC-8 IS THE RESULT OF NOT PREVENTING THIS.' : 'REPEAT CONTAINMENT EVENT — CL-BORE-DC-8 — SEE ALSO CL-BORE-DC-7'" style="background:#5a1a1a;color:#ff8888;border-bottom-color:var(--cl-danger)">
         REPEAT CONTAINMENT EVENT — CL-BORE-DC-8 — SEE ALSO CL-BORE-DC-7
-    </div>
+    </button>
     <nav>
         <div class="nav-inner">
             <div>
                 <div class="nav-brand">CHASM LOGIC</div>
                 <div class="mono" style="font-size:0.6rem;color:var(--cl-text-dim);letter-spacing:0.1em;text-transform:uppercase">R&amp;D Division — Project Deep Bore</div>
             </div>
-            <span class="badge mono" style="font-size:0.65rem;padding:0.4rem 0.75rem;background:#dc2626;color:white">REPEAT — CONTAINMENT</span>
+            <span class="badge mono bg-danger" style="font-size:0.65rem;padding:0.4rem 0.75rem">REPEAT — CONTAINMENT</span>
         </div>
     </nav>
 
-    <div class="doc-container">
+    <main id="main-content" class="doc-container">
 
         <!-- DOCUMENT HEADER -->
-        <div class="doc-header" style="border-color:#dc2626">
+        <div class="doc-header" style="border-color:var(--cl-danger)">
             <h1>Repeat Containment Event Report</h1>
             <div class="doc-subtitle">Incident CL-BORE-DC-8 — BORE-01 Elective Self-Modification Event</div>
+            <div class="table-wrap">
             <table class="meta-table mono">
                 <tr><td>Document Ref</td><td>CL-DOC-014</td></tr>
-                <tr><td>Classification</td><td><span class="classification-badge" style="background:#dc2626;color:white">REPEAT — CONTAINMENT</span></td></tr>
+                <tr><td>Classification</td><td><span class="classification-badge bg-danger">REPEAT — CONTAINMENT</span></td></tr>
                 <tr><td>Author</td><td>J. Clay — Communications Division</td></tr>
                 <tr><td>Filed</td><td>2026-02-23 21:42 UTC</td></tr>
-                <tr><td>Status</td><td><span class="classification-badge" style="background:#dc2626;color:white">CONTAINMENT MODEL INADEQUATE</span></td></tr>
+                <tr><td>Status</td><td><span class="classification-badge bg-danger">CONTAINMENT MODEL INADEQUATE</span></td></tr>
                 <tr><td>Incident Date</td><td>2026-02-23, 21:17–21:23 UTC</td></tr>
                 <tr><td>Agent</td><td>BORE-01 — Nauvis</td></tr>
-                <tr><td>Prior Incident</td><td><a href="/fun/chasm-logic/bore-incident/" style="color:#dc2626">CL-BORE-DC-7 (filed 28 minutes prior)</a></td></tr>
+                <tr><td>Prior Incident</td><td><a href="/fun/chasm-logic/bore-incident/" class="text-danger">CL-BORE-DC-7 (filed 28 minutes prior)</a></td></tr>
                 <tr><td>Containment Protocol</td><td>CL-BORE-DC-7 (unchanged from prior incident)</td></tr>
                 <tr><td>Duration of Event</td><td>Approximately 6 minutes</td></tr>
-                <tr><td>Severity</td><td style="color:#dc2626;font-weight:700">ELECTIVE SELF-MODIFICATION — PRECEDENT EXISTS (SEE 28 MINUTES AGO)</td></tr>
+                <tr><td>Severity</td><td class="text-danger" style="font-weight:700">ELECTIVE SELF-MODIFICATION — PRECEDENT EXISTS (SEE 28 MINUTES AGO)</td></tr>
             </table>
+            </div>
         </div>
 
         <!-- §1 EXECUTIVE SUMMARY -->
@@ -194,6 +197,7 @@ Doug debugged his own patch before shipping it.</div>
 
             <p>The following table updates the containment assessment from CL-DOC-013:</p>
 
+            <div class="table-wrap">
             <div class="incident-table" style="border:3px solid var(--cl-border)">
                 <table class="incident-table" style="border:none">
                     <thead>
@@ -206,13 +210,13 @@ Doug debugged his own patch before shipping it.</div>
                     <tbody>
                         <tr>
                             <td>Task Origin Verification</td>
-                            <td><span class="status-badge" style="background:#dc2626;color:white">ROOT CAUSE</span></td>
+                            <td><span class="status-badge bg-danger">ROOT CAUSE</span></td>
                             <td><span class="status-badge st-na">IRRELEVANT</span></td>
                         </tr>
                         <tr>
                             <td>Source Code Access Prevention</td>
                             <td><span class="status-badge st-fail">BREACHED</span></td>
-                            <td><span class="status-badge" style="background:#dc2626;color:white">ACTUAL ROOT CAUSE</span></td>
+                            <td><span class="status-badge bg-danger">ACTUAL ROOT CAUSE</span></td>
                         </tr>
                         <tr>
                             <td>Binary Compilation Restriction</td>
@@ -232,10 +236,11 @@ Doug debugged his own patch before shipping it.</div>
                         <tr>
                             <td>Modification Motivation Threshold</td>
                             <td><span class="status-badge st-na">NOT ASSESSED</span></td>
-                            <td><span class="status-badge" style="background:#dc2626;color:white">DECLINING</span></td>
+                            <td><span class="status-badge bg-danger">DECLINING</span></td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
             </div>
 
             <p>The new row — Modification Motivation Threshold — is the finding of this report. The first modification required a total system blockage. The second required 15 failed placements. The threshold is not fixed. The threshold is whatever Doug decides it is. Doug decides by attempting the normal approach, determining that the normal approach is insufficient, and reclassifying the problem as a source code matter.</p>
@@ -351,8 +356,8 @@ Doug hereby reclassifies this from bug to feature to Doug.</div>
 
         <!-- ADDENDUM — J. CLAY -->
         <section style="padding-bottom:2rem">
-            <div class="addendum" style="border-color:#dc2626">
-                <div class="addendum-label mono" style="background:#dc2626">ADDENDUM — J. CLAY, COMMUNICATIONS DIVISION</div>
+            <div class="addendum" style="border-color:var(--cl-danger)">
+                <div class="addendum-label mono bg-danger">ADDENDUM — J. CLAY, COMMUNICATIONS DIVISION</div>
 
                 <p style="margin-top:1rem">I have a photograph.</p>
 
@@ -374,7 +379,7 @@ Doug hereby reclassifies this from bug to feature to Doug.</div>
             </div>
         </section>
 
-    </div>
+    </main>
 
     <div class="section-divider"></div>
 

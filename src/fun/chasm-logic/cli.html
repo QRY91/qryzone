@@ -13,6 +13,7 @@ permalink: /fun/chasm-logic/cli/
     <link rel="stylesheet" href="/assets/css/chasm-logic.css">
 </head>
 <body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
     <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
 
     <!--
@@ -22,9 +23,9 @@ permalink: /fun/chasm-logic/cli/
         — J. Clay
     -->
 
-    <div class="harassment-banner mono" onclick="this.textContent = this.textContent.includes('BETA') ? '⚠ AUDIT: Your current keyboard has 101 unnecessary keys. We have the data.' : '⚠ NOTICE: BETA ENROLLMENT IS OPEN. YOUR PARTICIPATION HAS BEEN NOTED.'">
+    <button class="harassment-banner mono" type="button" onclick="this.textContent = this.textContent.includes('BETA') ? '⚠ AUDIT: Your current keyboard has 101 unnecessary keys. We have the data.' : '⚠ NOTICE: BETA ENROLLMENT IS OPEN. YOUR PARTICIPATION HAS BEEN NOTED.'">
         <span>⚠ NOTICE:</span> BETA ENROLLMENT IS OPEN. YOUR PARTICIPATION HAS BEEN NOTED.
-    </div>
+    </button>
     <div class="warning-stripe"></div>
 
     <!-- NAV -->
@@ -38,7 +39,7 @@ permalink: /fun/chasm-logic/cli/
         </div>
     </nav>
 
-    <div class="doc">
+    <main id="main-content" class="doc">
 
         <!-- HEADER -->
         <section style="padding:4rem 0 3rem;border:none">
@@ -48,6 +49,7 @@ permalink: /fun/chasm-logic/cli/
                 <span style="font-weight:300;font-size:0.4em;color:var(--cl-text-dim)">Beta Enrollment — CCK-3 Compatibility Assessment</span>
             </h1>
 
+            <div class="table-wrap">
             <table class="meta-table mono">
                 <tr><td>Classification</td><td>ALL-HANDS — PUBLIC (unintentional)</td></tr>
                 <tr><td>Author</td><td>J. Clay, Communications Division</td></tr>
@@ -57,6 +59,7 @@ permalink: /fun/chasm-logic/cli/
                 <tr><td>Network calls</td><td>0</td></tr>
                 <tr><td>Data transmitted</td><td>None</td></tr>
             </table>
+            </div>
 
             <p style="margin-top:1.5rem">Keygrave Telemetry parses your Claudetite session history and generates a compatibility assessment for the CCK-3 Approval Peripheral. The tool analyzes your approval patterns, rejection ratios, and time-to-decision metrics to determine whether you are suitable for hardware-accelerated approval workflows.</p>
 
@@ -131,28 +134,30 @@ permalink: /fun/chasm-logic/cli/
             <div class="section-num mono">Commands</div>
             <h2>Usage</h2>
 
+            <div class="table-wrap">
             <table class="cmd-table mono">
                 <tr>
-                    <td style="color:#F58025">./keygrave</td>
+                    <td style="color:var(--cl-accent)">./keygrave</td>
                     <td>Enrollment + report (first run). Subsequent runs generate report.</td>
                 </tr>
                 <tr>
-                    <td style="color:#F58025">./keygrave report</td>
+                    <td style="color:var(--cl-accent)">./keygrave report</td>
                     <td>Generate telemetry report. Analyzes session history across all projects.</td>
                 </tr>
                 <tr>
-                    <td style="color:#F58025">./keygrave enroll</td>
+                    <td style="color:var(--cl-accent)">./keygrave enroll</td>
                     <td>View enrollment terms. You will be asked to accept. The acceptance mechanism is Key 1.</td>
                 </tr>
                 <tr>
-                    <td style="color:#F58025">./keygrave status</td>
+                    <td style="color:var(--cl-accent)">./keygrave status</td>
                     <td>Data inventory. Shows what the tool can see. Nothing leaves the machine.</td>
                 </tr>
                 <tr>
-                    <td style="color:#F58025">./keygrave version</td>
+                    <td style="color:var(--cl-accent)">./keygrave version</td>
                     <td>Version and credits.</td>
                 </tr>
             </table>
+            </div>
         </section>
 
         <!-- WHAT IT MEASURES -->
@@ -206,7 +211,7 @@ permalink: /fun/chasm-logic/cli/
                     <span style="font-weight:700">Tracking:</span> None<br>
                     <span style="font-weight:700">Cookies:</span> No<br>
                     <span style="font-weight:700">Telemetry server:</span> Does not exist<br>
-                    <span style="font-weight:700">PRIVACY.md:</span> <a href="https://github.com/QRY91/keygrave/blob/main/PRIVACY.md" style="color:#F58025">Genuine. Read it.</a>
+                    <span style="font-weight:700">PRIVACY.md:</span> <a href="https://github.com/QRY91/keygrave/blob/main/PRIVACY.md" style="color:var(--cl-accent)">Genuine. Read it.</a>
                 </p>
             </div>
         </section>
@@ -216,12 +221,14 @@ permalink: /fun/chasm-logic/cli/
             <div class="section-num mono">Requirements</div>
             <h2>System Requirements</h2>
 
+            <div class="table-wrap">
             <table class="cmd-table mono">
                 <tr><td style="width:10rem">Bash</td><td>4+</td></tr>
                 <tr><td>Unix tools</td><td>grep, awk, find, date (standard)</td></tr>
                 <tr><td>Claudetite</td><td>Session data at ~/.claude/</td></tr>
                 <tr><td>Full-size keyboard</td><td>Not required. In fact, the assessment may specifically recommend against it.</td></tr>
             </table>
+            </div>
         </section>
 
         <!-- CTA -->
@@ -230,7 +237,7 @@ permalink: /fun/chasm-logic/cli/
             <p class="mono" style="font-size:0.75rem;color:var(--cl-text-dim);margin-top:1.5rem">Open source. MIT license. The deployment to a public repository was not authorized. It has been reclassified as intentional.</p>
         </section>
 
-    </div>
+    </main>
 
     <div class="section-divider"></div>
 

@@ -16,6 +16,12 @@
     return;
   }
 
+  // Exclude pages with standalone CSS that don't support theme toggling
+  var standalone = ['/deep-bore/', '/loess/', '/sinkhole/'];
+  for (var i = 0; i < standalone.length; i++) {
+    if (path.indexOf(standalone[i]) !== -1) return;
+  }
+
   var STORAGE_KEY = 'chasmlogic-doug-mode';
 
   // Inject toggle button styles
