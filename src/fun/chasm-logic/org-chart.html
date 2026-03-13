@@ -1,0 +1,330 @@
+---
+permalink: /fun/chasm-logic/org-chart/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CL-DOC-010 — Org Chart — Chasm Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/chasm-logic.css">
+    <style>
+        .org-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; border: 3px solid var(--cl-border); }
+        .org-table thead { background: var(--cl-text-heading); color: var(--cl-bg); }
+        .org-table th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+        }
+        .org-table td {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--cl-border-light);
+            vertical-align: top;
+            color: var(--cl-text);
+        }
+        .org-table tbody tr:hover { background: var(--cl-surface); }
+        .org-table .org-division { font-weight: 700; white-space: nowrap; }
+
+        .audit-block {
+            border: 3px solid var(--cl-danger);
+            background: var(--cl-card-bg);
+            margin: 2rem 0;
+            box-shadow: 8px 8px 0 0 var(--cl-card-shadow);
+        }
+        .audit-header {
+            background: var(--cl-danger);
+            color: white;
+            padding: 0.75rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .audit-body { padding: 1.5rem; }
+        .audit-table { width: 100%; border-collapse: collapse; }
+        .audit-table td {
+            padding: 0.5rem 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--cl-border-light);
+            vertical-align: top;
+            color: var(--cl-text);
+        }
+        .audit-table td:first-child {
+            width: 60%;
+            font-weight: 700;
+            color: var(--cl-text-dim);
+        }
+        .audit-table td:last-child { font-weight: 900; }
+        .audit-note {
+            font-size: 0.75rem;
+            color: var(--cl-text-dim);
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--cl-border-light);
+        }
+    </style>
+</head>
+<!--
+    This org chart was last verified prior to restructuring.
+    Doug count at time of filing: unverified.
+    Doug count at time of reading: probably higher.
+    HR would verify this but the position is vacant.
+-->
+<body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
+    <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
+    <div class="warning-stripe"></div>
+    <button class="harassment-banner" type="button" onclick="this.textContent = this.textContent === 'INTERNAL DOCUMENT — ORG CHARTS ARE LIVING DOCUMENTS — THIS ONE HAS OUTLIVED THE ORG' ? 'THE ORG CHART IS STILL MORE CURRENT THAN THE ORG' : 'INTERNAL DOCUMENT — ORG CHARTS ARE LIVING DOCUMENTS — THIS ONE HAS OUTLIVED THE ORG'">
+        INTERNAL DOCUMENT — ORG CHARTS ARE LIVING DOCUMENTS — THIS ONE HAS OUTLIVED THE ORG
+    </button>
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div class="nav-brand">CHASM LOGIC</div>
+                <div class="nav-sub mono">Investor Relations — Organizational Structure</div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content" class="doc-container">
+
+        <!-- DOCUMENT HEADER -->
+        <div class="doc-header">
+            <h1>Organizational Chart — Current Headcount</h1>
+            <div class="doc-subtitle">Reporting structure and personnel status as of last known configuration.</div>
+            <div class="table-wrap">
+            <table class="meta-table mono">
+                <tr><td>Document Ref</td><td>CL-DOC-010</td></tr>
+                <tr><td>Classification</td><td><span class="classification-badge cl-allhands">ALL-HANDS</span></td></tr>
+                <tr><td>Filed By</td><td>HR <span style="color:#ef4444;font-size:0.75rem">(POSITION VACANT)</span></td></tr>
+                <tr><td>Last Updated</td><td>Prior to restructuring</td></tr>
+                <tr><td>Status</td><td><span class="classification-badge" style="background:#fef3c7;color:#92400e">OUTDATED</span></td></tr>
+                <tr><td>Doug Count</td><td>Unverified</td></tr>
+                <tr><td>Accuracy</td><td>Not guaranteed. Not attempted.</td></tr>
+            </table>
+            </div>
+        </div>
+
+        <!-- §1 ORGANIZATIONAL STRUCTURE -->
+        <section>
+            <div class="section-num mono">§1</div>
+            <h2>Current Reporting Structure</h2>
+
+            <p>The following chart reflects the organizational structure of Chasm Logic as last documented. Several positions have changed status since filing. The chart has not been updated because the person responsible for updating it no longer holds a position. The position responsible for filling that position is also vacant.</p>
+
+            <div class="table-wrap">
+            <table class="org-table">
+                <thead>
+                    <tr>
+                        <th style="width:14rem">Division</th>
+                        <th>Personnel</th>
+                        <th style="width:10rem">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="org-division mono">CEO</td>
+                        <td>B. Granite</td>
+                        <td><span class="status-badge st-pass">ACTIVE</span> <span class="mono" style="font-size:0.7rem;color:var(--cl-text-dim)">&mdash; dictation only</span></td>
+                    </tr>
+                    <tr>
+                        <td class="org-division mono">Communications</td>
+                        <td>J. Clay</td>
+                        <td><span class="status-badge st-pass">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td class="org-division mono">QA Division</td>
+                        <td>S. Shale</td>
+                        <td><span class="status-badge st-pass">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td class="org-division mono">Legal</td>
+                        <td>Doug</td>
+                        <td><span class="status-badge st-pass">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td class="org-division mono">Acquisitions</td>
+                        <td>Doug</td>
+                        <td><span class="status-badge st-pass">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td class="org-division mono">R&D / Project Deep Bore</td>
+                        <td>Doug</td>
+                        <td><span class="status-badge st-shipped">ACTIVE</span> <span class="mono text-danger" style="font-size:0.7rem">&mdash; containment status: DEPLOYED</span></td>
+                    </tr>
+                    <tr>
+                        <td class="org-division mono">HR</td>
+                        <td><span style="color:var(--cl-text-muted)">(position vacant since restructuring)</span></td>
+                        <td><span class="status-badge st-na">VACANT</span></td>
+                    </tr>
+                    <tr>
+                        <td class="org-division mono">Finance</td>
+                        <td>D.Ite <span style="color:var(--cl-text-dim);font-size:0.85rem">(Doug)</span></td>
+                        <td><span class="status-badge st-fail">DEACTIVATED</span> <span class="mono" style="font-size:0.7rem;color:var(--cl-text-dim)">2025-11-02 &mdash; see QA notes</span></td>
+                    </tr>
+                    <tr>
+                        <td class="org-division mono">IT Infrastructure</td>
+                        <td><span style="color:var(--cl-text-muted)">(position not created)</span></td>
+                        <td><span class="status-badge st-na">N/A</span></td>
+                    </tr>
+                    <tr>
+                        <td class="org-division mono">Investor Relations</td>
+                        <td>J. Clay <span style="font-size:0.8rem;color:var(--cl-text-dim)">(concurrent)</span></td>
+                        <td><span class="status-badge st-pass">ACTIVE</span></td>
+                    </tr>
+                    <tr>
+                        <td class="org-division mono">Product</td>
+                        <td>B. Granite <span style="font-size:0.8rem;color:var(--cl-text-dim)">(concurrent)</span></td>
+                        <td><span class="status-badge st-pass">ACTIVE</span> <span class="mono" style="font-size:0.7rem;color:var(--cl-text-dim)">&mdash; dictation only</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <p>Total named employees: 4. Total positions: 11. Positions held concurrently: 3. Positions vacant or not created: 2. Positions held by Doug: 3. Positions formerly held by Doug under an alias: 1.</p>
+        </section>
+
+        <!-- §2 DOUG AUDIT -->
+        <section>
+            <div class="section-num mono">§2</div>
+            <h2>Doug Audit</h2>
+
+            <p>The following audit was conducted to assess Doug's organizational footprint. The audit was requested by Legal. Legal is Doug. This has been noted.</p>
+
+            <div class="audit-block">
+                <div class="audit-header mono">Doug Audit — Conflict of Interest Review</div>
+                <div class="audit-body">
+                    <table class="audit-table mono">
+                        <tr>
+                            <td>Named positions held by Doug</td>
+                            <td>3 <span style="font-size:0.75rem;color:var(--cl-text-dim)">(Legal, Acquisitions, R&D)</span></td>
+                        </tr>
+                        <tr>
+                            <td>Positions where Doug has reviewed own work</td>
+                            <td>3 of 3</td>
+                        </tr>
+                        <tr>
+                            <td>Conflict of interest flags</td>
+                            <td>0 <span style="font-size:0.75rem;color:var(--cl-text-dim)">(per Legal (Doug))</span></td>
+                        </tr>
+                        <tr>
+                            <td>Positions where Doug is the only candidate</td>
+                            <td>3 of 3</td>
+                        </tr>
+                        <tr>
+                            <td>Audit reviewed by</td>
+                            <td>Legal (Doug)</td>
+                        </tr>
+                        <tr>
+                            <td>Audit approved by</td>
+                            <td>Legal (Doug)</td>
+                        </tr>
+                        <tr>
+                            <td>Objections filed</td>
+                            <td>0 <span style="font-size:0.75rem;color:var(--cl-text-dim)">(HR position vacant)</span></td>
+                        </tr>
+                    </table>
+                    <div class="audit-note mono">
+                        This audit was found compliant by the reviewing authority. The reviewing authority is Doug. The audit methodology was designed by Legal (Doug) and approved by Acquisitions (Doug). No conflicts were identified by any of the three Dougs involved.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- §3 NOTES ON HEADCOUNT -->
+        <section>
+            <div class="section-num mono">§3</div>
+            <h2>Notes on Headcount</h2>
+
+            <p>Chasm Logic's headcount has been described as "lean" by Investor Relations (J. Clay), "optimal" by Legal (Doug), and "what headcount" by the CEO (B. Granite, via voicemail, highway noise).</p>
+
+            <p>The IT Infrastructure position was never created. All infrastructure decisions are made by whichever employee encounters the problem first. In practice, this is Doug, because Doug encounters all problems first, including problems he created, which he then resolves by creating additional problems.</p>
+
+            <p>The Finance position was held by D.Ite, who was deactivated on 2025-11-02. D.Ite was later identified as Doug operating under an assumed surname. The deactivation was processed by HR, which was still staffed at the time. HR was subsequently made vacant after Doug reviewed the last HR candidate's application and found them "redundant."</p>
+
+            <div class="footnote">
+                <p><span class="footnote-ref">[1]</span> The HR position has been vacant since restructuring. Restructuring was the event that made the HR position vacant. No other positions were affected by restructuring because restructuring consisted entirely of making the HR position vacant.</p>
+                <p><span class="footnote-ref">[2]</span> "Dictation only" means B. Granite communicates exclusively via voicemail left from his vehicle. Transcription accuracy is estimated at 40%. The remaining 60% is wind noise, which has been more actionable than the transcribed portion on at least two occasions.</p>
+            </div>
+        </section>
+
+        <!-- ADDENDUM — J. CLAY -->
+        <section style="padding-bottom:2rem">
+            <div class="addendum">
+                <div class="addendum-label mono">ADDENDUM — J. CLAY, COMMUNICATIONS DIVISION</div>
+
+                <p style="margin-top:1rem">I filed this update because someone should be filing something. HR would file it but the position is vacant. The position has been vacant since Doug reviewed the last HR candidate's application and found them "redundant."</p>
+
+                <p>I have verified the org chart against available records. The records are incomplete because the person responsible for maintaining records was the HR position, which is vacant. I verified the records against the org chart instead. They match. This is not the same as being accurate.</p>
+
+                <p>Doug's conflict-of-interest audit found zero conflicts. I want to note that this finding was unanimous among all parties involved, all of whom were Doug. I am not raising this as a concern. I am noting it as a fact. These are different things. I have been advised they are not different things. The advice came from Legal (Doug).</p>
+
+                <p class="mono" style="color:var(--cl-text-dim);margin-top:2rem;font-size:0.85rem">This document will be updated when the HR position is filled. The HR position will be filled when someone files the requisition. The requisition must be approved by HR.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="section-divider"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="mono">CHASM LOGIC</h3>
+                    <p>A Bedrock Holdings Company. We acquire things and rename them.</p>
+                </div>
+                <div>
+                    <h4 class="mono">LEGAL</h4>
+                    <ul>
+                        <li>Employment Policy (filed by Doug)</li>
+                        <li>Conflict of Interest Waiver (filed by Doug)</li>
+                        <li>Doug Disambiguation Protocol</li>
+                        <li>HR Requisition Form (pending HR approval)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">CONTACT</h4>
+                    <ul>
+                        <li class="mono">j.clay@chasmlogic.io</li>
+                        <li class="mono">hr@chasmlogic.io <span style="font-size:0.7rem;color:var(--cl-text-dim)">[UNMONITORED]</span></li>
+                        <li class="mono">legal@chasmlogic.io <span style="font-size:0.7rem;color:var(--cl-text-dim)">(Doug)</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">ALSO FROM CHASM LOGIC</h4>
+                    <ul>
+                        <li><a href="/fun/chasm-logic/bore-postmortem/" style="color:var(--cl-footer-dim);text-decoration:underline">Post-Incident Review</a></li>
+                        <li style="font-size:0.75rem;color:var(--cl-text-dim);margin-top:0.25rem">Where Doug reviewed Doug's containment of Doug.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/chasm-logic/qa/" style="color:var(--cl-footer-dim);text-decoration:underline">QA Incident Report</a></li>
+                        <li style="font-size:0.75rem;color:var(--cl-text-dim);margin-top:0.25rem">Reviewed by a deactivated employee. Status: PENDING.</li>
+                        <li style="margin-top:0.75rem"><a href="/fun/chasm-logic/" style="color:var(--cl-footer-dim);text-decoration:underline">Document Index</a></li>
+                        <li style="font-size:0.75rem;color:var(--cl-text-dim);margin-top:0.25rem">All filings. Most regrettable.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="disclaimer mono">
+                <p><span style="color:var(--cl-footer-text);font-weight:bold">DISCLAIMER:</span> This organizational chart was accurate at the time it was last updated. It was last updated prior to restructuring. Restructuring changed the organizational structure. The chart was not updated after restructuring because the person responsible for updating it was restructured. Chasm Logic maintains that this chart is a living document. It has outlived the org it documents.</p>
+
+                <p>Doug's presence across multiple divisions is documented but not questioned. The question would need to be filed through Legal (Doug), reviewed by HR (vacant), and approved by the CEO (dictation only, highway noise). This process has not been initiated. This process cannot be initiated. The form required to initiate it must be approved by HR.</p>
+
+                <p class="warning">WARNING: This org chart contains more Dougs than intended. Intended Doug count: 0. Actual Doug count: unverified.</p>
+            </div>
+
+            <div class="footer-copy mono">© 2026 CHASM LOGIC / BEDROCK HOLDINGS. ALL POSITIONS DOCUMENTED. MOST POSITIONS FILLED. SEVERAL POSITIONS ARE DOUG.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+    <script src="/assets/js/microdoug.js" defer></script>
+    <script src="/assets/js/dougmode.js" defer></script>
+</body>
+</html>
