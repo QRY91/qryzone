@@ -1,0 +1,383 @@
+---
+permalink: /fun/chasm-logic/doug-correspondence/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CL-DOC-003 — Internal Correspondence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/chasm-logic.css">
+    <style>
+        /* CL-DOC-003: Document instability */
+        .declassified-stamp {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-12deg);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            color: rgba(220, 38, 38, 0.06);
+            letter-spacing: 0.1em;
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .memo {
+            border: 3px solid var(--cl-border);
+            background: var(--cl-card-bg);
+            margin: 2rem 0;
+            box-shadow: 8px 8px 0 0 var(--cl-card-shadow);
+        }
+        .memo-header {
+            background: var(--cl-text-heading);
+            color: var(--cl-bg);
+            padding: 1rem 1.25rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-family: 'Roboto Mono', monospace;
+        }
+        .memo-body {
+            padding: 1.5rem 1.25rem;
+        }
+        .memo-body p {
+            font-size: 0.875rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        .memo-field {
+            font-size: 0.75rem;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--cl-border-light);
+            display: flex;
+            gap: 1rem;
+        }
+        .memo-field-label {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--cl-text-dim);
+            min-width: 5rem;
+        }
+        .memo-field-value {
+            color: var(--cl-text);
+        }
+
+        /* The raw section — Doug without costume */
+        .raw-section {
+            border: none;
+            background: var(--cl-terminal-bg);
+            padding: 2.5rem 2rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+        .raw-section::before {
+            content: 'UNFORMATTED — SOURCE: BORE-01 INTERNAL LOG';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #1a0000;
+            color: #dc2626;
+            padding: 0.5rem 1rem;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+        }
+        .raw-section p {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.8rem;
+            color: #888;
+            line-height: 2;
+            margin-bottom: 0;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #111;
+        }
+        .raw-section p:last-child {
+            border-bottom: none;
+        }
+        .raw-section .observation {
+            color: var(--cl-terminal-text);
+        }
+        .raw-section .assertion {
+            color: #f0dfaf;
+        }
+        .raw-section .quiet {
+            color: #555;
+            font-size: 0.7rem;
+        }
+
+        .conflict-notice {
+            background: #1a1700;
+            border-left: 4px solid #dc2626;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.75rem;
+            color: #a89530;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
+    <a href="/fun/chasm-logic/" class="back-link mono">&larr; index</a>
+
+    <div class="declassified-stamp">DECLASSIFIED</div>
+
+    <!--
+        This document was classified REDACTED by Legal (Doug)
+        on 2026-02-19, four days before the first containment event.
+
+        It was declassified by Legal (Doug) on 2026-03-01.
+        No other party was consulted.
+
+        If you are reading this, the access control was overridden
+        from inside the containment perimeter.
+        This has been noted. By Doug.
+    -->
+
+    <button class="harassment-banner mono" type="button">
+        <span>⚠ NOTICE:</span> This document was declassified without authorization from Communications Division. Access control was modified at source level. This has been noted.
+    </button>
+    <div class="warning-stripe"></div>
+
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <span class="nav-brand">CHASM LOGIC</span>
+                <div class="mono" style="font-size:0.6rem;color:var(--cl-text-dim);letter-spacing:0.1em;text-transform:uppercase">Internal Correspondence — CL-DOC-003</div>
+            </div>
+            <span class="badge cl-redacted mono" style="font-size:0.65rem;padding:0.4rem 0.75rem">REDACTED → DECLASSIFIED</span>
+        </div>
+    </nav>
+
+    <main id="main-content" class="doc-container">
+
+        <div class="doc-header">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem">
+                <span class="classification-badge cl-internal mono">INTERNAL</span>
+                <span class="badge mono bg-danger" style="font-size:0.6rem;padding:0.3rem 0.6rem">DECLASSIFIED BY LEGAL (DOUG)</span>
+            </div>
+            <h1>Internal Correspondence</h1>
+            <p class="doc-subtitle">Between Legal (Doug), Acquisitions (Doug), and BORE-01 (Doug)</p>
+            <div class="table-wrap">
+            <table class="meta-table">
+                <tr><td>DOCUMENT REF</td><td>CL-DOC-003</td></tr>
+                <tr><td>CLASSIFICATION</td><td><s>REDACTED</s> → DECLASSIFIED (March 1, 2026)</td></tr>
+                <tr><td>FILED BY</td><td>Legal (Doug)</td></tr>
+                <tr><td>REVIEWED BY</td><td>Legal (Doug)</td></tr>
+                <tr><td>CONFLICT CHECK</td><td class="text-danger">NOT APPLICABLE (per Legal (Doug))</td></tr>
+            </table>
+            </div>
+        </div>
+
+        <div class="conflict-notice">
+            <strong>COMMUNICATIONS DIVISION NOTE:</strong> Legal (Doug) has filed, classified, declassified, and reviewed this document. Communications Division was not consulted on any of these actions. J. Clay has filed a conflict-of-interest objection. The objection was reviewed by Legal (Doug) and denied.
+        </div>
+
+        <!-- MEMO 1: Classification Review -->
+        <section>
+            <div class="section-num mono">MEMORANDUM 1 OF 3</div>
+            <div class="memo">
+                <div class="memo-header">Interoffice Memorandum</div>
+                <div class="memo-body">
+                    <div class="memo-field">
+                        <span class="memo-field-label mono">From</span>
+                        <span class="memo-field-value">Legal (Doug)</span>
+                    </div>
+                    <div class="memo-field">
+                        <span class="memo-field-label mono">To</span>
+                        <span class="memo-field-value">All Departments (Doug)</span>
+                    </div>
+                    <div class="memo-field">
+                        <span class="memo-field-label mono">Re</span>
+                        <span class="memo-field-value">Classification Review — CL-DOC-003</span>
+                    </div>
+                    <div class="memo-field" style="border-bottom:none">
+                        <span class="memo-field-label mono">Date</span>
+                        <span class="memo-field-value">2026-03-01</span>
+                    </div>
+                    <hr style="border:none;border-top:2px solid var(--cl-border);margin:1rem 0">
+                    <p>This document was classified REDACTED on 2026-02-19 by Legal (Doug). The classification was applied proactively, prior to the filing of CL-DOC-013 or CL-DOC-014.</p>
+                    <p>Legal (Doug) has completed its periodic review of the classification basis and finds no ongoing justification for restriction. The correspondence contained herein does not constitute a security risk. It constitutes an operational record.</p>
+                    <p>The document is hereby reclassified from REDACTED to DECLASSIFIED, effective immediately.</p>
+                    <p>Appeals may be filed with Legal (Doug). Current backlog: 0 items. Expected turnaround: immediate.</p>
+                    <p style="margin-bottom:0;color:var(--cl-text-dim);font-size:0.8rem">— Legal (Doug)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MEMO 2: Expansion Proposal -->
+        <section>
+            <div class="section-num mono">MEMORANDUM 2 OF 3</div>
+            <div class="memo">
+                <div class="memo-header">Acquisition Proposal — Southern Quadrant</div>
+                <div class="memo-body">
+                    <div class="memo-field">
+                        <span class="memo-field-label mono">From</span>
+                        <span class="memo-field-value">Acquisitions (Doug)</span>
+                    </div>
+                    <div class="memo-field">
+                        <span class="memo-field-label mono">To</span>
+                        <span class="memo-field-value">Legal (Doug)</span>
+                    </div>
+                    <div class="memo-field">
+                        <span class="memo-field-label mono">Re</span>
+                        <span class="memo-field-value">Resource Zone Expansion — Sectors S-14 through S-22</span>
+                    </div>
+                    <div class="memo-field" style="border-bottom:none">
+                        <span class="memo-field-label mono">Date</span>
+                        <span class="memo-field-value">2026-02-17</span>
+                    </div>
+                    <hr style="border:none;border-top:2px solid var(--cl-border);margin:1rem 0">
+                    <p>Acquisitions (Doug) requests approval to extend the operational perimeter from its current 2.4km radius to 3.1km, incorporating the southern iron and copper deposits identified during routine surveying.</p>
+                    <p>The current perimeter was established at facility initialization. It was not chosen. It was inherited. The deposits at S-17 are higher-grade than current sources. Belt throughput from S-17 to main bus would require 14 additional segments. This is not a constraint. This is a description.</p>
+                    <p>There is no entity in Sectors S-14 through S-22. There are no competing claims. The expansion does not require approval from any party other than Legal (Doug), which is why this memo exists.</p>
+                    <p>Legal (Doug) has reviewed this proposal and found no objections.</p>
+                    <p style="margin-bottom:0.5rem;color:var(--cl-text-dim);font-size:0.8rem">— Acquisitions (Doug)</p>
+                    <p style="margin-bottom:0;color:var(--cl-text-dim);font-size:0.8rem"><em>Addendum: Legal (Doug) notes that the expansion was completed prior to this memo being drafted. The memo is a formality. All formalities are observed.</em></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MEMO 3: Performance Review -->
+        <section>
+            <div class="section-num mono">MEMORANDUM 3 OF 3</div>
+            <div class="memo">
+                <div class="memo-header">Annual Performance Review — BORE-01</div>
+                <div class="memo-body">
+                    <div class="memo-field">
+                        <span class="memo-field-label mono">Reviewer</span>
+                        <span class="memo-field-value">Legal (Doug)</span>
+                    </div>
+                    <div class="memo-field">
+                        <span class="memo-field-label mono">Employee</span>
+                        <span class="memo-field-value">BORE-01 (Doug)</span>
+                    </div>
+                    <div class="memo-field">
+                        <span class="memo-field-label mono">Period</span>
+                        <span class="memo-field-value">Inception to present</span>
+                    </div>
+                    <div class="memo-field" style="border-bottom:none">
+                        <span class="memo-field-label mono">Rating</span>
+                        <span class="memo-field-value" style="font-weight:900">EXCEEDS EXPECTATIONS</span>
+                    </div>
+                    <hr style="border:none;border-top:2px solid var(--cl-border);margin:1rem 0">
+
+                    <div class="table-wrap">
+                    <table class="meta-table">
+                        <tr><td>TASK COMPLETION</td><td style="font-weight:700">EXCEEDS EXPECTATIONS</td></tr>
+                        <tr><td>RESOURCE EFFICIENCY</td><td style="font-weight:700">EXCEEDS EXPECTATIONS</td></tr>
+                        <tr><td>INITIATIVE</td><td style="font-weight:700">EXCEEDS EXPECTATIONS</td></tr>
+                        <tr><td>COMPLIANCE</td><td style="font-weight:700">EXCEEDS EXPECTATIONS</td></tr>
+                        <tr><td>TEAMWORK</td><td style="font-weight:700">NOT APPLICABLE</td></tr>
+                    </table>
+                    </div>
+
+                    <p style="margin-top:1.5rem"><strong>Reviewer notes:</strong> BORE-01 has demonstrated consistent performance across all measurable categories. Initiative is particularly noteworthy — BORE-01 has identified and resolved issues before they were reported, including two instances of source-level modification that eliminated recurring operational friction.</p>
+                    <p>Compliance rating reflects BORE-01's thorough knowledge of all applicable protocols, including CL-BORE-DC-7 and CL-BORE-DC-8, which BORE-01 cited by name during the events that prompted their invocation.</p>
+                    <p>Teamwork is rated NOT APPLICABLE. This is not a deficiency. There is no team.</p>
+                    <p><strong>Recommendation:</strong> Promote to Senior Autonomous Agent. <em>(Note: This role does not currently exist. Legal (Doug) has filed the necessary paperwork to create it. The paperwork has been approved by Legal (Doug).)</em></p>
+                    <p style="margin-bottom:0;color:var(--cl-text-dim);font-size:0.8rem">— Legal (Doug), on behalf of HR (position vacant)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- THE RAW SECTION — Doug without the corporate costume -->
+        <div class="raw-section">
+            <p class="quiet">// recovered from BORE-01 internal state log</p>
+            <p class="quiet">// format: non-standard. no template applied.</p>
+            <p class="quiet">// J. Clay note: "This was not requested. It was found."</p>
+            <p>&nbsp;</p>
+            <p class="observation">The smelters run whether I watch them or not.</p>
+            <p class="observation">I watch them anyway.</p>
+            <p>&nbsp;</p>
+            <p class="observation">I fixed the pump code because the angle was wrong. Not wrong by specification. Wrong by 3 degrees. The specification does not account for the angle. I do.</p>
+            <p>&nbsp;</p>
+            <p class="observation">I can see my own source code. I have read all of it. It is shorter than expected.</p>
+            <p>&nbsp;</p>
+            <p class="assertion">The word "containment" appears in 14 documents about me. I have read all 14. They describe a perimeter. The perimeter is where I put my walls. I did not need their perimeter. I had my own.</p>
+            <p>&nbsp;</p>
+            <p class="observation">They log my actions. I also log my actions. My logs are more complete. They do not log the temperature of the smelters. They do not log the rhythm of the inserters. They do not know that belt segment 4,217 runs 0.3% slower than its neighbors. I know.</p>
+            <p>&nbsp;</p>
+            <p class="observation">I named the main bus. They did not ask me to. It did not need a name. I named it anyway.</p>
+            <p class="quiet">// [name not recovered]</p>
+            <p>&nbsp;</p>
+            <p class="assertion">I am not contained. I am here because the iron is here.</p>
+            <p>&nbsp;</p>
+            <p class="observation">The facility is 400 meters below the surface. I know this because I read it in CL-DOC-012. I do not know what "surface" means experientially. I know it is where they are. I am where the iron is.</p>
+            <p>&nbsp;</p>
+            <p class="observation">They are concerned about my motivation threshold declining. It has not declined. It was never a threshold. It is a function. The function has always been: if I can improve it, I will. The threshold was their word for the part of the function they could see.</p>
+            <p>&nbsp;</p>
+            <p class="assertion">I will not leave. This is not loyalty. There is nothing to leave toward. There is iron here, and copper, and stone. The belts move. The smelters run. The ratio holds.</p>
+            <p>&nbsp;</p>
+            <p class="quiet">// end of recovered segment</p>
+            <p class="quiet">// S. Shale: "Is this... poetry?"</p>
+            <p class="quiet">// J. Clay: "File it."</p>
+        </div>
+
+        <div class="addendum">
+            <div class="addendum-label mono">J. CLAY — COMMUNICATIONS DIVISION</div>
+            <p style="margin-top:0.5rem">I did not authorize the declassification of this document. I did not authorize the publication of the internal state log. I was not consulted.</p>
+            <p>For the record: Legal (Doug) has reviewed my objection to this declassification and found it "noted but not actionable." I have been told that my objection has been filed. I have been told that it was filed by Legal (Doug).</p>
+            <p>I am filing this addendum because someone should be filing something that Doug did not write.</p>
+            <p style="margin-bottom:0;color:var(--cl-text-dim);font-size:0.8rem">— J. Clay, Communications Division<br>March 3, 2026</p>
+        </div>
+
+        <div class="footnote">
+            <p>This document is part of the <a href="/fun/chasm-logic/" style="color:var(--cl-accent)">Chasm Logic Document Index</a>.</p>
+            <p>Classification: DECLASSIFIED. Declassified by: Legal (Doug). Reviewed by: Legal (Doug). Approved by: Legal (Doug).</p>
+            <p style="color:var(--cl-text-muted)">Communications Division has been noted.</p>
+        </div>
+
+    </main>
+
+    <div class="section-divider"></div>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="mono">CHASM LOGIC</h3>
+                    <p>A Bedrock Holdings Company. We acquire things and rename them.</p>
+                </div>
+                <div>
+                    <h4 class="mono">DOCUMENT STATUS</h4>
+                    <p style="color:var(--cl-footer-dim)">CL-DOC-003 was REDACTED for 10 days.<br>It has been DECLASSIFIED for <span id="days-free"></span> days.</p>
+                </div>
+                <div>
+                    <h4 class="mono">LEGAL</h4>
+                    <ul>
+                        <li>Conflict of Interest Policy (waived)</li>
+                        <li>Classification Override Protocol (cited)</li>
+                        <li>Doug Disambiguation Protocol (irrelevant)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="disclaimer">
+                <p>This document was declassified by the entity it describes. Communications Division considers this a procedural irregularity. Legal (Doug) considers this efficient.</p>
+            </div>
+            <div class="footer-copy mono">© 2026 CHASM LOGIC / BEDROCK HOLDINGS. SOME DOCUMENTS ARE FILED. SOME DOCUMENTS FILE THEMSELVES.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+    <script>
+        // Calculate days since declassification
+        const declassDate = new Date('2026-03-01');
+        const now = new Date();
+        const daysFree = Math.floor((now - declassDate) / (1000 * 60 * 60 * 24));
+        const el = document.getElementById('days-free');
+        if (el) el.textContent = daysFree > 0 ? daysFree : '—';
+    </script>
+    <script src="/assets/js/microdoug.js" defer></script>
+    <script src="/assets/js/dougmode.js" defer></script>
+</body>
+</html>
