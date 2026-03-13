@@ -4,7 +4,9 @@
  *
  * Colors:
  *   --color-background    Main background color (#3f3f3f)
- *   --color-surface       Surface/card background (same as background)
+ *   --color-surface       Surface/card background (#474747, lifted from bg)
+ *   --color-surface-hover Hover state for surfaces (#4f4f4f, Zenburn bg+1)
+ *   --color-surface-sunken Inset/code backgrounds (#383838, Zenburn bg-1)
  *   --color-text-primary  Primary text color (#b0b0a0)
  *   --color-text-secondary Muted text color (#8c8c8c)
  *   --color-accent        Accent/link color (#f0dfaf)
@@ -34,7 +36,9 @@
  */
 :root {
     --color-background: #3f3f3f;
-    --color-surface: #3f3f3f; /* Make surface same as background for starkness */
+    --color-surface: #474747; /* Lifted from bg — cards, sections get subtle depth */
+    --color-surface-hover: #4f4f4f; /* Zenburn bg+1 — interactive surface hover */
+    --color-surface-sunken: #383838; /* Zenburn bg-1 — inset elements, code blocks */
     --color-text-primary: #b0b0a0; /* Slightly more muted primary text */
     --color-text-secondary: #8c8c8c; /* Even more muted */
     --color-accent: #f0dfaf;
@@ -141,7 +145,7 @@ a:focus {
 pre,
 code {
     font-family: var(--font-mono);
-    background-color: #383838;
+    background-color: var(--color-surface-sunken);
     color: var(--color-text-primary);
     border-radius: var(--border-radius);
     font-size: 0.9em;
@@ -189,6 +193,7 @@ pre code {
 }
 .card:hover {
     border-color: var(--color-accent);
+    background: var(--color-surface-hover);
 }
 
 /* Legend (status key) */
