@@ -43,5 +43,11 @@ next-env.d.ts
 # tool context
 UROBORO*
 
+# impeccable / claude skills
+.agents/
+.claude/skills/
+skills/
+skills-lock.json
+
 # 11ty build output
 /_site/
