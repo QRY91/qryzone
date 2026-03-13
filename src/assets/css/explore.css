@@ -19,7 +19,7 @@
     font-size: 0.9rem;
 }
 
-/* Search row - always visible, compact */
+/* Search row */
 
 .search-row {
     display: flex;
@@ -60,6 +60,7 @@
     background: transparent;
     color: var(--color-text-secondary);
     cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
 }
 
 .filter-toggle:hover,
@@ -77,6 +78,12 @@
     color: var(--color-accent);
     cursor: pointer;
     font-family: var(--font-mono);
+    transition: background-color 0.15s, color 0.15s;
+}
+
+#random-btn:hover {
+    background: var(--color-accent);
+    color: var(--color-background);
 }
 
 #clear-btn {
@@ -91,7 +98,7 @@
     font-family: var(--font-mono);
 }
 
-/* Collapsible filter panel */
+/* Filter panel */
 
 .filter-section {
     margin-bottom: var(--space-md);
@@ -109,6 +116,9 @@
     font-size: 0.75rem;
     color: var(--color-text-secondary);
     margin-bottom: var(--space-xs);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .filter-group {
@@ -141,6 +151,7 @@
     gap: var(--space-sm);
 }
 
+/* Tag buttons */
 .tag-btn {
     font-family: var(--font-sans);
     font-size: 0.75rem;
@@ -150,10 +161,12 @@
     background: var(--color-background);
     color: var(--color-text-secondary);
     cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background-color 0.15s;
 }
 
 .tag-btn:hover {
     border-color: var(--color-accent);
+    color: var(--color-text-primary);
 }
 
 .tag-btn.active {
@@ -167,6 +180,7 @@
     padding: 2px 6px;
 }
 
+/* Status buttons — semantic colors */
 .status-btn,
 .type-btn {
     font-family: var(--font-sans);
@@ -177,14 +191,51 @@
     background: var(--color-background);
     color: var(--color-text-secondary);
     cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background-color 0.15s;
 }
 
 .status-btn:hover,
+.type-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-text-primary);
+}
+
 .status-btn.active,
-.type-btn:hover,
 .type-btn.active {
     border-color: var(--color-accent);
     color: var(--color-accent);
+}
+
+/* Color-coded status filter buttons */
+.status-btn[data-status="seedling"].active {
+    border-color: #7f9f7f;
+    color: #81c784;
+    background: #2d3a2d;
+}
+
+.status-btn[data-status="growing"].active {
+    border-color: #8c8c5e;
+    color: #f0dfaf;
+    background: #3a3a2d;
+}
+
+.status-btn[data-status="evergreen"].active {
+    border-color: #5f8f8f;
+    color: #7fc7c7;
+    background: #2d3a3a;
+}
+
+/* Type filter buttons */
+.type-btn[data-type="interactive"].active {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: rgba(240, 223, 175, 0.08);
+}
+
+.type-btn[data-type="project"].active {
+    border-color: #8cd0d3;
+    color: #8cd0d3;
+    background: rgba(140, 208, 211, 0.08);
 }
 
 /* Random section */
@@ -193,15 +244,16 @@
     display: none;
     margin-bottom: var(--space-md);
     padding: var(--space-md);
-    background: var(--status-seedling-bg, #2d3a2d);
-    border: 1px solid var(--status-seedling-border, #4a5f4a);
+    background: #2d3a2d;
+    border: 1px solid #4a5f4a;
     border-radius: var(--border-radius);
 }
 
 .random-label {
     font-size: 0.8rem;
-    color: var(--status-seedling-text, #81c784);
+    color: #81c784;
     margin-bottom: var(--space-sm);
+    font-family: var(--font-mono);
 }
 
 /* Recently updated */
@@ -233,26 +285,28 @@
     gap: var(--space-sm);
 }
 
-/* Cards */
+/* Cards — with status-colored accents */
 
 .content-card {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     padding: var(--space-sm) var(--space-md);
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, background-color 0.15s;
 }
 
 .content-card:hover {
     border-color: var(--color-accent);
+    background: var(--color-surface-hover, var(--color-surface));
 }
 
+/* Type indicators — colored left border */
 .content-card.type-interactive {
-    border-left: 2px solid var(--color-accent);
+    border-left: 3px solid var(--color-accent);
 }
 
 .content-card.type-project {
-    border-left: 2px solid var(--color-text-secondary);
+    border-left: 3px solid #8cd0d3;
 }
 
 .content-card.compact {
@@ -320,7 +374,7 @@
     flex-shrink: 0;
 }
 
-/* Fun link */
+/* Fun links */
 
 .fun-link {
     display: inline-block;
@@ -333,10 +387,12 @@
     border-radius: var(--border-radius);
     text-decoration: none;
     background: var(--color-surface);
+    transition: border-color 0.15s, background-color 0.15s;
 }
 
 .fun-link:hover {
     border-color: var(--color-accent);
+    background: var(--color-surface-hover, var(--color-surface));
 }
 
 /* Legend */
