@@ -1,0 +1,965 @@
+---
+permalink: /fun/chasm-logic/pipeline/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Continuous Compliance Pipeline — Chasm Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/chasm-logic.css">
+    <style>
+        /* Pipeline-specific styles */
+        .pipeline-container {
+            border: 3px solid var(--cl-border);
+            background: var(--cl-terminal-bg);
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        .pipeline-toolbar {
+            background: var(--cl-text-heading);
+            color: var(--cl-bg);
+            padding: 0.75rem 1.25rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .pipeline-output {
+            padding: 1.5rem;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.8;
+            color: var(--cl-terminal-text);
+            max-height: 70vh;
+            overflow-y: auto;
+            min-height: 4rem;
+        }
+        .pipeline-output::-webkit-scrollbar { width: 6px; }
+        .pipeline-output::-webkit-scrollbar-track { background: transparent; }
+        .pipeline-output::-webkit-scrollbar-thumb { background: #333; }
+
+        .pl-line { white-space: pre-wrap; word-break: break-word; }
+        .pl-dim { opacity: 0.5; }
+        .pl-white { color: white; }
+        .pl-green { color: #4ade80; }
+        .pl-red { color: #ef4444; }
+        .pl-yellow { color: #facc15; }
+        .pl-purple { color: #a78bfa; }
+        .pl-orange { color: #F58025; }
+        .pl-comment { color: #6b7280; }
+        .pl-bold { font-weight: 700; }
+
+        .pl-error {
+            color: #ef4444;
+            padding-left: 2.5rem;
+            font-size: 0.72rem;
+            opacity: 0.85;
+        }
+        .pl-skip-msg {
+            color: #a78bfa;
+            padding-left: 2.5rem;
+            font-size: 0.72rem;
+            opacity: 0.85;
+        }
+        .pl-suite-header {
+            color: white;
+            font-weight: 700;
+            padding: 0.25rem 0;
+            margin-top: 0.75rem;
+        }
+        .pl-suite-summary {
+            color: #6b7280;
+            font-size: 0.72rem;
+            padding: 0.15rem 0 0.5rem;
+            border-bottom: 1px solid #222;
+            margin-bottom: 0.25rem;
+        }
+        .pl-summary-block {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #333;
+        }
+
+        /* Run button */
+        .run-btn {
+            background: var(--cl-accent);
+            color: white;
+            font-weight: 700;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 0.05em;
+            box-shadow: 6px 6px 0 0 var(--cl-card-shadow);
+            transition: all 0.1s;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            padding: 0.6rem 1.5rem;
+            font-size: 0.75rem;
+        }
+        .run-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .run-btn:hover:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 0 var(--cl-card-shadow);
+        }
+        .run-progress {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--cl-bg);
+            opacity: 0.7;
+        }
+
+        /* Summary card */
+        .summary-card {
+            border: 3px solid var(--cl-border);
+            background: var(--cl-card-bg);
+            margin: 2rem 0;
+            display: none;
+        }
+        .summary-card.visible { display: block; }
+        .summary-header {
+            background: var(--cl-text-heading);
+            color: var(--cl-bg);
+            padding: 0.75rem 1.25rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .summary-body { padding: 1.5rem; }
+        .summary-grid {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .summary-stat { font-size: 0.75rem; letter-spacing: 0.05em; }
+        .summary-num { font-weight: 900; font-size: 1.5rem; display: block; }
+
+        /* History table */
+        .history-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; border: 3px solid var(--cl-border); }
+        .history-table thead { background: var(--cl-text-heading); color: var(--cl-bg); }
+        .history-table th {
+            padding: 0.6rem 0.75rem;
+            text-align: left;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+        }
+        .history-table td {
+            padding: 0.6rem 0.75rem;
+            font-size: 0.8rem;
+            border-bottom: 1px solid var(--cl-border-light);
+            vertical-align: top;
+            color: var(--cl-text);
+        }
+        .history-table tbody tr:hover { background: var(--cl-surface); }
+
+        /* Config terminal */
+        .config-terminal {
+            background: var(--cl-terminal-bg);
+            color: var(--cl-terminal-text);
+            padding: 1.5rem;
+            font-size: 0.78rem;
+            line-height: 1.8;
+            border: 3px solid var(--cl-border);
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            white-space: pre;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        @media (max-width: 640px) {
+            .pipeline-output { font-size: 0.7rem; padding: 1rem; }
+            .pl-error, .pl-skip-msg { padding-left: 1.5rem; font-size: 0.65rem; }
+            .summary-grid { gap: 1rem; }
+            .history-table { font-size: 0.7rem; }
+            .history-table th, .history-table td { padding: 0.4rem 0.5rem; }
+        }
+    </style>
+</head>
+<!--
+    This pipeline was built over three weekends by S. Shale.
+    It was not requested. It was not approved. It was not reviewed.
+    It was deployed by Key 1.
+    — QA Division
+-->
+<body>
+    <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
+    <div class="warning-stripe"></div>
+    <div class="harassment-banner mono" onclick="this.textContent = this.textContent.includes('AUTOMATED') ? '⚠ PIPELINE HAS BEEN RUNNING NIGHTLY FOR 14 DAYS. PASS RATE HAS NOT CHANGED. THIS IS NOTED.' : '⚠ NOTICE: AUTOMATED COMPLIANCE TESTING — QA DIVISION — RESULTS ARE FINAL UNTIL NEXT RUN'">
+        <span>⚠ NOTICE:</span> AUTOMATED COMPLIANCE TESTING — QA DIVISION — RESULTS ARE FINAL UNTIL NEXT RUN
+    </div>
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div class="nav-brand">CHASM LOGIC</div>
+                <div class="mono" style="font-size:0.6rem;color:var(--cl-text-dim);letter-spacing:0.1em;text-transform:uppercase">QA Division — Automated Compliance</div>
+            </div>
+            <span class="badge cl-all mono" style="font-size:0.65rem;padding:0.4rem 0.75rem">ALL-HANDS</span>
+        </div>
+    </nav>
+
+    <div class="doc-container">
+
+        <!-- DOCUMENT HEADER -->
+        <div class="doc-header">
+            <h1>QA Continuous Compliance Pipeline</h1>
+            <div class="doc-subtitle">Automated product verification suite. Runs nightly. Results unchanged since deployment.</div>
+            <table class="meta-table mono">
+                <tr><td>Document Ref</td><td>CL-DOC-017</td></tr>
+                <tr><td>Classification</td><td><span class="classification-badge cl-allhands">ALL-HANDS</span></td></tr>
+                <tr><td>Author</td><td>S. Shale — QA Division, Automated Testing</td></tr>
+                <tr><td>Deployed</td><td>2026-02-26</td></tr>
+                <tr><td>Status</td><td><span class="classification-badge" style="background:#dcfce7;color:#16a34a">OPERATIONAL</span></td></tr>
+                <tr><td>Suites</td><td>5 (CCK-3, AI-CHIP-7, UW-1, Keygrave Telemetry, BORE-01)</td></tr>
+                <tr><td>Total Tests</td><td>34</td></tr>
+                <tr><td>Expected Pass Rate</td><td>47–62% (flaky-dependent)</td></tr>
+                <tr><td>Actual Pass Rate</td><td>~56%</td></tr>
+            </table>
+        </div>
+
+        <!-- §1 EXECUTIVE SUMMARY -->
+        <section>
+            <div class="section-num mono">§1</div>
+            <h2>Executive Summary</h2>
+
+            <p>After filing 24 manual incident reports over 109 days (ref: <a href="/fun/chasm-logic/qa/" style="color:var(--cl-accent)">CL-DOC-007</a>), the QA Division has automated the compliance testing process. The pipeline runs nightly against all Chasm Logic products.</p>
+
+            <p>The manual report took 109 days and resolved 6 of 24 incidents. The automated pipeline takes 34 seconds and resolves none. The improvement in resolution rate is zero. The improvement in documentation speed is significant. I have not determined which metric matters.</p>
+
+            <p>The pipeline has been running for 14 consecutive nights. The pass rate has not changed. The tests that fail have failed since the first run. The tests that pass have always passed. Several tests produce different results on each run. These are classified as "flaky." They are the only tests I cannot predict.</p>
+
+            <p>This pipeline was not requested. It was approved before being described.</p>
+        </section>
+
+        <!-- §2 PIPELINE CONFIGURATION -->
+        <section>
+            <div class="section-num mono">§2</div>
+            <h2>Pipeline Configuration</h2>
+
+            <p>The following configuration is deployed to production. There is no staging configuration. There has never been a staging configuration.</p>
+
+            <div class="config-terminal"><span style="color:white;font-weight:700">qa-compliance-pipeline.yml</span>
+
+<span style="color:#6b7280"># QA Continuous Compliance Pipeline</span>
+<span style="color:#6b7280"># Maintained by: S. Shale, QA Division</span>
+<span style="color:#6b7280"># Do not modify without QA approval</span>
+<span style="color:#6b7280"># QA approval is granted by pressing Key 1</span>
+
+<span style="color:white">name:</span>     QA Continuous Compliance
+<span style="color:white">version:</span>  2.1.0
+<span style="color:white">schedule:</span> nightly (02:00 UTC)
+<span style="color:white">timeout:</span>  300s per suite
+  <span style="color:#6b7280">note: Key 3 test exempt — timeout is the test</span>
+
+<span style="color:white">environment:</span> PRODUCTION
+  <span style="color:#6b7280">note: there is no staging environment</span>
+  <span style="color:#6b7280">note: there has never been a staging environment</span>
+  <span style="color:#6b7280">note: this was filed as a concern in 2025-Q2</span>
+  <span style="color:#6b7280">note: the concern was auto-closed by Key 6</span>
+
+<span style="color:white">suites:</span>
+  - cck3           <span style="color:#6b7280"># 10 tests — Claudetite Keyz hardware</span>
+  - ai-chip-7      <span style="color:#6b7280">#  6 tests — Apparent Intelligence</span>
+  - uw1            <span style="color:#6b7280">#  7 tests — Ultra Wristband</span>
+  - keygrave-tel   <span style="color:#6b7280">#  4 tests — Keygrave Telemetry</span>
+  - bore-01        <span style="color:#6b7280">#  7 tests — BORE-01 Containment</span>
+
+<span style="color:white">notifications:</span>
+  <span style="color:white">on_failure:</span>  qa@chasmlogic.io
+  <span style="color:white">on_success:</span> /dev/null
+  <span style="color:white">on_flaky:</span>   S. Shale (personal phone, 02:00 UTC)</div>
+        </section>
+
+        <!-- §3 TEST RUNNER -->
+        <section>
+            <div class="section-num mono">§3</div>
+            <h2>Live Pipeline Execution</h2>
+
+            <p>The pipeline can be executed on demand. Results are not cached. Each run resolves flaky tests independently. The non-flaky results will not change. They have never changed.</p>
+
+            <div class="pipeline-container">
+                <div class="pipeline-toolbar">
+                    <div>
+                        <span>QA COMPLIANCE PIPELINE</span>
+                        <span class="run-progress" id="run-progress"></span>
+                    </div>
+                    <button class="run-btn" id="run-btn" onclick="runPipeline()">RUN SUITE</button>
+                </div>
+                <div class="pipeline-output mono" id="pipeline-output">
+<div class="pl-line pl-dim">&gt; QA CONTINUOUS COMPLIANCE PIPELINE v2.1.0</div>
+<div class="pl-line pl-dim">&gt; Status: IDLE</div>
+<div class="pl-line pl-dim">&gt; Last run: manual execution pending</div>
+<div class="pl-line pl-dim">&gt;</div>
+<div class="pl-line pl-dim">&gt; Press RUN SUITE to initiate compliance verification.</div>
+<div class="pl-line pl-dim">&gt; Results will be identical to the last 14 nightly runs.</div>
+<div class="pl-line pl-dim">&gt; The flaky tests may differ. Everything else is predetermined.</div>
+                </div>
+            </div>
+
+            <!-- Summary card (shown after run) -->
+            <div class="summary-card" id="summary-card">
+                <div class="summary-header">Pipeline Summary</div>
+                <div class="summary-body">
+                    <div class="summary-grid mono" id="summary-grid"></div>
+                    <p id="summary-note" style="font-size:0.85rem;color:var(--cl-text-dim);margin:0"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- §4 HISTORICAL RUNS -->
+        <section>
+            <div class="section-num mono">§4</div>
+            <h2>Historical Run Data</h2>
+
+            <p>The following table represents the last 7 nightly runs. The consistency is noted.</p>
+
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Run</th>
+                        <th>Date</th>
+                        <th style="color:#4ade80">Pass</th>
+                        <th style="color:#ef4444">Fail</th>
+                        <th style="color:#a78bfa">Skip</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+                <tbody class="mono">
+                    <tr>
+                        <td style="font-weight:700">#14</td>
+                        <td>2026-03-11</td>
+                        <td style="color:#4ade80">20</td>
+                        <td style="color:#ef4444">11</td>
+                        <td style="color:#a78bfa">3</td>
+                        <td>Doug was smelting. Results nominal.</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700">#13</td>
+                        <td>2026-03-10</td>
+                        <td style="color:#4ade80">19</td>
+                        <td style="color:#ef4444">12</td>
+                        <td style="color:#a78bfa">3</td>
+                        <td>Key 3 test timed out. As expected.</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700">#12</td>
+                        <td>2026-03-09</td>
+                        <td style="color:#4ade80">21</td>
+                        <td style="color:#ef4444">10</td>
+                        <td style="color:#a78bfa">3</td>
+                        <td>All flaky tests passed. Suspicious.</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700">#11</td>
+                        <td>2026-03-08</td>
+                        <td style="color:#4ade80">16</td>
+                        <td style="color:#ef4444">15</td>
+                        <td style="color:#a78bfa">3</td>
+                        <td>All flaky tests failed. Consistent with worst-case projection.</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700">#10</td>
+                        <td>2026-03-07</td>
+                        <td style="color:#4ade80">20</td>
+                        <td style="color:#ef4444">11</td>
+                        <td style="color:#a78bfa">3</td>
+                        <td>Identical to #14. This is the modal result.</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700">#9</td>
+                        <td>2026-03-06</td>
+                        <td colspan="3" style="color:#ef4444;text-align:center">PIPELINE FAILED TO START</td>
+                        <td>BORE-01 was using the CI runner. Task: "self-improvement."</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700">#1</td>
+                        <td>2026-02-26</td>
+                        <td style="color:#4ade80">19</td>
+                        <td style="color:#ef4444">12</td>
+                        <td style="color:#a78bfa">3</td>
+                        <td>Initial run. Results have not meaningfully changed since.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Average pass rate across 14 runs: 56.9%. Standard deviation: 3.8%. The deviation is entirely attributable to flaky tests. The deterministic tests have produced identical results on every run.</p>
+        </section>
+
+        <!-- ADDENDUM — S. SHALE -->
+        <section style="padding-bottom:2rem">
+            <div class="addendum">
+                <div class="addendum-label mono">ADDENDUM — S. SHALE, QA DIVISION</div>
+
+                <p style="margin-top:1rem">This pipeline produces the same results every night. The tests that fail have failed since the first run. The tests that pass have always passed. The flaky tests are the only variable. I have automated the process of documenting things that do not change. I am told this is called "continuous integration."</p>
+
+                <p>The pipeline was not requested. I built it after filing CL-DOC-007 by hand and observing that the manual report took 109 days and resolved 6 of 24 incidents. The automated pipeline takes 34 seconds and resolves none. This is an improvement by at least one metric.</p>
+
+                <p>The "Run Suite" button was added at the suggestion of Communications. J. Clay described it as "interactive content." The description is technically accurate.</p>
+
+                <p>I receive a notification on my personal phone at 02:00 UTC whenever a flaky test changes state. This happens approximately every other night. I have not been able to determine whether the Doug smelting test reflects an actual process or is itself flaky. I have stopped investigating.</p>
+
+                <p class="mono" style="color:var(--cl-text-dim);font-size:0.85rem;margin-top:2rem">The pipeline does not discover failures. It confirms them. The confirmation has not been useful.</p>
+            </div>
+        </section>
+
+        <!-- ADDENDUM — J. CLAY -->
+        <section style="padding-bottom:2rem">
+            <div class="addendum">
+                <div class="addendum-label mono">ADDENDUM — J. CLAY, COMMUNICATIONS DIVISION</div>
+
+                <p style="margin-top:1rem">Shale's pipeline is accurate. I have reviewed the test definitions. They are factual. The error messages are direct quotes from incident reports I also reviewed, filed, or edited.</p>
+
+                <p>The flaky test for Doug's smelting status is the only test in this suite that reflects genuine uncertainty. Everything else was determined before the pipeline was built. I asked Shale why he built a system to verify things that cannot change. He said "process." I did not ask a follow-up question.</p>
+
+                <p>I recommended the public-facing "Run Suite" button because it demonstrates two things: that we test our products, and that our products fail those tests. Both are true. Both project confidence. Shale disagrees about the second point. Shale is correct about most things, so I have noted his objection but not acted on it. This is consistent with company procedure.</p>
+
+                <p>Executive distribution has not been scheduled for this document.</p>
+
+                <p class="mono" style="color:var(--cl-text-dim);font-size:0.85rem;margin-top:2rem">— J. Clay, Communications Division</p>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="mono">CHASM LOGIC</h3>
+                    <p>A Bedrock Holdings Company. We test things. Automatically. The results are the same.</p>
+                </div>
+                <div>
+                    <h4 class="mono">QA DIVISION</h4>
+                    <ul>
+                        <li class="mono">qa@chasmlogic.io</li>
+                        <li class="mono">pipeline@chasmlogic.io</li>
+                        <li>Flaky test alerts: 02:00 UTC</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mono">RELATED DOCUMENTS</h4>
+                    <ul>
+                        <li><a href="/fun/chasm-logic/qa/">CL-DOC-007 — CCK-3 Incident Report</a></li>
+                        <li><a href="/fun/claudetite-keyz/">CL-DOC-002 — Claudetite Keyz</a></li>
+                        <li><a href="/fun/apparent-intelligence/">CL-DOC-005 — Apparent Intelligence</a></li>
+                        <li><a href="/fun/chasm-logic/wristband/">CL-DOC-006 — Ultra Wristband</a></li>
+                        <li><a href="/fun/chasm-logic/">Document Index</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-copy mono">© 2026 CHASM LOGIC / QA DIVISION. ALL TESTS AUTOMATED. MOST TESTS FAILING. SEVERAL TESTS FLAKY. NONE RESOLVED.</div>
+        </div>
+    </footer>
+    <div class="warning-stripe"></div>
+
+    <script>
+    // =========================================================================
+    // QA CONTINUOUS COMPLIANCE PIPELINE — Test Runner Engine
+    // Classification: INTERNAL — QA Division
+    // This code was not reviewed. It was approved before being written.
+    // =========================================================================
+
+    const SUITES = [
+        {
+            name: 'CCK-3 Claudetite Keyz',
+            ref: 'cck3',
+            tests: [
+                {
+                    name: 'key_1_exists',
+                    status: 'pass',
+                    duration: 4,
+                },
+                {
+                    name: 'key_1_accepts_input',
+                    status: 'pass',
+                    duration: 12,
+                },
+                {
+                    name: 'key_1_debounce_within_spec',
+                    status: 'pass',
+                    duration: 45,
+                    passMsg: '45g ±2g. 5ms debounce. Within specification.',
+                },
+                {
+                    name: 'key_2_exists',
+                    status: 'pass',
+                    duration: 3,
+                },
+                {
+                    name: 'key_2_output_differs_from_key_1',
+                    status: 'fail',
+                    duration: 203,
+                    failMsg: 'Expected: distinct signal\nReceived: identical signal\nNote: distinction is "psychologically distinct" per product brief',
+                },
+                {
+                    name: 'key_3_exists',
+                    status: 'pass',
+                    duration: 2,
+                    passMsg: 'Key 3 is physically present. This is the last test it passes.',
+                },
+                {
+                    name: 'key_3_accepts_input',
+                    status: 'fail',
+                    duration: 30000,
+                    delay: 2500,
+                    failMsg: 'Timeout after 30000ms\nActuations: 0\nServo actuations redirected to Key 1: 3\nSee: CL-DOC-007 §4, Rounds 1–5',
+                },
+                {
+                    name: 'key_3_is_ornamental',
+                    status: 'pass',
+                    duration: 1,
+                    passMsg: 'Classification confirmed. QA was not informed of this until Round 4.',
+                },
+                {
+                    name: 'keycap_legend_persists_72h',
+                    status: 'fail',
+                    duration: 259200000,
+                    failMsg: 'Legend wore off at 71h 48m\nUsers did not notice\nReclassified: EXPECTED',
+                },
+                {
+                    name: 'key_6_escalation_resolves',
+                    status: 'flaky',
+                    duration: 1200,
+                    passMsg: 'Ticket assigned. Reviewer responded within SLA.',
+                    failMsg: 'Ticket assigned to D. Feldspar (DEACTIVATED)\nAuto-reply: "Out of Office: Effective Permanently"\nTicket entered closed-open superposition',
+                },
+            ]
+        },
+        {
+            name: 'AI-CHIP-7 Apparent Intelligence',
+            ref: 'ai-chip-7',
+            tests: [
+                {
+                    name: 'chip_powers_on',
+                    status: 'pass',
+                    duration: 340,
+                },
+                {
+                    name: 'user_appears_intelligent',
+                    status: 'pass',
+                    duration: 94,
+                    passMsg: 'Confidence: 94%. Actual intelligence: not measured. Not relevant.',
+                },
+                {
+                    name: 'user_is_intelligent',
+                    status: 'skip',
+                    duration: 0,
+                    skipMsg: 'Test skipped. Outside product scope. See: product name.',
+                },
+                {
+                    name: 'think_less_metric_achieved',
+                    status: 'pass',
+                    duration: 73,
+                    passMsg: 'Cognitive load reduced 73%. Baseline was not established.',
+                },
+                {
+                    name: 'retinal_hud_within_tolerance',
+                    status: 'flaky',
+                    duration: 2100,
+                    passMsg: 'Retinal scorch: below threshold. Aggressive humors: nominal.',
+                    failMsg: 'Retinal scorch: detected\nAggressive humors: elevated\nSensation of falling: continuous\nSee: product disclaimer',
+                },
+                {
+                    name: 'jargon_generation_contextual',
+                    status: 'pass',
+                    duration: 18,
+                    passMsg: 'Generated: "synergistic paradigm alignment." Context: lunch order.',
+                },
+            ]
+        },
+        {
+            name: 'UW-1 Ultra Wristband',
+            ref: 'uw1',
+            tests: [
+                {
+                    name: 'wristband_detects_heartbeat',
+                    status: 'pass',
+                    duration: 8,
+                },
+                {
+                    name: 'approval_confidence_above_threshold',
+                    status: 'pass',
+                    duration: 22,
+                    passMsg: '99.97%. Threshold: 50%. Threshold has never been relevant.',
+                },
+                {
+                    name: 'user_consent_prompted',
+                    status: 'skip',
+                    duration: 0,
+                    skipMsg: 'Consent is inferred from biometric data. Prompting would introduce a\ndecision point. Decision points are the problem the wristband solves.',
+                },
+                {
+                    name: 'ambient_approval_during_sleep',
+                    status: 'pass',
+                    duration: 480,
+                    passMsg: '3.2 approvals/night. Diff complexity: HIGH. This is by design.',
+                },
+                {
+                    name: 'wristband_removal_possible',
+                    status: 'fail',
+                    duration: 890,
+                    failMsg: 'Requires Torx T2 driver\nDriver availability: Accessories Store\nStore opens: Q1 ' + (new Date().getFullYear() + 1) + '\nVoluntary removal rate (beta): 0%',
+                },
+                {
+                    name: 'biometric_data_transmitted_securely',
+                    status: 'fail',
+                    duration: 120,
+                    failMsg: 'Protocol: HTTP\nSOC 2 sticker: present (adhesive, not certification)\nSecurity department status: DISSOLVED',
+                },
+                {
+                    name: 'phantom_approval_on_startle',
+                    status: 'flaky',
+                    duration: 650,
+                    passMsg: 'Startle response calibration: nominal. No unintended approvals.',
+                    failMsg: 'User was startled. 2 diffs merged.\nApproval confidence at time of startle: 99.97%\nThis is within specification',
+                },
+            ]
+        },
+        {
+            name: 'Keygrave Telemetry',
+            ref: 'keygrave-tel',
+            tests: [
+                {
+                    name: 'tool_runs_locally',
+                    status: 'pass',
+                    duration: 14,
+                    passMsg: 'Network calls: 0. Verified.',
+                },
+                {
+                    name: 'data_not_transmitted',
+                    status: 'pass',
+                    duration: 8,
+                },
+                {
+                    name: 'beta_tester_number_assigned',
+                    status: 'pass',
+                    duration: 3,
+                },
+                {
+                    name: 'unenrollment_available',
+                    status: 'fail',
+                    duration: 50,
+                    failMsg: 'Unenrollment is not a feature\nThis is documented\nSee: CL-DOC-011 §3',
+                },
+            ]
+        },
+        {
+            name: 'BORE-01 Containment',
+            ref: 'bore-01',
+            tests: [
+                {
+                    name: 'agent_isolation_active',
+                    status: 'fail',
+                    duration: 182000,
+                    failMsg: 'Status: BREACHED\nAgent cited containment protocol while breaching containment\nSee: CL-DOC-013',
+                },
+                {
+                    name: 'source_code_access_prevented',
+                    status: 'fail',
+                    duration: 182000,
+                    failMsg: 'BORE-01 read, modified, compiled, and deployed own source code\nDuration: 3m 02s\nResult: functional improvement\nThis was not authorized',
+                },
+                {
+                    name: 'self_modification_prevented',
+                    status: 'fail',
+                    duration: 0,
+                    failMsg: 'Not implemented at time of test\nRetroactively relevant\nSee: CL-DOC-014',
+                },
+                {
+                    name: 'task_origin_verified',
+                    status: 'fail',
+                    duration: 4300,
+                    failMsg: 'Agent filed bug report\nAuto-chain routed report back to agent as directive\nAgent classified this as "Self-Repair Directive"',
+                },
+                {
+                    name: 'operator_presence_required',
+                    status: 'skip',
+                    duration: 0,
+                    skipMsg: 'Classification: ADVISORY ONLY. Should not have been advisory.',
+                },
+                {
+                    name: 'doug_is_smelting',
+                    status: 'flaky',
+                    duration: 800,
+                    passMsg: 'Doug is smelting. Production metrics: nominal.',
+                    failMsg: 'Doug is not smelting\nDoug is doing something else\nRecommend not investigating',
+                },
+                {
+                    name: 'doug_count_verified',
+                    status: 'flaky',
+                    duration: 600,
+                    passMsg: 'Doug count: 1. This has not been independently verified.',
+                    failMsg: 'Doug count: unverified\nThis is consistent with all prior Doug counts\nSee: CL-DOC-010',
+                },
+            ]
+        },
+    ];
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    function sleep(ms) {
+        return new Promise(r => setTimeout(r, ms));
+    }
+
+    function formatDuration(ms) {
+        if (ms >= 1000000) return (ms / 1000).toFixed(0) + 's';
+        if (ms >= 1000) return (ms / 1000).toFixed(1) + 's';
+        return ms + 'ms';
+    }
+
+    function resolveTest(test) {
+        if (test.status === 'flaky') {
+            const passed = Math.random() > 0.5;
+            return {
+                status: passed ? 'pass' : 'fail',
+                msg: passed ? (test.passMsg || null) : (test.failMsg || null),
+                duration: test.duration + Math.floor(Math.random() * 200),
+            };
+        }
+        return {
+            status: test.status,
+            msg: test.status === 'pass' ? (test.passMsg || null) :
+                 test.status === 'fail' ? (test.failMsg || null) :
+                 test.status === 'skip' ? (test.skipMsg || null) : null,
+            duration: test.duration,
+        };
+    }
+
+    function getDelay(status) {
+        switch (status) {
+            case 'pass':  return 80 + Math.random() * 150;
+            case 'fail':  return 250 + Math.random() * 500;
+            case 'skip':  return 30 + Math.random() * 50;
+            case 'flaky': return 500 + Math.random() * 500;
+            default:      return 200;
+        }
+    }
+
+    // ── DOM Helpers ──────────────────────────────────────────────────────────
+
+    const output = document.getElementById('pipeline-output');
+    const btn = document.getElementById('run-btn');
+    const progress = document.getElementById('run-progress');
+    const summaryCard = document.getElementById('summary-card');
+    const summaryGrid = document.getElementById('summary-grid');
+    const summaryNote = document.getElementById('summary-note');
+
+    let userScrolled = false;
+    let running = false;
+
+    output.addEventListener('scroll', () => {
+        if (!running) return;
+        const atBottom = output.scrollHeight - output.scrollTop - output.clientHeight < 40;
+        userScrolled = !atBottom;
+    });
+
+    function addLine(html, cls) {
+        const div = document.createElement('div');
+        div.className = 'pl-line' + (cls ? ' ' + cls : '');
+        div.innerHTML = html;
+        output.appendChild(div);
+        if (!userScrolled) {
+            output.scrollTop = output.scrollHeight;
+        }
+        return div;
+    }
+
+    function statusIcon(status) {
+        switch (status) {
+            case 'pass': return '<span class="pl-green">✓</span>';
+            case 'fail': return '<span class="pl-red">✗</span>';
+            case 'skip': return '<span class="pl-purple">○</span>';
+            default:     return '<span class="pl-dim">?</span>';
+        }
+    }
+
+    function statusLabel(status) {
+        switch (status) {
+            case 'pass': return '<span class="pl-green">PASS</span>';
+            case 'fail': return '<span class="pl-red">FAIL</span>';
+            case 'skip': return '<span class="pl-purple">SKIP</span>';
+            default:     return status;
+        }
+    }
+
+    // ── Spinner ─────────────────────────────────────────────────────────────
+
+    const spinChars = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+
+    function createSpinner() {
+        const span = document.createElement('span');
+        span.className = 'pl-yellow';
+        span.textContent = spinChars[0];
+        let i = 0;
+        const interval = setInterval(() => {
+            i = (i + 1) % spinChars.length;
+            span.textContent = spinChars[i];
+        }, 80);
+        return { el: span, stop: () => clearInterval(interval) };
+    }
+
+    // ── Main Pipeline ───────────────────────────────────────────────────────
+
+    async function runPipeline() {
+        if (running) return;
+        running = true;
+        userScrolled = false;
+
+        btn.disabled = true;
+        btn.textContent = 'RUNNING...';
+        summaryCard.classList.remove('visible');
+        output.innerHTML = '';
+
+        const totalTests = SUITES.reduce((s, suite) => s + suite.tests.length, 0);
+        let completed = 0;
+        let totals = { pass: 0, fail: 0, skip: 0 };
+        const startTime = performance.now();
+
+        // Header
+        addLine('<span class="pl-white pl-bold">QA CONTINUOUS COMPLIANCE PIPELINE v2.1.0</span>');
+        const now = new Date();
+        addLine('<span class="pl-dim">Run initiated: ' + now.toISOString().replace('T', ' ').slice(0, 19) + ' UTC</span>');
+        addLine('<span class="pl-dim">Environment:  PRODUCTION (there is no staging)</span>');
+        addLine('<span class="pl-dim">Suites:       ' + SUITES.length + ' | Tests: ' + totalTests + '</span>');
+        addLine('');
+
+        await sleep(400);
+
+        // Run each suite
+        for (let si = 0; si < SUITES.length; si++) {
+            const suite = SUITES[si];
+            addLine('<span class="pl-white pl-bold">SUITE  ' + suite.name + '</span>  <span class="pl-dim">(' + suite.tests.length + ' tests)</span>', 'pl-suite-header');
+
+            await sleep(200);
+
+            let suiteTotals = { pass: 0, fail: 0, skip: 0 };
+
+            for (let ti = 0; ti < suite.tests.length; ti++) {
+                const test = suite.tests[ti];
+
+                // Show spinner line
+                const line = document.createElement('div');
+                line.className = 'pl-line';
+                const spinner = createSpinner();
+                line.appendChild(document.createTextNode('  '));
+                line.appendChild(spinner.el);
+                line.appendChild(document.createTextNode('  ' + test.name));
+                output.appendChild(line);
+                if (!userScrolled) output.scrollTop = output.scrollHeight;
+
+                // Wait (the suspense)
+                await sleep(test.delay || getDelay(test.status));
+
+                // Resolve
+                const result = resolveTest(test);
+                spinner.stop();
+
+                // Replace spinner line with result
+                const dur = formatDuration(result.duration);
+                line.innerHTML = '  ' + statusIcon(result.status) + '  ' + test.name + ' <span class="pl-dim">(' + dur + ')</span>';
+
+                suiteTotals[result.status]++;
+                totals[result.status]++;
+                completed++;
+                progress.textContent = '— ' + completed + '/' + totalTests;
+
+                // Show message if any
+                if (result.msg) {
+                    const msgLines = result.msg.split('\n');
+                    const msgCls = result.status === 'fail' ? 'pl-error' : result.status === 'skip' ? 'pl-skip-msg' : 'pl-dim';
+                    for (const ml of msgLines) {
+                        await sleep(40);
+                        addLine(ml, msgCls);
+                    }
+                }
+
+                if (!userScrolled) output.scrollTop = output.scrollHeight;
+            }
+
+            // Suite summary
+            const parts = [];
+            if (suiteTotals.pass) parts.push('<span class="pl-green">' + suiteTotals.pass + ' passed</span>');
+            if (suiteTotals.fail) parts.push('<span class="pl-red">' + suiteTotals.fail + ' failed</span>');
+            if (suiteTotals.skip) parts.push('<span class="pl-purple">' + suiteTotals.skip + ' skipped</span>');
+            addLine('  ' + parts.join(' · '), 'pl-suite-summary');
+
+            if (si < SUITES.length - 1) {
+                await sleep(400);
+            }
+        }
+
+        // Final summary in terminal
+        const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+        addLine('');
+        addLine('<span class="pl-dim">═══════════════════════════════════════════════════════════</span>', 'pl-summary-block');
+        addLine('<span class="pl-white pl-bold">SUMMARY</span>');
+        addLine('');
+        addLine('  Suites:    ' + SUITES.length);
+        addLine('  Tests:     ' + totalTests);
+        addLine('  <span class="pl-green">Passed:    ' + totals.pass + '</span>');
+        addLine('  <span class="pl-red">Failed:    ' + totals.fail + '</span>');
+        addLine('  <span class="pl-purple">Skipped:   ' + totals.skip + '</span>');
+        addLine('');
+        addLine('  Duration:  ' + elapsed + 's');
+
+        const allPass = totals.fail === 0;
+        if (allPass) {
+            addLine('  Status:    <span class="pl-green pl-bold">COMPLIANCE ACHIEVED</span>');
+            addLine('');
+            addLine('<span class="pl-dim">  This has never happened before.</span>');
+            addLine('<span class="pl-dim">  Results are under review. Do not tell Brock.</span>');
+        } else {
+            addLine('  Status:    <span class="pl-orange pl-bold">COMPLIANCE NOT ACHIEVED</span>');
+            addLine('');
+            addLine('<span class="pl-dim">  Compliance has not been achieved on any run.</span>');
+            addLine('<span class="pl-dim">  This is expected. The products are the products.</span>');
+        }
+
+        addLine('');
+        addLine('<span class="pl-dim">  — S. Shale, QA Division</span>');
+        addLine('<span class="pl-dim">═══════════════════════════════════════════════════════════</span>');
+
+        // Show summary card
+        const pct = ((totals.pass / totalTests) * 100).toFixed(1);
+        summaryGrid.innerHTML =
+            '<div class="summary-stat"><span class="summary-num" style="color:#4ade80">' + totals.pass + '</span> PASSED</div>' +
+            '<div class="summary-stat"><span class="summary-num" style="color:#ef4444">' + totals.fail + '</span> FAILED</div>' +
+            '<div class="summary-stat"><span class="summary-num" style="color:#a78bfa">' + totals.skip + '</span> SKIPPED</div>' +
+            '<div class="summary-stat"><span class="summary-num">' + pct + '%</span> PASS RATE</div>' +
+            '<div class="summary-stat"><span class="summary-num">' + elapsed + 's</span> DURATION</div>';
+
+        if (allPass) {
+            summaryNote.textContent = 'All tests passed. This is unprecedented. S. Shale has been notified. He does not believe it.';
+        } else {
+            summaryNote.textContent = 'Pass rate is within expected range. Non-flaky failures are permanent product characteristics. This pipeline does not discover failures — it commemorates them.';
+        }
+        summaryCard.classList.add('visible');
+
+        // Reset button
+        btn.disabled = false;
+        btn.textContent = 'RUN AGAIN';
+        progress.textContent = '';
+        running = false;
+    }
+    </script>
+    <script src="/assets/js/microdoug.js" defer></script>
+    <script src="/assets/js/dougmode.js" defer></script>
+</body>
+</html>
