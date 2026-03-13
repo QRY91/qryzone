@@ -5,6 +5,18 @@ description: Short-form content explorer — cycle through ideas, escape through
 ---
 
 <style>
+/* ── Quips color tokens (Zenburn-derived) ─────────── */
+.quips-layout {
+    --q-cell: var(--color-surface);
+    --q-cell-text: var(--color-text-secondary);
+    --q-content-bg: var(--color-surface);
+    --q-content-text: #dcdccc;
+    --q-code-bg: var(--color-surface-sunken);
+    --q-green: #7f9f7f;
+    --q-pocket-hover: var(--color-surface-sunken);
+    --q-pocket-active: #2a2a2a;
+}
+
 .quips-layout {
     display: flex;
     align-items: center;
@@ -32,7 +44,7 @@ description: Short-form content explorer — cycle through ideas, escape through
     min-width: 0;
 }
 
-.cell-on { background: #333333; }
+.cell-on { background: var(--q-cell); }
 .cell-off { background: transparent; }
 
 .cell-link {
@@ -50,7 +62,7 @@ description: Short-form content explorer — cycle through ideas, escape through
     transition: color 0.2s;
 }
 
-.cell-on .cell-link { color: #555555; }
+.cell-on .cell-link { color: var(--q-cell-text); }
 .cell-on .cell-link:hover { color: var(--color-accent); text-decoration: none; }
 
 .cell-link span {
@@ -81,7 +93,7 @@ description: Short-form content explorer — cycle through ideas, escape through
     background: none;
     border: none;
     font-size: 0.8rem;
-    color: #555;
+    color: var(--q-cell-text);
     cursor: pointer;
     transition: color 0.2s;
     user-select: none;
@@ -90,13 +102,13 @@ description: Short-form content explorer — cycle through ideas, escape through
 }
 
 .nav-chevron:hover { color: var(--color-accent); }
-.nav-chevron:active { color: #fff; }
+.nav-chevron:active { color: var(--color-text-primary); }
 
 /* ── Inner Square ────────────────────────────────── */
 .inner-square {
     grid-column: 3 / 7;
     grid-row: 3 / 7;
-    background: #333333;
+    background: var(--q-content-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     padding: var(--space-md);
@@ -131,20 +143,20 @@ description: Short-form content explorer — cycle through ideas, escape through
 .inner-square p {
     margin-bottom: var(--space-sm);
     font-size: 0.75rem;
-    color: #dcdccc;
+    color: var(--q-content-text);
 }
 
 .inner-square p:last-child { margin-bottom: 0; }
 
 .inner-square pre {
-    background: #2a2a2a;
+    background: var(--q-code-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     padding: var(--space-sm);
     font-family: var(--font-mono);
     font-size: 0.65rem;
     line-height: 1.5;
-    color: #dcdccc;
+    color: var(--q-content-text);
     overflow-x: hidden;
     margin-bottom: var(--space-sm);
     white-space: pre-wrap;
@@ -160,7 +172,7 @@ description: Short-form content explorer — cycle through ideas, escape through
     margin: 0 0 var(--space-sm) var(--space-md);
     padding: 0;
     font-size: 0.75rem;
-    color: #dcdccc;
+    color: var(--q-content-text);
     line-height: 1.6;
 }
 
@@ -170,14 +182,14 @@ description: Short-form content explorer — cycle through ideas, escape through
     float: right;
     font-family: var(--font-mono);
     font-size: 0.6rem;
-    color: #7f9f7f;
+    color: var(--q-green);
     letter-spacing: 0.05em;
 }
 
 .inner-square .quip-type {
     font-family: var(--font-mono);
     font-size: 0.6rem;
-    color: #7f9f7f;
+    color: var(--q-green);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 2px;
@@ -209,7 +221,7 @@ description: Short-form content explorer — cycle through ideas, escape through
 }
 
 .nav-chevron.slide-mode {
-    color: #7f9f7f;
+    color: var(--q-green);
     font-size: 0.65rem;
 }
 
@@ -239,10 +251,10 @@ description: Short-form content explorer — cycle through ideas, escape through
 
 .pocket:hover {
     border-color: var(--color-accent);
-    background: #353535;
+    background: var(--q-pocket-hover);
 }
 
-.pocket:active { background: #2a2a2a; }
+.pocket:active { background: var(--q-pocket-active); }
 
 .pocket-text {
     position: relative;
@@ -361,9 +373,9 @@ description: Short-form content explorer — cycle through ideas, escape through
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #333;
+    background: var(--q-cell);
     border: 1px solid var(--color-border);
-    color: #7f9f7f;
+    color: var(--q-green);
     font-family: var(--font-mono);
     font-size: 0.85rem;
     cursor: pointer;
