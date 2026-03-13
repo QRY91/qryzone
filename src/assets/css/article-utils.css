@@ -1,0 +1,253 @@
+/* article-utils.css
+ *
+ * Shared utility classes for article sub-pages.
+ * Extracted from recursive-mirror/ and styleguide patterns.
+ *
+ * Uses CSS variables from globals.css.
+ * Semantic colors from Zenburn palette:
+ *   green  #7f9f7f
+ *   orange #dfaf8f
+ *   red    #cc9393
+ *   blue   #8cd0d3
+ */
+
+/* ── Section divider ─────────────────────────────────────── */
+
+.article-divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-xl) 0;
+}
+
+/* ── Callout boxes (colored left border) ─────────────────── */
+
+.article-callout {
+    background: var(--color-surface);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-md);
+    margin: var(--space-sm) 0;
+    font-style: italic;
+}
+
+.article-callout--good {
+    border-left-color: #7f9f7f;
+}
+
+.article-callout--warn {
+    border-left-color: #dfaf8f;
+}
+
+.article-callout--info {
+    border-left-color: #8cd0d3;
+}
+
+.article-callout--muted {
+    border-left-color: var(--color-text-secondary);
+}
+
+/* ── Verdict cards (assessment with color coding) ────────── */
+
+.article-verdict {
+    background: var(--color-surface);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-md) var(--space-lg);
+    margin: var(--space-md) 0;
+    font-style: italic;
+}
+
+.article-verdict--good {
+    border-left-color: #7f9f7f;
+}
+
+.article-verdict--warn {
+    border-left-color: #dfaf8f;
+}
+
+.article-verdict--miss {
+    border-left-color: #8cd0d3;
+}
+
+/* ── Example box (inline quote with mono font) ───────────── */
+
+.article-example {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    padding-left: var(--space-md);
+    border-left: 2px solid var(--color-border);
+    margin: var(--space-sm) 0;
+}
+
+/* ── Do/Don't grid ───────────────────────────────────────── */
+
+.article-dodont {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin: var(--space-md) 0;
+}
+
+@media (max-width: 600px) {
+    .article-dodont {
+        grid-template-columns: 1fr;
+    }
+}
+
+.article-dodont__do,
+.article-dodont__dont {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+}
+
+.article-dodont__do h4 {
+    color: #7f9f7f;
+}
+
+.article-dodont__dont h4 {
+    color: #cc9393;
+}
+
+/* ── Table with uppercase monospace headers ───────────────── */
+
+.article-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: var(--space-md) 0;
+}
+
+.article-table th,
+.article-table td {
+    text-align: left;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.article-table th {
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-weight: normal;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.article-table td:first-child {
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+
+/* Variant: accent-colored first column */
+.article-table--accent td:first-child {
+    font-weight: bold;
+    color: var(--color-accent);
+}
+
+/* Variant: hoverable rows */
+.article-table--hover tr:hover {
+    background: var(--color-surface);
+}
+
+/* ── Checklist / rule-list box ───────────────────────────── */
+
+.article-rulebox {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md) var(--space-lg);
+}
+
+.article-rulebox h4 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+/* Larger padding variant (for checklists) */
+.article-rulebox--lg {
+    padding: var(--space-lg);
+}
+
+/* ── Quick reference (monospace preformatted box) ────────── */
+
+.article-quickref {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+}
+
+/* ── Usage note (small muted text below examples) ────────── */
+
+.article-usage-note {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-sm);
+}
+
+/* ── Meta note (informational box) ───────────────────────── */
+
+.article-meta {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--space-md);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+/* ── Centered callout box ────────────────────────────────── */
+
+.article-callout-center {
+    background: var(--color-surface);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--border-radius);
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    text-align: center;
+}
+
+.article-callout-center p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* ── Artifact navigation (bottom-of-article link grid) ──── */
+
+.article-artifacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+}
+
+.article-artifacts a {
+    white-space: nowrap;
+}
+
+/* ── Source tag (small inline label) ──────────────────────── */
+
+.article-source-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    padding: 1px 6px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    vertical-align: middle;
+    margin-left: var(--space-xs);
+}
+
+/* ── Severity indicators ─────────────────────────────────── */
+
+.article-severity-high { color: #cc9393; }
+.article-severity-med  { color: #f0dfaf; }
+.article-severity-low  { color: #7f9f7f; }

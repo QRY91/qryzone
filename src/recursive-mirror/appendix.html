@@ -2,6 +2,8 @@
 layout: base.njk
 title: Recursive mirror / Appendix - qry.zone
 description: Technical breakdown of the voice analysis session
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-utils.css">
 ---
 
 <style>
@@ -9,28 +11,9 @@ description: Technical breakdown of the voice analysis session
     max-width: 900px;
     margin: 0 auto;
 }
-.tool-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: var(--space-md) 0;
+.appendix-container .article-table {
     font-family: var(--font-mono);
     font-size: 0.85rem;
-}
-.tool-table th,
-.tool-table td {
-    text-align: left;
-    padding: var(--space-sm) var(--space-md);
-    border-bottom: 1px solid var(--color-border);
-}
-.tool-table th {
-    color: var(--color-text-secondary);
-    font-weight: normal;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-}
-.tool-table tr:hover {
-    background: var(--color-surface);
 }
 .file-list {
     font-family: var(--font-mono);
@@ -145,7 +128,7 @@ description: Technical breakdown of the voice analysis session
 
     <section>
         <h2>Tool Usage Breakdown</h2>
-        <table class="tool-table">
+        <table class="article-table article-table--hover">
             <thead>
                 <tr>
                     <th>Tool</th>
@@ -354,11 +337,11 @@ grep -oE 'file_path":"[^"]*' $SESSION_FILE | sed 's/file_path":"//' | sort | uni
     </section>
 
     <footer class="article-footer">
-        <p>
-            <a href="/recursive-mirror/">&larr; Back to Recursive mirror</a> ·
-            <a href="/recursive-mirror/voice-analysis/">Voice Analysis</a> ·
-            <a href="/recursive-mirror/second-opinion/">Second Opinion</a> ·
+        <div class="article-artifacts">
+            <a href="/recursive-mirror/">&larr; Back to Recursive mirror</a> &middot;
+            <a href="/recursive-mirror/voice-analysis/">Voice Analysis</a> &middot;
+            <a href="/recursive-mirror/second-opinion/">Second Opinion</a> &middot;
             <a href="/recursive-mirror/voice-comparison/">Voice Comparison</a>
-        </p>
+        </div>
     </footer>
 </article>

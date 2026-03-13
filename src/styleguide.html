@@ -13,6 +13,8 @@ connections:
   - "De-slopping in practice"
 firstCreated: 2026-02-16
 lastUpdated: 2026-02-16
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-utils.css">
 ---
 
 <style>
@@ -47,78 +49,6 @@ lastUpdated: 2026-02-16
     color: var(--color-text-secondary);
     font-size: 0.8rem;
 }
-.severity-high { color: #cc9393; }
-.severity-med { color: #f0dfaf; }
-.severity-low { color: #7f9f7f; }
-.pattern-box {
-    background: var(--color-surface);
-    border-left: 3px solid var(--color-accent);
-    padding: var(--space-md);
-    margin: var(--space-sm) 0;
-    font-style: italic;
-}
-.pattern-box.warn {
-    border-left-color: #cc9393;
-}
-.pattern-box.good {
-    border-left-color: #7f9f7f;
-}
-.checklist {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: var(--space-lg);
-    margin: var(--space-md) 0;
-}
-.checklist h4 {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-sm);
-}
-.do-dont {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-md);
-    margin: var(--space-md) 0;
-}
-@media (max-width: 600px) {
-    .do-dont { grid-template-columns: 1fr; }
-}
-.do-list, .dont-list {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: var(--space-md);
-}
-.do-list h4 { color: #7f9f7f; }
-.dont-list h4 { color: #cc9393; }
-.section-divider {
-    border: none;
-    border-top: 1px solid var(--color-border);
-    margin: var(--space-xl) 0;
-}
-.source-tag {
-    display: inline-block;
-    font-size: 0.7rem;
-    font-family: var(--font-mono);
-    padding: 1px 6px;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-    vertical-align: middle;
-    margin-left: var(--space-xs);
-}
-.quick-ref {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: var(--space-lg);
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    white-space: pre-wrap;
-}
 </style>
 
 <article class="article guide-container">
@@ -139,10 +69,10 @@ lastUpdated: 2026-02-16
         </p>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
-        <h2>Part 1: What to watch for <span class="source-tag">antislop</span></h2>
+        <h2>Part 1: What to watch for <span class="article-source-tag">antislop</span></h2>
 
         <p>
             The Antislop paper analyzed creative writing output from 67 language models against human baselines (Reddit creative writing + Project Gutenberg). They measured how often specific words and phrases appear in LLM text relative to human text. The ratios are staggering &mdash; some patterns are over 1,000x more frequent in model output.
@@ -161,26 +91,26 @@ lastUpdated: 2026-02-16
                 <tr><th>word</th><th>% models</th><th>severity</th></tr>
             </thead>
             <tbody>
-                <tr><td>flickered / flicker / flickering</td><td>98.5 / 94.0 / 92.5</td><td><span class="severity-high">high</span></td></tr>
-                <tr><td>leaned</td><td>82.1</td><td><span class="severity-high">high</span></td></tr>
-                <tr><td>muttered</td><td>82.1</td><td><span class="severity-high">high</span></td></tr>
-                <tr><td>gaze</td><td>80.6</td><td><span class="severity-high">high</span></td></tr>
-                <tr><td>grinned</td><td>80.6</td><td><span class="severity-high">high</span></td></tr>
-                <tr><td>gestured</td><td>77.6</td><td><span class="severity-high">high</span></td></tr>
-                <tr><td>murmured</td><td>73.1</td><td><span class="severity-med">medium</span></td></tr>
-                <tr><td>nodded</td><td>73.1</td><td><span class="severity-med">medium</span></td></tr>
-                <tr><td>glint</td><td>68.7</td><td><span class="severity-med">medium</span></td></tr>
-                <tr><td>hesitated</td><td>68.7</td><td><span class="severity-med">medium</span></td></tr>
-                <tr><td>whispered</td><td>68.7</td><td><span class="severity-med">medium</span></td></tr>
-                <tr><td>blinked</td><td>64.2</td><td><span class="severity-med">medium</span></td></tr>
-                <tr><td>hummed</td><td>64.2</td><td><span class="severity-med">medium</span></td></tr>
-                <tr><td>faintly</td><td>62.7</td><td><span class="severity-med">medium</span></td></tr>
-                <tr><td>unreadable</td><td>62.7</td><td><span class="severity-med">medium</span></td></tr>
-                <tr><td>shimmered</td><td>&mdash;</td><td><span class="severity-high">high</span> (2,882x in gemma-3-12b)</td></tr>
-                <tr><td>stammered</td><td>&mdash;</td><td><span class="severity-high">high</span> (3,833x in gemma-3-12b)</td></tr>
-                <tr><td>unsettlingly</td><td>&mdash;</td><td><span class="severity-high">high</span> (3,833x in gemma-3-12b)</td></tr>
-                <tr><td>containment</td><td>77.6</td><td><span class="severity-med">medium</span></td></tr>
-                <tr><td>addendum</td><td>74.6</td><td><span class="severity-med">medium</span></td></tr>
+                <tr><td>flickered / flicker / flickering</td><td>98.5 / 94.0 / 92.5</td><td><span class="article-severity-high">high</span></td></tr>
+                <tr><td>leaned</td><td>82.1</td><td><span class="article-severity-high">high</span></td></tr>
+                <tr><td>muttered</td><td>82.1</td><td><span class="article-severity-high">high</span></td></tr>
+                <tr><td>gaze</td><td>80.6</td><td><span class="article-severity-high">high</span></td></tr>
+                <tr><td>grinned</td><td>80.6</td><td><span class="article-severity-high">high</span></td></tr>
+                <tr><td>gestured</td><td>77.6</td><td><span class="article-severity-high">high</span></td></tr>
+                <tr><td>murmured</td><td>73.1</td><td><span class="article-severity-med">medium</span></td></tr>
+                <tr><td>nodded</td><td>73.1</td><td><span class="article-severity-med">medium</span></td></tr>
+                <tr><td>glint</td><td>68.7</td><td><span class="article-severity-med">medium</span></td></tr>
+                <tr><td>hesitated</td><td>68.7</td><td><span class="article-severity-med">medium</span></td></tr>
+                <tr><td>whispered</td><td>68.7</td><td><span class="article-severity-med">medium</span></td></tr>
+                <tr><td>blinked</td><td>64.2</td><td><span class="article-severity-med">medium</span></td></tr>
+                <tr><td>hummed</td><td>64.2</td><td><span class="article-severity-med">medium</span></td></tr>
+                <tr><td>faintly</td><td>62.7</td><td><span class="article-severity-med">medium</span></td></tr>
+                <tr><td>unreadable</td><td>62.7</td><td><span class="article-severity-med">medium</span></td></tr>
+                <tr><td>shimmered</td><td>&mdash;</td><td><span class="article-severity-high">high</span> (2,882x in gemma-3-12b)</td></tr>
+                <tr><td>stammered</td><td>&mdash;</td><td><span class="article-severity-high">high</span> (3,833x in gemma-3-12b)</td></tr>
+                <tr><td>unsettlingly</td><td>&mdash;</td><td><span class="article-severity-high">high</span> (3,833x in gemma-3-12b)</td></tr>
+                <tr><td>containment</td><td>77.6</td><td><span class="article-severity-med">medium</span></td></tr>
+                <tr><td>addendum</td><td>74.6</td><td><span class="article-severity-med">medium</span></td></tr>
             </tbody>
         </table>
 
@@ -217,63 +147,63 @@ lastUpdated: 2026-02-16
             Beyond individual words and phrases, models overuse certain sentence constructions.
         </p>
 
-        <div class="pattern-box warn">
+        <div class="article-callout article-callout--warn">
             <strong>"It's not X, it's Y"</strong> &mdash; 6.3x more prevalent than in human writing. The paper built regex patterns to detect and suppress this entire family. Variants: "It wasn't X, it was Y", "This isn't X, it's Y", "That's not X, it's Y", "not just X, but Y", "X isn't Y &mdash; it's Z". The construction itself isn't banned &mdash; sometimes it earns its place. But if you find three in one article, the model was driving.
         </div>
 
-        <div class="pattern-box warn">
+        <div class="article-callout article-callout--warn">
             <strong>Sensory clich&eacute;s</strong> &mdash; "Air thick with [scent/tension/silence]", "voice barely above a whisper", "heart pounding in [chest/ears]", "eyes never leaving". These create an atmosphere that reads as template rather than observation.
         </div>
 
-        <div class="pattern-box warn">
+        <div class="article-callout article-callout--warn">
             <strong>Character name fixation</strong> &mdash; Models gravitate toward specific names. "Elara" appeared 85,513x more often in gemma-3-12b output than in human text. "Kael" shows similar patterns. If your AI collaborator suggests a character name, check whether it's a genuine suggestion or a default.
         </div>
 
-        <div class="pattern-box warn">
+        <div class="article-callout article-callout--warn">
             <strong>Generic intensifiers</strong> &mdash; "a profound sense of", "a deep sense of", "felt a surge of". These are the model reaching for emotional weight without earning it. If you can replace the phrase with "felt [emotion]" and lose nothing, it was padding.
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
-        <h2>Part 2: What to aim for <span class="source-tag">voice analysis</span></h2>
+        <h2>Part 2: What to aim for <span class="article-source-tag">voice analysis</span></h2>
 
         <p>
             From the <a href="/recursive-mirror/voice-analysis/">voice analysis</a> &mdash; patterns extracted from five years of raw journal entries. These are the things that make writing sound like a person, not a model.
         </p>
 
         <h3 style="margin-top: var(--space-lg);">Rhythm</h3>
-        <div class="pattern-box good">
+        <div class="article-callout article-callout--good">
             <strong>Staccato &rarr; Reflection &rarr; Staccato</strong><br>
             Short punch. Short punch. Longer flowing thought that develops the idea. Short punch.
         </div>
-        <div class="pattern-box good">
+        <div class="article-callout article-callout--good">
             <strong>Fragment punches</strong> &mdash; Short declarative fragments that hit hard. No subject needed. "Let's get to work." "Make shit up. Make it real."
         </div>
-        <div class="pattern-box good">
+        <div class="article-callout article-callout--good">
             <strong>Breathing separators</strong> &mdash; Use whitespace to mark thought boundaries. Let ideas stand alone without forcing connections.
         </div>
 
         <h3 style="margin-top: var(--space-lg);">Tone</h3>
-        <div class="pattern-box good">
+        <div class="article-callout article-callout--good">
             <strong>Direct profanity</strong> &mdash; When frustrated or emphatic. Never gratuitous. Punctuation, not filler.
         </div>
-        <div class="pattern-box good">
+        <div class="article-callout article-callout--good">
             <strong>Self-questioning</strong> &mdash; Mid-thought interrogation. Questions that drive exploration and signal genuine uncertainty.
         </div>
-        <div class="pattern-box good">
+        <div class="article-callout article-callout--good">
             <strong>Rhetorical escalation</strong> &mdash; Questions that answer themselves through absurdity.
         </div>
-        <div class="pattern-box good">
+        <div class="article-callout article-callout--good">
             <strong>Parenthetical asides</strong> &mdash; Process thinking made visible. Shows the work.
         </div>
 
         <h3 style="margin-top: var(--space-lg);">Transformation rules</h3>
         <p>When going from draft to published:</p>
 
-        <div class="do-dont">
-            <div class="do-list">
+        <div class="article-dodont">
+            <div class="article-dodont__do">
                 <h4>Preserve</h4>
                 <ul>
                     <li>Fragment punches</li>
@@ -285,7 +215,7 @@ lastUpdated: 2026-02-16
                     <li>Specific numbers and timestamps</li>
                 </ul>
             </div>
-            <div class="dont-list">
+            <div class="article-dodont__dont">
                 <h4>Avoid</h4>
                 <ul>
                     <li>Over-explaining (trust the reader)</li>
@@ -300,16 +230,16 @@ lastUpdated: 2026-02-16
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
-        <h2>Part 3: The editing pass <span class="source-tag">synthesis</span></h2>
+        <h2>Part 3: The editing pass <span class="article-source-tag">synthesis</span></h2>
 
         <p>
             Where the two sources meet. Antislop tells us what patterns to scan for. The voice analysis tells us what to replace them with. Neither is sufficient alone &mdash; you can strip all the slop words and still end up with generic text if you don't know what voice to aim for.
         </p>
 
-        <div class="checklist">
+        <div class="article-rulebox article-rulebox--lg">
             <h4>Editing checklist</h4>
             <ol>
                 <li><strong>Word scan</strong> &mdash; Search for banlist words. For each hit: did I choose this, or did the model? If the model, replace or cut.</li>
@@ -330,11 +260,11 @@ lastUpdated: 2026-02-16
         </p>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>Quick reference</h2>
-        <div class="quick-ref">SCAN FOR:
+        <div class="article-quickref">SCAN FOR:
 - Banlist words (flickered, gaze, murmured, whispered, nodded...)
 - Banlist trigrams (voice barely, air thick, took deep breath...)
 - "It's not X, it's Y" constructions

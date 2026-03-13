@@ -2,28 +2,14 @@
 layout: base.njk
 title: Recursive mirror / Second Opinion - qry.zone
 description: What the original voice analysis missed, overstated, or couldn't see
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-utils.css">
 ---
 
 <style>
 .opinion-container {
     max-width: 900px;
     margin: 0 auto;
-}
-.verdict {
-    background: var(--color-surface);
-    border-left: 3px solid var(--color-accent);
-    padding: var(--space-md) var(--space-lg);
-    margin: var(--space-md) 0;
-    font-style: italic;
-}
-.verdict.accurate {
-    border-left-color: #4a9;
-}
-.verdict.overstated {
-    border-left-color: #a86;
-}
-.verdict.missed {
-    border-left-color: #68a;
 }
 .pattern-card {
     background: var(--color-surface);
@@ -43,63 +29,6 @@ description: What the original voice analysis missed, overstated, or couldn't se
 }
 .pattern-card p:last-child {
     margin-bottom: 0;
-}
-.example-quote {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    padding-left: var(--space-md);
-    border-left: 2px solid var(--color-border);
-    margin: var(--space-sm) 0;
-}
-.additions-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-    margin: var(--space-md) 0;
-}
-.additions-table th,
-.additions-table td {
-    text-align: left;
-    padding: var(--space-sm) var(--space-md);
-    border-bottom: 1px solid var(--color-border);
-}
-.additions-table th {
-    color: var(--color-text-secondary);
-    font-weight: normal;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-}
-.additions-table td:first-child {
-    font-weight: bold;
-    color: var(--color-accent);
-    white-space: nowrap;
-}
-.section-divider {
-    border: none;
-    border-top: 1px solid var(--color-border);
-    margin: var(--space-xl) 0;
-}
-.meta-note {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: var(--space-md);
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-}
-.callout-box {
-    background: var(--color-surface);
-    border: 1px solid var(--color-accent);
-    border-radius: var(--border-radius);
-    padding: var(--space-lg);
-    margin: var(--space-lg) 0;
-    text-align: center;
-}
-.callout-box p {
-    margin: 0;
-    font-size: 1.1rem;
 }
 </style>
 
@@ -122,7 +51,7 @@ description: What the original voice analysis missed, overstated, or couldn't se
         </p>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>What it got right</h2>
@@ -130,17 +59,17 @@ description: What the original voice analysis missed, overstated, or couldn't se
         <div class="pattern-card">
             <h3>Parenthetical asides</h3>
             <p>Everywhere. Process thinking made visible.</p>
-            <div class="example-quote">"(probably not in v1, as long as we can avoid the ID replacement by using this logic that's a big W, we can add filters later)"</div>
+            <div class="article-example">"(probably not in v1, as long as we can avoid the ID replacement by using this logic that's a big W, we can add filters later)"</div>
         </div>
 
         <div class="pattern-card">
             <h3>Self-questioning</h3>
             <p>Accurate, including the habit of answering your own questions in parentheses.</p>
-            <div class="example-quote">"what's next? do we work on this during downtime? (yes.)"</div>
+            <div class="article-example">"what's next? do we work on this during downtime? (yes.)"</div>
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>What it overstated</h2>
@@ -157,7 +86,7 @@ description: What the original voice analysis missed, overstated, or couldn't se
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>What it missed</h2>
@@ -165,53 +94,53 @@ description: What the original voice analysis missed, overstated, or couldn't se
         <div class="pattern-card">
             <h3>Empathetic observation</h3>
             <p>Work documents read almost ethnographic. Not just documenting systems — seeing the humans in them.</p>
-            <div class="example-quote">"Chip on his shoulder, occasionally vents complaints loudly to his colleagues in humorous way"</div>
-            <div class="example-quote">"Young adult, energetic, dynamic & open communication style, likes to joke around with his team for morale & bonding"</div>
+            <div class="article-example">"Chip on his shoulder, occasionally vents complaints loudly to his colleagues in humorous way"</div>
+            <div class="article-example">"Young adult, energetic, dynamic & open communication style, likes to joke around with his team for morale & bonding"</div>
         </div>
 
         <div class="pattern-card">
             <h3>Pedagogical instinct</h3>
             <p>Teaching through experience, not just explaining. Walking through frustration step by step to make the pain legible.</p>
-            <div class="example-quote">"Imagine making a mistake in the search query, and having to wait for the irrelevant query result to load before you can correct it and query the thing you actually want to search."</div>
+            <div class="article-example">"Imagine making a mistake in the search query, and having to wait for the irrelevant query result to load before you can correct it and query the thing you actually want to search."</div>
             <p>The numbered workflow comparisons (current state vs ideal state) are the same pattern. Show the friction, then show what it could be.</p>
         </div>
 
         <div class="pattern-card">
             <h3>Absurdist narration</h3>
             <p>Gallows humor as documentation strategy. Narrating code like it's a horror movie because treating it seriously would be unbearable.</p>
-            <div class="example-quote">"loop 01: `while (true)` (yes, really)"</div>
-            <div class="example-quote">"buckle up."</div>
-            <div class="example-quote">"`log.content = null; ¯\_(ツ)_/¯`"</div>
-            <div class="example-quote">"we did one (1) log!"</div>
+            <div class="article-example">"loop 01: `while (true)` (yes, really)"</div>
+            <div class="article-example">"buckle up."</div>
+            <div class="article-example">"`log.content = null; ¯\_(ツ)_/¯`"</div>
+            <div class="article-example">"we did one (1) log!"</div>
             <p>One document ends with a wall of whitespace, then: "But... How does export work?" The comedic timing is structural. Dread built into the document layout.</p>
         </div>
 
         <div class="pattern-card">
             <h3>Scale humor</h3>
             <p>Making disproportion visible through emphasis.</p>
-            <div class="example-quote">"we did one (1) log! only 100 more, and 100 more, and so on"</div>
-            <div class="example-quote">"This was an attempt at a brief summary of roughly 1200 lines of code."</div>
+            <div class="article-example">"we did one (1) log! only 100 more, and 100 more, and so on"</div>
+            <div class="article-example">"This was an attempt at a brief summary of roughly 1200 lines of code."</div>
             <p>The parenthetical "(1)" does real work. It makes the smallness of the progress sting.</p>
         </div>
 
         <div class="pattern-card">
             <h3>Breadcrumb warnings</h3>
             <p>Parentheticals that aren't just process-thinking — they're <em>warnings</em>.</p>
-            <div class="example-quote">"(this means that `prepareRequest()` should not `return (void);` unless ref is actually missing. <em>no early escapes allowed!</em>)"</div>
+            <div class="article-example">"(this means that `prepareRequest()` should not `return (void);` unless ref is actually missing. <em>no early escapes allowed!</em>)"</div>
             <p>Writing for someone (probably future you) who will otherwise fall into the same trap.</p>
         </div>
 
         <div class="pattern-card">
             <h3>Quantified frustration</h3>
             <p>Putting numbers on the cost of unclear thinking.</p>
-            <div class="example-quote">"it took 1.5h of 2 devs' time to find a solution"</div>
+            <div class="article-example">"it took 1.5h of 2 devs' time to find a solution"</div>
             <p>Not vague complaints. Measurable waste. Harder to argue with.</p>
         </div>
 
         <div class="pattern-card">
             <h3>Rhetorical escalation (refined)</h3>
             <p>The voice analysis names this pattern but the work notes show a specific variant: <strong>parallel structure building to indictment</strong>.</p>
-            <div class="example-quote">"We treat our clients with great respect, always looking for ways to improve our products, to make them easy to understand, appealing in presentation, and empowering workers to do better work. But do we treat our developers... the same way?"</div>
+            <div class="article-example">"We treat our clients with great respect, always looking for ways to improve our products, to make them easy to understand, appealing in presentation, and empowering workers to do better work. But do we treat our developers... the same way?"</div>
             <p>The kicker lands because the setup was methodical. The question isn't a question. It's a verdict.</p>
         </div>
 
@@ -224,7 +153,7 @@ description: What the original voice analysis missed, overstated, or couldn't se
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>The honest conclusion</h2>
@@ -234,7 +163,7 @@ description: What the original voice analysis missed, overstated, or couldn't se
         <p>
             Raw work notes are messier. More tentative. More sprawling.
         </p>
-        <div class="verdict overstated">
+        <div class="article-verdict article-verdict--warn">
             "i'm hesitant to say this"<br>
             "i'm getting too tired to think atm"
         </div>
@@ -245,16 +174,16 @@ description: What the original voice analysis missed, overstated, or couldn't se
             But it means the analysis is partially aspirational. It's the voice you're <em>aiming for</em>, not necessarily the voice you write in by default.
         </p>
 
-        <div class="callout-box">
+        <div class="article-callout-center">
             <p><strong>The mirror shows you at your best, not your baseline.</strong></p>
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>Suggested additions</h2>
-        <table class="additions-table">
+        <table class="article-table article-table--accent">
             <thead>
                 <tr>
                     <th>Pattern</th>
@@ -297,20 +226,20 @@ description: What the original voice analysis missed, overstated, or couldn't se
         </table>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
-        <div class="meta-note">
+        <div class="article-meta">
             <strong>Meta-note:</strong> This analysis was produced by comparing the original voice analysis against five pre-LLM work documents: Funday Monday, Exploratory research notes, Maersk AMS visit, import integration tldr, and sprint retrospectives. The source material Claude Code never saw.
         </div>
     </section>
 
     <footer class="article-footer">
-        <p>
-            <a href="/recursive-mirror/">&larr; Back to Recursive mirror</a> ·
-            <a href="/recursive-mirror/voice-analysis/">Voice Analysis</a> ·
-            <a href="/recursive-mirror/voice-comparison/">Voice Comparison</a> ·
+        <div class="article-artifacts">
+            <a href="/recursive-mirror/">&larr; Back to Recursive mirror</a> &middot;
+            <a href="/recursive-mirror/voice-analysis/">Voice Analysis</a> &middot;
+            <a href="/recursive-mirror/voice-comparison/">Voice Comparison</a> &middot;
             <a href="/recursive-mirror/appendix/">Session Appendix</a>
-        </p>
+        </div>
     </footer>
 </article>

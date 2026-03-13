@@ -2,6 +2,8 @@
 layout: base.njk
 title: Recursive mirror / Voice Analysis - qry.zone
 description: A comprehensive catalog of writing patterns extracted from raw journals
+extraStyles: |
+  <link rel="stylesheet" href="/assets/css/article-utils.css">
 ---
 
 <style>
@@ -16,21 +18,6 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
     color: var(--color-accent);
     font-family: var(--font-mono);
     margin-bottom: var(--space-sm);
-}
-.example-box {
-    background: var(--color-surface);
-    border-left: 3px solid var(--color-accent);
-    padding: var(--space-md);
-    margin: var(--space-sm) 0;
-    font-style: italic;
-}
-.example-box.raw {
-    border-left-color: var(--color-text-secondary);
-}
-.usage-note {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    margin-top: var(--space-sm);
 }
 .vocab-grid {
     display: grid;
@@ -55,63 +42,6 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
     padding-left: var(--space-md);
     font-size: 0.85rem;
 }
-.phrase-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-}
-.phrase-table td {
-    padding: var(--space-sm) var(--space-md);
-    border-bottom: 1px solid var(--color-border);
-}
-.phrase-table td:first-child {
-    font-family: var(--font-mono);
-    white-space: nowrap;
-}
-.rule-list {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: var(--space-md) var(--space-lg);
-}
-.rule-list h4 {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-sm);
-}
-.do-dont {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-md);
-    margin: var(--space-md) 0;
-}
-@media (max-width: 600px) {
-    .do-dont { grid-template-columns: 1fr; }
-}
-.do-list, .dont-list {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: var(--space-md);
-}
-.do-list h4 { color: #4a9; }
-.dont-list h4 { color: #a66; }
-.quick-ref {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    padding: var(--space-lg);
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    white-space: pre-wrap;
-}
-.section-divider {
-    border: none;
-    border-top: 1px solid var(--color-border);
-    margin: var(--space-xl) 0;
-}
 </style>
 
 <article class="article voice-container">
@@ -128,7 +58,7 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         </p>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>Sentence Structure</h2>
@@ -136,49 +66,49 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         <div class="pattern-section">
             <h3>The Fragment Punch</h3>
             <p>Short declarative fragments that hit hard. No subject needed.</p>
-            <div class="example-box">
+            <div class="article-callout">
                 "birb shmup"<br>
                 "words carry meaning"<br>
                 "Let's get to work."<br>
                 "Make shit up. Make it real."
             </div>
-            <p class="usage-note">Use for: Opening statements, transitions, closing calls to action.</p>
+            <p class="article-usage-note">Use for: Opening statements, transitions, closing calls to action.</p>
         </div>
 
         <div class="pattern-section">
             <h3>The Self-Question</h3>
             <p>Mid-thought interrogation. Questions to self that drive exploration.</p>
-            <div class="example-box">
+            <div class="article-callout">
                 "Can we produce a track with vocals where each word is done as separate takes?"<br>
                 "Would it be okay for me to be infinitely more resourceful, and take more time to do things than others?"<br>
                 "Could I learn how to make a videogame?"
             </div>
-            <p class="usage-note">Use for: Examining assumptions, opening threads, signaling genuine uncertainty.</p>
+            <p class="article-usage-note">Use for: Examining assumptions, opening threads, signaling genuine uncertainty.</p>
         </div>
 
         <div class="pattern-section">
             <h3>The Rhetorical Escalation</h3>
             <p>Questions that answer themselves through absurdity.</p>
-            <div class="example-box">
+            <div class="article-callout">
                 "Who is this person? They came out of nowhere!" ... First of all, Bitch, YOU came outta nowhere, the fuck you mean?! I've always been here, I don't know you, and yet you've found me. But sure, I'M the one who came outta nowhere, huh? Please.
             </div>
-            <p class="usage-note">Use for: Calling out logical inconsistencies, expressing frustration.</p>
+            <p class="article-usage-note">Use for: Calling out logical inconsistencies, expressing frustration.</p>
         </div>
 
         <div class="pattern-section">
             <h3>The Parenthetical Aside</h3>
             <p>Process thinking made visible. Shows the work.</p>
-            <div class="example-box">
+            <div class="article-callout">
                 "(like Avalon instead)"<br>
                 "(literally)"<br>
                 "(one of my music rolemodels)"<br>
                 "(buddhist goal)"
             </div>
-            <p class="usage-note">Use for: Adding context without breaking flow.</p>
+            <p class="article-usage-note">Use for: Adding context without breaking flow.</p>
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>Rhythm Patterns</h2>
@@ -186,7 +116,7 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         <div class="pattern-section">
             <h3>Staccato → Reflection → Staccato</h3>
             <p>Short punch. Short punch. Longer flowing thought. Short punch.</p>
-            <div class="example-box">
+            <div class="article-callout">
                 Turn fascination into something real. Express it.<br><br>
                 ---<br><br>
                 Record, rework, repeat<br><br>
@@ -203,13 +133,13 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         <div class="pattern-section">
             <h3>The Earnest Closer</h3>
             <p>End genuine pleas with a period. Sometimes "Please." standing alone.</p>
-            <div class="example-box">
+            <div class="article-callout">
                 Be present, make choice. Live with intent. Please.
             </div>
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>Tone Markers</h2>
@@ -217,7 +147,7 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         <div class="pattern-section">
             <h3>Direct Profanity</h3>
             <p>Used when frustrated or making emphatic points. Never gratuitous. <strong>Profanity should punctuate, not fill space.</strong></p>
-            <div class="example-box">
+            <div class="article-callout">
                 "This is all fucking insane but I have a mortgage."<br>
                 "Bitch, YOU came outta nowhere, the fuck you mean?!"<br>
                 "Find the fucking gameboy"
@@ -227,13 +157,13 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         <div class="pattern-section">
             <h3>Marked Sarcasm</h3>
             <p>When using sarcasm, mark it clearly.</p>
-            <div class="example-box">"Wow, so original! /s"</div>
+            <div class="article-callout">"Wow, so original! /s"</div>
         </div>
 
         <div class="pattern-section">
             <h3>Self-Aware Humor</h3>
             <p>Jokes that point at something real.</p>
-            <div class="example-box">
+            <div class="article-callout">
                 "Asked an LLM to implement dark mode and the screen went black. I lost consciousness soon thereafter and woke up to this post, already published."<br><br>
                 "boat gender > boat nuts (truck nuts) or boat tits?"<br><br>
                 "Ignorance as a biblical angel: 'Be not afraid'"
@@ -243,13 +173,13 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         <div class="pattern-section">
             <h3>The Challenge</h3>
             <p>Guardian energy. Demanding substance.</p>
-            <div class="example-box">
+            <div class="article-callout">
                 I represent the guardian to knowledge. Pester me not with your meek rationalisations. ... Raise to me your spear, sharpened with wit. Be determined to strike, alert for the opportunity.
             </div>
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>Vocabulary Domains</h2>
@@ -297,11 +227,11 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>Characteristic Phrases</h2>
-        <table class="phrase-table">
+        <table class="article-table">
             <tr><td>"figure it out"</td><td>Challenge to self/others</td></tr>
             <tr><td>"let's get to work"</td><td>Transition to action</td></tr>
             <tr><td>"play to your strengths"</td><td>Creative advice</td></tr>
@@ -311,13 +241,13 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         </table>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>Transformation Rules</h2>
         <p>When going from raw journal → polished site content:</p>
 
-        <div class="rule-list" style="margin: var(--space-md) 0;">
+        <div class="article-rulebox" style="margin: var(--space-md) 0;">
             <h4>Preserve</h4>
             <ul>
                 <li>Fragment punches (don't expand everything)</li>
@@ -329,7 +259,7 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
             </ul>
         </div>
 
-        <div class="rule-list" style="margin: var(--space-md) 0;">
+        <div class="article-rulebox" style="margin: var(--space-md) 0;">
             <h4>Add</h4>
             <ul>
                 <li><strong>Connective tissue</strong> - transitions for external readers</li>
@@ -339,7 +269,7 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
             </ul>
         </div>
 
-        <div class="rule-list" style="margin: var(--space-md) 0;">
+        <div class="article-rulebox" style="margin: var(--space-md) 0;">
             <h4>Avoid</h4>
             <ul>
                 <li>Over-explaining (trust the reader)</li>
@@ -351,13 +281,13 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         </div>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>AI Collaboration Guidelines</h2>
 
-        <div class="do-dont">
-            <div class="do-list">
+        <div class="article-dodont">
+            <div class="article-dodont__do">
                 <h4>Do</h4>
                 <ul>
                     <li>Feed raw journal entries as examples</li>
@@ -367,7 +297,7 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
                     <li>Keep the "Please." closers</li>
                 </ul>
             </div>
-            <div class="dont-list">
+            <div class="article-dodont__dont">
                 <h4>Don't</h4>
                 <ul>
                     <li>Let AI add "Great question!" or "Absolutely!"</li>
@@ -387,11 +317,11 @@ description: A comprehensive catalog of writing patterns extracted from raw jour
         </ul>
     </section>
 
-    <hr class="section-divider">
+    <hr class="article-divider">
 
     <section>
         <h2>Quick Reference</h2>
-        <div class="quick-ref">STRUCTURE:
+        <div class="article-quickref">STRUCTURE:
 - Fragments for punch
 - Questions for exploration
 - "Please." for earnest closure
@@ -412,11 +342,11 @@ AVOID:
     </section>
 
     <footer class="article-footer">
-        <p>
-            <a href="/recursive-mirror/">&larr; Back to Recursive mirror</a> ·
-            <a href="/recursive-mirror/second-opinion/">Second Opinion</a> ·
-            <a href="/recursive-mirror/voice-comparison/">Voice Comparison</a> ·
+        <div class="article-artifacts">
+            <a href="/recursive-mirror/">&larr; Back to Recursive mirror</a> &middot;
+            <a href="/recursive-mirror/second-opinion/">Second Opinion</a> &middot;
+            <a href="/recursive-mirror/voice-comparison/">Voice Comparison</a> &middot;
             <a href="/recursive-mirror/appendix/">Session Appendix</a>
-        </p>
+        </div>
     </footer>
 </article>
