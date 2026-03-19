@@ -1,44 +1,766 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Below the Second Floor — Chasm Logic</title>
-    <style>
-        body {
-            background: #0e0e0e;
-            color: #b8b8b8;
-            font-family: 'Roboto Mono', monospace;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .stub {
-            text-align: center;
-            max-width: 400px;
-            padding: 2rem;
-        }
-        .stub-ref { font-size: 0.7rem; color: #555; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; }
-        .stub-title { font-size: 1.1rem; color: #e0e0e0; margin-bottom: 0.5rem; }
-        .stub-note { font-size: 0.8rem; color: #555; margin-top: 2rem; }
-        a { color: #F58025; text-decoration: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Below the Second Floor — Chasm Logic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0e0e0e;
+  color: #888;
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  min-height: 100vh;
+}
+
+/* ── CL-DOC header ── */
+.cl-hdr {
+  border-bottom: 1px solid #181818;
+  padding: 0.65rem 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.cl-fields { display: flex; gap: 1.6rem; flex-wrap: wrap; }
+.cl-f { display: flex; gap: 0.5em; }
+.cl-k { color: #222; }
+.cl-v { color: #2e2e2e; }
+.cl-v.p { animation: bk 2.8s ease-in-out infinite; }
+.cl-v.ok { color: #16a34a; transition: color 1.2s ease; animation: none; }
+@keyframes bk { 0%,100%{opacity:.2} 50%{opacity:.6} }
+.cl-exit { color: #252525; text-decoration: none; font-size: 0.6rem; letter-spacing: 0.1em; transition: color 0.15s; }
+.cl-exit:hover { color: #555; }
+
+/* ── Main content ── */
+#vn {
+  max-width: 580px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 7rem;
+  transition: opacity 0.26s ease;
+}
+#vn.fade { opacity: 0; }
+
+/* ── Scene text ── */
+.txt {
+  font-size: 0.875rem;
+  line-height: 1.95;
+  color: #888;
+}
+.txt p { margin-bottom: 0.6rem; }
+.txt em { font-style: normal; color: #555; }
+
+/* ── Dialogue block ── */
+.dial-wrap {
+  margin-top: 1.2rem;
+  border-left: 1px solid #1e1e1e;
+  padding-left: 1rem;
+}
+.dial-entry { margin-bottom: 0.85rem; }
+.dial-q { font-size: 0.75rem; color: #4a4a4a; display: block; }
+.dial-a { font-size: 0.83rem; color: #777; display: block; margin-top: 0.2rem; line-height: 1.75; }
+.dial-a em { font-style: normal; color: #444; }
+.folder-prompt { margin-top: 1rem; font-size: 0.875rem; color: #777; font-style: italic; }
+
+/* ── Document fragment ── */
+.doc-frag {
+  margin-top: 1.5rem;
+  border: 1px solid #1c1c1c;
+  background: #080808;
+  padding: 1.1rem 1.2rem;
+}
+.doc-ref {
+  font-size: 0.6rem;
+  letter-spacing: 0.13em;
+  color: #2a2a2a;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.doc-row { font-size: 0.77rem; color: #585858; line-height: 1.8; }
+.doc-hl { color: #888; }
+.doc-margin {
+  margin-top: 0.65rem;
+  border-left: 2px solid #222;
+  padding-left: 0.7rem;
+  font-size: 0.72rem;
+  color: #404040;
+  font-style: italic;
+  line-height: 1.7;
+}
+.doc-aftermath {
+  margin-top: 1.2rem;
+  font-size: 0.83rem;
+  color: #777;
+  line-height: 1.85;
+  font-style: italic;
+}
+
+/* ── Note ── */
+.note-obj {
+  margin-top: 1.5rem;
+  border: 1px solid #252525;
+  background: #0b0b0b;
+  padding: 1.3rem 1.6rem;
+  font-size: 0.9rem;
+  color: #ccc;
+  letter-spacing: 0.02em;
+}
+.note-resp-wrap { margin-top: 1.1rem; }
+.note-resp {
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: #555;
+  font-style: italic;
+  margin-bottom: 0.65rem;
+}
+
+/* ── Choices ── */
+.choices {
+  margin-top: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+button.ch {
+  background: none;
+  border: 1px solid #1c1c1c;
+  color: #525252;
+  font-family: inherit;
+  font-size: 0.77rem;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s;
+}
+button.ch:hover:not([disabled]):not(.used) {
+  border-color: #F58025;
+  color: #F58025;
+}
+button.ch[disabled], button.ch.used {
+  opacity: 0.28;
+  cursor: default;
+}
+
+/* ── Flavor ── */
+#flv {
+  margin-top: 0.85rem;
+  font-size: 0.77rem;
+  line-height: 1.65;
+  color: #454545;
+  min-height: 1.3em;
+  font-style: italic;
+}
+
+/* ── Beat 10 cards ── */
+.b10 { padding-top: 0.5rem; }
+.card {
+  font-size: 0.875rem;
+  line-height: 1.85;
+  color: #4d4d4d;
+  margin-bottom: 0.35rem;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.card.vis { opacity: 1; }
+.card.gap { margin-bottom: 1.4rem; }
+.card.bright { color: #999; }
+.card.ans {
+  color: #F58025;
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  margin-top: 1.8rem;
+}
+.card.foot {
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  color: #252525;
+  text-transform: uppercase;
+  margin-top: 3rem;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.card.foot.vis { opacity: 1; }
+.card.foot a { color: #252525; text-decoration: none; }
+.card.foot a:hover { color: #555; }
+
+/* ── VO indicator ── */
+.vo {
+  position: fixed;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #F58025;
+  pointer-events: none;
+  animation: voa 2.6s ease-in-out forwards;
+}
+@keyframes voa { 0%{opacity:0} 12%{opacity:1} 65%{opacity:1} 100%{opacity:0} }
+</style>
 </head>
 <body>
-    <div class="stub">
-        <div class="stub-ref">CL-VN-001</div>
-        <div class="stub-title">Below the Second Floor</div>
-        <div style="font-size:0.85rem;color:#555;margin-top:0.5rem;">[ not yet deployed ]</div>
-        <div class="stub-note"><a href="/fun/chasm-logic/">&larr; back to index</a></div>
-    </div>
+
+<header class="cl-hdr">
+  <div class="cl-fields">
+    <div class="cl-f"><span class="cl-k">CL-DOC:</span><span class="cl-v p" id="hd">[UNASSIGNED]</span></div>
+    <div class="cl-f"><span class="cl-k">FILED:</span><span class="cl-v p" id="hf">[PENDING]</span></div>
+    <div class="cl-f"><span class="cl-k">DIVISION:</span><span class="cl-v p" id="hdv">[PENDING]</span></div>
+    <div class="cl-f"><span class="cl-k">SUBJECT:</span><span class="cl-v p" id="hs">[MISSING]</span></div>
+  </div>
+  <a href="/fun/chasm-logic/" class="cl-exit">&larr; archive</a>
+</header>
+
+<div id="vn"></div>
+
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+const S = {
+  beat: 1,
+  dialCount: 0,
+  dialBusy: false,
+  shaleActive: false,
+  shaleIntro: '',
+  shaleQ: new Set(),
+  b6Phase: 'init',
+  noteQ: new Set(),
+  notePocketed: false,
+};
+
+// ─── Flavor text maps ─────────────────────────────────────────────────────────
+const FLV = {
+  b1: {
+    inbox:   "Nothing filed since Tuesday. Three days. She doesn\u2019t miss days.",
+    window:  "Parking lot looks fine. That\u2019s not where she is.",
+    door:    "The hallway sounds right. That\u2019s wrong too.",
+  },
+  b2: {
+    ext: "Marketing picks up immediately. Richter: \u201CBrock! Great timing, we\u2019re finalizing the Q4\u2014\u201D  [end call]",
+    msg: "She doesn\u2019t have voicemail. She picks up.",
+  },
+  b3: {
+    lobby: "Not there.",
+    mktg:  "Not there either.",
+    exec:  "That\u2019s where I came from.",
+    panel: "He\u2019s owned this building for six years. He doesn\u2019t know what B2 is.",
+  },
+  b4: {
+    docs:    "Rows of numbers. Every one dated. He doesn\u2019t know what they mean. Probably everything to someone.",
+    temp:    "Wrong for offices. Right for something he can\u2019t name.",
+    light:   "Dim down here. She keeps it this way. He\u2019s never thought about how he knows how she keeps anything.",
+    cabinet: "He pulls one. A report inside. Defect rates. Resolution rates. Page after page of something nobody asked for. He puts it back.",
+  },
+  b5: {
+    reports: "Twenty-five percent resolution rate. He\u2019s seen the number somewhere in a memo. He didn\u2019t know it was a person.",
+    monitor: "Test results. He can\u2019t read the columns. The red ones seem bad.",
+  },
+  b6: {
+    p1:    "Statistics. He doesn\u2019t read statistics. He reads momentum. This doesn\u2019t have momentum.",
+    graph: "A line going steadily right, then stopping. He understands stopping.",
+    down:  "",  // handled separately — Shale's hand
+  },
+  b7: {
+    filing: "Every number in the right place. Right up until three days ago.",
+    chair:  "Pulled back. She stood up fast. She doesn\u2019t stand up fast.",
+    temp:   "18.2\u00B0C. He checks his phone. His office is 21\u00B0C. She\u2019s been living three degrees colder than he has. He didn\u2019t know.",
+  },
+  b9: {
+    again: "Still nothing. Different kind of nothing now.",
+    back:  "The archive. The cabinets. The graph with the line that stops. Shale, still working. He\u2019ll be here when you come back.",
+    hum:   "Something running. Somewhere in the walls. He doesn\u2019t know what. It sounds like it knows what it\u2019s doing.",
+  },
+};
+
+// ─── Audio ───────────────────────────────────────────────────────────────────
+let AC = null;
+
+function initAC() {
+  if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+  if (AC.state === 'suspended') AC.resume();
+}
+
+function tone(freqs, dur, vol) {
+  if (!AC) return;
+  vol = vol || 0.055;
+  const g = AC.createGain();
+  g.gain.setValueAtTime(vol, AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + dur);
+  g.connect(AC.destination);
+  freqs.forEach(function(f) {
+    const o = AC.createOscillator();
+    o.frequency.value = f;
+    o.connect(g);
+    o.start();
+    o.stop(AC.currentTime + dur);
+  });
+}
+
+const DIAL_MS = 3250;
+const RING_MS = 2000;
+
+function playDial() { tone([350, 420], DIAL_MS / 1000); }
+function playRing() { tone([440, 480], RING_MS / 1000); }
+
+// ─── VO indicator ─────────────────────────────────────────────────────────────
+function showVO() {
+  const d = document.createElement('div');
+  d.className = 'vo';
+  document.body.appendChild(d);
+  setTimeout(function() { if (d.parentNode) d.parentNode.removeChild(d); }, 2800);
+}
+
+// ─── Navigation ──────────────────────────────────────────────────────────────
+function go(beat) {
+  initAC();
+  S.beat = beat;
+  const vn = document.getElementById('vn');
+  vn.classList.add('fade');
+  setTimeout(function() {
+    render();
+    vn.classList.remove('fade');
+  }, 275);
+}
+
+function render() {
+  const fns = [null, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10];
+  if (fns[S.beat]) fns[S.beat]();
+}
+
+function flv(txt) {
+  const el = document.getElementById('flv');
+  if (el) el.textContent = txt;
+}
+
+// ─── Beat 1 — THE OFFICE ─────────────────────────────────────────────────────
+function b1() {
+  document.getElementById('vn').innerHTML =
+    '<div class="txt">' +
+      '<p>Something\u2019s wrong.</p>' +
+      '<p>The inbox. Empty since Tuesday.</p>' +
+    '</div>' +
+    '<div class="choices">' +
+      '<button class="ch" onclick="flv(FLV.b1.inbox)">[inbox]</button>' +
+      '<button class="ch" onclick="flv(FLV.b1.window)">[window]</button>' +
+      '<button class="ch" onclick="flv(FLV.b1.door)">[door]</button>' +
+      '<button class="ch" onclick="go(2)">[phone]</button>' +
+    '</div>' +
+    '<div id="flv"></div>';
+}
+
+// ─── Beat 2 — THE DIALTONE ────────────────────────────────────────────────────
+function b2() {
+  document.getElementById('vn').innerHTML =
+    '<div class="txt">' +
+      '<p>The call connects. Then doesn\u2019t.</p>' +
+    '</div>' +
+    '<div class="choices" id="choices"></div>' +
+    '<div id="flv"></div>';
+
+  b2_render_choices();
+
+  // auto-play first dialtone
+  if (S.dialCount === 0) {
+    setTimeout(function() {
+      S.dialCount = 1;
+      S.dialBusy = true;
+      playDial();
+      b2_render_choices();
+      setTimeout(function() {
+        S.dialBusy = false;
+        b2_render_choices();
+      }, DIAL_MS + 150);
+    }, 400);
+  }
+}
+
+function b2_render_choices() {
+  const div = document.getElementById('choices');
+  if (!div) return;
+  let html = '';
+  if (S.dialCount < 3) {
+    html += '<button class="ch" ' + (S.dialBusy ? 'disabled' : 'onclick="b2call()"') + '>[call again]</button>';
+  } else {
+    html += '<button class="ch" onclick="go(3)">[go find her]</button>';
+  }
+  html += '<button class="ch" onclick="flv(FLV.b2.ext)">[try another extension]</button>';
+  html += '<button class="ch" onclick="flv(FLV.b2.msg)">[leave a message]</button>';
+  div.innerHTML = html;
+}
+
+function b2call() {
+  if (S.dialBusy) return;
+  S.dialBusy = true;
+  S.dialCount++;
+  b2_render_choices();
+  playDial();
+  if (S.dialCount === 2) {
+    setTimeout(showVO, DIAL_MS + 100);
+  }
+  setTimeout(function() {
+    S.dialBusy = false;
+    b2_render_choices();
+  }, DIAL_MS + 150);
+}
+
+// ─── Beat 3 — THE ELEVATOR ───────────────────────────────────────────────────
+function b3() {
+  document.getElementById('vn').innerHTML =
+    '<div class="txt">' +
+      '<p>The panel. Floors B2 through 4. The B2 button has an archive symbol.</p>' +
+      '<p>He\u2019s never pressed it.</p>' +
+    '</div>' +
+    '<div class="choices">' +
+      '<button class="ch" onclick="flv(FLV.b3.lobby)">[1 / Lobby]</button>' +
+      '<button class="ch" onclick="flv(FLV.b3.mktg)">[3 / Marketing]</button>' +
+      '<button class="ch" onclick="flv(FLV.b3.exec)">[4 / Executive]</button>' +
+      '<button class="ch" onclick="flv(FLV.b3.panel)">[examine the panel]</button>' +
+      '<button class="ch" onclick="go(4)">[B2]</button>' +
+    '</div>' +
+    '<div id="flv"></div>';
+}
+
+// ─── Beat 4 — THE ARCHIVE CORRIDOR ───────────────────────────────────────────
+function b4() {
+  document.getElementById('vn').innerHTML =
+    '<div class="txt">' +
+      '<p>Cold. Wrong lighting. Filing cabinets further than the floor plan implied.</p>' +
+      '<p>CL-DOC ranges labeled on the drawers. A system he can\u2019t read.</p>' +
+    '</div>' +
+    '<div class="choices">' +
+      '<button class="ch" onclick="flv(FLV.b4.docs)">[CL-DOC 001\u2013047]</button>' +
+      '<button class="ch" onclick="flv(FLV.b4.temp)">[temperature]</button>' +
+      '<button class="ch" onclick="flv(FLV.b4.light)">[light switch]</button>' +
+      '<button class="ch" onclick="flv(FLV.b4.cabinet)">[cabinet drawer]</button>' +
+      '<button class="ch" onclick="go(5)">[keep walking]</button>' +
+    '</div>' +
+    '<div id="flv"></div>';
+}
+
+// ─── Beat 5 — SHALE ──────────────────────────────────────────────────────────
+function b5() {
+  const vn = document.getElementById('vn');
+
+  let sceneHTML =
+    '<div class="txt">' +
+      '<p>Shale at a workstation. Stacks of printed reports, color-coded, nobody asked for them.</p>' +
+      '<p>He looks up. Neither of them speaks first.</p>' +
+    '</div>';
+
+  let dialogHTML = '';
+  let choicesHTML = '';
+
+  if (!S.shaleActive) {
+    choicesHTML =
+      '<button class="ch" onclick="b5speak()">[speak]</button>' +
+      '<button class="ch" onclick="b5nothing()">[say nothing]</button>' +
+      '<button class="ch" onclick="flv(FLV.b5.reports)">[Shale\u2019s reports]</button>' +
+      '<button class="ch" onclick="flv(FLV.b5.monitor)">[Shale\u2019s monitor]</button>';
+  } else {
+    // intro line
+    if (S.shaleIntro === 'speak') {
+      sceneHTML +=
+        '<div class="txt" style="margin-top:1rem"><p>Brock breaks the silence.</p></div>';
+    } else {
+      sceneHTML +=
+        '<div class="txt" style="margin-top:1rem"><p>Shale waits, then: <em>\u201CShe\u2019s not here. I already checked.\u201D</em></p></div>';
+    }
+
+    // dialogue accumulation
+    let dialEntries = '';
+    if (S.shaleQ.has('where')) {
+      dialEntries +=
+        '<div class="dial-entry">' +
+          '<span class="dial-q">\u201CWhere is she?\u201D</span>' +
+          '<span class="dial-a">\u201CI don\u2019t know. Last filing was three days ago. CL-DOC-018. I checked the archive.\u201D</span>' +
+        '</div>';
+    }
+    if (S.shaleQ.has('what')) {
+      dialEntries +=
+        '<div class="dial-entry">' +
+          '<span class="dial-q">\u201CWhat is this place?\u201D</span>' +
+          '<span class="dial-a">\u201CThe record. Everything the company did, in order. She\u2019s the only one who\u2019s been down here regularly.\u201D <em>Beat.</em> \u201CI come sometimes.\u201D</span>' +
+        '</div>';
+    }
+    if (S.shaleQ.has('before')) {
+      dialEntries +=
+        '<div class="dial-entry">' +
+          '<span class="dial-q">\u201CHas this happened before?\u201D</span>' +
+          '<span class="dial-a">\u201CNo.\u201D</span>' +
+        '</div>';
+    }
+    if (dialEntries) {
+      dialogHTML = '<div class="dial-wrap">' + dialEntries + '</div>';
+    }
+
+    const allAsked = S.shaleQ.has('where') && S.shaleQ.has('what') && S.shaleQ.has('before');
+    if (allAsked) {
+      dialogHTML += '<p class="folder-prompt">Then Shale produces a folder. Holds it out.</p>';
+    }
+
+    choicesHTML =
+      '<button class="ch' + (S.shaleQ.has('where') ? ' used' : '') + '" onclick="b5q(' + "'where'" + ')">[where is she?]</button>' +
+      '<button class="ch' + (S.shaleQ.has('what') ? ' used' : '') + '" onclick="b5q(' + "'what'" + ')">[what is this place?]</button>' +
+      '<button class="ch' + (S.shaleQ.has('before') ? ' used' : '') + '" onclick="b5q(' + "'before'" + ')">[has this happened before?]</button>' +
+      '<button class="ch" onclick="flv(FLV.b5.reports)">[Shale\u2019s reports]</button>' +
+      '<button class="ch" onclick="flv(FLV.b5.monitor)">[Shale\u2019s monitor]</button>';
+    if (allAsked) {
+      choicesHTML += '<button class="ch" onclick="go(6)">[take it]</button>';
+    }
+  }
+
+  vn.innerHTML =
+    sceneHTML +
+    dialogHTML +
+    '<div class="choices" id="choices">' + choicesHTML + '</div>' +
+    '<div id="flv"></div>';
+}
+
+function b5speak() {
+  initAC();
+  S.shaleActive = true;
+  S.shaleIntro = 'speak';
+  b5();
+}
+
+function b5nothing() {
+  initAC();
+  S.shaleActive = true;
+  S.shaleIntro = 'nothing';
+  b5();
+}
+
+function b5q(q) {
+  if (S.shaleQ.has(q)) return;
+  S.shaleQ.add(q);
+  b5();
+}
+
+// ─── Beat 6 — WHAT SHALE PREPARED ────────────────────────────────────────────
+function b6() {
+  const vn = document.getElementById('vn');
+
+  if (S.b6Phase === 'init') {
+    vn.innerHTML =
+      '<div class="txt">' +
+        '<p>An analysis Shale made for nobody, because that\u2019s what Shale does.</p>' +
+        '<p>Filing frequency over time. Anomaly flagged. Three days ago, the line stops.</p>' +
+        '<p><em>Shale: \u201CPage two. The highlighted section.\u201D</em></p>' +
+      '</div>' +
+      '<div class="choices">' +
+        '<button class="ch" onclick="flv(FLV.b6.p1)">[page one]</button>' +
+        '<button class="ch" onclick="flv(FLV.b6.graph)">[the graph]</button>' +
+        '<button class="ch" onclick="b6down()">[put it down]</button>' +
+        '<button class="ch" onclick="b6p2()">[page two]</button>' +
+      '</div>' +
+      '<div id="flv"></div>';
+  } else {
+    // page two revealed
+    vn.innerHTML =
+      '<div class="txt">' +
+        '<p>An analysis Shale made for nobody, because that\u2019s what Shale does.</p>' +
+        '<p>Filing frequency over time. Anomaly flagged. Three days ago, the line stops.</p>' +
+      '</div>' +
+      '<div class="doc-frag">' +
+        '<div class="doc-ref">Filing frequency analysis &mdash; page 2 of 2 &mdash; highlighted</div>' +
+        '<div class="doc-row">Last filing: <span class="doc-hl">CL-DOC-018</span></div>' +
+        '<div class="doc-row">Timestamp: <span class="doc-hl">2026-03-12 &nbsp; 23:17 UTC</span></div>' +
+        '<div class="doc-row">Subsequent filings: <span class="doc-hl">0</span></div>' +
+        '<div class="doc-margin">Behavioral anomaly. No precedent. Monitoring. &mdash; S.H.</div>' +
+      '</div>' +
+      '<div class="doc-aftermath">' +
+        '<p>He\u2019s been monitoring. Alone. For three days.</p>' +
+      '</div>' +
+      '<div class="choices">' +
+        '<button class="ch" onclick="go(7)">[continue]</button>' +
+      '</div>';
+    setTimeout(showVO, 300);
+  }
+}
+
+function b6down() {
+  flv("Shale\u2019s hand, patient, indicates page two. No words.");
+}
+
+function b6p2() {
+  S.b6Phase = 'page2';
+  b6();
+}
+
+// ─── Beat 7 — THE WORKSPACE ───────────────────────────────────────────────────
+function b7() {
+  document.getElementById('vn').innerHTML =
+    '<div class="txt">' +
+      '<p>The desk. Everything perfect except one thing.</p>' +
+      '<p>The pen is on the table. Not in the holder.</p>' +
+    '</div>' +
+    '<div class="choices">' +
+      '<button class="ch" onclick="flv(FLV.b7.filing)">[the filing system]</button>' +
+      '<button class="ch" onclick="flv(FLV.b7.chair)">[the chair]</button>' +
+      '<button class="ch" onclick="flv(FLV.b7.temp)">[the temperature gauge]</button>' +
+      '<button class="ch" onclick="go(8)">[the paper]</button>' +
+      '<button class="ch" onclick="go(8)">[the pen]</button>' +
+    '</div>' +
+    '<div id="flv"></div>';
+}
+
+// ─── Beat 8 — THE NOTE ────────────────────────────────────────────────────────
+function b8() {
+  const vn = document.getElementById('vn');
+
+  let respHTML = '';
+  if (S.noteQ.has('read')) {
+    respHTML += '<p class="note-resp">Brock. Not \u201CMr. Granite.\u201D Not \u201CExecutive.\u201D His name. The one only a handful of people know.</p>';
+  }
+  if (S.noteQ.has('shale')) {
+    respHTML += '<p class="note-resp">Shale reads it. Something happens in his face. He closes the folder he\u2019s holding. He says nothing. You watch him file it \u2014 visibly, internally \u2014 under something you can\u2019t name.</p>';
+  }
+
+  let choicesHTML;
+  if (S.notePocketed) {
+    choicesHTML =
+      '<p class="note-resp">This is the first thing you\u2019ve taken from the basement. The first time the basement has had something to take.</p>' +
+      '<div class="choices"><button class="ch" onclick="go(9)">[continue &rarr;]</button></div>';
+  } else {
+    choicesHTML =
+      '<div class="choices">' +
+        '<button class="ch' + (S.noteQ.has('read') ? ' used' : '') + '" onclick="b8read()">[read it again]</button>' +
+        '<button class="ch' + (S.noteQ.has('shale') ? ' used' : '') + '" onclick="b8shale()">[show Shale]</button>' +
+        '<button class="ch" onclick="b8pocket()">[put it in your pocket]</button>' +
+      '</div>';
+  }
+
+  vn.innerHTML =
+    '<div class="txt">' +
+      '<p>No header. No CL-DOC number. No timestamp.</p>' +
+    '</div>' +
+    '<div class="note-obj">Brock. I found him. &mdash;J</div>' +
+    '<div class="note-resp-wrap" id="note-resps">' + respHTML + '</div>' +
+    choicesHTML;
+}
+
+function b8read() {
+  if (S.noteQ.has('read')) return;
+  S.noteQ.add('read');
+  b8();
+}
+
+function b8shale() {
+  if (S.noteQ.has('shale')) return;
+  S.noteQ.add('shale');
+  b8();
+}
+
+function b8pocket() {
+  S.notePocketed = true;
+  showVO();
+  b8();
+}
+
+// ─── Beat 9 — THE THRESHOLD ───────────────────────────────────────────────────
+function b9() {
+  document.getElementById('vn').innerHTML =
+    '<div class="txt">' +
+      '<p>Back at the elevator. The basement extends behind him.</p>' +
+      '<p>Shale at his station. The gate-hum present, constant.</p>' +
+    '</div>' +
+    '<div class="choices" id="choices">' +
+      '<button class="ch" onclick="b9dial()">[call her again]</button>' +
+      '<button class="ch" onclick="flv(FLV.b9.back)">[look back]</button>' +
+      '<button class="ch" onclick="flv(FLV.b9.hum)">[the hum]</button>' +
+      '<button class="ch" onclick="go(10)">[go up]</button>' +
+    '</div>' +
+    '<div id="flv"></div>';
+}
+
+function b9dial() {
+  if (S.dialBusy) return;
+  S.dialBusy = true;
+  const btn = document.querySelector('#choices .ch');
+  if (btn) btn.disabled = true;
+  playDial();
+  setTimeout(function() {
+    S.dialBusy = false;
+    flv(FLV.b9.again);
+    const b = document.querySelector('#choices .ch');
+    if (b) b.disabled = false;
+  }, DIAL_MS + 150);
+}
+
+// ─── Beat 10 — S2 LEAD-IN ────────────────────────────────────────────────────
+const B10 = [
+  { text: "The company continues.",                                           delay: 800  },
+  { text: "The archive is quiet.",                                            delay: 1800, gap: true },
+  { text: "Day 4: No filing.",                                                delay: 3200 },
+  { text: "Day 8: No filing.",                                                delay: 4500 },
+  { text: "Day 11: The widget appears on the hub page. Nobody announced it.", delay: 5900, gap: true },
+  { text: "Day 11: The widget speaks in Jasmine\u2019s voice.",              delay: 7500, onShow: fillHeader },
+  { text: "Day 11: The archive resumes.",                                     delay: 9200, gap: true },
+  { text: "Day 19: You call.",                                                delay: 11400, bright: true },
+  { text: "It rings.",                                                        delay: 13600, onShow: function() { setTimeout(playRing, 300); } },
+  { text: "\u201CYes?\u201D",                                                 delay: 17000, ans: true },
+  { text: null,                                                               delay: 19500, foot: true },
+];
+
+function b10() {
+  document.getElementById('vn').innerHTML = '<div class="b10" id="b10"></div>';
+
+  B10.forEach(function(card, i) {
+    setTimeout(function() {
+      const container = document.getElementById('b10');
+      if (!container) return;
+
+      if (card.foot) {
+        const el = document.createElement('div');
+        el.className = 'card foot';
+        el.innerHTML = '<a href="/fun/chasm-logic/">&larr; back to the archive</a>';
+        container.appendChild(el);
+        setTimeout(function() { el.classList.add('vis'); }, 50);
+        return;
+      }
+
+      const el = document.createElement('div');
+      let cls = 'card';
+      if (card.gap)    cls += ' gap';
+      if (card.bright) cls += ' bright';
+      if (card.ans)    cls += ' ans';
+      el.className = cls;
+      el.textContent = card.text;
+      container.appendChild(el);
+
+      setTimeout(function() {
+        el.classList.add('vis');
+        if (card.onShow) card.onShow();
+      }, 50);
+    }, card.delay);
+  });
+}
+
+function fillHeader() {
+  const fill = function(id, text) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('p');
+    el.textContent = text;
+    // trigger reflow so transition fires
+    void el.offsetWidth;
+    el.classList.add('ok');
+  };
+  fill('hd',  'VN-001');
+  fill('hf',  '2026-03-23');
+  fill('hdv', 'Communications');
+  fill('hs',  'Below the Second Floor');
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  b1();
+});
+</script>
 </body>
 </html>
-<!--
-    Stub. Replace with Twine/Sugarcube export when authored.
-    This file is passthrough-copied by Eleventy — no Nunjucks processing.
-    Beat sheet: narrative/vn-s1-ending.md
-    Story format: Sugarcube 2.x
-    Custom CSS/JS: embed in Sugarcube Story Stylesheet / Script sections
--->
