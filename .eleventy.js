@@ -93,6 +93,9 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy("src/robots.txt");
 
+  // Twine VN output — bypass Nunjucks processing
+  eleventyConfig.addPassthroughCopy("src/fun/chasm-logic/vn/");
+
   // Watch for changes in assets
   eleventyConfig.addWatchTarget("src/assets/");
 
