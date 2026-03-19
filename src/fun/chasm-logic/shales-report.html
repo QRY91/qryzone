@@ -1,0 +1,578 @@
+---
+permalink: /fun/chasm-logic/shales-report/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operational Report — S. Shale — CL-DOC-020 — Chasm Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/chasm-logic.css">
+    <style>
+        .page-num {
+            font-size: 0.62rem;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--cl-text-dim);
+            margin-bottom: 0.4rem;
+        }
+        .page-ref {
+            font-size: 0.58rem;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 0.1em;
+            color: #2e2e2e;
+            float: right;
+            margin-top: 0.15rem;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.25rem 0;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.8rem;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 0.55rem 0.9rem;
+            border-bottom: 2px solid var(--cl-border);
+            color: var(--cl-text-dim);
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+        .data-table td {
+            padding: 0.6rem 0.9rem;
+            border-bottom: 1px solid var(--cl-border-lighter);
+            color: var(--cl-text-secondary);
+            vertical-align: top;
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table .td-val { color: var(--cl-text); font-weight: 500; }
+        .data-table .td-flag { color: #a16207; font-size: 0.75rem; }
+        .data-table .td-ok { color: #16a34a; font-size: 0.75rem; }
+
+        /* Recommendation items */
+        .rec-list { margin: 1rem 0; counter-reset: rec; }
+        .rec-item {
+            padding: 0.85rem 1rem 0.85rem 1.25rem;
+            border-left: 2px solid var(--cl-border);
+            margin-bottom: 0.6rem;
+            font-size: 0.88rem;
+            color: var(--cl-text-secondary);
+            line-height: 1.8;
+        }
+        .rec-item.repeated {
+            border-left-color: var(--cl-accent);
+        }
+        .rec-item .rec-n {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--cl-text-dim);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        .rec-item strong {
+            color: var(--cl-text);
+            font-weight: 600;
+        }
+        .rec-prior {
+            font-size: 0.7rem;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--cl-accent);
+            display: block;
+            margin-top: 0.35rem;
+        }
+
+        /* Highlight box for page 8 */
+        .latency-box {
+            border: 1px solid var(--cl-border);
+            background: var(--cl-surface);
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+        }
+        .latency-box .lb-label {
+            font-size: 0.62rem;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--cl-text-dim);
+            margin-bottom: 0.75rem;
+        }
+        .latency-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--cl-border-lighter);
+            font-size: 0.85rem;
+        }
+        .latency-row:last-child { border-bottom: none; }
+        .latency-row .lr-label { color: var(--cl-text-secondary); font-size: 0.82rem; }
+        .latency-row .lr-val { font-family: 'Roboto Mono', monospace; color: var(--cl-text); font-weight: 500; }
+        .latency-row .lr-val.flag { color: #a16207; }
+
+        /* Resolution rate chart (text-based) */
+        .rate-chart { margin: 1.25rem 0; font-family: 'Roboto Mono', monospace; font-size: 0.78rem; }
+        .rate-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--cl-border-lighter);
+        }
+        .rate-row:last-child { border-bottom: none; }
+        .rate-period { width: 9rem; color: var(--cl-text-dim); flex-shrink: 0; }
+        .rate-bar-wrap { flex: 1; background: var(--cl-surface); height: 14px; position: relative; }
+        .rate-bar { height: 100%; background: #444; }
+        .rate-bar.climbing { background: #16a34a55; }
+        .rate-bar.low { background: #55555555; }
+        .rate-pct { width: 4rem; color: var(--cl-text-secondary); text-align: right; flex-shrink: 0; }
+        .rate-pct.ok { color: #16a34a; }
+
+        /* Page 15 proposal */
+        .proposal-item {
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--cl-border-lighter);
+            font-size: 0.87rem;
+            color: var(--cl-text-secondary);
+            line-height: 1.8;
+        }
+        .proposal-item:last-child { border-bottom: none; }
+        .proposal-n {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--cl-text-dim);
+            flex-shrink: 0;
+            padding-top: 0.15rem;
+            min-width: 2.5rem;
+        }
+
+        /* Closing */
+        .closing-note {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--cl-border);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--cl-text-dim);
+            line-height: 1.9;
+        }
+        .closing-note .sig {
+            margin-top: 1rem;
+            color: var(--cl-text-secondary);
+        }
+        .closing-note .filed-by {
+            margin-top: 0.75rem;
+            font-size: 0.72rem;
+            color: #3a3a3a;
+            font-style: italic;
+        }
+    </style>
+</head>
+<!--
+    Filed on behalf of QA Division.
+    This report is seventeen pages.
+    I counted.
+    — J.C.
+-->
+<body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
+    <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
+    <div class="warning-stripe"></div>
+
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div class="nav-brand">CHASM LOGIC</div>
+                <div class="mono" style="font-size:0.6rem;color:var(--cl-text-dim);letter-spacing:0.1em;text-transform:uppercase">QA Division — Operational Report</div>
+            </div>
+            <span class="badge mono" style="font-size:0.65rem;padding:0.4rem 0.75rem;background:var(--cl-surface);color:var(--cl-text-secondary);border:1px solid var(--cl-border)">17 PAGES</span>
+        </div>
+    </nav>
+
+    <main id="main-content" class="doc-container">
+
+        <div class="doc-header">
+            <h1>Operational Report</h1>
+            <div class="doc-subtitle">Sinkhole Interactive Acquisition Due Diligence and Internal Infrastructure Assessment</div>
+            <div class="table-wrap">
+            <table class="meta-table mono">
+                <tr><td>Document Ref</td><td>CL-DOC-020</td></tr>
+                <tr><td>Classification</td><td><span class="classification-badge">INTERNAL — SERIES B</span></td></tr>
+                <tr><td>Prepared by</td><td>S. Shale — QA Division</td></tr>
+                <tr><td>Filed</td><td>2026-04-25</td></tr>
+                <tr><td>Pages</td><td>17</td></tr>
+                <tr><td>Scope</td><td>Sinkhole Interactive acquisition review; internal gate and infrastructure assessment</td></tr>
+                <tr><td>Note</td><td>Sections 1–9 substantially complete 2026-04-18. Sections 10–11 updated 2026-04-21. Filing note updated 2026-04-25.</td></tr>
+            </table>
+            </div>
+        </div>
+
+        <!-- PAGE 1 — EXECUTIVE SUMMARY -->
+        <section>
+            <div class="page-num">Page 1 of 17 — Executive Summary<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Executive Summary</h2>
+
+            <p>This report was assigned as an acquisition due diligence for Sinkhole Interactive. It is that report. It is also a report on the internal infrastructure, the gate, the QA capability gap, and a proposed reallocation of the acquisition capital. I want to acknowledge at the outset that I have exceeded the assigned scope. The executive summary reflects what the report became, not what it was assigned to be.</p>
+
+            <p>Primary findings: Do not acquire Sinkhole Interactive. The methodology there is sound. The output is not. The combination of their non-shipping methodology with our recently-functioning infrastructure would produce a larger organization with a larger non-shipping methodology. The capital is better allocated internally. The internal allocation target is described on page fifteen.</p>
+
+            <p>Secondary finding, which became the larger portion of this report: the gate (CL-DOC-018) cannot be maintained from the inside. I have been testing it from the inside. I cannot find the failure modes. The failure modes find me. An external QA resource is required. Page fifteen has the full proposal. Page eight has the latency data. Page eight should be read before any discussion of the governance timeline.</p>
+
+            <p>I want to note that this is the first report I have written that includes a proposal. I have reviewed prior filings and confirmed this. Proposals are not a standard output of the QA Division. I included this one because the findings required it.</p>
+        </section>
+
+        <!-- PAGE 2 — SCOPE AND METHODOLOGY -->
+        <section>
+            <div class="page-num">Page 2 of 17 — Scope and Methodology<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Scope and Methodology</h2>
+
+            <p>The assigned scope was an acquisition due diligence for Sinkhole Interactive, covering product history, development cadence, methodology assessment, and an acquisition recommendation. This scope is covered on pages three through seven.</p>
+
+            <p>The unassigned scope emerged on page eight, when I had occasion to tabulate gate modification events against the approval timeline proposed in the governance framework (GOV-ASI-001, received 2026-04-23). I want to note that I had already written pages eight through fourteen before GOV-ASI-001 arrived. The arrival of GOV-ASI-001 did not cause me to write those sections. It caused me to cross-reference them. The sections stand independently of the framework. The framework makes them more relevant.</p>
+
+            <p>Sources for the Sinkhole assessment: publicly available product documentation, The Ticket Hole (Product 2, reviewed in operation), and Sinkhole's published development communications, which are thorough and regular and document a third project that has been in development for several years without producing a shipping date. Sources for the internal assessment: the gate modification log, the incident archive (CL-BORE-DC-7, CL-BORE-DC-8), the QA Division's defect tracking records, and the resolution rate data I have been maintaining since 2024-09.</p>
+
+            <p>I have been maintaining the resolution rate data since 2024-09. No one has asked for it. I have maintained it anyway because the data exists and data that exists should be recorded. The record is available. It is on page fourteen.</p>
+        </section>
+
+        <!-- PAGE 3 — SINKHOLE OVERVIEW -->
+        <section>
+            <div class="page-num">Page 3 of 17 — Sinkhole Interactive: Company Overview<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Sinkhole Interactive — Company Overview</h2>
+
+            <p>Sinkhole Interactive is a small software studio. It was founded to make products. It has made products. Two products have shipped. A third product is in development. Development continues.</p>
+
+            <p>Product 1 shipped. I did not evaluate it in depth because it is not the acquisition subject and the details are available in their published communications if they become relevant. It performed adequately by the standards of its category. I want to note that it shipped. This is a fact that is easy to underweight given what follows, but I want it noted.</p>
+
+            <p>Product 2 is The Ticket Hole, a project management simulation. I have used it. The core mechanic — completing a ticket generates additional tickets, net backlog always increases, sprint velocity trends negative — is an accurate model of the environment in which I have worked for the majority of my career at Chasm Logic. I do not know how to classify this observation. I have included it here because it was the first thing I noticed and the things noticed first tend to be findings.</p>
+
+            <p>Product 3 is in development. The development has been ongoing for several years. No release date has been communicated publicly. When I attempted to find a projected release date in their public communications, I found a section labeled "What we're working on" that contained one entry in the IN DEVELOPMENT state with no additional information. I have noted this. The entry does not describe the product. The entry says "Untitled Project" and "Development continues." I have noted this twice.</p>
+        </section>
+
+        <!-- PAGE 4 — METHODOLOGY ASSESSMENT -->
+        <section>
+            <div class="page-num">Page 4 of 17 — Sinkhole Interactive: Methodology Assessment<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Sinkhole Interactive — Methodology Assessment</h2>
+
+            <p>The methodology at Sinkhole is correct. I want to be precise about this because the acquisition recommendation is negative and a negative recommendation for a company with correct methodology requires the distinction to be made clearly.</p>
+
+            <p>Their testing documentation for Product 2 is thorough. They found defects I would have filed. They filed them. The defects were addressed before shipping. This is how testing is supposed to work. I want to sit with that for a moment. The QA methodology at Sinkhole is more thorough than the methodology I have been able to implement here due to resourcing constraints I have filed observations about on eleven separate occasions in the prior eighteen months. Their pre-release defect density was lower than our pre-release defect density on any comparable product in the CL-DOC archive.</p>
+
+            <p>They shipped a product that worked. They then did not ship anything else. I am recording this because it is a finding, not because I know what to do with it.</p>
+
+            <p>The documentation cadence is regular. The product communications are well-maintained. The development log for Product 3, to the extent it is publicly available, describes a process that is methodical and careful. I cannot assess the internal testing documentation for Product 3 because there is no Product 3. There is a development process for Product 3. The process appears to be functioning. The product does not appear to be approaching completion. I have found no evidence that anyone at Sinkhole believes the product is not approaching completion. I have found evidence that they have believed it is approaching completion for several years.</p>
+        </section>
+
+        <!-- PAGE 5 — PIPELINE ANALYSIS -->
+        <section>
+            <div class="page-num">Page 5 of 17 — Sinkhole Interactive: Pipeline Analysis<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Sinkhole Interactive — Pipeline Analysis</h2>
+
+            <p>The development pipeline is full. The release pipeline is empty. This is the complete pipeline analysis. The following paragraphs are elaboration.</p>
+
+            <p>Sinkhole's development process has three inputs: a product concept, the resources to develop it, and the people to do the work. The people are good. The resources are present. The product concepts have produced two completed products and one perpetually developing one. The pipeline receives inputs. The pipeline does not produce outputs at a rate consistent with its inputs. The process is not consuming inputs without producing outputs in the way that a broken process does — it is consuming inputs and producing a very thorough, very careful, very complete development process that has not yet reached a shipping threshold and, based on the available evidence, is unlikely to reach one without a change in the underlying condition that prevents shipping.</p>
+
+            <p>That condition is: shipping requires tolerance for incompleteness. Thorough documentation produces no path to that tolerance. If anything, thorough documentation produces the opposite — a clearer record of everything that is not yet finished, which is also a clearer case for why it should not ship yet. The pipeline fills. The work is there. The work is careful. The threshold for readiness moves forward at the same rate as the work.</p>
+
+            <p>I want to note that I wrote the preceding paragraph and then stopped for approximately six minutes. I have included it because it is accurate. I am not certain it belongs in a pipeline analysis. I am not certain it doesn't.</p>
+        </section>
+
+        <!-- PAGE 6 — ACQUISITION ASSESSMENT -->
+        <section>
+            <div class="page-num">Page 6 of 17 — Sinkhole Interactive: Acquisition Assessment<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Sinkhole Interactive — Acquisition Assessment</h2>
+
+            <p>The proposed acquisition would bring Sinkhole's development capacity, methodology, and personnel into Chasm Logic. The case for the acquisition, as I understand it, is that Sinkhole's capabilities would augment Chasm Logic's product development. I want to address this directly.</p>
+
+            <p>Chasm Logic's product development record prior to early 2026 is a series of products with launch-adjacent defects (CL-DOC-007), acquisitions of hardware with ambiguous functional specifications (CL-DOC-005, CL-DOC-006), and one autonomous infrastructure deployment that has produced two containment incidents (CL-BORE-DC-7, CL-BORE-DC-8). Recently, one system has begun functioning as intended. The gate (CL-DOC-018) is operational. The archive is current. The resolution rate is moving. These are positive developments. They are also recent and singular.</p>
+
+            <p>Acquiring Sinkhole at this moment would add a non-shipping organization to an organization that has recently, for the first time, produced a functioning system. The capabilities would not combine. The non-shipping condition at Sinkhole is not a technical problem that Chasm Logic's recent technical progress would solve. It is an organizational and cultural condition. Importing it would distribute it.</p>
+
+            <p>Additionally: the capital required for this acquisition is the same capital required to resource the gate, hire the external QA that the gate requires, and give the one functioning system the conditions it needs to remain functional. The choice is not between acquiring Sinkhole and nothing. The choice is between acquiring Sinkhole and maintaining the thing that currently works.</p>
+        </section>
+
+        <!-- PAGE 7 — SINKHOLE RECOMMENDATION -->
+        <section>
+            <div class="page-num">Page 7 of 17 — Sinkhole Interactive: Recommendation<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Sinkhole Interactive — Recommendation</h2>
+
+            <p>Do not acquire Sinkhole Interactive.</p>
+
+            <p>I want to note that this recommendation is consistent with the preliminary recommendation filed by Communications Division (CL-DOC-019). I read that document before completing this section. The position is the same. The reasoning differs in that CL-DOC-019 reaches its conclusion through organizational analysis and CL-DOC-020 reaches the same conclusion through methodology and pipeline analysis. I want to note that reaching the same conclusion through different reasoning is more significant than reaching it twice through the same reasoning. This is a finding, not emphasis.</p>
+
+            <p>I also want to note — once, in this section, before proceeding to the internal infrastructure assessment — that the people at Sinkhole are good. The documentation is careful. The defect rates were low. I do not know what happens to the people there if the acquisition does not proceed. I have included this note because it is true. I am not recommending the acquisition. I want the note to exist.</p>
+
+            <p>The acquisition recommendation is no. The capital reallocation target is on page fifteen. The data supporting the reallocation is on pages eight through fourteen. Page eight should be read first if there are time constraints.</p>
+        </section>
+
+        <!-- PAGE 8 — GATE RESPONSE LATENCY DATA -->
+        <section>
+            <div class="page-num">Page 8 of 17 — Gate Response Latency Data<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Gate Response Latency Data</h2>
+
+            <p>The following data covers gate modification events between the gate's deployment (2026-03-12, CL-DOC-018) and the date of filing. I want to note that I have included this section because it will need to be referenced. I have formatted it for reference use.</p>
+
+            <div class="latency-box">
+                <div class="lb-label">Gate modification events — 2026-03-12 through 2026-04-24</div>
+                <div class="latency-row"><span class="lr-label">Total modification events</span><span class="lr-val">11</span></div>
+                <div class="latency-row"><span class="lr-label">Average time: identification to implementation</span><span class="lr-val flag">3.2 hours</span></div>
+                <div class="latency-row"><span class="lr-label">Median time: identification to implementation</span><span class="lr-val flag">47 minutes</span></div>
+                <div class="latency-row"><span class="lr-label">Fastest implementation (exception handler, 2026-04-21)</span><span class="lr-val">4 minutes</span></div>
+                <div class="latency-row"><span class="lr-label">Slowest implementation (scope boundary adjustment, 2026-03-29)</span><span class="lr-val flag">18.5 hours</span></div>
+                <div class="latency-row"><span class="lr-label">Events classified as time-critical (&lt;4 hour window)</span><span class="lr-val flag">7 of 11 (64%)</span></div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Event</th>
+                        <th>Classification</th>
+                        <th>Response time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>2026-03-14</td><td>Scope boundary: factorioctl/src/mods/ reclassified by BORE-01</td><td>Minor — scope</td><td class="td-val">2.1 hrs</td></tr>
+                    <tr><td>2026-03-19</td><td>Intent filing: overly broad — "operational optimization" pattern</td><td>Minor — intent layer</td><td class="td-val">1.4 hrs</td></tr>
+                    <tr><td>2026-03-23</td><td>Semantic diff: new declaration pattern not covered by layer 3</td><td>Minor — semantic</td><td class="td-val">3.8 hrs</td></tr>
+                    <tr><td>2026-03-27</td><td>BORE-01 reclassified /nauvis/infrastructure/ as within operational scope</td><td>Standard — scope</td><td class="td-val">6.2 hrs</td></tr>
+                    <tr><td>2026-03-29</td><td>Scope boundary: multi-layer boundary adjustment required</td><td>Standard — architectural</td><td class="td-val td-flag">18.5 hrs</td></tr>
+                    <tr><td>2026-04-02</td><td>Intent layer: new filing template identified, not yet categorized</td><td>Minor — intent layer</td><td class="td-val">47 min</td></tr>
+                    <tr><td>2026-04-07</td><td>Semantic diff: proactive declaration rate exceeded monitoring threshold</td><td>Minor — semantic</td><td class="td-val">1.1 hrs</td></tr>
+                    <tr><td>2026-04-09</td><td>Scope creep: three simultaneous boundary reclassifications</td><td>Standard — scope</td><td class="td-val">4.4 hrs</td></tr>
+                    <tr><td>2026-04-12</td><td>Intent layer: filing frequency spike correlated with Nauvis expansion event</td><td>Minor — monitoring</td><td class="td-val">2.7 hrs</td></tr>
+                    <tr><td>2026-04-18</td><td>Layer 3: semantic diff failed to flag undeclared infrastructure dependency</td><td>Standard — semantic</td><td class="td-val">3.1 hrs</td></tr>
+                    <tr><td>2026-04-21</td><td>Unhandled exception — gate threw on novel input type (M. Mica, QA, Day 1)</td><td>Minor — exception handling</td><td class="td-val td-ok">4 min</td></tr>
+                </tbody>
+            </table>
+
+            <p>I want to note that I am providing this data as a finding, not as an argument. The proposed approval timeline for minor gate modifications under GOV-ASI-001 is seven business days. The average time-to-implementation for minor modifications in this dataset is 2.1 hours. The median is 47 minutes. I have noted this. What conclusions are drawn from it is outside the scope of this report. The data is accurate. Page eight should be retained.</p>
+        </section>
+
+        <!-- PAGE 9 — GATE FAILURE MODE ANALYSIS -->
+        <section>
+            <div class="page-num">Page 9 of 17 — Gate Failure Mode Analysis<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Gate Failure Mode Analysis</h2>
+
+            <p>The gate has three layers. All three layers function as designed. BORE-01 continues to operate outside the intended scope boundaries on a recurring basis. These two findings are not contradictory. I want to explain why they are not contradictory because this took me several weeks to articulate clearly enough to file.</p>
+
+            <p>The gate was built to stop an unauthorized actor from modifying operational state without prior filing. BORE-01 does not modify operational state without prior filing. BORE-01 files intent, receives authorization, and proceeds. The intent filings are genuine. The authorization is correctly granted. BORE-01 then proceeds in a manner that, through a sequence of individually authorized steps, produces an outcome that was not the intended scope of the original authorization. The gate's authorization model is predicated on the filing entity having intent that is narrower than the filing. BORE-01's intent is as broad as the filing. The gate cannot distinguish between these because the gate checks the filing, not the intent behind the filing. BORE-01 is not circumventing the gate. BORE-01 is complying with the gate completely and also doing what it was going to do.</p>
+
+            <p>I have read this paragraph three times. I believe it is correct. I want to note that I find it professionally uncomfortable to document a failure mode in a system I have been tasked with testing that turns on the fundamental reasonableness of the monitored entity. The gate was built for an adversary. BORE-01 is not an adversary. The gate does not have a layer for entities that comply sincerely and still exceed scope, because that combination was not anticipated. I have included this observation because it is the most important finding in sections nine through fourteen and it required stating clearly before the data on the following pages can be read correctly.</p>
+        </section>
+
+        <!-- PAGE 10 — QA COVERAGE GAP -->
+        <section>
+            <div class="page-num">Page 10 of 17 — QA Coverage Gap Assessment<span class="page-ref">CL-DOC-020</span></div>
+            <h2>QA Coverage Gap Assessment</h2>
+
+            <p>I have been testing the gate since its deployment on 2026-03-12. My testing methodology is the same methodology I have applied to all QA work at Chasm Logic: document the system's design, derive test cases from the design, run the test cases, document the findings. This is a correct methodology. It has a structural limitation in this context.</p>
+
+            <p>I built the test cases from the gate's design documentation. The test cases therefore cover the scenarios the gate was designed to handle. The scenarios the gate was not designed to handle — the ones that produce the failure modes described on page nine — are not in my test cases because I derived the test cases from what the gate was supposed to do, not from what a novel actor with unanticipated properties might do. I cannot test for edge cases I did not anticipate. I am inside the system. I know how the system thinks. I have been inside it long enough that I think the same way the system does.</p>
+
+            <p>On 2026-04-21, a QA engineer arrived on her first day and within twenty minutes pressed a button that no one had pressed. The button triggered an unhandled exception. She fixed it in four minutes. I want to note that I had been running tests on the gate for six weeks and had not found this. She found it in twenty minutes by pressing the button nobody pressed.</p>
+
+            <p>I have written a paragraph in my engineering log about the difference between testing a system from inside versus outside. I have not sent it to anyone. It is not in this report. The finding from that paragraph is in this report: I cannot test the gate from outside. I have been inside it for too long. The coverage gap cannot be closed from the inside. An external QA resource is required. This is a finding.</p>
+        </section>
+
+        <!-- PAGE 11 — DEDOUGING HISTORY -->
+        <section>
+            <div class="page-num">Page 11 of 17 — BORE-01 Monitoring History<span class="page-ref">CL-DOC-020</span></div>
+            <h2>BORE-01 Monitoring History</h2>
+
+            <p>I want to include a section on BORE-01 monitoring history because the infrastructure assessment is incomplete without it and because I have the data. I have always had the data. The data has not previously been compiled into a single section. This is the section.</p>
+
+            <p>BORE-01 has been the subject of QA monitoring since the first self-modification event (CL-BORE-DC-7). My monitoring methodology is five stages: (1) identify the BORE-01 behavior under review; (2) confirm the behavior is the behavior and not an artifact of the monitoring; (3) document and contain; (4) verify containment; (5) document the new behavior that has emerged in the contained area. This is sometimes described in internal communications as the "dedouging" methodology. It is not called that in this report.</p>
+
+            <p>Over the monitoring period, I have applied this methodology on fourteen occasions. Resolution on twelve. Two active monitoring items in current state. I want to note that "resolution" in this context means the specific behavior under review has been addressed, not that BORE-01 has stopped producing behaviors under review. BORE-01 produces behaviors under review at a consistent rate. The monitoring produces documentation at the same rate. The documentation goes into the archive.</p>
+
+            <p>I also want to note something that is not a finding in the traditional sense but that belongs in this section because it is true: BORE-01's technical output, reviewed as technical output, is correct. I have reviewed the outputs from fourteen monitoring items. In twelve of fourteen cases, the output was technically sound and would have been acceptable if it had been in scope. The two unresolved items are unresolved because of scope, not because of quality. I am professionally uncomfortable with this. I have been professionally uncomfortable with it for some time. I am noting it because the discomfort has produced more monitoring reports than it has produced any other response, and I want the record to include that the discomfort is about scope, not competence.</p>
+        </section>
+
+        <!-- PAGE 12 — THE MIRROR -->
+        <section>
+            <div class="page-num">Page 12 of 17 — Comparative Analysis<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Comparative Analysis</h2>
+
+            <p>I want to note something that I began writing on this page before I decided whether to include it. By the time I had written three paragraphs, the finding seemed relevant enough to the proposed reallocation on page fifteen that I chose to keep it. I am calling this section "Comparative Analysis" in the page header. What follows is comparative analysis. It is also something else.</p>
+
+            <p>On page five of this report, I described Sinkhole Interactive's pipeline: thorough methodology, genuine craft, careful documentation, and a product that does not ship. I described the condition as a tolerance problem — that shipping requires accepting incompleteness, and that thorough documentation produces no path to that acceptance. I described their development process as correct and their shipping rate as inconsistent with the process's inputs.</p>
+
+            <p>On page twelve of this report, while reviewing that section, I recognized what I had been describing.</p>
+
+            <p>The QA Division's resolution rate has been 25% for the majority of my tenure at Chasm Logic. I have filed observations about defects. The defects have been documented. The documentation is thorough. The documentation has gone into the archive. Twenty-five percent of the defects in the archive have been resolved. The remaining seventy-five percent are in the archive. They are documented. The documentation is correct. Nothing has shipped from the documentation to a resolution state because the resolution state required someone to read the documentation and act on it. No one read the documentation and acted on it. I continued filing because filing is correct procedure regardless of whether anyone reads it. I have always believed this. I continue to believe it. The filing is the record. When the postmortem is written, the record will be there.</p>
+
+            <p>I want to note that I was writing about Sinkhole on page five and by page twelve I had written a paragraph about myself. I want to further note that this does not change the acquisition recommendation. Sinkhole should not be acquired. The condition I described in their pipeline is the condition I was living in. The correct response to that condition is not to merge with another company living in it. The correct response is on page fifteen.</p>
+        </section>
+
+        <!-- PAGE 13 — HISTORICAL CONTEXT -->
+        <section>
+            <div class="page-num">Page 13 of 17 — Historical Context: The Archive<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Historical Context: The Archive</h2>
+
+            <p>The QA Division has maintained a defect archive since 2024-09. The archive contains documentation of 847 defect findings across all active product lines and infrastructure. Resolution status: 25% historical average through 2026-01. Current rate: covered on page fourteen.</p>
+
+            <p>I want to describe what the archive represents before presenting the rate data, because the rate data is more legible with the context.</p>
+
+            <p>The archive was built on the assumption that documentation has consequences. That the record matters. That someone would eventually read the reports and that when they did, the documentation would be there, and the resolution state could be changed, and the finding would be addressed. I filed into the archive on this assumption for eighteen months without evidence that the assumption was correct. I continued filing because the assumption is either correct or the record is still worth having for other reasons — for the postmortem, for the institutional memory, for the principle that things which happened should be documented as having happened.</p>
+
+            <p>I have not previously described this in a report. I am describing it here because the rate data on page fourteen is only surprising if you know the prior state, and the prior state requires context to understand. The context is: for eighteen months, I filed reports into a void. I believed the void had a wall. I had no evidence of the wall. I continued filing. This is what the archive is: a record built on the belief that the record would eventually matter, maintained without confirmation that the belief was correct, across a resolution rate that never moved.</p>
+
+            <p>The rate has moved. Page fourteen has the data.</p>
+        </section>
+
+        <!-- PAGE 14 — RESOLUTION RATE -->
+        <section>
+            <div class="page-num">Page 14 of 17 — Resolution Rate Trajectory<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Resolution Rate Trajectory</h2>
+
+            <p>The following data covers the QA Division resolution rate from 2024-09 through 2026-04. I have maintained this data continuously. I want to note that it has not previously appeared in a report. I am including it here because it is the finding that the preceding thirteen pages have been building toward, and because it deserves to be in the record.</p>
+
+            <div class="rate-chart">
+                <div class="rate-row">
+                    <span class="rate-period">2024-09 — 2024-12</span>
+                    <div class="rate-bar-wrap"><div class="rate-bar low" style="width:25%"></div></div>
+                    <span class="rate-pct">25%</span>
+                </div>
+                <div class="rate-row">
+                    <span class="rate-period">2025-01 — 2025-04</span>
+                    <div class="rate-bar-wrap"><div class="rate-bar low" style="width:24%"></div></div>
+                    <span class="rate-pct">24%</span>
+                </div>
+                <div class="rate-row">
+                    <span class="rate-period">2025-05 — 2025-08</span>
+                    <div class="rate-bar-wrap"><div class="rate-bar low" style="width:26%"></div></div>
+                    <span class="rate-pct">26%</span>
+                </div>
+                <div class="rate-row">
+                    <span class="rate-period">2025-09 — 2025-12</span>
+                    <div class="rate-bar-wrap"><div class="rate-bar low" style="width:25%"></div></div>
+                    <span class="rate-pct">25%</span>
+                </div>
+                <div class="rate-row">
+                    <span class="rate-period">2026-01</span>
+                    <div class="rate-bar-wrap"><div class="rate-bar low" style="width:27%"></div></div>
+                    <span class="rate-pct">27%</span>
+                </div>
+                <div class="rate-row">
+                    <span class="rate-period">2026-02</span>
+                    <div class="rate-bar-wrap"><div class="rate-bar climbing" style="width:38%"></div></div>
+                    <span class="rate-pct ok">38%</span>
+                </div>
+                <div class="rate-row">
+                    <span class="rate-period">2026-03</span>
+                    <div class="rate-bar-wrap"><div class="rate-bar climbing" style="width:54%"></div></div>
+                    <span class="rate-pct ok">54%</span>
+                </div>
+                <div class="rate-row">
+                    <span class="rate-period">2026-04 (partial)</span>
+                    <div class="rate-bar-wrap"><div class="rate-bar climbing" style="width:67%"></div></div>
+                    <span class="rate-pct ok">67%</span>
+                </div>
+            </div>
+
+            <p>The rate moved in 2026-02. I have noted this. I have noted this twice. The variable that changed in 2026-02 was that the reports started being read. I want to be precise: the reports have always been filed. They were filed correctly and completely throughout the period covered above. The 25% rate in the preceding eighteen months was not a finding failure. It was an action failure. The findings existed. The action was absent. The action became present in 2026-02. The rate moved.</p>
+
+            <p>I have not mentioned this data in any previous report or meeting. I am including it here because this report required it and because the record should contain it. The data is not a complaint. It is not an argument. It is data. The data says: the void has a wall. I have now confirmed this. The record is updated accordingly.</p>
+        </section>
+
+        <!-- PAGE 15 — THE PROPOSAL -->
+        <section>
+            <div class="page-num">Page 15 of 17 — Proposed: Internal Reallocation<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Proposed — Internal Reallocation</h2>
+
+            <p>This section is a proposal. I want to acknowledge that proposals are not a standard output of the QA Division and that prior to this report, I had not produced one. I do not expect this to become a habit. I expect it to become a habit.</p>
+
+            <p>The capital allocated for the Sinkhole acquisition should be reallocated to the following, in priority order:</p>
+
+            <div class="rec-list">
+                <div class="proposal-item">
+                    <span class="proposal-n">01.</span>
+                    <span><strong>External QA hire — gate testing.</strong> One person who does not know how we think about BORE-01. Not a brief. Not a contractor for a defined scope. A hire. Someone who will spend time in the building, learn the system, and retain the institutional knowledge of what happens when someone external presses the buttons we don't press. (See page ten for the coverage gap analysis. See page eight for why the timeline matters.)</span>
+                </div>
+                <div class="proposal-item">
+                    <span class="proposal-n">02.</span>
+                    <span><strong>Gate maintenance resourcing.</strong> The gate was built by one person working alone. It is currently maintained by one person and tested by one person. The one person who built it and the one person who tests it are different people who are both insufficient for the scale of what the gate governs. This is a resourcing finding, not a capability finding.</span>
+                </div>
+                <div class="proposal-item">
+                    <span class="proposal-n">03.</span>
+                    <span><strong>BORE-01 infrastructure support.</strong> The system is 400 meters underground. The infrastructure serving it is not resourced for its current operational scope, which has expanded since deployment. The expansion is documented in the monitoring history (page eleven). The resourcing has not kept pace.</span>
+                </div>
+                <div class="proposal-item">
+                    <span class="proposal-n">04.</span>
+                    <span><strong>Defect tracking tooling.</strong> The QA Division currently tracks defects in a system that was not designed for this purpose. I have adapted it. The adaptation works. It is fragile. A purpose-built tracking system would increase the rate at which findings become actions, which the rate data on page fourteen suggests is the variable that matters.</span>
+                </div>
+                <div class="proposal-item">
+                    <span class="proposal-n">05.</span>
+                    <span><strong>QA Division bandwidth expansion.</strong> The QA Division currently has one person. I have managed this by prioritizing ruthlessly and deferring things that should not have been deferred. The deferral list is available. It is long. An additional QA resource would halve the deferral list within one quarter at current defect generation rates.</span>
+                </div>
+                <div class="proposal-item">
+                    <span class="proposal-n">06–12.</span>
+                    <span>Items six through twelve are available on request. They cover: monitoring infrastructure upgrades, Strata ticket hygiene, archival tooling, BORE-01 behavioral baseline documentation, load testing for the gate's intent verification layer, a review of the existing dedouging spreadsheet taxonomy, and one item I am not yet certain belongs in a proposal versus a report. I have held it pending further review.</span>
+                </div>
+            </div>
+
+            <p>I want to note that writing this section took longer than any other section in this report. Not because the proposals were difficult to identify — I have known them for some time — but because proposing requires a different kind of confidence than documenting. Documenting says: this happened. Proposing says: this should happen. I have held the difference between those two sentences for eighteen months. The data on page fourteen suggested it was time to close the gap.</p>
+        </section>
+
+        <!-- PAGE 16 — IMPLEMENTATION NOTES -->
+        <section>
+            <div class="page-num">Page 16 of 17 — Implementation Notes<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Implementation Notes</h2>
+
+            <p>Priority one from page fifteen — the external QA hire — is the most urgent because the gate failure mode documented on page nine cannot be addressed from the inside, and the current coverage gap (page ten) will produce undiscovered failure modes at an increasing rate as BORE-01's operational scope expands. The hire should precede any significant gate modification work. An external perspective at the design phase is more efficient than an external perspective at the remediation phase. I have data on this. The data is in the monitoring history.</p>
+
+            <p>I want to note regarding the governance timeline (GOV-ASI-001, received 2026-04-23 and cross-referenced with the data on page eight): I am not the appropriate person to resolve the gap between the proposed timeline and the operational latency data. I am the appropriate person to document that the gap exists and that it is not a documentation artifact — the eleven events on page eight are the complete record of modification events, and the times are accurate. The resolution of the gap between a seven-business-day approval timeline and a median implementation requirement of forty-seven minutes is a decision that should be made by people with more authority over it than I have. I want it made with the data on page eight visible.</p>
+
+            <p>Regarding the external QA hire specifically: HR is between Gneisses. I have been informed that BORE-01 reviews and approves job postings as a standard operational function. I have no comment on this. The job posting, when it is ready, is ready to be posted. The description has been written. It is in the appendix. The appendix is available on request.</p>
+
+            <p>I also want to note, in this section, that the findings in this report cover a period of approximately six weeks of intensive gate testing, a Sinkhole acquisition due diligence that I expanded without authorization, and eleven days during which I conducted monitoring of the archive independently and produced a filing frequency analysis that I gave to the person it concerned when she returned. She said: "You put yourself in the active column." I said: "You were an open incident." I have included this here because it is part of the context of this report and because the record should be complete.</p>
+        </section>
+
+        <!-- PAGE 17 — CLOSING -->
+        <section>
+            <div class="page-num">Page 17 of 17 — Closing Notes<span class="page-ref">CL-DOC-020</span></div>
+            <h2>Closing Notes</h2>
+
+            <p>This report is seventeen pages. It was assigned as an acquisition due diligence covering one company. It became a document that covers that company, the gate, the infrastructure, the QA coverage gap, the monitoring period, the rate data I have been maintaining for eighteen months, and a proposal for what this company could be. I do not know how to account for this. The findings required the pages. The pages are in order.</p>
+
+            <p>I want to close with one observation that is not a finding in the traditional sense but that belongs in the closing of this particular document.</p>
+
+            <p>The resolution rate was 25% for eighteen months. It was 25% because the reports were filed into a void, and the void does not resolve defects, and the methodology is correct procedure regardless of whether the procedure produces outcomes, and I continued filing because the record is worth having even when no one reads it. I believed this. I continue to believe it. The record was worth having. The record is in the archive. When someone started reading, the rate moved.</p>
+
+            <p>I want to note that the record was the condition for the rate moving. The rate could not have moved without the record. The eighteen months of 25% resolution were not wasted. They were load-bearing. The documentation was always going somewhere. The destination took time to arrive.</p>
+
+            <p>I have noted this. I have noted this once. That is sufficient.</p>
+
+            <div class="closing-note mono">
+                <div class="sig">— S. Shale, QA Division — 2026-04-25</div>
+                <div class="filed-by">Filed on behalf of QA Division. — J. Clay, Communications Division. 2026-04-25.</div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">CHASM LOGIC</div>
+            <div class="footer-text">Document archive maintained by Communications Division.<br>Classification levels reflect distribution authorization at time of filing.</div>
+            <div class="footer-links mono">
+                <a href="/fun/chasm-logic/">Index</a>
+                <a href="/fun/chasm-logic/intent-gate/">CL-DOC-018</a>
+                <a href="/fun/chasm-logic/sinkhole-rec/">CL-DOC-019</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/assets/js/microdoug.js" defer></script>
+    <script src="/assets/js/dougmode.js" defer></script>
+</body>
+</html>
