@@ -48,9 +48,9 @@ permalink: /fun/chasm-logic/
         </div>
 
         <div class="stats mono">
-            <div class="stat"><span class="stat-num">19</span> INDEXED</div>
-            <div class="stat"><span class="stat-num" style="color:#16a34a">18</span> ACCESSIBLE</div>
-            <div class="stat"><span class="stat-num" style="color:#a16207">0</span> PENDING</div>
+            <div class="stat"><span class="stat-num" id="stat-indexed">20</span> INDEXED</div>
+            <div class="stat"><span class="stat-num" id="stat-accessible" style="color:#16a34a">18</span> ACCESSIBLE</div>
+            <div class="stat"><span class="stat-num" id="stat-pending" style="color:#a16207">0</span> PENDING</div>
             <div class="stat"><span class="stat-num text-danger">1</span> CLASSIFIED</div>
             <div class="stat"><span class="stat-num" style="color:var(--cl-text-dim)">0</span> DEFERRED</div>
         </div>
@@ -373,6 +373,24 @@ permalink: /fun/chasm-logic/
             <div class="doc-note mono" style="color:#86efac">Preliminary recommendation on proposed Sinkhole Interactive acquisition. Position: no. Archive resumed 2026-03-23.</div>
         </a>
 
+        <!-- CL-DOC-020 — Shale Operational Report (GATED) -->
+        <a href="/fun/chasm-logic/shales-report/" class="doc-entry doc-live"
+            data-release="2026-03-26">
+            <div class="doc-top">
+                <span class="doc-ref mono">CL-DOC-020</span>
+                <span class="badge cl-b mono">SERIES B</span>
+            </div>
+            <div class="doc-title">Operational Report — S. Shale, QA Division</div>
+            <div class="doc-meta mono">
+                <span class="badge badge-type">OPERATIONAL REPORT</span>
+                <span class="dot">&middot;</span>
+                S. Shale — QA Division
+                <span class="dot">&middot;</span>
+                <span class="badge badge-live">LIVE</span>
+            </div>
+            <div class="doc-note mono">Seventeen pages. Page 8: response latency data. Page 15: proposed reallocation. Filed 2026-04-25.</div>
+        </a>
+
         <!-- INCOMING section -->
         <div style="margin-top:2.5rem;margin-bottom:0.5rem;padding-top:2rem;border-top:1px solid var(--cl-border-light)">
             <div class="mono" style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--cl-text-dim);margin-bottom:1rem">Incoming / Filed under governance-incoming</div>
@@ -435,6 +453,58 @@ permalink: /fun/chasm-logic/
     </footer>
     <div class="warning-stripe"></div>
     <script>document.querySelectorAll('[data-ship-date]').forEach(el=>{el.textContent='Q1 '+(new Date().getFullYear()+1)})</script>
+
+    <!--
+        RELEASE GATE
+        To schedule an entry: add data-release="YYYY-MM-DD" to the <a class="doc-entry"> element.
+        The entry must be written as live content (real title, badge, note, href).
+        Before the release date: JS replaces title with "[not yet filed]", swaps badge to PENDING,
+        blanks the note to "Entry reserved. Filing date: YYYY-MM-DD.", removes the link.
+        After the release date: entry shows as written, no changes.
+        Stats (#stat-accessible, #stat-pending) update automatically.
+        To add a new gated entry: increment #stat-indexed manually in the stats block.
+        ACCESSIBLE and PENDING are managed by this script.
+    -->
+    <script>
+    (function() {
+        var now = new Date();
+        var locked = 0;
+        var unlocked = 0;
+
+        document.querySelectorAll('[data-release]').forEach(function(el) {
+            var release = new Date(el.dataset.release + 'T12:00:00');
+            if (now < release) {
+                locked++;
+                el.style.opacity = '0.5';
+                el.style.cursor = 'default';
+                el.style.pointerEvents = 'none';
+                el.removeAttribute('href');
+
+                var title = el.querySelector('.doc-title');
+                if (title) title.textContent = '[not yet filed]';
+
+                var note = el.querySelector('.doc-note');
+                if (note) {
+                    note.textContent = 'Entry reserved. Filing date: ' + el.dataset.release + '.';
+                    note.style.color = 'var(--cl-text-dim)';
+                }
+
+                el.querySelectorAll('.badge-live').forEach(function(b) {
+                    b.textContent = 'PENDING';
+                    b.className = b.className.replace('badge-live', 'badge-pending');
+                });
+            } else {
+                unlocked++;
+            }
+        });
+
+        var pendingEl = document.getElementById('stat-pending');
+        var accessibleEl = document.getElementById('stat-accessible');
+        if (pendingEl)    pendingEl.textContent    = parseInt(pendingEl.textContent)    + locked;
+        if (accessibleEl) accessibleEl.textContent = parseInt(accessibleEl.textContent) + unlocked;
+    })();
+    </script>
+
     <script src="/assets/js/microdoug.js" defer></script>
     <script src="/assets/js/dougmode.js" defer></script>
 </body>
