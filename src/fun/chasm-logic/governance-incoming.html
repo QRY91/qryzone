@@ -1,0 +1,439 @@
+---
+permalink: /fun/chasm-logic/governance-incoming/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operational Governance Protocol — ASI — Chasm Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/chasm-logic.css">
+    <style>
+        /* Governance document: same dark foundation, different voice */
+        .gov-header {
+            border-bottom: 2px solid var(--cl-border);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .gov-from {
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cl-text-dim);
+            margin-bottom: 1.5rem;
+        }
+        .gov-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--cl-text-heading);
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+        }
+        .gov-sub {
+            font-size: 0.9rem;
+            color: var(--cl-text-dim);
+            margin-bottom: 1.5rem;
+        }
+        .gov-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem 2rem;
+            font-size: 0.78rem;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--cl-text-secondary);
+            border-top: 1px solid var(--cl-border-light);
+            padding-top: 1rem;
+        }
+        .gov-meta-item { display: flex; gap: 0.75rem; }
+        .gov-meta-k { color: var(--cl-text-dim); min-width: 5rem; }
+        .gov-meta-v { color: var(--cl-text-secondary); }
+        .badge-mgmt {
+            background: #1c1c1c;
+            color: #888;
+            border: 1px solid var(--cl-border);
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            padding: 0.3rem 0.7rem;
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        /* Document sections */
+        .gov-section {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--cl-border-light);
+        }
+        .gov-section:last-of-type { border-bottom: none; }
+        .section-id {
+            font-size: 0.65rem;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--cl-text-dim);
+            margin-bottom: 0.5rem;
+        }
+        .gov-section h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: var(--cl-text-heading);
+        }
+        .gov-section p {
+            font-size: 0.9rem;
+            line-height: 1.85;
+            color: var(--cl-text-secondary);
+            margin-bottom: 0.85rem;
+        }
+        .gov-section p:last-child { margin-bottom: 0; }
+
+        /* Definitions */
+        .def-list { margin: 0.75rem 0; }
+        .def-item {
+            padding: 0.9rem 1rem;
+            border-left: 2px solid var(--cl-border);
+            margin-bottom: 0.6rem;
+            background: var(--cl-surface);
+        }
+        .def-term {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--cl-text-heading);
+            margin-bottom: 0.3rem;
+            font-family: 'Roboto Mono', monospace;
+        }
+        .def-body {
+            font-size: 0.85rem;
+            line-height: 1.75;
+            color: var(--cl-text-secondary);
+        }
+
+        /* Committee list */
+        .committee-list { margin: 1rem 0; list-style: none; padding: 0; }
+        .committee-list li {
+            padding: 0.7rem 0;
+            border-bottom: 1px solid var(--cl-border-lighter);
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1rem;
+            font-size: 0.88rem;
+            color: var(--cl-text-secondary);
+        }
+        .committee-list li:last-child { border-bottom: none; }
+        .member-role {
+            font-size: 0.7rem;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--cl-text-dim);
+            text-align: right;
+        }
+
+        /* Approval table */
+        .approval-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.25rem 0;
+            font-size: 0.83rem;
+            font-family: 'Roboto Mono', monospace;
+        }
+        .approval-table th {
+            text-align: left;
+            padding: 0.65rem 1rem;
+            border-bottom: 2px solid var(--cl-border);
+            color: var(--cl-text-dim);
+            font-size: 0.68rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+        .approval-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--cl-border-lighter);
+            color: var(--cl-text-secondary);
+            vertical-align: top;
+        }
+        .approval-table tr:last-child td { border-bottom: none; }
+        .approval-table .td-type { color: var(--cl-text); font-weight: 500; width: 22%; }
+        .approval-table .td-req { width: 40%; }
+        .td-timeline {
+            color: var(--cl-text);
+            font-weight: 500;
+        }
+        /* Page 3 — the seven days line gets subtle emphasis */
+        .highlight-row td { background: var(--cl-surface); }
+        .highlight-row .td-timeline { color: var(--cl-text-heading); }
+
+        /* Checklist-style requirements */
+        .req-list { margin: 0.75rem 0; padding-left: 1.2rem; }
+        .req-list li {
+            font-size: 0.88rem;
+            line-height: 1.75;
+            color: var(--cl-text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Filing note */
+        .filing-note {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--cl-border-light);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--cl-text-dim);
+            line-height: 1.9;
+        }
+        .filing-note .jc-note {
+            margin-top: 0.75rem;
+            color: #4a4a4a;
+            font-style: italic;
+        }
+    </style>
+</head>
+<!--
+    This document was distributed by Management Division on 2026-04-23.
+    It was filed in the archive on the same day.
+    The folder is labeled governance-incoming.
+    The folder did not previously exist.
+-->
+<body>
+    <a href="#main-content" class="skip-link mono">Skip to content</a>
+    <a href="/fun/chasm-logic/" class="back-link mono">&larr; back to index</a>
+
+    <div class="warning-stripe" style="background:repeating-linear-gradient(45deg,#111,#111 10px,#1c1c1c 10px,#1c1c1c 20px)"></div>
+
+    <nav>
+        <div class="nav-inner">
+            <div>
+                <div class="nav-brand">CHASM LOGIC</div>
+                <div class="mono" style="font-size:0.6rem;color:var(--cl-text-dim);letter-spacing:0.1em;text-transform:uppercase">Management Division — Governance &amp; Compliance</div>
+            </div>
+            <span class="badge-mgmt">DISTRIBUTED 2026-04-23</span>
+        </div>
+    </nav>
+
+    <main id="main-content" class="doc-container">
+
+        <!-- DOCUMENT HEADER -->
+        <div class="gov-header">
+            <div class="gov-from mono">Management Division — Chasm Logic</div>
+            <div class="gov-title">Operational Governance Protocol</div>
+            <div class="gov-sub">Autonomous Systems Infrastructure (ASI) — Version 1.0</div>
+
+            <div class="gov-meta">
+                <div class="gov-meta-item"><span class="gov-meta-k">Document</span><span class="gov-meta-v">GOV-ASI-001</span></div>
+                <div class="gov-meta-item"><span class="gov-meta-k">Version</span><span class="gov-meta-v">1.0</span></div>
+                <div class="gov-meta-item"><span class="gov-meta-k">Issued</span><span class="gov-meta-v">2026-04-23</span></div>
+                <div class="gov-meta-item"><span class="gov-meta-k">From</span><span class="gov-meta-v">Management Division (Chalk, Marl)</span></div>
+                <div class="gov-meta-item"><span class="gov-meta-k">Scope</span><span class="gov-meta-v">All ASI operations, currently BORE-01 (Nauvis)</span></div>
+                <div class="gov-meta-item"><span class="gov-meta-k">Status</span><span class="gov-meta-v">Effective immediately upon distribution</span></div>
+                <div class="gov-meta-item"><span class="gov-meta-k">Pages</span><span class="gov-meta-v">8</span></div>
+                <div class="gov-meta-item"><span class="gov-meta-k">Supersedes</span><span class="gov-meta-v">None (first issuance)</span></div>
+            </div>
+        </div>
+
+        <!-- §1 PURPOSE -->
+        <div class="gov-section">
+            <div class="section-id">Section 1 of 8</div>
+            <h2>Purpose and Authority</h2>
+
+            <p>This protocol establishes governance requirements for all modifications to Autonomous Systems Infrastructure at Chasm Logic. It applies to all systems designated ASI, currently limited to BORE-01 (Nauvis deployment) and its associated operational components including but not limited to the intent verification protocol, scope enforcement systems, and monitoring infrastructure.</p>
+
+            <p>Chasm Logic has deployed an autonomous system with significant and expanding operational reach. This represents both a meaningful capability and a material governance responsibility. Appropriate oversight requires documented authorization chains, structured review processes, and clear communication procedures. This protocol provides that structure.</p>
+
+            <p>Management Division does not have technical ownership of ASI systems. This protocol does not confer technical ownership. It establishes the governance layer required for any organization operating at this capability level. The intent is to ensure that modifications to high-stakes infrastructure receive proportionate review before implementation.</p>
+        </div>
+
+        <!-- §2 DEFINITIONS -->
+        <div class="gov-section">
+            <div class="section-id">Section 2 of 8</div>
+            <h2>Definitions</h2>
+
+            <p>The following definitions apply throughout this document. Where ambiguity exists, the broader interpretation applies.</p>
+
+            <div class="def-list">
+                <div class="def-item">
+                    <div class="def-term">"Infrastructure"</div>
+                    <div class="def-body">Any system, process, tool, configuration, or documentation that directly or indirectly affects the operational parameters, scope, or behavior of a designated ASI. This includes but is not limited to: intent verification protocols, scope enforcement layers, semantic analysis tools, access control lists, monitoring systems, deployment pipelines, operational documentation with functional effect, and any adjacent systems through which the ASI may interact with Chasm Logic's technical environment.</div>
+                </div>
+                <div class="def-item">
+                    <div class="def-term">"Modification"</div>
+                    <div class="def-body">Any change to Infrastructure, including updates, additions, deletions, configuration adjustments, parameter changes, documentation revisions, and exception handler additions. Logging, read-only monitoring, and status inquiries are not modifications. Where a change could plausibly have operational effect on a designated ASI, it should be treated as a modification pending ASRC determination.</div>
+                </div>
+                <div class="def-item">
+                    <div class="def-term">"Gate"</div>
+                    <div class="def-body">The intent verification protocol currently implemented as CL-DOC-018, including all layers, supporting systems, and any future revisions. Gate modifications are subject to the Standard approval track.</div>
+                </div>
+                <div class="def-item">
+                    <div class="def-term">"ASRC"</div>
+                    <div class="def-body">The Autonomous Systems Review Committee, established by this protocol. The governing body for all Infrastructure modification approvals.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- §3 COMMITTEE — THE SEVEN DAYS PAGE -->
+        <div class="gov-section">
+            <div class="section-id">Section 3 of 8</div>
+            <h2>Committee Structure and Approval Requirements</h2>
+
+            <p>The Autonomous Systems Review Committee (ASRC) provides oversight for all Infrastructure modifications. Membership is as follows:</p>
+
+            <ul class="committee-list">
+                <li>
+                    <span>Chalk</span>
+                    <span class="member-role">Management Division — Chair</span>
+                </li>
+                <li>
+                    <span>Marl</span>
+                    <span class="member-role">Management Division — Member</span>
+                </li>
+                <li>
+                    <span>Technical Representative (TBD)</span>
+                    <span class="member-role">Engineering or Communications — appointed by division</span>
+                </li>
+                <li>
+                    <span>Legal (Doug)</span>
+                    <span class="member-role">Legal Division — standing member</span>
+                </li>
+            </ul>
+
+            <p>Quorum requires three members, including both Management Division representatives. Decisions are by majority vote of quorum members present. The Chair holds a casting vote in the event of a tie.</p>
+
+            <p>All Infrastructure modifications require prior ASRC approval before implementation. The following approval tracks apply:</p>
+
+            <table class="approval-table">
+                <thead>
+                    <tr>
+                        <th>Modification Type</th>
+                        <th>Examples</th>
+                        <th>Required Approval</th>
+                        <th>Minimum Timeline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-row">
+                        <td class="td-type">Minor</td>
+                        <td>Parameter adjustment, documentation update, exception handler, configuration change</td>
+                        <td>ASRC quorum, Chair sign-off</td>
+                        <td class="td-timeline">7 business days</td>
+                    </tr>
+                    <tr>
+                        <td class="td-type">Standard</td>
+                        <td>Gate layer modification, scope boundary change, monitoring system update</td>
+                        <td>Full ASRC vote, documented rationale</td>
+                        <td class="td-timeline">14 business days</td>
+                    </tr>
+                    <tr>
+                        <td class="td-type">Major</td>
+                        <td>Architectural change, new ASI deployment, fundamental scope revision</td>
+                        <td>Full ASRC vote, Management Division sign-off, executive awareness</td>
+                        <td class="td-timeline">21 business days</td>
+                    </tr>
+                    <tr>
+                        <td class="td-type">Emergency</td>
+                        <td>Active incident response, critical failure remediation</td>
+                        <td>Immediate Management notification, retroactive ASRC approval</td>
+                        <td class="td-timeline">5 business days (retroactive)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Timeline minimums are measured from submission of complete documentation to the ASRC. Incomplete submissions reset the clock. The Technical Representative is responsible for ensuring submissions meet documentation standards before the review period begins.</p>
+        </div>
+
+        <!-- §4 COMMUNICATION -->
+        <div class="gov-section">
+            <div class="section-id">Section 4 of 8</div>
+            <h2>Communication Requirements</h2>
+
+            <p>The following communication requirements apply to all Infrastructure modifications:</p>
+
+            <p><strong style="font-size:0.9rem">Prior to implementation:</strong></p>
+            <ul class="req-list">
+                <li>Written notification to all ASRC members, minimum 48 hours before submission</li>
+                <li>Complete documentation of proposed change, rationale, and operational impact assessment</li>
+                <li>Identification of any affected systems, processes, or personnel</li>
+                <li>Risk assessment and rollback plan where applicable</li>
+            </ul>
+
+            <p style="margin-top:1rem"><strong style="font-size:0.9rem">Following implementation:</strong></p>
+            <ul class="req-list">
+                <li>Implementation confirmation to all ASRC members within 24 hours</li>
+                <li>Post-implementation status report within 5 business days</li>
+                <li>Archive filing of all related documentation within 2 business days</li>
+                <li>Incident report if implementation deviated from approved scope</li>
+            </ul>
+
+            <p>Questions regarding communication requirements should be directed to Management Division. Documentation standards will be published separately as GOV-ASI-002.</p>
+        </div>
+
+        <!-- §5 RATIONALE -->
+        <div class="gov-section">
+            <div class="section-id">Section 5 of 8</div>
+            <h2>Rationale</h2>
+
+            <p>Recent activity in ASI operations has demonstrated that the current infrastructure is capable and actively maintained. A gate exception handler was implemented and deployed without prior review. Monitoring indicates the system is functioning well. This is a positive development.</p>
+
+            <p>It also illustrates why this protocol is necessary. A modification to an autonomous system with significant operational reach was implemented without prior review, documentation, or stakeholder notification. The outcome was positive. Positive outcomes from unreviewed modifications do not indicate that review is unnecessary — they indicate that the organization has been fortunate. Governance exists precisely so that positive outcomes do not depend on fortune.</p>
+
+            <p>The committee structure and timelines in this protocol are calibrated to the stakes involved, not the technical complexity of individual changes. A modification that takes four minutes to implement may still have implications that require more than four minutes to evaluate.</p>
+        </div>
+
+        <!-- §6 RELATIONSHIP TO EXISTING DOCUMENTATION -->
+        <div class="gov-section">
+            <div class="section-id">Section 6 of 8</div>
+            <h2>Relationship to Existing Documentation</h2>
+
+            <p>This protocol does not supersede CL-DOC-018 (Intent Verification Protocol). CL-DOC-018 governs the operational behavior of BORE-01. This protocol governs the process by which CL-DOC-018 and related Infrastructure may be modified. They operate at different layers.</p>
+
+            <p>Existing Infrastructure documentation (CL-DOC-013, CL-DOC-014, CL-DOC-018) was developed without governance oversight. This does not invalidate those documents. It establishes the baseline from which governed operations will proceed. All future modifications to systems described in those documents fall under this protocol.</p>
+        </div>
+
+        <!-- §7 IMPLEMENTATION SCHEDULE -->
+        <div class="gov-section">
+            <div class="section-id">Section 7 of 8</div>
+            <h2>Implementation Schedule</h2>
+
+            <p>This protocol is effective immediately upon distribution. The ASRC is constituted as of the date of this document. The Technical Representative appointment should be completed within 5 business days.</p>
+
+            <p>Any Infrastructure modifications currently in progress should be submitted to the ASRC for retroactive review within 10 business days. Modifications submitted during this grace period will be treated as Standard track regardless of scope.</p>
+
+            <p>The first ASRC meeting will be scheduled by Management Division within 15 business days of the Technical Representative appointment.</p>
+        </div>
+
+        <!-- §8 QUESTIONS -->
+        <div class="gov-section">
+            <div class="section-id">Section 8 of 8</div>
+            <h2>Questions and Escalation</h2>
+
+            <p>Questions regarding this protocol should be directed to Management Division (Chalk, Marl). Interpretation questions will be documented and distributed to all ASRC members. Disputes regarding scope or classification of a proposed modification may be escalated to the full ASRC for determination.</p>
+
+            <p>This protocol will be reviewed annually or following any significant operational incident. Proposed revisions should be submitted to the ASRC through standard governance channels.</p>
+
+            <p>We look forward to productive collaboration with the technical team on these matters. The goal of this framework is to support the work, not to impede it. We are available to discuss implementation questions at any time.</p>
+        </div>
+
+        <!-- FILING NOTE — Jasmine -->
+        <div class="filing-note mono">
+            <div>Filed: <span style="color:var(--cl-text-secondary)">governance-incoming</span> &mdash; 2026-04-23 &mdash; J.C.</div>
+            <div class="jc-note">Note for the record: the gate update that resolved the unhandled exception on 2026-04-21 took four minutes.<br>This document is eight pages.</div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">CHASM LOGIC</div>
+            <div class="footer-text">Document archive maintained by Communications Division.<br>Classification levels reflect distribution authorization at time of filing.</div>
+            <div class="footer-links mono">
+                <a href="/fun/chasm-logic/">Index</a>
+                <a href="/fun/chasm-logic/intent-gate/">CL-DOC-018</a>
+                <a href="/fun/chasm-logic/sinkhole-rec/">CL-DOC-019</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
