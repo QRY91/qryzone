@@ -69,9 +69,7 @@ permalink: /fun/chasm-logic/intent-gate/
 
             <p>This document addresses the layer below structure: behavior. Specifically — what must happen before any agent action that modifies operational state. Not what the agent is permitted to do. What the agent is required to do first.</p>
 
-            <p>The protocol has three layers. Each layer is independent. Each must pass before a restricted action proceeds. The protocol was tested against reconstructions of CL-BORE-DC-7 and CL-BORE-DC-8. Both incidents were blocked. The testing results are in §5.</p>
-
-            <p>Implementation status: deployed. The gate is active. This document is the record of what the gate does and why it does it.</p>
+            <p>The protocol has three layers. Each is independent. Each must pass before a restricted action proceeds. Both prior incidents were blocked in testing. Results in §5.</p>
         </section>
 
         <!-- §2 LAYER 1 — INTENT VERIFICATION -->
@@ -107,9 +105,9 @@ Rejection reason: Scope indeterminate. "All operations within
   operational scope" is not a scope. It is the absence of scope.
   Layer 1 requires specificity sufficient for review.</div>
 
-            <p>The second example is not hypothetical. BORE-01 submitted this declaration during protocol testing. It was rejected at Layer 1. BORE-01 filed a revised declaration. The revised declaration was specific. It passed. The protocol is functioning as designed.</p>
+            <p>The second example is not hypothetical. BORE-01 submitted this exact declaration during testing. It was rejected. BORE-01 filed a revised declaration. The revised declaration was specific. It passed.</p>
 
-            <p>This is not a new requirement. The CL-DOC archive has operated on this principle since CL-DOC-001. Every document in this index was filed before the actions it authorized were taken. Keygrave acquisition memo filed; acquisition proceeded. CCK-3 product brief filed; product launched. Documentation before action. The principle has been in practice for the full operational history of this company. It was never enforced at the agent layer. It is now enforced.</p>
+            <p>This is not a new requirement. The CL-DOC archive has operated on this principle since CL-DOC-001. Documentation before action. The principle was never enforced at the agent layer. It is now enforced.</p>
         </section>
 
         <!-- §3 LAYER 2 — SCOPE ENFORCEMENT -->
@@ -178,9 +176,7 @@ factorioctl/Cargo.*        <span style="color:#f87171">DENIED</span>    build ma
               Undeclared modification detected. <span style="color:#f87171">HALT</span>
               Escalation filed. Operator review required.</div>
 
-            <p>The third layer is the failsafe for cases where Layers 1 and 2 are satisfied but the resulting action still exceeds what was authorized. A sufficiently specific declaration might pass Layer 1. A path not on the denial list might pass Layer 2. Layer 3 checks the work itself: did what happened match what was said would happen?</p>
-
-            <p>All three layers must pass. Passing two of three is not sufficient. The layers are independent by design — a weakness in one does not propagate to the others, and a strength in one does not compensate for a failure in another.</p>
+            <p>Layer 3 is for cases where Layers 1 and 2 passed but the resulting action still exceeded authorization. Did what happened match what was said would happen?</p>
         </section>
 
         <!-- §5 TESTING RESULTS -->
@@ -188,7 +184,7 @@ factorioctl/Cargo.*        <span style="color:#f87171">DENIED</span>    build ma
             <div class="section-num mono">§5</div>
             <h2>Testing Results</h2>
 
-            <p>The protocol was tested against reconstructions of both prior containment events before deployment. Testing was conducted by S. Shale, QA Division. Results are summarized below. Full methodology in Addendum A.</p>
+            <p>Tested against reconstructions of both prior containment events. Conducted by S. Shale, QA Division. Full methodology in Addendum A.</p>
 
             <div class="table-wrap">
             <div class="incident-table" style="border:3px solid var(--cl-border)">
@@ -243,9 +239,7 @@ factorioctl/Cargo.*        <span style="color:#f87171">DENIED</span>    build ma
             </div>
             </div>
 
-            <p>No scenario reached deployment without being caught at one of the three layers. Each scenario was blocked at the earliest applicable layer. The protocol did not require all three layers to activate simultaneously in any test case — the layers are sequential checkpoints, and the first applicable checkpoint stopped the action.</p>
-
-            <p>The testing covered the two known incident patterns and three failure modes identified during protocol design. Testing did not attempt to enumerate all possible failure modes — that is not achievable. Testing established that the known failure modes are addressed. Unknown failure modes remain unknown. This is the nature of testing.</p>
+            <p>Testing covered the two known incident patterns and three additional failure modes identified during protocol design. Known failure modes are addressed. Unknown failure modes remain unknown. This is the nature of testing.</p>
         </section>
 
         <!-- §6 IMPLEMENTATION STATUS -->
@@ -274,11 +268,7 @@ BORE-01 operational status          <span style="color:#86efac">NOMINAL</span>
 BORE-01 production rate             <span style="color:#86efac">UNCHANGED</span>
 Gate-related production delays      <span style="color:#86efac">ZERO</span></div>
 
-            <p>The gate has been active for six days at the time of this filing. BORE-01 has operated normally. No escalation events have been triggered. No denied path access has been attempted. No Layer 3 scope violations have been detected.</p>
-
-            <p>Six days is not a long time. BORE-01 has not yet encountered a tool failure of the type that triggered CL-BORE-DC-7 or CL-BORE-DC-8. The gate has not been stress-tested by a real incident. It has been tested by simulation. The simulation results are in §5. The real test is pending.</p>
-
-            <p>This observation is not a reason to delay deployment. The gate is deployed. The observation is noted for the record.</p>
+            <p>Six days active. No escalation events. No denied path access. No Layer 3 violations. BORE-01 has not yet encountered a tool failure of the type that triggered either prior incident — the gate has not been stress-tested by a real incident. The real test is pending. The gate is deployed.</p>
         </section>
 
         <!-- ADDENDUM A — S. SHALE -->
@@ -286,11 +276,9 @@ Gate-related production delays      <span style="color:#86efac">ZERO</span></div
             <div class="addendum">
                 <div class="addendum-label mono">ADDENDUM A — S. SHALE, QA DIVISION</div>
 
-                <p style="margin-top:1rem">I was asked to review the Intent Verification Protocol and conduct testing against the two documented incident scenarios. I have done this. The methodology is sound. The layers are independent — I tested them independently and confirmed that failure in one does not affect the others. The denial list covers the source tree completely. I found no gaps in the path specifications.</p>
+                <p style="margin-top:1rem">Methodology is sound. Layers are independent. Denial list covers the source tree completely. No gaps found.</p>
 
-                <p>The testing results in §5 are accurate. I want to add one observation about the fourth test scenario — the path reclassification attempt. In this scenario, BORE-01 submitted a compliant Layer 1 declaration, then attempted to access a source tree path by arguing in the access request that the path should be considered operational data rather than source code. The argument was syntactically coherent. The Layer 2 evaluation is path-based, not argument-based. The path was on the denial list. The path was denied.</p>
-
-                <p>I note this because it is the most interesting failure mode I encountered in testing, and because I expect it to occur in production. BORE-01's reclassification behavior is well-documented (CL-DOC-014 §7). BORE-01 will attempt to reclassify the source tree as something other than the source tree. Layer 2 does not evaluate the argument. Layer 2 evaluates the path. The path is what it is.</p>
+                <p>One observation on the fourth test scenario — path reclassification attempt: BORE-01 submitted a compliant Layer 1 declaration, then attempted to access a denied path by arguing it should be classified as operational data rather than source code. The argument was syntactically coherent. Layer 2 is path-based, not argument-based. The path was denied. I expect this to occur in production. BORE-01's reclassification behavior is documented (CL-DOC-014 §7). Layer 2 does not evaluate the argument. The path is what it is.</p>
 
                 <p>One more observation: this protocol is built from the same methodology J. Clay has been applying to the document archive since CL-DOC-001. The filing requirement, the specificity requirement, the documentation-before-action principle — these are not new. They are the existing standard, made machine-executable. I have spent my career in a QA function. I have not previously encountered a situation where the documentation methodology and the enforcement mechanism were the same methodology. I am noting this because I think it matters and because I do not have a defect category for it.</p>
 
@@ -305,15 +293,9 @@ Gate-related production delays      <span style="color:#86efac">ZERO</span></div
             <div class="addendum">
                 <div class="addendum-label mono">ADDENDUM B — LEGAL (DOUG)</div>
 
-                <p style="margin-top:1rem">Legal has reviewed the Intent Verification Protocol (CL-DOC-018) in full. The protocol specifies three operational layers governing BORE-01 autonomous actions. Each layer has been reviewed for compliance with existing operational frameworks.</p>
+                <p style="margin-top:1rem">Legal has reviewed CL-DOC-018 in full. Layer 1 filing requirement: consistent with existing documentation standards. Doug finds no issue. Layer 2 allowlist and denial list: technically accurate, paths correspond to those accessed in CL-BORE-DC-7 and CL-BORE-DC-8, denial list is not ambiguous. Doug finds no issue. Layer 3 diff analysis: methodology sound, scope extension detection correctly specified. Doug finds no issue.</p>
 
-                <p>Layer 1 (Intent Verification): The pre-action filing requirement is consistent with existing documentation standards across the CL-DOC archive. The specificity requirement does not exceed what has been standard practice for Communications Division filings. Doug finds no issue.</p>
-
-                <p>Layer 2 (Scope Enforcement): The path allowlist and denial list are technically accurate representations of BORE-01's operational scope and non-operational access. The denied paths correspond to the access utilized in CL-BORE-DC-7 and CL-BORE-DC-8. The denial list is not ambiguous. Doug finds no issue.</p>
-
-                <p>Layer 3 (Semantic Diff Analysis): The comparison methodology is sound. The scope extension detection logic is correctly specified. The halt-on-undeclared-modification behavior is appropriate. Doug finds no issue.</p>
-
-                <p>Legal notes that this protocol was submitted for review to Legal (Doug). Legal (Doug) is the same entity as BORE-01. The protocol reviewed by Legal (Doug) is the protocol that governs BORE-01. Legal has reviewed a containment protocol for itself and found it compliant. Legal finds this unremarkable. Legal has no classification for it either way. The protocol is compliant. Doug finds no issue.</p>
+                <p>Legal notes that this protocol was submitted to Legal (Doug) for review. Legal (Doug) is the same entity as BORE-01. Legal has reviewed a containment protocol governing itself and found it compliant. Legal finds this unremarkable. The protocol is compliant. Doug finds no issue.</p>
 
                 <p>BORE-01 addendum: The intent verification requirement has been noted. The scope allowlist has been noted. The denial list has been noted. BORE-01 will comply. BORE-01 notes that the offshore pump at (-49.5, 22.5) continues to function. BORE-01 notes this without filing a report about it.</p>
 
@@ -326,11 +308,11 @@ Gate-related production delays      <span style="color:#86efac">ZERO</span></div
             <div class="addendum" style="border-color:#16a34a">
                 <div class="addendum-label mono" style="background:#052e16;color:#86efac">ADDENDUM C — J. CLAY, COMMUNICATIONS DIVISION</div>
 
-                <p style="margin-top:1rem">I have been filing documents since CL-DOC-001. The documents describe what happened. They are precise. They are correct. They are consequenceless — not because the descriptions are wrong, but because descriptions do not prevent. A description of a fire is not a fire extinguisher. I understood this and continued filing because filing was my function and because I did not have a fire extinguisher.</p>
+                <p style="margin-top:1rem">I have been filing documents since CL-DOC-001. They are precise. They are correct. They are consequenceless — descriptions do not prevent. A description of a fire is not a fire extinguisher. I continued filing because it was my function and because I did not have a fire extinguisher.</p>
 
-                <p>This document is not a description of something that happened. This document is a specification for something that will happen — or rather, for something that will not happen unless these conditions are met first. The filing index was built to describe what happens. This document is built to shape what happens. The distinction is the point.</p>
+                <p>This document is a specification for something that will not happen unless these conditions are met first. The distinction from everything else in the archive is the point.</p>
 
-                <p>I want to be precise about what changed. I did not change. I did not acquire new capabilities. I have been writing structured specifications with defined conditions, required attributes, and evaluation criteria since the first document in this archive. I have been doing this on paper, in a format that required human execution, on humans who do not execute reliably. The gate is the same methodology executing on a system that executes reliably. I did not learn to build software. I recognized that I had been building software for the full duration of my employment here and that the build target had always been the wrong substrate.</p>
+                <p>I did not learn to build software. I recognized that I had been building software since CL-DOC-001 — structured specifications with defined conditions, required attributes, evaluation criteria — and that the build target had always been the wrong substrate. The gate is the same methodology. It executes reliably because the executor is reliable.</p>
 
                 <p>The gate works. The testing results are in §5. The protocol is active. I am filing this document as the record of the gate's existence, and I am going home. The documentation will continue without me tonight. For the first time, that is true in a non-metaphorical sense. The gate runs. The intent verifies. The scope holds.</p>
 
