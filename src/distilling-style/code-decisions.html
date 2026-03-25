@@ -241,7 +241,7 @@ description: What 534 uroboro captures reveal about coding patterns
           <span class="chosen">In-memory queue</span> over <span class="rejected">Bull/BullMQ with Redis</span>
         </div>
         <div class="decision-reason">Single-process NestJS app, no Redis dependency needed, queue state is transient, simpler to implement and debug.</div>
-        <div class="decision-project">coenegrachts-rpa-api</div>
+        <div class="decision-project">rpa-api</div>
       </div>
 
       <div class="decision-card">
@@ -284,7 +284,7 @@ description: What 534 uroboro captures reveal about coding patterns
           <span class="chosen">PortalSessionState map</span> over <span class="rejected">separate VLM/Traces fields</span>
         </div>
         <div class="decision-reason">Unified getOrCreateSession with portal param. Eliminates copy-paste duplication (6 fields, 6 methods), creation-promise lock fixes race condition.</div>
-        <div class="decision-project">coenegrachts-rpa-api</div>
+        <div class="decision-project">rpa-api</div>
       </div>
 
       <div class="decision-card">
@@ -292,7 +292,7 @@ description: What 534 uroboro captures reveal about coding patterns
           <span class="chosen">Stateless BrowserService (pass page as param)</span> over <span class="rejected">mutable this.page</span>
         </div>
         <div class="decision-reason">Eliminates concurrency bugs when VLM and Traces queues drain simultaneously on the singleton BrowserService.</div>
-        <div class="decision-project">coenegrachts-rpa-api</div>
+        <div class="decision-project">rpa-api</div>
       </div>
 
       <div class="insight-box">
@@ -319,7 +319,7 @@ description: What 534 uroboro captures reveal about coding patterns
           <span class="chosen">Extract createPersistentSession helper</span> over <span class="rejected">duplicating getOrCreatePersistentSession</span>
         </div>
         <div class="decision-reason">VLM and Traces sessions follow identical patterns. Extracting avoids copy-paste and makes the dual-session pattern maintainable.</div>
-        <div class="decision-project">coenegrachts-rpa-api</div>
+        <div class="decision-project">rpa-api</div>
       </div>
 
       <div class="decision-card">
@@ -487,7 +487,7 @@ description: What 534 uroboro captures reveal about coding patterns
           <span class="chosen">Auth state persistence</span> over <span class="rejected">HTML mocks</span>
         </div>
         <div class="decision-reason">Mock can drift from reality, causing "works in test, fails in prod" scenarios.</div>
-        <div class="decision-project">coenegrachts-rpa-api</div>
+        <div class="decision-project">rpa-api</div>
       </div>
 
       <div class="decision-card">
@@ -495,7 +495,7 @@ description: What 534 uroboro captures reveal about coding patterns
           <span class="chosen">Form filling before auth/nav</span> &mdash; sequenced for early testing
         </div>
         <div class="decision-reason">Allows testing on live form immediately via CDP. Auth implementation can follow without blocking test feedback.</div>
-        <div class="decision-project">coenegrachts-rpa-api</div>
+        <div class="decision-project">rpa-api</div>
       </div>
 
       <div class="insight-box">
