@@ -33,11 +33,14 @@ function initThreeScene(containerId) {
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
+    // Respect user motion preferences — stated site principle
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.autoRotate = true;
+    controls.autoRotate = !reducedMotion;
     controls.autoRotateSpeed = 1.0;
 
     // Lighting
@@ -174,6 +177,8 @@ function initThreeScene(containerId) {
         // Hide loading indicator
         const loadingEl = container.querySelector('.loading-indicator');
         if (loadingEl) loadingEl.style.display = 'none';
+
+        if (reducedMotion) render();
     }
 
     // Load logo texture
@@ -206,13 +211,19 @@ function initThreeScene(containerId) {
                 scene.add(model);
             },
             undefined,
-            (error) => {
-                console.log('Using cube fallback', error);
+            () => {
+                if (reducedMotion) render();
             }
         );
     }
 
     loadModel();
+
+    function render() {
+        logoObjects.forEach((logo) => logo.lookAt(camera.position));
+        controls.update();
+        renderer.render(scene, camera);
+    }
 
     // Animation loop
     function animate() {
@@ -240,7 +251,15 @@ function initThreeScene(containerId) {
         requestAnimationFrame(animate);
     }
 
-    animate();
+    if (reducedMotion) {
+        // Static render — re-render on user drag and after async asset loads
+        controls.addEventListener('change', () => renderer.render(scene, camera));
+        render();
+        setTimeout(render, 500);
+        setTimeout(render, 2000);
+    } else {
+        animate();
+    }
 
     // Handle resize
     function handleResize() {
@@ -254,6 +273,8 @@ function initThreeScene(containerId) {
         if (material && material.uniforms.u_resolution) {
             material.uniforms.u_resolution.value.set(width, height);
         }
+
+        if (reducedMotion) render();
     }
 
     window.addEventListener('resize', handleResize);

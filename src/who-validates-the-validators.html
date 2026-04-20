@@ -1,0 +1,120 @@
+---
+layout: base.njk
+title: Who validates the validators? - qry.zone
+description: An LLM judge grading your AI product is another AI product. It can be wrong in the same ways. You only find out if you check.
+explore: true
+tagline: "An LLM judge grading your AI product is another AI product. It can be wrong in the same ways. You only find out if you check."
+exploreTags:
+  - ai-collaboration
+  - craft
+  - philosophy
+status: seedling
+firstCreated: 2026-04-20
+lastUpdated: 2026-04-20
+connections:
+  - "The reading is the work"
+  - "Recursive mirror"
+  - "LLMs as compilers"
+---
+
+<article class="article">
+    <header class="article-header">
+        <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">&larr; Back to Explore</a>
+        <span class="status-badge status-seedling">seedling</span>
+        <h1>Who validates the validators?</h1>
+        <p class="article-subtitle">An LLM judge grading your AI product is another AI product. It can be wrong in the same ways. You only find out if you check.</p>
+        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">April 2026</p>
+    </header>
+
+    <section>
+        <p>
+            The judge is a model.
+        </p>
+        <p>
+            At any real scale, you're running an LLM-as-judge: a model that reads the product's output and returns a verdict. The judge has a rubric &mdash; the things to check for &mdash; and a verdict &mdash; pass, fail. You trust the verdicts because you wrote the rubric, and the rubric encodes your standards.
+        </p>
+        <p>
+            Except the judge is a model. It misreads rubrics. It hallucinates rationales. It's slightly biased toward whichever output happens to be listed first. It does the things LLMs do when nobody's watching, and it does them quietly, because the output is just a true/false and a one-line reason.
+        </p>
+        <p>
+            Shreya Shankar wrote a paper about this: <em>Who Validates the Validators?</em> The thesis is simple and corrosive. If you don't validate the judge against humans, you don't know what the judge is measuring. You assume it's measuring the rubric. It's probably measuring something correlated with the rubric, and also with the model's priors, and also with how the prompt was formatted. The correlations drift from your rubric silently, and the drift is invisible unless you look.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            The validation move.
+        </p>
+        <p>
+            Hold back a set of outputs humans have already graded &mdash; labeled in advance, by you or whoever owns the product's quality, using the same rubric the judge uses. Run the judge on that set. Compute two numbers.
+        </p>
+        <p>
+            <strong>True positive rate.</strong> Of the outputs humans marked as failures, how many did the judge catch? If the judge misses half, the rubric is not operational. It doesn't matter that the judge <em>could</em> identify the failure mode in principle. On real outputs, with the rubric you wrote, it misses half.
+        </p>
+        <p>
+            <strong>True negative rate.</strong> Of the outputs humans marked as passing, how many did the judge correctly pass? If the judge flags a quarter of clean outputs as failures, a pipeline full of false alarms is a pipeline nobody reads.
+        </p>
+        <p>
+            TPR without TNR: we catch everything, including things that aren't broken. TNR without TPR: we agree on the easy cases and miss the hard ones. Together, the two numbers describe whether the judge is operating on the signal you thought the rubric pointed at.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            When the numbers are bad, the fix is the rubric, not the judge.
+        </p>
+        <p>
+            This is the part people skip. A bad TPR looks like a judge problem &mdash; the judge is missing things, surely we need a smarter one. Switch to a bigger model. Turn up the temperature. Ask for a confidence score.
+        </p>
+        <p>
+            No. If the judge misses failures a human catches, the rubric isn't describing what the human is looking for. A rubric is a compression of human judgment; a compression that loses the main signal is a shadow of a rubric, not a rubric. Read the disagreements. A human marks an output as ungrounded because it invented a procedure name &mdash; the judge passed it because the rubric said "grounded in the customer's question" and the output did mention the customer's topic. "Grounded" is doing too much work. Name the specific failure: <em>invents procedure names that do not appear in source documents.</em> That's what a rubric looks like after the validation loop has pressured it.
+        </p>
+        <p>
+            Sometimes what the human was doing isn't rubric-able &mdash; they were using context the judge can't have, like knowledge of a recent incident or an unwritten product norm. That's worth knowing too. It tells you which failure modes belong in a human-in-the-loop stage, not inside a judge.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            Calibration is continuous.
+        </p>
+        <p>
+            Models update. Prompts drift. Products change. A rubric with good TPR/TNR in March will score worse in June if nobody re-checks. The validation set is not a one-time artifact &mdash; it's a living corpus. Grow it. Re-label edges. Re-run the validation any time you change the judge model, the judge prompt, or the rubric. Treat a regression in validation numbers the same as a CI failure, because the judge is no longer reliable on the thing you claimed it was reliable on.
+        </p>
+        <p>
+            Without this, you have an eval system that produces numbers with no guarantee the numbers mean what they used to mean. Worse than no eval system, because the numbers are a confidence signal that causes people to stop looking.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            This is the same shape as <a href="/the-reading-is-the-work/">the reading is the work</a>. Every part of the eval stack is downstream of humans reading outputs. The rubric is a compression of human reading. The judge is a model approximating the rubric. The validation set is humans re-grounding the approximation. Remove any of those and the whole thing starts measuring the wrong thing, confidently.
+        </p>
+        <p>
+            The judge is not a replacement for human reading. It's a cache. Caches need invalidation. The validation set is the invalidation signal &mdash; it tells you when the world has moved and the cache has to be rebuilt against current ground truth.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            Binary judge scores. Hand-labeled validation set. TPR and TNR. Re-run when anything changes. Fix the rubric, not the judge.
+        </p>
+        <p>
+            Who validates the validators? You do. In a spreadsheet. By hand.
+        </p>
+    </section>
+
+    <footer class="article-footer">
+        <p>Related: <a href="/the-reading-is-the-work/">The reading is the work</a> &mdash; <a href="/recursive-mirror/">Recursive mirror</a> &mdash; <a href="/llms-as-compilers/">LLMs as compilers</a></p>
+    </footer>
+</article>

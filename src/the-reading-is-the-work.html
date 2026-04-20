@@ -1,0 +1,134 @@
+---
+layout: base.njk
+title: The reading is the work - qry.zone
+description: CI guards the floor. Humans raise the ceiling. The heresy is that your tool can't do the part that matters.
+explore: true
+tagline: "CI guards the floor. Humans raise the ceiling. The heresy is that your tool can't do the part that matters."
+exploreTags:
+  - ai-collaboration
+  - craft
+  - philosophy
+status: seedling
+firstCreated: 2026-04-20
+lastUpdated: 2026-04-20
+connections:
+  - "Recursive mirror"
+  - "LLMs as compilers"
+  - "De-slopping in practice"
+---
+
+<article class="article">
+    <header class="article-header">
+        <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">&larr; Back to Explore</a>
+        <span class="status-badge status-seedling">seedling</span>
+        <h1>The reading is the work</h1>
+        <p class="article-subtitle">CI guards the floor. Humans raise the ceiling. The heresy is that your tool can't do the part that matters.</p>
+        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">April 2026</p>
+    </header>
+
+    <section>
+        <p>
+            The thing that actually works is a spreadsheet.
+        </p>
+        <p>
+            Open one. Paste in a hundred real outputs from your AI product. Label each row with what went wrong &mdash; or nothing, if it's fine. Pivot-table the failures by category. Target the biggest category first. That is the method. <a href="https://hamel.dev/blog/posts/evals/" target="_blank" rel="noopener noreferrer">Hamel teaches it</a>. His students from OpenAI, Anthropic, and Google learn it. And the engineer response is almost always the same: <em>surely we can skip the spreadsheet and build the tool.</em>
+        </p>
+        <p>
+            You can't. That's the heresy, and it's a real one.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            I built a full eval harness for a customer-support-agent product this month. Promptfoo with fixtures pulled from real reviewer corrections, Ollama for fast local runs, an Anthropic model as the judge, side-by-side HTML reports. The whole stack works &mdash; you can run prompt A against prompt B on identical inputs and see every difference.
+        </p>
+        <p>
+            That's the floor. CI refuses to merge a change that makes things measurably worse on the fixtures we have today. We weren't going to ship prompt edits by vibes.
+        </p>
+        <p>
+            It does not raise the ceiling.
+        </p>
+        <p>
+            The ceiling moves when somebody reads twenty outputs by hand, notices the model is inventing procedure names when customers ask about billing, tags the failure mode, edits the prompt, reruns, and decides whether the edit helped. No tool produces that noticing. The tool shows you the diff. The diff is not the insight.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            Hamel's pedagogy is blunt: <em>error analysis is the core workflow, not eval design.</em> Evals flow from observation. You cannot write a rubric for a failure you have not seen. Generic rubrics &mdash; "helpfulness," "correctness," "fluency" &mdash; miss what actually breaks in your specific product. The failures you want to catch only surface when a human reads outputs, and the rubric is a crystallization of what that human kept noticing.
+        </p>
+        <p>
+            Related: binary judge scores beat 1&ndash;5 scales. Nobody knows what "3 out of 5" means, and the middle of the scale is where all the interesting judgments live. Force true/false and you have a measurement. Allow gradients and you have a vibe dressed up as data.
+        </p>
+        <p>
+            The judge itself has to be validated against humans. Hold back a hand-labeled set, compute true-positive and true-negative rates against the judge's decisions, fix the rubric if the numbers are bad. The judge is not ground truth. Humans reading outputs are ground truth. The judge is an approximation that stays honest only as long as you keep grounding it against the humans.
+        </p>
+        <p>
+            Every layer of the stack delegates judgment downward until it reaches a person reading. If no person is reading, the stack is not measuring quality. It is generating confidence about quality, which is a different and worse thing.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            Why is this hard for engineers to accept? Because the tool-building instinct is strong and the reading instinct is weak. Building a pipeline feels like progress. Reading twenty outputs feels like not-progress &mdash; no commit, no merge, no green check. The same trap operates in testing: the test file exists, therefore the thing is tested. Except evals are worse, because the eval can pass and the product can still be broken, and you won't find out until a customer tells you.
+        </p>
+        <p>
+            The manual loop produces no clean artifact. You read. You notice. You change a sentence in the prompt. You read again. After two hours you have a paragraph in a lab notebook: <em>what I changed, what got better, what got worse, what I suspect next.</em> That paragraph is the deliverable. The prompt diff is a side effect.
+        </p>
+        <p>
+            The CI corpus is downstream of humans who ran this loop by hand. Every fixture in the regression set started as a correction somebody read and said <em>yes, this matters, save it.</em> The corpus does not spontaneously generate. Neither do the rubrics.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            This is the same move as <a href="/recursive-mirror/">recursive mirror</a>. Point an AI at a corpus of your own writing, ask it to surface patterns, read what it finds, decide what's real. The reading is how you learn the shape of your own voice. Skipping it gives you a style guide that looks plausible and means nothing.
+        </p>
+        <p>
+            And it rhymes with <a href="/llms-as-compilers/">LLMs as compilers</a>. The prompt is the program; the spec is the thinking. In eval terms: the rubric is the spec, the judge compiles it, and the <em>failure mode you identified by reading outputs</em> is the thinking. Without that identification, the judge is compiling garbage with more steps.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            Operational notes.
+        </p>
+        <p>
+            Stop condition for a round: when the pivot table stops surprising you. If round three shows the same top failure tag as round two and your edit didn't move it, the prompt is not the problem. Go up a layer &mdash; check the schema description, the retrieval context shape, the locale primer &mdash; and come back down.
+        </p>
+        <p>
+            Budget: two hours for a round of twenty. More than that and you're over-engineering per round. Less and you skipped the tagging. The tagging is the part that compounds, because tags are what become future rubric items.
+        </p>
+        <p>
+            Save the edges. Anything the model still fumbles after a prompt edit becomes a new fixture with a tag explaining why. That's how twenty fixtures grows into a hundred, weighted toward real failure modes instead of imagined ones.
+        </p>
+        <p>
+            Do not automate this phase yet. Not until the pivot tables stop surprising you <em>across</em> rounds, not just within one. That's when you know what to automate, because you have seen the shape of the failure surface.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            The heresy isn't <em>don't build tools.</em> It's that the tool doesn't teach you what the tool should measure. The tool can only check the things a human has already decided are checkable.
+        </p>
+        <p>
+            Open a spreadsheet. Read twenty outputs. Notice something. That is the job.
+        </p>
+    </section>
+
+    <footer class="article-footer">
+        <p>Related: <a href="/recursive-mirror/">Recursive mirror</a> &mdash; <a href="/llms-as-compilers/">LLMs as compilers</a> &mdash; <a href="/antislop-editorial/">De-slopping in practice</a></p>
+    </footer>
+</article>

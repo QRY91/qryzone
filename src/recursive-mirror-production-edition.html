@@ -1,0 +1,115 @@
+---
+layout: base.njk
+title: Recursive mirror, production edition - qry.zone
+description: Voice analysis and error analysis are the same move on inverse corpora. The first taught me the shape of the second.
+explore: true
+tagline: "Voice analysis and error analysis are the same move on inverse corpora. The first taught me the shape of the second."
+exploreTags:
+  - ai-collaboration
+  - meta
+  - craft
+status: seedling
+firstCreated: 2026-04-20
+lastUpdated: 2026-04-20
+connections:
+  - "Recursive mirror"
+  - "The reading is the work"
+  - "Who validates the validators?"
+---
+
+<article class="article">
+    <header class="article-header">
+        <a href="/explore/" style="color: var(--color-accent); text-decoration: none; margin-bottom: var(--space-md); display: inline-block">&larr; Back to Explore</a>
+        <span class="status-badge status-seedling">seedling</span>
+        <h1>Recursive mirror, production edition</h1>
+        <p class="article-subtitle">Voice analysis and error analysis are the same move on inverse corpora. The first taught me the shape of the second.</p>
+        <p style="font-size: 0.85rem; color: var(--color-text-secondary);">April 2026</p>
+    </header>
+
+    <section>
+        <p>
+            In January I wrote about <a href="/recursive-mirror/">recursive mirror</a> &mdash; pointing Claude at five years of journals, asking it to surface my voice patterns, using the result as a reference during AI-assisted writing. The premise: an AI helping me turn journal into prose needs to know what I sound like, so it aims at me instead of at its defaults.
+        </p>
+        <p>
+            That essay is about writing. The move is general.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            For the last year I've been doing a different version of the same operation on a different corpus: reading LLM outputs from an AI product, tagging failure modes, building a catalog of what the model actually does wrong. This is what <a href="https://hamel.dev/blog/posts/evals/" target="_blank" rel="noopener noreferrer">Hamel Husain calls error analysis</a>, and it's the foundation of every eval system that works.
+        </p>
+        <p>
+            The two exercises feel different on the surface. Voice analysis: read my old words, notice what I sound like, build a reference. Error analysis: read the AI's current words, notice what it gets wrong, build a rubric. The corpora are inverse &mdash; my writing vs. the model's writing. The role is inverse &mdash; understanding self vs. constraining other. The artifacts have different names &mdash; voice guide vs. failure taxonomy.
+        </p>
+        <p>
+            But the core motion is the same: read a pile of outputs, notice what's actually happening, name it, use the names.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            Three things the recursive mirror taught me about error analysis.
+        </p>
+        <p>
+            <strong>The catalog is a side effect. The reading is the product.</strong> When I built the voice reference, I thought the document was the deliverable. It wasn't. The deliverable was that I now know what my voice does &mdash; I can hear it while writing, catch it when it drifts, notice when the model is driving instead of me. The reference document helps other people get closer to it, but the reference didn't teach me anything new. I learned it during the reading.
+        </p>
+        <p>
+            Error analysis is the same trap. People build a rubric and think they're done. The rubric is a side effect. The product is that <em>you</em>, the person who read a hundred outputs, now know what the failure modes are. You can hear them in new outputs you haven't seen. A fresh reader looking at the rubric won't have that ear. The rubric helps them get closer, but they still have to do their own reading.
+        </p>
+        <p>
+            <strong>The AI can help you read. It can't read for you.</strong> Claude produced a 370-line voice analysis from my journals. Some of it was true. Some of it was over-reading one-off moments as if they were recurring patterns. One example: it catalogued a "Please." ending as a signature move of mine. I used it once, years ago, in a specific context. The analysis generalized the one instance into a rule, and I've been living with that rule ever since &mdash; quoted back to me in AI outputs, showing up as a "feature" of my voice whenever a model tries to imitate it.
+        </p>
+        <p>
+            The document was useful only because I read it critically and culled what wasn't me. An LLM judge does the same thing with failure modes. It produces a list of what it thinks went wrong. Some of it is real. Some is the judge's own priors leaking into the categorization. The list is useful only if a human reads it critically and culls what isn't the actual failure.
+        </p>
+        <p>
+            Both cases: the AI is a reading assistant. Not a reader.
+        </p>
+        <p>
+            <strong>Pattern catalogs decay if you stop reading.</strong> The voice analysis from January is already slightly wrong. I write differently now &mdash; less staccato, fewer earnest fragments, more flowing paragraphs. If I kept treating the January document as canon, I'd end up imitating a version of myself that no longer exists. The only way to keep the catalog current is to re-do the reading on new writing.
+        </p>
+        <p>
+            Rubrics are the same. A rubric that described your product's failure modes six months ago describes six-months-ago's product. The model has updated, the prompts have drifted, customer expectations have moved. Stop doing fresh error analysis and the rubric starts grading against a ghost.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            One specific trap is worth naming, because I fell into it with the voice analysis and I've watched another team fall into it with their judge rubric.
+        </p>
+        <p>
+            The trap: the AI produces a plausible-looking catalog, and the catalog's plausibility feels like validation. It looks right. It pattern-matches to what you'd expect. It's written in the confident register of a document. So you ship it, you start using it, and it takes months before you notice that half of it is wrong, because it was never grounded in anything.
+        </p>
+        <p>
+            The move against the trap is the same in both domains. Don't trust the catalog until you've verified it against the corpus by hand. For voice: read ten of your own paragraphs and check whether the catalog's patterns actually show up. For rubrics: hand-label twenty outputs and check whether the catalog's failure modes actually describe the disagreements &mdash; which is exactly the <a href="/who-validates-the-validators/">judge-validation loop</a> from the last post, arriving from a different angle.
+        </p>
+        <p>
+            If the verification doesn't land, the catalog is wrong in a way that looks right, which is the worst kind of wrong.
+        </p>
+    </section>
+
+    <hr class="article-divider">
+
+    <section>
+        <p>
+            Recursive mirror was an experiment about writing. I treated it as a one-off. It was a dry run for the production version.
+        </p>
+        <p>
+            The production version reads AI outputs instead of human ones, builds a failure taxonomy instead of a voice guide, runs continuously instead of once, feeds a judge instead of a style reference. But the operation is identical. Read a corpus. Notice patterns. Name them. Verify. Update.
+        </p>
+        <p>
+            Two directions, one skill. And the same warning in both: if you don't do the reading, neither version works. The catalog will look right and mean nothing.
+        </p>
+    </section>
+
+    <footer class="article-footer">
+        <p>Related: <a href="/recursive-mirror/">Recursive mirror</a> &mdash; <a href="/the-reading-is-the-work/">The reading is the work</a> &mdash; <a href="/who-validates-the-validators/">Who validates the validators?</a></p>
+    </footer>
+</article>
