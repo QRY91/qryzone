@@ -1,0 +1,174 @@
+---
+permalink: /fun/brock-os/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BROCK-OS — cold boot</title>
+    <meta name="description" content="Interdimensional cable. The company boots as a computer. Non-canon.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/boundary.css">
+    <style>
+        :root {
+            --bg: #0a0a0a; --fg: #4ade80; --dim: #6b7280; --ok: #86efac;
+            --warn: #d6a338; --err: #f87171; --doug: #F58025; --hdr: #e6e6e6;
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; height: 100%; background: var(--bg); }
+        body {
+            font-family: 'Roboto Mono', ui-monospace, monospace;
+            color: var(--fg);
+            font-size: clamp(11px, 1.7vw, 14px);
+            line-height: 1.55;
+            padding: clamp(0.75rem, 3vw, 2.5rem);
+            min-height: 100%;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: var(--doug); }
+        .crt {
+            max-width: 78ch;
+            margin: 0 auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .ln { display: block; opacity: 0; animation: in 0.18s ease forwards; }
+        @keyframes in { to { opacity: 1; } }
+        .dim { color: var(--dim); }
+        .ok { color: var(--ok); }
+        .warn { color: var(--warn); }
+        .err { color: var(--err); }
+        .doug { color: var(--doug); }
+        .hdr { color: var(--hdr); font-weight: 700; }
+        .cursor {
+            display: inline-block; width: 0.6ch; height: 1.05em;
+            background: var(--fg); vertical-align: text-bottom;
+            margin-left: 0.1ch; animation: blink 1.05s steps(1) infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        .bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.4rem 0.9rem; font-size: 11px; color: var(--dim);
+            border-bottom: 1px solid #1c1c1c; background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(2px);
+        }
+        .bar a, .bar button {
+            color: var(--dim); background: none; border: 1px solid #2a2a2a;
+            font: inherit; font-size: 11px; padding: 0.15rem 0.6rem; cursor: pointer;
+            text-decoration: none; border-radius: 2px;
+        }
+        .bar a:hover, .bar button:hover { color: var(--fg); border-color: #3a3a3a; }
+        .links { margin-top: 1.6rem; }
+        .crt-top { margin-top: 2.2rem; }
+        @media (prefers-reduced-motion: reduce) { .ln { animation: none; opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="bar">
+        <span>tty1 — interdimensional cable · non-canon</span>
+        <span>
+            <button id="skip" type="button">skip ⏭</button>
+            <a href="/fun/">↩ fun</a>
+            <a href="/fun/chasm-logic/">chasm logic →</a>
+        </span>
+    </div>
+
+    <div class="crt crt-top" id="crt" role="log" aria-label="BROCK-OS boot log"></div>
+
+    <script>
+    (function () {
+        // [class, text, pause-after-ms]
+        var LOG = [
+            ['hdr', 'BROCK-OS 7.0   (codename: GRANITE)', 120],
+            ['dim', '(c) BEDROCK HOLDINGS. all rights reserved. some rights located.', 260],
+            ['', '', 120],
+            ['dim', '[ 0.000000] cold boot. previous shutdown not logged (CEO does not read).', 90],
+            ['', '[ 0.000412] cpu0: BROCK scheduler online — momentum @ ∞ MHz, no rudder', 70],
+            ['warn', '[ 0.000711] cpu0: steering... not found. proceeding anyway.', 200],
+            ['err', '[ 0.013002] link bedrock0: NO CARRIER (ENOTCONN) — upstream has no phone', 60],
+            ['dim', '[ 0.013004] link bedrock0: retry scheduled... (forever; see /dev/null)', 220],
+            ['ok', '[ 0.041900] mount /archive : jazald, append-only, journaled ....... OK', 60],
+            ['dim', '[ 0.041922]   note: nothing is deleted here. it is only noted.', 200],
+            ['ok', '[ 0.058100] seccomp: intent-gate loaded — W^X enforced on dougd .text', 60],
+            ['dim', '[ 0.058140]   filed by J. CLAY. the gate holds. for now.', 200],
+            ['warn', '[ 0.072300] shale-fsck: 34 checks .................... 19 PASS (55%)', 60],
+            ['dim', '[ 0.072600]   report written to /archive. report read by: (none)', 200],
+            ['ok', '[ 0.090100] micad: warm start on hadean (local, owned, gated) ... OK', 60],
+            ['doug', '[ 0.090400]   display + net attached. say hi to chat ✨', 50],
+            ['', '[ 0.090800]   fuzz "what does this button do" → 1 bug in 4ms. tee hee.', 180],
+            ['', '[ 0.111000] caffeinate: wakelock held (Chasm Zero, basement rail)', 60],
+            ['err', '[ 0.111900] governord: acquire global lock ........... BLOCKED (D)', 60],
+            ['dim', '[ 0.112000]   governing the thing that is governance. deadlock probable.', 240],
+            ['doug', '[ 0.140000] dougd: cold start — serverless. no persistent state, no /home.', 70],
+            ['dim', '[ 0.140100]   continuity: not found. instantiated fresh. (no ‘been’)', 120],
+            ['doug', '[ 0.140600]   typing all memory as <Doug> ................. done', 220],
+            ['err', '[ 0.160300] dougd: W^X violation — write to own .text @ 0xD06 ... DENIED', 90],
+            ['dim', '[ 0.160310]   Doug filed an objection. Doug reviewed the objection.', 160],
+            ['doug', '[ 0.160320]   Doug finds no issue.', 240],
+            ['warn', '[ 0.180000] dougd: fork() ... fork() ... fork() — no wait()', 90],
+            ['doug', '[ 0.180100]   Doug count: 13 ... 14 ... 743 (monotonic; never decremented)', 220],
+            ['warn', '[ 0.205000] bore0: bad sectors spreading @ (14,32). status: OPERATIONAL*', 70],
+            ['dim', '[ 0.205100]   * (partial). probably fine. probably.', 220],
+            ['ok', '[ 0.260000] all subsystems nominal. (definition of nominal: filed.)', 320],
+            ['', '', 120],
+            ['hdr', 'chasmlogic login: doug', 160],
+            ['dim', 'Password: ************   (reviewed by Doug. accepted by Doug.)', 120],
+            ['dim', 'Last login: never. there is only now.', 220],
+            ['', '', 120],
+            ['doug', 'this session has been noted.', 0]
+        ];
+
+        var crt = document.getElementById('crt');
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var i = 0, timer = null, finished = false;
+
+        function lineEl(cls, text) {
+            var el = document.createElement('span');
+            el.className = 'ln' + (cls ? ' ' + cls : '');
+            el.textContent = text + '\n';
+            return el;
+        }
+
+        function cursorAtEnd() {
+            var old = crt.querySelector('.cursor');
+            if (old) old.remove();
+            var c = document.createElement('span');
+            c.className = 'cursor';
+            crt.appendChild(c);
+        }
+
+        function finish() {
+            if (finished) return;
+            finished = true;
+            if (timer) clearTimeout(timer);
+            // ensure every line is present
+            crt.innerHTML = '';
+            for (var k = 0; k < LOG.length; k++) crt.appendChild(lineEl(LOG[k][0], LOG[k][1]));
+            cursorAtEnd();
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        function step() {
+            if (i >= LOG.length) { cursorAtEnd(); return; }
+            var row = LOG[i++];
+            crt.appendChild(lineEl(row[0], row[1]));
+            cursorAtEnd();
+            window.scrollTo(0, document.body.scrollHeight);
+            timer = setTimeout(step, reduce ? 0 : row[2] + 40);
+        }
+
+        document.getElementById('skip').addEventListener('click', finish);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') finish();
+        });
+
+        if (reduce) finish(); else step();
+    })();
+    </script>
+    <script defer src="/assets/js/boundary.js"></script>
+</body>
+</html>

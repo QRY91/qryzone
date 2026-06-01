@@ -189,6 +189,38 @@ nav {
   color: var(--cl-text-heading);
 }
 
+/* ── Brand mark — the qry.zone logo, inverted & quarter-turned ──────────────
+   Chasm Logic IS qry.zone, bit-flipped. Same 8x8 mark (1-bit, 2 states),
+   masked to the CL accent instead of qry gold, and container-rotated 45°
+   (lossless — the bits never resample, the square pixels just tilt to
+   diamonds). The square reads as a diamond; the recursion pocket rotates onto
+   the right vertex and becomes a "C"/Pac-man mouth opening right. The mask
+   asset keeps the pocket, so recursion is preserved (Pac-man eats Pac-man).
+   Static first; the full-page boundary loader / palette transition lands later. */
+.cl-brand {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 0.9rem;
+}
+.cl-logo {
+  width: 34px;
+  height: 34px;
+  grid-row: 1 / span 2; /* mark sits left of the stacked brand + subtitle */
+  background-color: var(--cl-accent);
+  -webkit-mask: url(/assets/images/logo_transparent_black_inverted.png) center / contain no-repeat;
+          mask: url(/assets/images/logo_transparent_black_inverted.png) center / contain no-repeat;
+  transform: rotate(-45deg); /* square → diamond; pocket → mouth, opening right */
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s;
+}
+.cl-brand:hover .cl-logo {
+  transform: rotate(-45deg) scale(1.08);
+  background-color: var(--cl-accent-hover);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cl-logo { transition: none; }
+}
+
 /* --------------------------------------------------------------------------
    DOCUMENT CONTAINER
    -------------------------------------------------------------------------- */

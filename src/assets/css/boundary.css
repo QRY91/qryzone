@@ -1,0 +1,40 @@
+/* boundary.css
+ * The qry.zone ⇄ Chasm Logic boundary loader.
+ * A brief full-screen veil that plays on click, BEFORE navigation. The mark does
+ * a windup → full spin → overshoot-settle (driven by boundary.js via the Web
+ * Animations API) while it recolors: gold → orange entering Chasm Logic, orange →
+ * gold on the way out. The veil itself wipes from the current page's background to
+ * the destination's. Reduced-motion users never see it.
+ */
+
+.boundary-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  background: var(--bv-from, #3f3f3f);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, background-color 1s ease;
+}
+
+.boundary-veil.is-active {
+  opacity: 1;
+  background: var(--bv-to, #0e0e0e);
+}
+
+/* Transform + color are animated by boundary.js (WAAPI); CSS only sizes/masks it
+   and sets the at-rest start frame inline. */
+.boundary-mark {
+  width: clamp(80px, 16vw, 128px);
+  aspect-ratio: 1 / 1;
+  background-color: var(--bv-logo-from, #f0dfaf);
+  -webkit-mask: url(/assets/images/logo_transparent_black_inverted.png) center / contain no-repeat;
+          mask: url(/assets/images/logo_transparent_black_inverted.png) center / contain no-repeat;
+  will-change: transform, background-color;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boundary-veil { display: none; }
+}
