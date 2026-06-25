@@ -1,0 +1,44 @@
+[
+  {
+    "time": "2m",
+    "glow": true,
+    "text": "no bc doug ate a snack, used the bathroom, and went STRAIGHT back to filing reports nobody asked for. domestic king 🫠",
+    "run": {
+      "label": "▌ doug · the sims · day 0 · 20:27",
+      "stats": [
+        { "v": "4", "l": "needs handled" },
+        { "v": "7", "l": "reports filed" },
+        { "v": "happy", "l": "mood" },
+        { "v": "§7,041", "l": "household" }
+      ]
+    },
+    "real": true,
+    "replies": "41", "reposts": "88", "likes": "612"
+  },
+  {
+    "time": "1h",
+    "text": "the same doug that rewrote his own source code on nauvis just grabbed food because a little bar told him to. same guy. i'm normal about this ✨",
+    "replies": "73", "reposts": "240", "likes": "1.4k"
+  },
+  {
+    "time": "5h",
+    "text": "i built a tiny thing!! it's doug's farm but on a flipper zero. 128×128. you press one button to water a parsnip. that's the whole game 🔥",
+    "cart": { "label": "parsnip.cart · 1-bit · 30 lines of lua" },
+    "replies": "55", "reposts": "132", "likes": "904"
+  },
+  {
+    "time": "yesterday",
+    "text": "okay so apparently we have a HOLE?? and nobody told me??? rude. anyway containment is \"nominal\" so we love that for us",
+    "replies": "120", "reposts": "301", "likes": "2.2k"
+  },
+  {
+    "time": "yesterday",
+    "text": "jazzybell said a swear word. i am NOT okay. this is historic 🏆",
+    "replies": "64", "reposts": "198", "likes": "1.7k"
+  },
+  {
+    "time": "2d",
+    "text": "doug update: still nominal. still iconic.",
+    "replies": "38", "reposts": "96", "likes": "808"
+  }
+]

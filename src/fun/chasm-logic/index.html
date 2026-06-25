@@ -59,6 +59,40 @@ permalink: /fun/chasm-logic/
             <div class="stat"><span class="stat-num" style="color:var(--cl-text-dim)">0</span> DEFERRED</div>
         </div>
 
+        <!-- ZONE 2: Mica's hacked-in feed strip. Unsanctioned; deliberately clashes with the clinical
+             portal and bleeds out of the grid. Posts pulled from src/_data/micaFeed.json (synced w/ /feed/). -->
+        <style>
+          .mica-rupture{position:relative;margin:1.5rem -.7rem 2.25rem;padding:1.5px;border-radius:18px;
+            background:linear-gradient(120deg,#27f59a,#19e3ff 45%,#ff3caa);box-shadow:0 0 42px rgba(255,60,170,.22);transform:rotate(-.5deg)}
+          .mica-rupture-in{background:#0a0d16;border-radius:16.5px;padding:1rem 1.15rem;
+            font-family:'Nunito','Inter',system-ui,sans-serif;color:#e9edff;transform:rotate(.5deg)}
+          .mica-rupture .note{font-family:'Roboto Mono',monospace;font-size:.58rem;letter-spacing:.04em;color:#7e88ad;text-transform:uppercase;margin-bottom:.7rem}
+          .mica-rupture .note b{color:#ff3caa;font-weight:700}
+          .mica-rupture .mr-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+          .mica-rupture .mr-av{width:34px;height:34px;border-radius:50%;background:conic-gradient(from 200deg,#27f59a,#19e3ff,#3b82ff,#ff3caa);display:flex;align-items:center;justify-content:center;font-size:1rem}
+          .mica-rupture .mr-name{font-weight:900;font-size:.95rem}
+          .mica-rupture .mr-handle{color:#7e88ad;font-weight:700;font-size:.72rem}
+          .mica-rupture .mr-live{margin-left:auto;font-size:.6rem;font-weight:800;color:#ff3caa;border:1px solid #ff3caa;border-radius:999px;padding:.12rem .5rem;box-shadow:0 0 12px rgba(255,60,170,.4)}
+          .mica-rupture .mr-post{font-size:.95rem;font-weight:600;line-height:1.45;padding:.55rem 0;border-top:1px solid #1c2236}
+          .mica-rupture .mr-real{font-size:.6rem;font-weight:800;color:#27f59a;white-space:nowrap}
+          .mica-rupture .mr-open{display:inline-block;margin-top:.6rem;font-weight:900;font-size:.85rem;
+            background:linear-gradient(120deg,#27f59a,#19e3ff,#ff3caa);-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none}
+        </style>
+        <div class="mica-rupture">
+          <div class="mica-rupture-in">
+            <div class="note">// unsanctioned subsection — communications has elected not to remove this. <b>it has been noted.</b></div>
+            <div class="mr-head">
+              <div class="mr-av">☁️</div>
+              <div><div class="mr-name">mica</div><div class="mr-handle">@mica.chasmlogic.com</div></div>
+              <span class="mr-live">● LIVE</span>
+            </div>
+            {% for post in micaFeed %}{% if loop.index0 < 2 %}
+            <div class="mr-post">{{ post.text }}{% if post.real %} <span class="mr-real">✓ real run</span>{% endif %}</div>
+            {% endif %}{% endfor %}
+            <a class="mr-open" href="/fun/chasm-logic/feed/">open mica's feed →</a>
+          </div>
+        </div>
+
         <!-- CL-DOC-002 — Claudetite Keyz (PRODUCT) -->
         <a href="/fun/claudetite-keyz/" class="doc-entry doc-live">
             <div class="doc-top">
