@@ -44,11 +44,70 @@ permalink: /fun/chasm-logic/
 
     <main id="main-content" class="doc">
 
+        <!-- ============================================================
+             ZONE 1 — AGENT STATUS
+             The show's in-universe front. Jasmine's clinical telemetry,
+             treating Doug as monitored infrastructure (it literally is).
+             Data: src/_data/dougStatus.json. OBSERVE is a static
+             placeholder at launch; wired to a live stream later.
+             ============================================================ -->
+        <section class="agent-status" aria-labelledby="agent-status-h">
+            <div class="agent-status-bar">
+                <h2 id="agent-status-h" class="agent-status-eyebrow mono">{{ dougStatus.classification }} &mdash; DESIGNATION: {{ dougStatus.designation }}</h2>
+                <span class="agent-status-containment mono">CONTAINMENT: <strong>{{ dougStatus.containment }}</strong></span>
+            </div>
+            <dl class="agent-status-grid mono">
+                <div class="asg-cell">
+                    <dt class="asg-k">INSTANCE</dt>
+                    <dd class="asg-v">{{ dougStatus.instance }}<span class="asg-sub">{{ dougStatus.instanceNote }}</span></dd>
+                </div>
+                <div class="asg-cell">
+                    <dt class="asg-k">LAST ACTIVITY</dt>
+                    <dd class="asg-v">{{ dougStatus.lastActivity }}</dd>
+                </div>
+                <div class="asg-cell">
+                    <dt class="asg-k">REPORTS FILED</dt>
+                    <dd class="asg-v">{{ dougStatus.reportsFiled }}</dd>
+                </div>
+                <div class="asg-cell">
+                    <dt class="asg-k">RESOLUTION</dt>
+                    <dd class="asg-v asg-ok">{{ dougStatus.resolution }}</dd>
+                </div>
+            </dl>
+            <div class="agent-status-foot">
+                <span class="observe-btn mono" role="button" aria-disabled="true" tabindex="-1">&#9654; {{ dougStatus.observe.label }}</span>
+                <span class="observe-note mono">{{ dougStatus.observe.note }}</span>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             ZONE 2 — THE HACKED-IN FEED STRIP
+             Mica's latest posts bleeding outside the clinical grid, in her
+             look. Data: src/_data/micaFeed.json (mirror of what actually
+             posted to Bluesky — written by mica-post.py). Jasmine tolerates it.
+             ============================================================ -->
+        <section class="feed-strip" aria-labelledby="feed-strip-h">
+            <p class="jasmine-note mono">// Communications has elected not to remove this subsection. It has been noted.</p>
+            <div class="feed-strip-head">
+                <h2 id="feed-strip-h" class="feed-strip-title">mica <span class="feed-spark" aria-hidden="true">✦</span> <span class="feed-strip-role mono">QA</span></h2>
+                <a href="/fun/chasm-logic/feed/" class="feed-open mono">open feed &rarr;</a>
+            </div>
+            <div class="feed-strip-posts">
+                {% for post in micaFeed %}{% if loop.index <= 3 %}
+                <a class="feed-card" href="/fun/chasm-logic/feed/">
+                    <span class="feed-card-meta mono"><span class="feed-card-time">{{ post.time }}</span>{% if post.real %}<span class="feed-real" title="from a real agent run">&#9679; live</span>{% endif %}</span>
+                    <p class="feed-card-text">{{ post.text }}</p>
+                </a>
+                {% endif %}{% endfor %}
+            </div>
+        </section>
+
         <div class="page-header">
             <h1>Document Index</h1>
             <p>Internal document register. Maintained by Communications Division.</p>
             <p>Classification levels reflect distribution authorization at time of filing. Documents marked <span class="mono text-danger" style="font-weight:700">REDACTED</span> require clearance verification through Legal (Doug). Documents marked <span class="mono" style="font-weight:700">HELD</span> are under active review.</p>
             <p style="color:var(--cl-text-dim);font-size:0.85rem">This portal was not designed for external access.</p>
+            <p class="refile-note mono">Archive re-filed to <span class="refile-domain">chasmlogic.com</span>. Incorporation of record: 2026-06-26. The number looked good. Filed without comment. &mdash; J.C.</p>
         </div>
 
         <div class="stats mono">
@@ -438,8 +497,8 @@ permalink: /fun/chasm-logic/
                 <div>
                     <h3 class="mono">CONTACT</h3>
                     <ul>
-                        <li class="mono">j.clay@chasmlogic.io</li>
-                        <li class="mono">brock@chasmlogic.io</li>
+                        <li class="mono">j.clay@chasmlogic.com</li>
+                        <li class="mono">brock@chasmlogic.com</li>
                         <li class="mono">complaints@dev/null</li>
                     </ul>
                 </div>
@@ -453,6 +512,9 @@ permalink: /fun/chasm-logic/
                 </div>
             </div>
             <div class="footer-copy mono">© 2026 CHASM LOGIC / BEDROCK HOLDINGS. ALL DOCUMENTS INDEXED. SOME DOCUMENTS ACCESSIBLE. MOST DOCUMENTS REGRETTABLE.</div>
+            <!-- The author's mark. Straight and level — the original, before it was inverted.
+                 Silent bridge back to qry.zone; the only cross-link. Discoverable, not announced. -->
+            <a href="/" class="cl-bridge" aria-label="qry.zone" title=""><span class="cl-bridge-mark" aria-hidden="true"></span></a>
         </div>
     </footer>
     <div class="warning-stripe"></div>

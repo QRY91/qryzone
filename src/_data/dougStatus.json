@@ -1,0 +1,16 @@
+{
+  "classification": "AUTONOMOUS AGENT",
+  "designation": "DOUG",
+  "instance": "TILTH",
+  "instanceNote": "domestic containment build",
+  "lastActivity": "entered rest cycle — 23:40",
+  "reportsFiled": 7,
+  "resolution": "100%",
+  "containment": "NOMINAL",
+  "observe": {
+    "live": false,
+    "label": "OBSERVE",
+    "note": "stream offline — telemetry archival only"
+  },
+  "updated": "2026-06-26"
+}

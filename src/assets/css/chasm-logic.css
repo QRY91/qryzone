@@ -878,3 +878,306 @@ footer a { color: var(--cl-footer-dim); text-decoration: underline; }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ==========================================================================
+   GO-LIVE LANDING ZONES — the show's front door
+   Zone 1: Agent Status (Jasmine's clinical telemetry).
+   Zone 2: the hacked-in feed strip (Mica, bleeding outside the grid).
+   The clash between the two is the design. Mica's neon /feed/ redesign
+   (mica-feed.css) is deferred to the continuing project.
+   ========================================================================== */
+
+/* Mica's intruder palette — restrained at launch (full neon deferred) */
+:root {
+  --mica: #e98fc6;
+  --mica-dim: #b96fa0;
+  --mica-panel: #17121a;
+  --mica-card: #1d1620;
+  --mica-edge: #3a2533;
+}
+
+/* ── ZONE 1 — AGENT STATUS ─────────────────────────────────────────────── */
+.agent-status {
+  margin: 2.5rem 0 1.75rem;
+  border: 2px solid var(--cl-border);
+  border-top: 3px solid var(--cl-accent);
+  background: var(--cl-surface);
+  padding: 1.25rem 1.5rem 1.1rem;
+}
+.agent-status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--cl-border-light);
+}
+.agent-status-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--cl-text-heading);
+  margin: 0;
+}
+.agent-status-containment {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--cl-text-dim);
+}
+.agent-status-containment strong { color: var(--cl-terminal-text); font-weight: 700; }
+.agent-status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem 1.5rem;
+  margin: 0;
+}
+.asg-cell { display: flex; flex-direction: column; gap: 0.3rem; }
+.asg-k {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  color: var(--cl-text-muted);
+}
+.asg-v {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cl-text-heading);
+  line-height: 1.3;
+}
+.asg-v.asg-ok { color: var(--cl-terminal-text); }
+.asg-sub {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--cl-text-muted);
+  margin-top: 0.15rem;
+}
+.agent-status-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--cl-border-light);
+}
+/* OBSERVE — static placeholder at launch; wired to a stream later. Inert. */
+.observe-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--cl-accent);
+  border: 1px solid var(--cl-accent);
+  background: transparent;
+  opacity: 0.65;
+  cursor: not-allowed;
+  user-select: none;
+}
+.observe-note {
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: var(--cl-text-muted);
+}
+
+/* ── ZONE 2 — HACKED-IN FEED STRIP ─────────────────────────────────────── */
+/* Bleeds outside the clinical column: warmer panel, rounded cards, Mica pink. */
+.feed-strip {
+  margin: 0 -1.25rem 2.75rem;
+  padding: 1.25rem 1.25rem 1.4rem;
+  background: var(--mica-panel);
+  border: 1px solid var(--mica-edge);
+  border-radius: 12px;
+  position: relative;
+}
+.jasmine-note {
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  color: var(--cl-text-muted);
+  margin: 0 0 0.9rem;
+  font-style: normal;
+}
+.feed-strip-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+.feed-strip-title {
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: #f4e9f0;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.feed-strip-role {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  color: var(--mica-dim);
+  border: 1px solid var(--mica-edge);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  align-self: center;
+}
+.feed-spark { color: var(--mica); font-size: 1.1rem; }
+.feed-open {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--mica);
+  text-decoration: none;
+}
+.feed-open:hover { color: #f6b7dd; text-decoration: underline; }
+.feed-strip-posts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.feed-card {
+  display: block;
+  background: var(--mica-card);
+  border: 1px solid var(--mica-edge);
+  border-left: 3px solid var(--mica);
+  border-radius: 10px;
+  padding: 0.9rem 1rem 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+.feed-card:hover {
+  background: #241a28;
+  border-color: var(--mica-dim);
+  border-left-color: #f6b7dd;
+  transform: translateY(-2px);
+}
+.feed-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.feed-card-time {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: var(--mica-dim);
+  text-transform: lowercase;
+}
+.feed-real {
+  font-size: 0.56rem;
+  letter-spacing: 0.06em;
+  color: var(--cl-terminal-text);
+  text-transform: uppercase;
+}
+.feed-card-text {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: #d7cdd4;
+  margin: 0;
+}
+
+/* ── DIEGETIC RE-FILING NOTE (page header) ─────────────────────────────── */
+.refile-note {
+  font-size: 0.7rem !important;
+  letter-spacing: 0.02em;
+  color: var(--cl-text-muted) !important;
+  margin-top: 1rem !important;
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--cl-border-light);
+  line-height: 1.6 !important;
+}
+.refile-domain { color: var(--cl-accent); }
+
+/* ── HIDDEN LOGO BRIDGE (footer → qry.zone) ────────────────────────────── */
+/* The straight/level original mark — gold, un-inverted. Silent, discoverable. */
+.cl-bridge {
+  display: block;
+  width: 28px;
+  height: 28px;
+  margin: 2.5rem auto 0;
+  opacity: 0.16;
+  transition: opacity 0.4s ease;
+}
+.cl-bridge:hover, .cl-bridge:focus-visible {
+  opacity: 0.85;
+  outline: none;
+}
+.cl-bridge-mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #f0dfaf;
+  -webkit-mask: url(/assets/images/logo_transparent_black_inverted.png) center / contain no-repeat;
+          mask: url(/assets/images/logo_transparent_black_inverted.png) center / contain no-repeat;
+}
+
+/* ── /feed/ PAGE — simple mirror (neon redesign deferred) ──────────────── */
+.feed-page {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3.5rem;
+}
+.feed-page-head {
+  padding-bottom: 1.75rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 1px solid var(--mica-edge);
+}
+.feed-page-head .jasmine-note { margin-bottom: 1.25rem; }
+.feed-page-title {
+  font-size: clamp(2rem, 6vw, 2.75rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #f4e9f0;
+  margin: 0 0 0.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.feed-page-bio {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--cl-text);
+  margin: 0 0 0.9rem;
+}
+.feed-handle {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--mica);
+  text-decoration: none;
+}
+.feed-handle:hover { color: #f6b7dd; text-decoration: underline; }
+.feed-page-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.feed-card-full { cursor: default; }
+.feed-card-full:hover { transform: none; }
+.feed-card-full .feed-card-text { font-size: 0.95rem; }
+.feed-page-foot {
+  margin-top: 2.5rem;
+  text-align: center;
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+  color: var(--cl-text-muted);
+}
+
+/* ── RESPONSIVE — landing zones ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .agent-status-grid { grid-template-columns: repeat(2, 1fr); }
+  .feed-strip-posts { grid-template-columns: 1fr; }
+  .feed-strip { margin-left: -0.5rem; margin-right: -0.5rem; }
+}
+@media (max-width: 480px) {
+  .agent-status-grid { grid-template-columns: 1fr 1fr; gap: 0.85rem 1rem; }
+}
